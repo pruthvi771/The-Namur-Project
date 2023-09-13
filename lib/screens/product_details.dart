@@ -257,8 +257,10 @@ class _ProductDetailsState extends State<ProductDetails>
 
   onWishTap() {
     if (is_logged_in.$ == false) {
-      ToastComponent.showDialog(AppLocalizations.of(context)!.you_need_to_log_in,
-          gravity: Toast.center, duration: Toast.lengthLong);
+      ToastComponent.showDialog(
+          AppLocalizations.of(context)!.you_need_to_log_in,
+          gravity: Toast.center,
+          duration: Toast.lengthLong);
       return;
     }
 
@@ -804,14 +806,15 @@ class _ProductDetailsState extends State<ProductDetails>
     );
 
     return Directionality(
-      textDirection: app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
+      textDirection:
+          app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
-         // extendBody: true,
+          // extendBody: true,
           bottomNavigationBar: buildBottomAppBar(context, _addedToCartSnackbar),
           //appBar: buildAppBar(statusBarHeight, context),
           body: RefreshIndicator(
             color: MyTheme.accent_color,
-            backgroundColor:MyTheme.primary_color,
+            backgroundColor: MyTheme.primary_color,
             onRefresh: _onPageRefresh,
             child: CustomScrollView(
               controller: _mainScrollController,
@@ -820,15 +823,15 @@ class _ProductDetailsState extends State<ProductDetails>
               slivers: <Widget>[
                 SliverAppBar(
                   elevation: 0,
-                 backgroundColor: MyTheme.primary_color,
-                 // backgroundColor: Colors.white.withOpacity(opacity),
+                  backgroundColor: MyTheme.primary_color,
+                  // backgroundColor: Colors.white.withOpacity(opacity),
                   pinned: true,
                   automaticallyImplyLeading: false,
                   //titleSpacing: 0,
                   title: Container(
-                   // height: 150,
-                  //  width: MediaQuery.of(context).size.width,
-                  //  color: MyTheme.primary_color,
+                    // height: 150,
+                    //  width: MediaQuery.of(context).size.width,
+                    //  color: MyTheme.primary_color,
                     child: Row(
                       children: [
                         Builder(
@@ -877,8 +880,8 @@ class _ProductDetailsState extends State<ProductDetails>
                             });
                           },
                           child: Container(
-                            decoration:
-                                BoxDecorations.buildCircularButtonDecoration_1(),
+                            decoration: BoxDecorations
+                                .buildCircularButtonDecoration_1(),
                             width: 36,
                             height: 36,
                             padding: EdgeInsets.all(8),
@@ -915,8 +918,8 @@ class _ProductDetailsState extends State<ProductDetails>
                             onPressShare(context);
                           },
                           child: Container(
-                            decoration:
-                                BoxDecorations.buildCircularButtonDecoration_1(),
+                            decoration: BoxDecorations
+                                .buildCircularButtonDecoration_1(),
                             width: 36,
                             height: 36,
                             child: Center(
@@ -934,8 +937,8 @@ class _ProductDetailsState extends State<ProductDetails>
                             onWishTap();
                           },
                           child: Container(
-                            decoration:
-                                BoxDecorations.buildCircularButtonDecoration_1(),
+                            decoration: BoxDecorations
+                                .buildCircularButtonDecoration_1(),
                             width: 36,
                             height: 36,
                             child: Center(
@@ -954,7 +957,7 @@ class _ProductDetailsState extends State<ProductDetails>
                   ),
                   expandedHeight: 375.0,
                   flexibleSpace: FlexibleSpaceBar(
-                    background:  buildProductSliderImageSection(),
+                    background: buildProductSliderImageSection(),
                   ),
                 ),
                 SliverToBoxAdapter(
@@ -1114,7 +1117,7 @@ class _ProductDetailsState extends State<ProductDetails>
                                   8.0,
                                   8.0,
                                 ),
-                                child: _productDetails!= null
+                                child: _productDetails != null
                                     ? buildExpandableDescription()
                                     : Padding(
                                         padding: const EdgeInsets.symmetric(
@@ -1363,7 +1366,8 @@ class _ProductDetailsState extends State<ProductDetails>
                         0.0,
                       ),
                       child: Text(
-                        AppLocalizations.of(context)!.products_you_may_also_like,
+                        AppLocalizations.of(context)!
+                            .products_you_may_also_like,
                         style: TextStyle(
                             color: MyTheme.dark_font_grey,
                             fontSize: 16,
@@ -1531,7 +1535,8 @@ class _ProductDetailsState extends State<ProductDetails>
                   ? _totalPrice.toString().replaceAll(
                       SystemConfig.systemCurrency!.code!,
                       SystemConfig.systemCurrency!.symbol!)
-                  : SystemConfig.systemCurrency!.symbol! + _totalPrice.toString(),
+                  : SystemConfig.systemCurrency!.symbol! +
+                      _totalPrice.toString(),
               style: TextStyle(
                   color: MyTheme.accent_color,
                   fontSize: 16.0,
@@ -1722,7 +1727,7 @@ class _ProductDetailsState extends State<ProductDetails>
             width: MediaQuery.of(context).size.width - (107 + 45),
             child: Scrollbar(
               controller: _variantScrollController,
-              isAlwaysShown: false,
+              thumbVisibility: false,
               child: Wrap(
                 children: List.generate(
                     choice_options[choice_options_index].options.length,
@@ -1817,8 +1822,9 @@ class _ProductDetailsState extends State<ProductDetails>
           ),
         ),
         Container(
-          alignment:
-              app_language_rtl.$! ? Alignment.centerRight : Alignment.centerLeft,
+          alignment: app_language_rtl.$!
+              ? Alignment.centerRight
+              : Alignment.centerLeft,
           height: 40,
           width: MediaQuery.of(context).size.width - (107 + 44),
           child: Scrollbar(
@@ -2200,8 +2206,7 @@ class _ProductDetailsState extends State<ProductDetails>
           ratingWidget: RatingWidget(
             full: Icon(Icons.star, color: Colors.amber),
             half: Icon(Icons.star_half, color: Colors.amber),
-            empty:
-                Icon(Icons.star, color: Color.fromRGBO(224, 224, 225, 1)),
+            empty: Icon(Icons.star, color: Color.fromRGBO(224, 224, 225, 1)),
           ),
           itemPadding: EdgeInsets.only(right: 1.0),
           onRatingUpdate: (rating) {
@@ -2296,10 +2301,10 @@ class _ProductDetailsState extends State<ProductDetails>
           Expandable(
             collapsed: Container(
                 height: 50, child: Html(data: _productDetails.description)),
-            expanded: Container(child: Html(
+            expanded: Container(
+                child: Html(
               data: _productDetails.description,
-            )
-            ),
+            )),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -2449,7 +2454,7 @@ class _ProductDetailsState extends State<ProductDetails>
             icon: Icon(Icons.add, size: 16, color: MyTheme.dark_grey),
             onPressed: () {
               if (_quantity! < _stock!) {
-                _quantity=(_quantity!) + 1;
+                _quantity = (_quantity!) + 1;
                 setState(() {});
                 //fetchVariantPrice();
 
@@ -2466,7 +2471,7 @@ class _ProductDetailsState extends State<ProductDetails>
           icon: Icon(Icons.remove, size: 16, color: MyTheme.dark_grey),
           onPressed: () {
             if (_quantity! > 1) {
-              _quantity= _quantity! - 1;
+              _quantity = _quantity! - 1;
               setState(() {});
               // calculateTotalPrice();
               // fetchVariantPrice();
@@ -2566,7 +2571,7 @@ class _ProductDetailsState extends State<ProductDetails>
             width: 64,
             child: Scrollbar(
               controller: _imageScrollController,
-              isAlwaysShown: false,
+              thumbVisibility: false,
               thickness: 4.0,
               child: Padding(
                 padding: app_language_rtl.$!

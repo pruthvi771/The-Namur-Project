@@ -34,7 +34,6 @@ import '../repositories/address_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
@@ -83,10 +82,13 @@ class _LoginState extends State<Login> {
     var phone = _phoneNumberController.text.toString();
     var password = _passwordController.text.toString();
 
+
     if (_login_by == 'email' && email == "") {
       ToastComponent.showDialog(AppLocalizations.of(context)!.enter_email,
           gravity: Toast.center, duration: Toast.lengthLong);
-      return  Main(go_back: false,);
+      return Main(
+        go_back: false,
+      );
     } else if (_login_by == 'phone' && _phone == "") {
       ToastComponent.showDialog(
           AppLocalizations.of(context)!.enter_phone_number,
@@ -98,6 +100,7 @@ class _LoginState extends State<Login> {
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
+
 
     var loginResponse = await AuthRepository()
         .getLoginResponse(_login_by == 'email' ? email : phone, password);
@@ -143,8 +146,8 @@ class _LoginState extends State<Login> {
   }
 
   onPressedFacebookLogin() async {
-    final facebookLogin =
-        await FacebookAuth.instance.login(loginBehavior: LoginBehavior.deviceAuth);
+    final facebookLogin = await FacebookAuth.instance
+        .login(loginBehavior: LoginBehavior.deviceAuth);
 
     if (facebookLogin.status == LoginStatus.success) {
       // get the user data
@@ -156,7 +159,6 @@ class _LoginState extends State<Login> {
           userData['email'].toString(),
           userData['id'].toString(),
           access_token: facebookLogin.accessToken!.token);
-
 
       print("..........................${loginResponse.toString()}");
       if (loginResponse.result == false) {
@@ -180,9 +182,10 @@ class _LoginState extends State<Login> {
     }
   }
 
-  Future<void> saveUserDataToFirestore(String displayName, String email, String uid) async {
+  Future<void> saveUserDataToFirestore(
+      String displayName, String email, String uid) async {
     final CollectionReference usersCollection =
-    FirebaseFirestore.instance.collection('users');
+        FirebaseFirestore.instance.collection('users');
 
     await usersCollection.doc(uid).set({
       'displayName': displayName,
@@ -190,7 +193,6 @@ class _LoginState extends State<Login> {
       // Add any other user data you want to save
     });
   }
-
 
   onPressedGoogleLogin() async {
     try {
@@ -225,7 +227,8 @@ class _LoginState extends State<Login> {
             gravity: Toast.center, duration: Toast.lengthLong);
         AuthHelper().setUserData(loginResponse);
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          saveUserDataToFirestore("${googleUser.displayName}", googleUser.email,googleUser.id);
+          saveUserDataToFirestore(
+              "${googleUser.displayName}", googleUser.email, googleUser.id);
           return Main();
         }));
       }
@@ -235,9 +238,6 @@ class _LoginState extends State<Login> {
       // TODO
     }
   }
-
-
-
 
   onPressedTwitterLogin() async {
     try {
@@ -277,8 +277,6 @@ class _LoginState extends State<Login> {
       // TODO
     }
   }
-
-
 
   String generateNonce([int length = 32]) {
     final charset =
@@ -399,6 +397,7 @@ class _LoginState extends State<Login> {
                 ),
               ),*/
               SizedBox(height: 10),
+
               if (_login_by == "email")
                 Padding(
                   padding: const EdgeInsets.only(
@@ -410,6 +409,7 @@ class _LoginState extends State<Login> {
                     children: [
                       Container(
                         height: 40,
+                        //"Email_ Id" text field
                         child: TextField(
                           controller: _emailController,
                           autofocus: false,
@@ -448,7 +448,9 @@ class _LoginState extends State<Login> {
                         child: CustomInternationalPhoneNumberInput(
                           maxLength: 12,
                           countries: countries_code,
-                          initialValue: PhoneNumber(isoCode: 'IN'), // Set the initial value to India (ISO code: 'IN')
+                          initialValue: PhoneNumber(
+                              isoCode:
+                                  'IN'), // Set the initial value to India (ISO code: 'IN')
                           onInputChanged: (PhoneNumber number) {
                             print(number.phoneNumber);
                             setState(() {
@@ -473,7 +475,8 @@ class _LoginState extends State<Login> {
                           // initialValue: PhoneNumber(
                           //     isoCode: countries_code[0].toString()),
                           textFieldController: _phoneNumberController,
-                          formatInput: false,// Set this to false to remove the space after the 4th character
+                          formatInput:
+                              false, // Set this to false to remove the space after the 4th character
                           keyboardType: TextInputType.numberWithOptions(
                               signed: true, decimal: true),
                           inputDecoration:
@@ -510,6 +513,7 @@ class _LoginState extends State<Login> {
                 ),
               ),*/
 
+              //Password textbox
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
                 child: Column(
@@ -530,6 +534,7 @@ class _LoginState extends State<Login> {
 
                     SizedBox(height: 10),
 
+                    //"Forgot Password" Text button
                     GestureDetector(
                       onTap: () {
                         Navigator.push(context,
@@ -551,30 +556,32 @@ class _LoginState extends State<Login> {
                 ),
               ),
 
-
+              //SIGNUP and LOGIN buttons row
               Padding(
                 padding: const EdgeInsets.only(top: 20.0, left: 20, right: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    //SIGNUP button
                     Container(
                       height: 50,
-                      width: MediaQuery.of(context).size.width/2.5,
+                      width: MediaQuery.of(context).size.width / 2.5,
                       decoration: BoxDecoration(
-                          border:
-                          Border.all(color: MyTheme.textfield_grey, width: 1),
+                          border: Border.all(
+                              color: MyTheme.textfield_grey, width: 1),
                           borderRadius:
-                          const BorderRadius.all(Radius.circular(12.0)),
-                      color: MyTheme.primary_color),
+                              const BorderRadius.all(Radius.circular(12.0)),
+                          color: MyTheme.primary_color),
                       child: Btn.minWidthFixHeight(
                         minWidth: MediaQuery.of(context).size.width,
                         height: 44,
                         //  color: MyTheme.amber,
                         shape: RoundedRectangleBorder(
                             borderRadius:
-                            const BorderRadius.all(Radius.circular(10.0))),
+                                const BorderRadius.all(Radius.circular(10.0))),
                         child: Text(
-                          AppLocalizations.of(context)!.login_screen_create_account,
+                          AppLocalizations.of(context)!
+                              .login_screen_create_account,
                           style: TextStyle(
                               color: MyTheme.white,
                               fontFamily: 'Poppins',
@@ -583,18 +590,23 @@ class _LoginState extends State<Login> {
                               fontWeight: FontWeight.w600),
                         ),
                         onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=> Registration()
-                          ));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Registration()));
                         },
                       ),
                     ),
+
                     SizedBox(width: 20),
+
+                    //LOGIN button
                     Container(
                       height: 50,
-                      width: MediaQuery.of(context).size.width/2.5,
+                      width: MediaQuery.of(context).size.width / 2.5,
                       decoration: BoxDecoration(
-                          border:
-                              Border.all(color: MyTheme.textfield_grey, width: 1),
+                          border: Border.all(
+                              color: MyTheme.textfield_grey, width: 1),
                           borderRadius:
                               const BorderRadius.all(Radius.circular(12.0))),
                       child: Btn.minWidthFixHeight(
@@ -622,7 +634,6 @@ class _LoginState extends State<Login> {
                 ),
               ),
 
-
               if (_login_by == "email")
                 Padding(
                   padding:
@@ -633,28 +644,25 @@ class _LoginState extends State<Login> {
                         border: Border.all(color: MyTheme.primary_color),
                         borderRadius: BorderRadius.circular(10)),
                     child: Btn.minWidthFixHeight(
-                      minWidth: MediaQuery.of(context).size.width,
-                      height: 50,
-                      //  color: MyTheme.amber,
-                      shape: RoundedRectangleBorder(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10.0))),
-                      child:  GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _login_by = "phone";
-                          });
-                        },
-                        child: Text(
-                          AppLocalizations.of(context)!
-                              .or_login_with_a_phone,
-                          style: TextStyle(
-                              color: MyTheme.primary_color,
-                            fontFamily: 'Poppins'
+                        minWidth: MediaQuery.of(context).size.width,
+                        height: 50,
+                        //  color: MyTheme.amber,
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10.0))),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _login_by = "phone";
+                            });
+                          },
+                          child: Text(
+                            AppLocalizations.of(context)!.or_login_with_a_phone,
+                            style: TextStyle(
+                                color: MyTheme.primary_color,
+                                fontFamily: 'Poppins'),
                           ),
-                        ),
-                      )
-                    ),
+                        )),
                   ),
                 )
               else
@@ -691,7 +699,7 @@ class _LoginState extends State<Login> {
                   ),
                 ),
               Padding(
-                padding: const EdgeInsets.only(left: 20,right: 20,top: 20),
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -704,7 +712,7 @@ class _LoginState extends State<Login> {
                         child: Image.asset("assets/google_logo.png"),
                       ),
                     ),
-                  /*  SizedBox(width: 40,),
+                    /*  SizedBox(width: 40,),
                     InkWell(
                       onTap: () {
                         onPressedFacebookLogin();
@@ -714,12 +722,10 @@ class _LoginState extends State<Login> {
                         child: Image.asset("assets/facebook_logo.png"),
                       ),
                     ),*/
-
-
                   ],
                 ),
               ),
-             /* Padding(
+              /* Padding(
                 padding: const EdgeInsets.only(top: 10.0, bottom: 10),
                 child: Center(
                     child: Text(

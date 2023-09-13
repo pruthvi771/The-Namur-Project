@@ -154,7 +154,8 @@ class _AuctionProductsDetailsState extends State<AuctionProductsDetails>
         .getAuctionProductsDetails(id: widget.id);
 
     if (auctionproductDetailsResponse.auction_product!.length > 0) {
-      _auctionproductDetails = auctionproductDetailsResponse.auction_product![0];
+      _auctionproductDetails =
+          auctionproductDetailsResponse.auction_product![0];
       sellerChatTitleController.text =
           auctionproductDetailsResponse.auction_product![0].name!;
     }
@@ -214,8 +215,10 @@ class _AuctionProductsDetailsState extends State<AuctionProductsDetails>
 
   onWishTap() {
     if (is_logged_in.$ == false) {
-      ToastComponent.showDialog(AppLocalizations.of(context)!.you_need_to_log_in,
-          gravity: Toast.center, duration: Toast.lengthLong);
+      ToastComponent.showDialog(
+          AppLocalizations.of(context)!.you_need_to_log_in,
+          gravity: Toast.center,
+          duration: Toast.lengthLong);
       return;
     }
 
@@ -686,7 +689,8 @@ class _AuctionProductsDetailsState extends State<AuctionProductsDetails>
     );
 
     return Directionality(
-      textDirection: app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
+      textDirection:
+          app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
           extendBody: true,
           // bottomNavigationBar: buildBottomAppBar(context, _addedToCartSnackbar),
@@ -1795,8 +1799,7 @@ class _AuctionProductsDetailsState extends State<AuctionProductsDetails>
           ratingWidget: RatingWidget(
             full: Icon(Icons.star, color: Colors.amber),
             half: Icon(Icons.star_half, color: Colors.amber),
-            empty:
-                Icon(Icons.star, color: Color.fromRGBO(224, 224, 225, 1)),
+            empty: Icon(Icons.star, color: Color.fromRGBO(224, 224, 225, 1)),
           ),
           itemPadding: EdgeInsets.only(right: 1.0),
           onRatingUpdate: (rating) {
@@ -2012,7 +2015,7 @@ class _AuctionProductsDetailsState extends State<AuctionProductsDetails>
             width: 64,
             child: Scrollbar(
               controller: _imageScrollController,
-              isAlwaysShown: false,
+              thumbVisibility: false,
               thickness: 4.0,
               child: Padding(
                 padding: app_language_rtl.$!
