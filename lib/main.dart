@@ -62,7 +62,6 @@ import 'screens/product_details.dart';
 import 'screens/seller_details.dart';
 import 'screens/seller_products.dart';
 
-
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
   FlutterDownloader.initialize(
@@ -131,51 +130,66 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(create: (_) => LocaleProvider()),
           ChangeNotifierProvider(create: (context) => CartCounter()),
           ChangeNotifierProvider(create: (context) => CurrencyPresenter()),
-           // ChangeNotifierProvider(create: (context) => HomePresenter())
+          // ChangeNotifierProvider(create: (context) => HomePresenter())
         ],
         child: Consumer<LocaleProvider>(builder: (context, provider, snapshot) {
           return MaterialApp(
             initialRoute: "/",
-            routes:
-              {
-                "/":(context)=>SplashScreen(),
-                "/classified_ads":(context)=>ClassifiedAds(),
-                "/classified_ads_details":(context)=>ClassifiedAdsDetails(id:0),
-                "/my_classified_ads":(context)=>MyClassifiedAds(),
-                "/digital_product_details":(context)=>DigitalProductDetails(id: 0,),
-                "/digital_products":(context)=>DigitalProducts(),
-                "/purchased_digital_products":(context)=>PurchasedDigitalProducts(),
-                "/update_package":(context)=>UpdatePackage(),
-                "/address":(context)=>Address(),
-                "/auction_products":(context)=>AuctionProducts(),
-                "/auction_products_details":(context)=>AuctionProductsDetails(id: 0),
-                "/brand_products":(context)=>BrandProducts(id: 0,brand_name: ""),
-                "/cart":(context)=>Cart(),
-                "/category_list":(context)=>CategoryList(parent_category_id: 0,is_base_category: true,parent_category_name: "",is_top_category: false),
-                "/category_products":(context)=>CategoryProducts(category_id: 0,category_name: ""),
-                "/chat":(context)=>Chat(),
-                "/checkout":(context)=>Checkout(),
-                "/clubpoint":(context)=>Clubpoint(),
-                "/flash_deal_list":(context)=>FlashDealList(),
-                "/flash_deal_products":(context)=>FlashDealProducts(),
-                "/home":(context)=>Home(),
-                "/login":(context)=>Login(),
-                "/main":(context)=>Main(),
-                "/map_location":(context)=>MapLocation(),
-                "/messenger_list":(context)=>MessengerList(),
-                "/order_details":(context)=>OrderDetails(),
-                "/order_list":(context)=>OrderList(),
-                "/product_details":(context)=>ProductDetails(id: 0,),
-                "/product_reviews":(context)=>ProductReviews(id: 0,),
-                "/profile":(context)=>Profile(),
-                "/refund_request":(context)=>RefundRequest(),
-                "/seller_details":(context)=>SellerDetails(id: 0,),
-                "/seller_products":(context)=>SellerProducts(),
-                "/todays_deal_products":(context)=>TodaysDealProducts(),
-                "/top_selling_products":(context)=>TopSellingProducts(),
-                "/wallet":(context)=>Wallet(),
-
-              },
+            routes: {
+              "/": (context) => SplashScreen(),
+              "/classified_ads": (context) => ClassifiedAds(),
+              "/classified_ads_details": (context) =>
+                  ClassifiedAdsDetails(id: 0),
+              "/my_classified_ads": (context) => MyClassifiedAds(),
+              "/digital_product_details": (context) => DigitalProductDetails(
+                    id: 0,
+                  ),
+              "/digital_products": (context) => DigitalProducts(),
+              "/purchased_digital_products": (context) =>
+                  PurchasedDigitalProducts(),
+              "/update_package": (context) => UpdatePackage(),
+              "/address": (context) => Address(),
+              "/auction_products": (context) => AuctionProducts(),
+              "/auction_products_details": (context) =>
+                  AuctionProductsDetails(id: 0),
+              "/brand_products": (context) =>
+                  BrandProducts(id: 0, brand_name: ""),
+              "/cart": (context) => Cart(),
+              "/category_list": (context) => CategoryList(
+                  parent_category_id: 0,
+                  is_base_category: true,
+                  parent_category_name: "",
+                  is_top_category: false),
+              "/category_products": (context) =>
+                  CategoryProducts(category_id: 0, category_name: ""),
+              "/chat": (context) => Chat(),
+              "/checkout": (context) => Checkout(),
+              "/clubpoint": (context) => Clubpoint(),
+              "/flash_deal_list": (context) => FlashDealList(),
+              "/flash_deal_products": (context) => FlashDealProducts(),
+              "/home": (context) => Home(),
+              "/login": (context) => Login(),
+              "/main": (context) => Main(),
+              "/map_location": (context) => MapLocation(),
+              "/messenger_list": (context) => MessengerList(),
+              "/order_details": (context) => OrderDetails(),
+              "/order_list": (context) => OrderList(),
+              "/product_details": (context) => ProductDetails(
+                    id: 0,
+                  ),
+              "/product_reviews": (context) => ProductReviews(
+                    id: 0,
+                  ),
+              "/profile": (context) => Profile(),
+              "/refund_request": (context) => RefundRequest(),
+              "/seller_details": (context) => SellerDetails(
+                    id: 0,
+                  ),
+              "/seller_products": (context) => SellerProducts(),
+              "/todays_deal_products": (context) => TodaysDealProducts(),
+              "/top_selling_products": (context) => TopSellingProducts(),
+              "/wallet": (context) => Wallet(),
+            },
             builder: OneContext().builder,
             navigatorKey: OneContext().navigator.key,
             title: AppConfig.app_name,
