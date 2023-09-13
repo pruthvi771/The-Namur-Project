@@ -1,36 +1,26 @@
 {
   "project_info": {
-    "project_number": "1077436434374",
-    "project_id": "namur-74ad9",
-    "storage_bucket": "namur-74ad9.appspot.com"
+    "project_number": "581813390000",
+    "project_id": "namur-5095e",
+    "storage_bucket": "namur-5095e.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1077436434374:android:324f98eca099778e7214c7",
+        "mobilesdk_app_id": "1:581813390000:android:7db1ed5bdb5ea630ae8975",
         "android_client_info": {
           "package_name": "com.activeitzone.namur"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "1077436434374-a36gs9mruedcp191c4eortchc2uonbu4.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyClQd8GLd2GfOsp7zM71vEimjFp4esKSxc"
+          "current_key": "AIzaSyAvsmahZ-zyp9QuNbBo2CAjOQiDCKMJnHs"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1077436434374-a36gs9mruedcp191c4eortchc2uonbu4.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

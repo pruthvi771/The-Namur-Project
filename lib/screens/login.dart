@@ -7,16 +7,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:toast/toast.dart';
 
 import '../app_config.dart';
 import '../custom/btn.dart';
 import '../custom/input_decorations.dart';
 import '../custom/intl_phone_input.dart';
+import '../custom/toast_component.dart';
 import '../helpers/shared_value_helper.dart';
 import '../my_theme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../ui_elements/auth_ui.dart';
+import 'main.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -41,7 +44,46 @@ class _LoginState extends State<Login> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
-  onPressedLogin() async {}
+  late User loggedInUser;
+
+  onPressedLogin() async {
+    var email = _emailController.text.toString();
+    var phone = _phoneNumberController.text.toString();
+    var password = _passwordController.text.toString();
+
+    if (_login_by == 'email' && email == "") {
+      ToastComponent.showDialog(AppLocalizations.of(context)!.enter_email,
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return Main(
+        go_back: false,
+      );
+    } else if (_login_by == 'phone' && _phone == "") {
+      ToastComponent.showDialog(
+          AppLocalizations.of(context)!.enter_phone_number,
+          gravity: Toast.center,
+          duration: Toast.lengthLong);
+      return;
+    } else if (password == "") {
+      ToastComponent.showDialog(AppLocalizations.of(context)!.enter_password,
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    try{
+      final user = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      // final newUser = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      final loggedInUser = _auth.currentUser;
+      if (loggedInUser != null) {
+        print(loggedInUser.email);
+        print(loggedInUser.uid);
+      } else {
+        print('failed in production');
+      }
+
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
