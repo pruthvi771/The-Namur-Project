@@ -12,7 +12,6 @@ import 'package:active_ecommerce_flutter/screens/common_webview_screen.dart';
 import 'package:active_ecommerce_flutter/screens/login.dart';
 import 'package:active_ecommerce_flutter/screens/otp.dart';
 import 'package:active_ecommerce_flutter/ui_elements/auth_ui.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,12 +22,12 @@ import 'package:validators/validators.dart';
 
 import '../repositories/address_repository.dart';
 
-class Registration extends StatefulWidget {
+class Registration2 extends StatefulWidget {
   @override
-  _RegistrationState createState() => _RegistrationState();
+  _Registration2State createState() => _Registration2State();
 }
 
-class _RegistrationState extends State<Registration> {
+class _Registration2State extends State<Registration2> {
   String _register_by = "email"; //phone or email
   String initialCountry = 'US';
 
@@ -46,8 +45,6 @@ class _RegistrationState extends State<Registration> {
   TextEditingController _phoneNumberController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _passwordConfirmController = TextEditingController();
-
-  final _auth = FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -117,24 +114,40 @@ class _RegistrationState extends State<Registration> {
       return;
     }
 
-    if (_register_by == "phone") {
-      print('phone login attempted');
+    var signupResponse = await AuthRepository().getSignupResponse(
+        name,
+        _register_by == 'email' ? email : _phone,
+        password,
+        password_confirm,
+        _register_by,
+        googleRecaptchaKey);
+
+    if (signupResponse.result == false) {
+      var message = "";
+      signupResponse.message.forEach((key, value) {
+        value.forEach((messages) {
+          message += messages + "\n";
+        });
+      });
+
+      ToastComponent.showDialog(message, gravity: Toast.center, duration: 3);
     } else {
-      try {
-        final newUser = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-        // final newUser = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-        final loggedInUser = _auth.currentUser;
-        if (loggedInUser != null) {
-          print(loggedInUser.email);
-          print(loggedInUser.uid);
-        } else {
-          print('failed in production (some error, not exception)');
-        }
-      } catch (e) {
-        print(e);
+      ToastComponent.showDialog(signupResponse.message,
+          gravity: Toast.center, duration: Toast.lengthLong);
+      if ((mail_verification_status.$ && _register_by == "email") ||
+          _register_by == "phone") {
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return Otp(
+            verify_by: _register_by,
+            user_id: signupResponse.user_id,
+          );
+        }));
+      } else {
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return Login();
+        }));
       }
     }
-
   }
 
   @override
