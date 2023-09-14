@@ -51,6 +51,8 @@ class _LoginState extends State<Login> {
     var phone = _phoneNumberController.text.toString();
     var password = _passwordController.text.toString();
 
+    _login_by = "email";
+
     if (_login_by == 'email' && email == "") {
       ToastComponent.showDialog(AppLocalizations.of(context)!.enter_email,
           gravity: Toast.center, duration: Toast.lengthLong);
@@ -69,19 +71,23 @@ class _LoginState extends State<Login> {
       return;
     }
 
-    try{
-      final user = await _auth.signInWithEmailAndPassword(email: email, password: password);
-      // final newUser = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      final loggedInUser = _auth.currentUser;
-      if (loggedInUser != null) {
-        print(loggedInUser.email);
-        print(loggedInUser.uid);
-      } else {
-        print('failed in production');
+    if (_login_by == "phone") {
+      print('phone login attempted');
+    } else {
+      try {
+        final user = await _auth.signInWithEmailAndPassword(
+            email: email, password: password);
+        // final newUser = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+        final loggedInUser = _auth.currentUser;
+        if (loggedInUser != null) {
+          print(loggedInUser.email);
+          print(loggedInUser.uid);
+        } else {
+          print('failed in production (some error, not exception)');
+        }
+      } catch (e) {
+        print(e);
       }
-
-    } catch (e) {
-      print(e);
     }
   }
 
@@ -591,20 +597,20 @@ class _LoginState extends State<Login> {
                       ),
                       otp_addon_installed.$
                           ? GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _login_by = "phone";
-                          });
-                        },
-                        child: Text(
-                          AppLocalizations.of(context)!
-                              .or_login_with_a_phone,
-                          style: TextStyle(
-                              color: MyTheme.accent_color,
-                              fontStyle: FontStyle.italic,
-                              decoration: TextDecoration.underline),
-                        ),
-                      )
+                              onTap: () {
+                                setState(() {
+                                  _login_by = "phone";
+                                });
+                              },
+                              child: Text(
+                                AppLocalizations.of(context)!
+                                    .or_login_with_a_phone,
+                                style: TextStyle(
+                                    color: MyTheme.accent_color,
+                                    fontStyle: FontStyle.italic,
+                                    decoration: TextDecoration.underline),
+                              ),
+                            )
                           : Container()
                     ],
                   ),
@@ -620,9 +626,8 @@ class _LoginState extends State<Login> {
                         child: CustomInternationalPhoneNumberInput(
                           maxLength: 12,
                           countries: countries_code,
-                          initialValue: PhoneNumber(
-                              isoCode:
-                              'IN'), // Set the initial value to India (ISO code: 'IN')
+                          initialValue: PhoneNumber(isoCode: 'IN'),
+                          // Set the initial value to India (ISO code: 'IN')
                           onInputChanged: (PhoneNumber number) {
                             print(number.phoneNumber);
                             setState(() {
@@ -642,18 +647,18 @@ class _LoginState extends State<Login> {
                           ignoreBlank: false,
                           autoValidateMode: AutovalidateMode.disabled,
                           selectorTextStyle:
-                          TextStyle(color: MyTheme.font_grey),
+                              TextStyle(color: MyTheme.font_grey),
                           textStyle: TextStyle(color: MyTheme.font_grey),
                           // initialValue: PhoneNumber(
                           //     isoCode: countries_code[0].toString()),
                           textFieldController: _phoneNumberController,
-                          formatInput:
-                          false, // Set this to false to remove the space after the 4th character
+                          formatInput: false,
+                          // Set this to false to remove the space after the 4th character
                           keyboardType: TextInputType.numberWithOptions(
                               signed: true, decimal: true),
                           inputDecoration:
-                          InputDecorations.buildInputDecoration_phone(
-                              hint_text: "Mobile Number"),
+                              InputDecorations.buildInputDecoration_phone(
+                                  hint_text: "Mobile Number"),
                           onSaved: (PhoneNumber number) {
                             print('On Saved: $number');
                           },
@@ -711,8 +716,8 @@ class _LoginState extends State<Login> {
                       onTap: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                              return PasswordForget();
-                            }));
+                          return PasswordForget();
+                        }));
                       },
                       child: Text(
                         AppLocalizations.of(context)!
@@ -742,7 +747,7 @@ class _LoginState extends State<Login> {
                           border: Border.all(
                               color: MyTheme.textfield_grey, width: 1),
                           borderRadius:
-                          const BorderRadius.all(Radius.circular(12.0)),
+                              const BorderRadius.all(Radius.circular(12.0)),
                           color: MyTheme.primary_color),
                       child: Btn.minWidthFixHeight(
                         minWidth: MediaQuery.of(context).size.width,
@@ -750,7 +755,7 @@ class _LoginState extends State<Login> {
                         //  color: MyTheme.amber,
                         shape: RoundedRectangleBorder(
                             borderRadius:
-                            const BorderRadius.all(Radius.circular(10.0))),
+                                const BorderRadius.all(Radius.circular(10.0))),
                         child: Text(
                           AppLocalizations.of(context)!
                               .login_screen_create_account,
@@ -780,14 +785,14 @@ class _LoginState extends State<Login> {
                           border: Border.all(
                               color: MyTheme.textfield_grey, width: 1),
                           borderRadius:
-                          const BorderRadius.all(Radius.circular(12.0))),
+                              const BorderRadius.all(Radius.circular(12.0))),
                       child: Btn.minWidthFixHeight(
                         minWidth: MediaQuery.of(context).size.width,
                         height: 50,
                         color: MyTheme.primary_color,
                         shape: RoundedRectangleBorder(
                             borderRadius:
-                            const BorderRadius.all(Radius.circular(10.0))),
+                                const BorderRadius.all(Radius.circular(10.0))),
                         child: Text(
                           AppLocalizations.of(context)!.login_screen_log_in,
                           style: TextStyle(
@@ -809,7 +814,7 @@ class _LoginState extends State<Login> {
               if (_login_by == "email")
                 Padding(
                   padding:
-                  const EdgeInsets.only(left: 20.0, right: 20, top: 20),
+                      const EdgeInsets.only(left: 20.0, right: 20, top: 20),
                   child: Container(
                     height: 40,
                     decoration: BoxDecoration(
@@ -821,7 +826,7 @@ class _LoginState extends State<Login> {
                         //  color: MyTheme.amber,
                         shape: RoundedRectangleBorder(
                             borderRadius:
-                            const BorderRadius.all(Radius.circular(10.0))),
+                                const BorderRadius.all(Radius.circular(10.0))),
                         child: GestureDetector(
                           onTap: () {
                             setState(() {
@@ -840,7 +845,7 @@ class _LoginState extends State<Login> {
               else
                 Padding(
                   padding:
-                  const EdgeInsets.only(left: 20.0, right: 20, top: 10),
+                      const EdgeInsets.only(left: 20.0, right: 20, top: 10),
                   child: Container(
                     height: 40,
                     decoration: BoxDecoration(
@@ -852,7 +857,7 @@ class _LoginState extends State<Login> {
                       //  color: MyTheme.amber,
                       shape: RoundedRectangleBorder(
                           borderRadius:
-                          const BorderRadius.all(Radius.circular(10.0))),
+                              const BorderRadius.all(Radius.circular(10.0))),
                       child: GestureDetector(
                         onTap: () {
                           setState(() {
@@ -879,7 +884,6 @@ class _LoginState extends State<Login> {
                       onTap: () {
                         // onPressedGoogleLogin();
                         print('google');
-
                       },
                       child: Container(
                         width: 40,
@@ -929,7 +933,6 @@ class _LoginState extends State<Login> {
                     onPressed: () async {
                       // signInWithApple();
                       print('apple');
-
                     },
                   ),
                 ),
@@ -939,9 +942,9 @@ class _LoginState extends State<Login> {
                   padding: const EdgeInsets.only(top: 20.0),
                   child: Center(
                       child: Text(
-                        AppLocalizations.of(context)!.login_screen_login_with,
-                        style: TextStyle(color: MyTheme.font_grey, fontSize: 12),
-                      )),
+                    AppLocalizations.of(context)!.login_screen_login_with,
+                    style: TextStyle(color: MyTheme.font_grey, fontSize: 12),
+                  )),
                 ),
               ),
               Padding(
@@ -957,7 +960,6 @@ class _LoginState extends State<Login> {
                             onTap: () {
                               // onPressedGoogleLogin();
                               print('google');
-
                             },
                             child: Container(
                               width: 28,
@@ -1020,5 +1022,4 @@ class _LoginState extends State<Login> {
       ],
     );
   }
-
 }
