@@ -9,6 +9,8 @@ abstract class AuthProvider {
 
   Future<AuthUser> createUserWithEmail({required String email, required String password});
 
+  Future<AuthUser> loginWithGoogle();
+
   Future<void> logOut();
 
   Future<void> sendEmailVerification();
