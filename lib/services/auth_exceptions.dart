@@ -1,5 +1,6 @@
 //sign-in exceptions
-class UserNotFoundAuthException implements Exception {}
+class UserNotFoundAuthException implements Exception {
+}
 
 class WrongPasswordAuthException implements Exception {}
 

@@ -1,15 +1,18 @@
 import 'package:active_ecommerce_flutter/services/auth_user.dart';
 import 'package:active_ecommerce_flutter/services/auth_provider.dart';
+import 'firebase_auth_provider.dart';
 
 class AuthService implements AuthProvider {
   final AuthProvider provider;
   const AuthService(this.provider);
 
+  factory AuthService.firebase() => AuthService(FirebaseAuthProvider());
+
   @override
-  Future<AuthUser> createUser({
+  Future<AuthUser> createUserWithEmail({
     required String email,
     required String password,
-  }) => provider.createUser(email: email, password: password);
+  }) => provider.createUserWithEmail(email: email, password: password);
 
   @override
   AuthUser? get currentUser => provider.currentUser;
@@ -18,10 +21,10 @@ class AuthService implements AuthProvider {
   Future<void> logOut() => provider.logOut();
 
   @override
-  Future<AuthUser> login({
+  Future<AuthUser> loginWithEmail({
     required String email,
     required String password,
-  }) => provider.login(email: email, password: password);
+  }) => provider.loginWithEmail(email: email, password: password);
 
   @override
   Future<void> sendEmailVerification() => provider.sendEmailVerification();

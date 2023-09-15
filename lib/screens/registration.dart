@@ -11,8 +11,10 @@ import 'package:active_ecommerce_flutter/repositories/auth_repository.dart';
 import 'package:active_ecommerce_flutter/screens/common_webview_screen.dart';
 import 'package:active_ecommerce_flutter/screens/login.dart';
 import 'package:active_ecommerce_flutter/screens/otp.dart';
+import 'package:active_ecommerce_flutter/services/auth_exceptions.dart';
+import 'package:active_ecommerce_flutter/services/auth_service.dart';
 import 'package:active_ecommerce_flutter/ui_elements/auth_ui.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -47,7 +49,6 @@ class _RegistrationState extends State<Registration> {
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _passwordConfirmController = TextEditingController();
 
-  final _auth = FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -113,7 +114,8 @@ class _RegistrationState extends State<Registration> {
       ToastComponent.showDialog(
           AppLocalizations.of(context)!.passwords_do_not_match,
           gravity: Toast.center,
-          duration: Toast.lengthLong);
+          duration: Toast.lengthLong
+      );
       return;
     }
 
@@ -121,20 +123,37 @@ class _RegistrationState extends State<Registration> {
       print('phone login attempted');
     } else {
       try {
-        final newUser = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-        // final newUser = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-        final loggedInUser = _auth.currentUser;
-        if (loggedInUser != null) {
-          print(loggedInUser.email);
-          print(loggedInUser.uid);
-        } else {
-          print('failed in production (some error, not exception)');
-        }
-      } catch (e) {
-        print(e);
+        final newUser = await AuthService.firebase().createUserWithEmail(
+          email: email,
+          password: password,
+        );
+
+      } on EmailAlreadyInUseAuthException {
+        ToastComponent.showDialog(
+            'The email address is already in use by another account.',
+            gravity: Toast.center,
+            duration: Toast.lengthLong
+        );
+      } on InvalidEmailAuthException {
+        ToastComponent.showDialog(
+            'The email address is not valid.',
+            gravity: Toast.center,
+            duration: Toast.lengthLong
+        );
+      } on WeakPasswordAuthException {
+        ToastComponent.showDialog(
+            'The password is not strong enough.',
+            gravity: Toast.center,
+            duration: Toast.lengthLong
+        );
+      } on GenericAuthException {
+        ToastComponent.showDialog(
+            'Something went wrong. Please try again later.',
+            gravity: Toast.center,
+            duration: Toast.lengthLong
+        );
       }
     }
-
   }
 
   @override

@@ -15,7 +15,7 @@ class FirebaseAuthProvider implements AuthProvider {
   }
 
   @override
-  Future<AuthUser> login({
+  Future<AuthUser> loginWithEmail({
     required String email,
     required String password,
   }) async {
@@ -40,7 +40,7 @@ class FirebaseAuthProvider implements AuthProvider {
   }
 
   @override
-  Future<AuthUser> createUser({
+  Future<AuthUser> createUserWithEmail({
     required String email,
     required String password,
   }) async {
@@ -50,6 +50,7 @@ class FirebaseAuthProvider implements AuthProvider {
 
       final user = currentUser;
       return user != null ? user : throw UserNotFoundAuthException();
+
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         throw WeakPasswordAuthException();

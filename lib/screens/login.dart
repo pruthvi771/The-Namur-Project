@@ -3,6 +3,8 @@ import 'dart:io' show Platform;
 import 'package:active_ecommerce_flutter/screens/password_forget.dart';
 import 'package:active_ecommerce_flutter/screens/password_otp.dart';
 import 'package:active_ecommerce_flutter/screens/registration.dart';
+import 'package:active_ecommerce_flutter/services/auth_exceptions.dart';
+import 'package:active_ecommerce_flutter/services/auth_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -33,8 +35,7 @@ class _LoginState extends State<Login> {
   String _login_by = "phone"; //phone or email
   String initialCountry = 'US';
 
-  final _firestore = FirebaseFirestore.instance;
-  final _auth = FirebaseAuth.instance;
+  // final _auth = FirebaseAuth.instance;
 
   // PhoneNumber phoneCode = PhoneNumber(isoCode: 'US', dialCode: "+1");
   var countries_code = <String?>[];
@@ -97,20 +98,31 @@ class _LoginState extends State<Login> {
         codeAutoRetrievalTimeout: (String verificationId) {},
       );
     } else {
-      try {
-        final user = await _auth.signInWithEmailAndPassword(
-            email: email, password: password);
-        // final newUser = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-        final loggedInUser = _auth.currentUser;
-        if (loggedInUser != null) {
-          print(loggedInUser.email);
-          print(loggedInUser.uid);
-        } else {
-          print('failed in production (some error, not exception)');
+        try {
+          final user = await AuthService.firebase().loginWithEmail(
+              email: email, password: password);
+
+          // print(user);
+
+        } on UserNotFoundAuthException {
+          ToastComponent.showDialog(
+              'User not found. Please register first.',
+              gravity: Toast.center,
+              duration: Toast.lengthLong
+          );
+        } on WrongPasswordAuthException {
+          ToastComponent.showDialog(
+              'Wrong password. Please try again.',
+              gravity: Toast.center,
+              duration: Toast.lengthLong
+          );
+        } on GenericAuthException {
+          ToastComponent.showDialog(
+              'Something went wrong. Please try again.',
+              gravity: Toast.center,
+              duration: Toast.lengthLong
+          );
         }
-      } catch (e) {
-        print(e);
-      }
     }
   }
 
