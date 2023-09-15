@@ -1,6 +1,7 @@
 import 'dart:io' show Platform;
 
 import 'package:active_ecommerce_flutter/screens/password_forget.dart';
+import 'package:active_ecommerce_flutter/screens/password_otp.dart';
 import 'package:active_ecommerce_flutter/screens/registration.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -51,8 +52,6 @@ class _LoginState extends State<Login> {
     var phone = _phoneNumberController.text.toString();
     var password = _passwordController.text.toString();
 
-    _login_by = "email";
-
     if (_login_by == 'email' && email == "") {
       ToastComponent.showDialog(AppLocalizations.of(context)!.enter_email,
           gravity: Toast.center, duration: Toast.lengthLong);
@@ -72,7 +71,31 @@ class _LoginState extends State<Login> {
     }
 
     if (_login_by == "phone") {
-      print('phone login attempted');
+      print('+91 $phone');
+      await FirebaseAuth.instance.verifyPhoneNumber(
+        // phoneNumber: '+44 7123 123 456',
+        phoneNumber: '+91 $phone',
+        verificationCompleted: (PhoneAuthCredential credential) {
+          print('verification completed');
+          // ToastComponent.showDialog('Verification Completed.',
+          //     gravity: Toast.center, duration: Toast.lengthLong);
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          print(e);
+          ToastComponent.showDialog('Something went wrong',
+              gravity: Toast.center, duration: Toast.lengthLong);
+        },
+        codeSent: (String verificationId, int? resendToken) {
+          print('OTP sent to your phone number');
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => PasswordOtp(verify_by: 'phone')));
+          ToastComponent.showDialog('OTP sent to your phone number',
+              gravity: Toast.center, duration: Toast.lengthLong);
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {},
+      );
     } else {
       try {
         final user = await _auth.signInWithEmailAndPassword(
