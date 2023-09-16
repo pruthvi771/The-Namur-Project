@@ -7,7 +7,7 @@ import 'package:active_ecommerce_flutter/screens/registration.dart';
 import 'package:active_ecommerce_flutter/services/auth_exceptions.dart';
 import 'package:active_ecommerce_flutter/services/auth_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -39,7 +39,7 @@ class _LoginState extends State<Login> {
   String _login_by = "phone"; //phone or email
   String initialCountry = 'US';
 
-  final _auth = FirebaseAuth.instance;
+  // final _auth = FirebaseAuth.instance;
 
   // PhoneNumber phoneCode = PhoneNumber(isoCode: 'US', dialCode: "+1");
   var countries_code = <String?>[];
@@ -72,7 +72,7 @@ class _LoginState extends State<Login> {
     super.dispose();
   }
 
-  late User loggedInUser;
+  // late User loggedInUser;
 
   onPressedLogin() async {
     var email = _emailController.text.toString();
@@ -99,33 +99,21 @@ class _LoginState extends State<Login> {
 
     if (_login_by == "phone") {
       print('+91 $phone');
-      await FirebaseAuth.instance.verifyPhoneNumber(
-        // phoneNumber: '+44 7123 123 456',
-        phoneNumber: '+91 $phone',
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          print('verification completed');
-          await _auth.signInWithCredential(credential).then(
-                (value) => print('Logged In Successfully'),
-              );
-          // ToastComponent.showDialog('Verification Completed.',
-          //     gravity: Toast.center, duration: Toast.lengthLong);
-        },
-        verificationFailed: (FirebaseAuthException e) {
-          print(e.code);
-          print(e.message);
-          ToastComponent.showDialog('Something went wrong',
-              gravity: Toast.center, duration: Toast.lengthLong);
-        },
-        codeSent: (String verificationId, int? resendToken) {
-          print('OTP sent to your phone number');
 
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => Otp(verify_by: 'phone')));
-          ToastComponent.showDialog('OTP sent to your phone number',
-              gravity: Toast.center, duration: Toast.lengthLong);
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {},
-      );
+      final String? verificationId = await AuthService.firebase().phoneNumberVerification(phone: '+91 $phone');
+      print('response $verificationId');
+
+      Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => Otp(
+                  verify_by: 'phone',
+                  verificationId: verificationId.toString(),
+                  // resendToken: resendToken,
+                )));
+        ToastComponent.showDialog('OTP sent to your phone number',
+            gravity: Toast.center, duration: Toast.lengthLong);
+
     } else {
       try {
         final user = await AuthService.firebase()
@@ -134,8 +122,8 @@ class _LoginState extends State<Login> {
         // print(user);
         Navigator.pushAndRemoveUntil(context,
             MaterialPageRoute(builder: (context) {
-              return Main();
-            }), (newRoute) => false);
+          return Main();
+        }), (newRoute) => false);
       } on UserNotFoundAuthException {
         ToastComponent.showDialog('User not found. Please register first.',
             gravity: Toast.center, duration: Toast.lengthLong);
@@ -152,10 +140,22 @@ class _LoginState extends State<Login> {
   onPressedGoogleLogin() async {
     final user = await AuthService.firebase().loginWithGoogle();
 
-    Navigator.pushAndRemoveUntil(context,
-        MaterialPageRoute(builder: (context) {
-          return Main();
-        }), (newRoute) => false);
+    ToastComponent.showDialog('Logged in successfully',
+        gravity: Toast.center, duration: Toast.lengthLong);
+
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) {
+      return Main();
+    }), (newRoute) => false);
+  }
+
+  onPressedFacebookLogin() async {
+    print('Facebook login attempted');
+    // final user = await AuthService.firebase().loginWithGoogle();
+    //
+    // Navigator.pushAndRemoveUntil(context,
+    //     MaterialPageRoute(builder: (context) {
+    //       return Main();
+    //     }), (newRoute) => false);
   }
 
   @override
@@ -171,7 +171,6 @@ class _LoginState extends State<Login> {
           buildBody(context, _screen_width)),
     );
   }
-
 
   Widget buildBody(BuildContext context, double _screen_width) {
     return Column(
@@ -447,7 +446,7 @@ class _LoginState extends State<Login> {
                   ],
                 ),
               ),
-
+              //login with email/phone button
               if (_login_by == "email")
                 Padding(
                   padding:
@@ -512,6 +511,7 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ),
+
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
                 child: Row(
@@ -527,16 +527,18 @@ class _LoginState extends State<Login> {
                         child: Image.asset("assets/google_logo.png"),
                       ),
                     ),
-                    /*  SizedBox(width: 40,),
+                    SizedBox(
+                      width: 40,
+                    ),
                     InkWell(
                       onTap: () {
                         onPressedFacebookLogin();
                       },
                       child: Container(
-                        width:40,
+                        width: 40,
                         child: Image.asset("assets/facebook_logo.png"),
                       ),
-                    ),*/
+                    ),
                   ],
                 ),
               ),
@@ -608,6 +610,7 @@ class _LoginState extends State<Login> {
                           padding: const EdgeInsets.only(left: 15.0),
                           child: Visibility(
                             visible: allow_facebook_login.$,
+                            // visible: true,
                             child: InkWell(
                               onTap: () {
                                 // onPressedFacebookLogin();

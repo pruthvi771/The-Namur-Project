@@ -41,6 +41,7 @@ import 'package:toast/toast.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../repositories/auth_repository.dart';
+import '../../services/auth_service.dart';
 import '../notification/notification_screen.dart';
 
 class MyAccount extends StatefulWidget {
@@ -63,12 +64,14 @@ class _MyAccountState extends State<MyAccount> {
   String _orderCounterString = "00";
   late BuildContext loadingcontext;
 
+  var user = AuthService.firebase().currentUser;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-    if (is_logged_in.$ == true) {
+    if (user != null) {
       fetchAll();
     }
   }
@@ -236,7 +239,7 @@ class _MyAccountState extends State<MyAccount> {
                   border: Border.all(color: MyTheme.white, width: 1),
                   //shape: BoxShape.rectangle,
                 ),
-                child: is_logged_in.$
+                child: (user != null)
                     ? ClipRRect(
                         clipBehavior: Clip.hardEdge,
                         borderRadius: BorderRadius.all(Radius.circular(25.0)),
@@ -297,7 +300,9 @@ class _MyAccountState extends State<MyAccount> {
             //   child: buildSettingAndAddonsVerticalMenu(),
             // ),
 
-            SizedBox(height:100,)
+            SizedBox(
+              height: 100,
+            )
           ]),
         )
       ],
@@ -322,7 +327,7 @@ class _MyAccountState extends State<MyAccount> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Container(
-                 // margin: EdgeInsets.only(right: 18),
+                  // margin: EdgeInsets.only(right: 18),
                   height: 20,
                   child: Container(
                     child: Padding(
@@ -331,9 +336,11 @@ class _MyAccountState extends State<MyAccount> {
                           onPressed: () {
                             homeData.scaffoldKey.currentState?.openDrawer();
                           },
-                          icon: Icon(Icons.menu,
-                          color: MyTheme.white,
-                          size: 25,)),
+                          icon: Icon(
+                            Icons.menu,
+                            color: MyTheme.white,
+                            size: 25,
+                          )),
                     ),
                   ),
                 ),
@@ -652,10 +659,12 @@ class _MyAccountState extends State<MyAccount> {
             ),
           ),
           buildHorizontalSettingItem(
-              is_logged_in.$,
+              // is_logged_in.$,
+              (user != null),
               "assets/edit.png",
               AppLocalizations.of(context)!.edit_profile_ucf,
-              is_logged_in.$
+              // is_logged_in.$
+              (user != null)
                   ? () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
@@ -666,10 +675,12 @@ class _MyAccountState extends State<MyAccount> {
                     }
                   : () => showLoginWarning()),
           buildHorizontalSettingItem(
-              is_logged_in.$,
+              // is_logged_in.$,
+              (user != null),
               "assets/location.png",
               AppLocalizations.of(context)!.address_ucf,
-              is_logged_in.$
+              // is_logged_in.$
+              (user != null)
                   ? () {
                       Navigator.push(
                         context,
