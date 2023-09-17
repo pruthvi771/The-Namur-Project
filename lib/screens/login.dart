@@ -130,6 +130,9 @@ class _LoginState extends State<Login> {
       } on WrongPasswordAuthException {
         ToastComponent.showDialog('Wrong password. Please try again.',
             gravity: Toast.center, duration: Toast.lengthLong);
+      } on InvalidEmailAuthException {
+        ToastComponent.showDialog('Invalid email. Please try again.',
+            gravity: Toast.center, duration: Toast.lengthLong);
       } on GenericAuthException {
         ToastComponent.showDialog('Something went wrong. Please try again.',
             gravity: Toast.center, duration: Toast.lengthLong);
@@ -533,18 +536,18 @@ class _LoginState extends State<Login> {
                         child: Image.asset("assets/google_logo.png"),
                       ),
                     ),
-                    SizedBox(
-                      width: 40,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        onPressedFacebookLogin();
-                      },
-                      child: Container(
-                        width: 40,
-                        child: Image.asset("assets/facebook_logo.png"),
-                      ),
-                    ),
+                    // SizedBox(
+                    //   width: 40,
+                    // ),
+                    // InkWell(
+                    //   onTap: () {
+                    //     onPressedFacebookLogin();
+                    //   },
+                    //   child: Container(
+                    //     width: 40,
+                    //     child: Image.asset("assets/facebook_logo.png"),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -612,23 +615,23 @@ class _LoginState extends State<Login> {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 15.0),
-                          child: Visibility(
-                            visible: allow_facebook_login.$,
-                            // visible: true,
-                            child: InkWell(
-                              onTap: () {
-                                // onPressedFacebookLogin();
-                                print('fb');
-                              },
-                              child: Container(
-                                width: 28,
-                                child: Image.asset("assets/facebook_logo.png"),
-                              ),
-                            ),
-                          ),
-                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(left: 15.0),
+                        //   child: Visibility(
+                        //     visible: allow_facebook_login.$,
+                        //     // visible: true,
+                        //     child: InkWell(
+                        //       onTap: () {
+                        //         // onPressedFacebookLogin();
+                        //         print('fb');
+                        //       },
+                        //       child: Container(
+                        //         width: 28,
+                        //         child: Image.asset("assets/facebook_logo.png"),
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
                         if (allow_twitter_login.$)
                           Padding(
                             padding: const EdgeInsets.only(left: 15.0),
