@@ -91,7 +91,7 @@ class _LoginState extends State<Login> {
           gravity: Toast.center,
           duration: Toast.lengthLong);
       return;
-    } else if (password == "") {
+    } else if (_login_by == 'email' && password == "") {
       ToastComponent.showDialog(AppLocalizations.of(context)!.enter_password,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
@@ -100,20 +100,20 @@ class _LoginState extends State<Login> {
     if (_login_by == "phone") {
       print('+91 $phone');
 
-      final String? verificationId = await AuthService.firebase().phoneNumberVerification(phone: '+91 $phone');
+      final String? verificationId = await AuthService.firebase()
+          .phoneNumberVerification(phone: '+91 $phone');
       print('response $verificationId');
 
       Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => Otp(
-                  verify_by: 'phone',
-                  verificationId: verificationId.toString(),
-                  // resendToken: resendToken,
-                )));
-        ToastComponent.showDialog('OTP sent to your phone number',
-            gravity: Toast.center, duration: Toast.lengthLong);
-
+          context,
+          MaterialPageRoute(
+              builder: (context) => Otp(
+                    verify_by: 'phone',
+                    verificationId: verificationId.toString(),
+                    // resendToken: resendToken,
+                  )));
+      ToastComponent.showDialog('OTP sent to your phone number',
+          gravity: Toast.center, duration: Toast.lengthLong);
     } else {
       try {
         final user = await AuthService.firebase()
@@ -211,6 +211,9 @@ class _LoginState extends State<Login> {
                 ),
               ),*/
               SizedBox(height: 10),
+              (_login_by == "phone")
+              ? SizedBox(height: 30)
+                  : Container(),
 
               if (_login_by == "email")
                 Padding(
@@ -332,18 +335,21 @@ class _LoginState extends State<Login> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Container(
-                      height: 40,
-                      child: TextField(
-                        controller: _passwordController,
-                        autofocus: false,
-                        obscureText: true,
-                        enableSuggestions: false,
-                        autocorrect: false,
-                        decoration: InputDecorations.buildInputDecoration_1(
-                            hint_text: "Password"),
-                      ),
-                    ),
+                    (_login_by == "email")
+                        ? Container(
+                            height: 40,
+                            child: TextField(
+                              controller: _passwordController,
+                              autofocus: false,
+                              obscureText: true,
+                              enableSuggestions: false,
+                              autocorrect: false,
+                              decoration:
+                                  InputDecorations.buildInputDecoration_1(
+                                      hint_text: "Password"),
+                            ),
+                          )
+                        : Container(),
 
                     SizedBox(height: 10),
 
