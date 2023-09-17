@@ -36,7 +36,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  String _login_by = "phone"; //phone or email
+  String _login_by = "email"; //phone or email
   String initialCountry = 'US';
 
   // final _auth = FirebaseAuth.instance;
@@ -98,22 +98,29 @@ class _LoginState extends State<Login> {
     }
 
     if (_login_by == "phone") {
-      print('+91 $phone');
+      try {
+        print('+91 $phone');
 
-      final String? verificationId = await AuthService.firebase()
-          .phoneNumberVerification(phone: '+91 $phone');
-      print('response $verificationId');
+        final String? verificationId = await AuthService.firebase()
+            .phoneNumberVerification(phone: '+91 $phone');
+        print('response $verificationId');
 
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => Otp(
-                    verify_by: 'phone',
-                    verificationId: verificationId.toString(),
-                    // resendToken: resendToken,
-                  )));
-      ToastComponent.showDialog('OTP sent to your phone number',
-          gravity: Toast.center, duration: Toast.lengthLong);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => Otp(
+                      verify_by: 'phone',
+                      verificationId: verificationId.toString(),
+                      // resendToken: resendToken,
+                    )));
+        ToastComponent.showDialog('OTP sent to your phone number',
+            gravity: Toast.center, duration: Toast.lengthLong);
+
+      } on GenericAuthException {
+        ToastComponent.showDialog('Something went wrong. Please try again.',
+            gravity: Toast.center, duration: Toast.lengthLong);
+      }
+
     } else {
       try {
         final user = await AuthService.firebase()
@@ -124,6 +131,7 @@ class _LoginState extends State<Login> {
             MaterialPageRoute(builder: (context) {
           return Main();
         }), (newRoute) => false);
+
       } on UserNotFoundAuthException {
         ToastComponent.showDialog('User not found. Please register first.',
             gravity: Toast.center, duration: Toast.lengthLong);
@@ -133,6 +141,9 @@ class _LoginState extends State<Login> {
       } on InvalidEmailAuthException {
         ToastComponent.showDialog('Invalid email. Please try again.',
             gravity: Toast.center, duration: Toast.lengthLong);
+      }  on TooManyRequestsAuthException {
+          ToastComponent.showDialog('Maximum requests limit reached. Please try again later',
+              gravity: Toast.center, duration: Toast.lengthLong);
       } on GenericAuthException {
         ToastComponent.showDialog('Something went wrong. Please try again.',
             gravity: Toast.center, duration: Toast.lengthLong);
@@ -357,6 +368,7 @@ class _LoginState extends State<Login> {
                     SizedBox(height: 10),
 
                     //"Forgot Password" Text button
+                    if (_login_by == "email")
                     GestureDetector(
                       onTap: () {
                         Navigator.push(context,
@@ -490,7 +502,7 @@ class _LoginState extends State<Login> {
               else
                 Padding(
                   padding:
-                      const EdgeInsets.only(left: 20.0, right: 20, top: 10),
+                      const EdgeInsets.only(left: 20.0, right: 20, top: 25),
                   child: Container(
                     height: 40,
                     decoration: BoxDecoration(
@@ -584,17 +596,17 @@ class _LoginState extends State<Login> {
                     },
                   ),
                 ),
-              Visibility(
-                visible: allow_google_login.$ || allow_facebook_login.$,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
-                  child: Center(
-                      child: Text(
-                    AppLocalizations.of(context)!.login_screen_login_with,
-                    style: TextStyle(color: MyTheme.font_grey, fontSize: 12),
-                  )),
-                ),
-              ),
+              // Visibility(
+              //   visible: allow_google_login.$ || allow_facebook_login.$,
+              //   child: Padding(
+              //     padding: const EdgeInsets.only(top: 20.0),
+              //     child: Center(
+              //         child: Text(
+              //       AppLocalizations.of(context)!.login_screen_login_with,
+              //       style: TextStyle(color: MyTheme.font_grey, fontSize: 12),
+              //     )),
+              //   ),
+              // ),
               Padding(
                 padding: const EdgeInsets.only(top: 15.0),
                 child: Center(

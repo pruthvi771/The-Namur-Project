@@ -44,4 +44,8 @@ class AuthService implements AuthProvider {
     required String otp,
   }) =>
       provider.loginWithPhone(verificationId: verificationId, otp: otp);
+
+  @override
+  Future<void> resetPasswordForEmail({required String email}) =>
+      provider.resetPasswordForEmail(email: email);
 }

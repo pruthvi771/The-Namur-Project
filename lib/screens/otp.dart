@@ -1,5 +1,6 @@
 import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
+import 'package:active_ecommerce_flutter/services/auth_exceptions.dart';
 import 'package:active_ecommerce_flutter/services/auth_service.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -88,10 +89,11 @@ class _OtpState extends State<Otp> {
     //   smsCode: code,
     // );
 
-    final user = await AuthService.firebase().loginWithPhone(verificationId: widget.verificationId, otp: code);
+
     try {
-      if (user != null) {
-        print('User: ${user.userId}');
+      final user = await AuthService.firebase().loginWithPhone(verificationId: widget.verificationId, otp: code);
+
+        print('User: ${user?.userId.toString()}');
         ToastComponent.showDialog(
           'Login Successful',
           gravity: Toast.center,
@@ -101,16 +103,21 @@ class _OtpState extends State<Otp> {
             MaterialPageRoute(builder: (context) {
               return Main();
             }), (newRoute) => false);
-      } else {
-        ToastComponent.showDialog(
-          'Invalid OTP',
-          gravity: Toast.center,
-          duration: Toast.lengthLong,
-        );
-      }
-    } catch (e) {
-      print('Error: $e');
+
+    } on InvalidOTPAuthException {
+      ToastComponent.showDialog('Invalid OTP',
+          gravity: Toast.center, duration: Toast.lengthLong);
+    }  on TooManyRequestsAuthException {
+      ToastComponent.showDialog('Maximum requests limit reached. Please try again later',
+          gravity: Toast.center, duration: Toast.lengthLong);
+    }  on ExpiredOTPAuthException {
+      ToastComponent.showDialog('OTP Expired.',
+          gravity: Toast.center, duration: Toast.lengthLong);
+    } on GenericAuthException {
+      ToastComponent.showDialog('Something went wrong. Please try again.',
+          gravity: Toast.center, duration: Toast.lengthLong);
     }
+
 
     // var confirmCodeResponse =
     //     await AuthRepository().getConfirmCodeResponse(widget.user_id, code);

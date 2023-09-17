@@ -16,4 +16,10 @@ class GenericAuthException implements Exception {}
 
 class UserNotLoggedInAuthException implements Exception {}
 
+class TooManyRequestsAuthException implements Exception {}
+
+class InvalidOTPAuthException implements Exception {}
+
+class ExpiredOTPAuthException implements Exception {}
+
 

@@ -19,4 +19,6 @@ abstract class AuthProvider {
 
   Future<AuthUser?> loginWithPhone({required String verificationId, required String otp});
 
+  Future<void> resetPasswordForEmail({required String email});
+
 }

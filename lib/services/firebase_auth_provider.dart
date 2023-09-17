@@ -168,9 +168,39 @@ class FirebaseAuthProvider implements AuthProvider {
       } else {
         throw UserNotFoundAuthException();
       }
-
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'invalid-verification-code') {
+        throw InvalidOTPAuthException();
+      } else if (e.code == 'too-many-requests') {
+        throw TooManyRequestsAuthException();
+      } else if (e.code == 'session-expired') {
+        throw ExpiredOTPAuthException();
+      } else {
+        print(e);
+        throw GenericAuthException();
+      }
     } catch (_) {
+      print(_);
+      throw GenericAuthException();
+    }
+  }
 
+  @override
+  Future<void> resetPasswordForEmail({required String email}) async {
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'invalid-email') {
+        throw InvalidEmailAuthException();
+      } else if (e.code == 'user-not-found') {
+        throw UserNotFoundAuthException();
+      } else if (e.code == 'too-many-requests') {
+        throw TooManyRequestsAuthException();
+      } else {
+        throw GenericAuthException();
+      }
+    } catch (_) {
+      throw GenericAuthException();
     }
   }
 }
