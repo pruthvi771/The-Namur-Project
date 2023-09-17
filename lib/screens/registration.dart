@@ -11,7 +11,10 @@ import 'package:active_ecommerce_flutter/repositories/auth_repository.dart';
 import 'package:active_ecommerce_flutter/screens/common_webview_screen.dart';
 import 'package:active_ecommerce_flutter/screens/login.dart';
 import 'package:active_ecommerce_flutter/screens/otp.dart';
+import 'package:active_ecommerce_flutter/services/auth_exceptions.dart';
+import 'package:active_ecommerce_flutter/services/auth_service.dart';
 import 'package:active_ecommerce_flutter/ui_elements/auth_ui.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -45,6 +48,7 @@ class _RegistrationState extends State<Registration> {
   TextEditingController _phoneNumberController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _passwordConfirmController = TextEditingController();
+
 
   @override
   void initState() {
@@ -110,43 +114,44 @@ class _RegistrationState extends State<Registration> {
       ToastComponent.showDialog(
           AppLocalizations.of(context)!.passwords_do_not_match,
           gravity: Toast.center,
-          duration: Toast.lengthLong);
+          duration: Toast.lengthLong
+      );
       return;
     }
 
-
-    var signupResponse = await AuthRepository().getSignupResponse(
-        name,
-        _register_by == 'email' ? email : _phone,
-        password,
-        password_confirm,
-        _register_by,
-        googleRecaptchaKey);
-
-    if (signupResponse.result == false) {
-      var message = "";
-      signupResponse.message.forEach((key, value) {
-        value.forEach((messages) {
-          message += messages + "\n";
-        });
-      });
-
-      ToastComponent.showDialog(message, gravity: Toast.center, duration: 3);
+    if (_register_by == "phone") {
+      print('phone login attempted');
     } else {
-      ToastComponent.showDialog(signupResponse.message,
-          gravity: Toast.center, duration: Toast.lengthLong);
-      if ((mail_verification_status.$ && _register_by == "email") ||
-          _register_by == "phone") {
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return Otp(
-            verify_by: _register_by,
-            user_id: signupResponse.user_id,
-          );
-        }));
-      } else {
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return Login();
-        }));
+      try {
+        final newUser = await AuthService.firebase().createUserWithEmail(
+          email: email,
+          password: password,
+        );
+
+      } on EmailAlreadyInUseAuthException {
+        ToastComponent.showDialog(
+            'The email address is already in use by another account.',
+            gravity: Toast.center,
+            duration: Toast.lengthLong
+        );
+      } on InvalidEmailAuthException {
+        ToastComponent.showDialog(
+            'The email address is not valid.',
+            gravity: Toast.center,
+            duration: Toast.lengthLong
+        );
+      } on WeakPasswordAuthException {
+        ToastComponent.showDialog(
+            'The password is not strong enough.',
+            gravity: Toast.center,
+            duration: Toast.lengthLong
+        );
+      } on GenericAuthException {
+        ToastComponent.showDialog(
+            'Something went wrong. Please try again later.',
+            gravity: Toast.center,
+            duration: Toast.lengthLong
+        );
       }
     }
   }
@@ -172,7 +177,7 @@ class _RegistrationState extends State<Registration> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-            /*  Padding(
+              /*  Padding(
                 padding: const EdgeInsets.only(bottom: 4.0, left: 20),
                 child: Text(
                   AppLocalizations.of(context)!.name_ucf,
@@ -197,7 +202,7 @@ class _RegistrationState extends State<Registration> {
               SizedBox(
                 height: 5,
               ),
-             /* Padding(
+              /* Padding(
                 padding:
                     const EdgeInsets.only(bottom: 4.0, right: 20, left: 20),
                 child: Text(
@@ -225,24 +230,24 @@ class _RegistrationState extends State<Registration> {
                               hint_text: "Email Id"),
                         ),
                       ),
-                     // otp_addon_installed.$
-                     //     ?
+                      // otp_addon_installed.$
+                      //     ?
                       GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _register_by = "phone";
-                                });
-                              },
-                              child: Text(
-                                AppLocalizations.of(context)!
-                                    .or_register_with_a_phone,
-                                style: TextStyle(
-                                    color: MyTheme.accent_color,
-                                    fontStyle: FontStyle.italic,
-                                    decoration: TextDecoration.underline),
-                              ),
-                            )
-                         // : Container()
+                        onTap: () {
+                          setState(() {
+                            _register_by = "phone";
+                          });
+                        },
+                        child: Text(
+                          AppLocalizations.of(context)!
+                              .or_register_with_a_phone,
+                          style: TextStyle(
+                              color: MyTheme.accent_color,
+                              fontStyle: FontStyle.italic,
+                              decoration: TextDecoration.underline),
+                        ),
+                      )
+                      // : Container()
                     ],
                   ),
                 )
@@ -258,7 +263,7 @@ class _RegistrationState extends State<Registration> {
                         child: CustomInternationalPhoneNumberInput(
                           maxLength: 10,
                           countries: countries_code,
-                            initialValue: PhoneNumber(isoCode: 'IN'),
+                          initialValue: PhoneNumber(isoCode: 'IN'),
                           onInputChanged: (PhoneNumber number) {
                             String? phoneNumber = number.phoneNumber;
                             if (phoneNumber?.length == 10) {
@@ -271,7 +276,7 @@ class _RegistrationState extends State<Registration> {
                             }
                           },
                           // Rest of the code...
-                         /* onInputChanged: (PhoneNumber number) {
+                          /* onInputChanged: (PhoneNumber number) {
                             print(number.phoneNumber);
                             setState(() {
                               _phone = number.phoneNumber;
@@ -281,10 +286,9 @@ class _RegistrationState extends State<Registration> {
                             print(value);
                           },
                           selectorConfig: SelectorConfig(
-                            selectorType: PhoneInputSelectorType.DIALOG,
-                            showFlags: false,
-                            trailingSpace: false
-                          ),
+                              selectorType: PhoneInputSelectorType.DIALOG,
+                              showFlags: false,
+                              trailingSpace: false),
 
                           ignoreBlank: false,
                           autoValidateMode: AutovalidateMode.disabled,
@@ -295,7 +299,7 @@ class _RegistrationState extends State<Registration> {
                           textFieldController: _phoneNumberController,
                           formatInput: false, // Disable default formatting
                           keyboardType: TextInputType.number,
-                         /* formatInput: true,
+                          /* formatInput: true,
                           keyboardType: TextInputType.numberWithOptions(
                               signed: true, decimal: true),*/
                           inputDecoration:
@@ -304,7 +308,6 @@ class _RegistrationState extends State<Registration> {
                           onSaved: (PhoneNumber number) {
                             //print('On Saved: $number');
                           }, // Limit input to 10 digits
-
                         ),
                       ),
                       GestureDetector(
@@ -325,14 +328,11 @@ class _RegistrationState extends State<Registration> {
                     ],
                   ),
                 ),
-
-
               SizedBox(
                 height: 5,
               ),
 
-
-            /*  Padding(
+              /*  Padding(
                 padding: const EdgeInsets.only(bottom: 4.0, left: 20),
                 child: Text(
                   AppLocalizations.of(context)!.password_ucf,
@@ -342,7 +342,6 @@ class _RegistrationState extends State<Registration> {
                 ),
               ),*/
 
-
               Padding(
                 padding:
                     const EdgeInsets.only(bottom: 8.0, right: 20, left: 20),
@@ -350,7 +349,7 @@ class _RegistrationState extends State<Registration> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Container(
-                      height:40,
+                      height: 40,
                       child: TextField(
                         controller: _passwordController,
                         autofocus: false,
@@ -372,7 +371,6 @@ class _RegistrationState extends State<Registration> {
                 ),
               ),
 
-
               /*Padding(
                 padding: const EdgeInsets.only(bottom: 4.0, left: 20),
                 child: Text(
@@ -382,7 +380,6 @@ class _RegistrationState extends State<Registration> {
                       fontWeight: FontWeight.w600),
                 ),
               ),*/
-
 
               Padding(
                 padding:
@@ -400,8 +397,6 @@ class _RegistrationState extends State<Registration> {
                   ),
                 ),
               ),
-
-
               if (google_recaptcha.$)
                 Container(
                   height: _isCaptchaShowing ? 350 : 50,
@@ -419,8 +414,6 @@ class _RegistrationState extends State<Registration> {
                     },
                   ),
                 ),
-
-
               Padding(
                 padding: const EdgeInsets.only(top: 10.0, left: 20),
                 child: Row(
@@ -496,10 +489,8 @@ class _RegistrationState extends State<Registration> {
                   ],
                 ),
               ),
-
-
               Padding(
-                padding: const EdgeInsets.only(top: 5.0, left: 20,right: 20),
+                padding: const EdgeInsets.only(top: 5.0, left: 20, right: 20),
                 child: Container(
                   height: 44,
                   child: Btn.minWidthFixHeight(
@@ -524,8 +515,6 @@ class _RegistrationState extends State<Registration> {
                   ),
                 ),
               ),
-
-
               Padding(
                 padding: const EdgeInsets.only(top: 0.0, left: 20),
                 child: Row(
@@ -557,8 +546,6 @@ class _RegistrationState extends State<Registration> {
                   ],
                 ),
               ),
-
-
               SizedBox(
                 height: 10,
               )

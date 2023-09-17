@@ -9,9 +9,12 @@ import 'package:active_ecommerce_flutter/presenter/currency_presenter.dart';
 import 'package:active_ecommerce_flutter/providers/locale_provider.dart';
 import 'package:active_ecommerce_flutter/screens/login.dart';
 import 'package:active_ecommerce_flutter/screens/main.dart';
+import 'package:active_ecommerce_flutter/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
+
+import '../services/auth_user.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -21,6 +24,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  late AuthUser? user;
+
   PackageInfo _packageInfo = PackageInfo(
     appName: AppConfig.app_name,
     packageName: 'Unknown',
@@ -43,11 +48,21 @@ class _SplashScreenState extends State<SplashScreen> {
     getSharedValueHelperData().then((value){
       Future.delayed(Duration(seconds: 3)).then((value) {
         Provider.of<LocaleProvider>(context,listen: false).setLocale(app_mobile_language.$!);
-        Navigator.pushAndRemoveUntil(context,
-          MaterialPageRoute(builder: (context) {
-            return  Login();// Main(go_back: false,);
-          },
-          ),(route)=>false,);
+
+        user = AuthService.firebase().currentUser;
+        if (user != null) {
+          Navigator.pushAndRemoveUntil(context,
+            MaterialPageRoute(builder: (context) {
+              return  Main();// Main(go_back: false,);
+            },
+            ),(newRoute)=>false,);
+        } else {
+          Navigator.pushAndRemoveUntil(context,
+            MaterialPageRoute(builder: (context) {
+              return  Login();// Main(go_back: false,);
+            },
+            ),(route)=>false,);
+        }
       }
       );
     });

@@ -5,6 +5,7 @@ import 'package:active_ecommerce_flutter/screens/contact_us/contact_us.dart';
 import 'package:active_ecommerce_flutter/screens/my_account/my_account.dart';
 import 'package:active_ecommerce_flutter/screens/notification/notification_screen.dart';
 import 'package:active_ecommerce_flutter/screens/setting/setting.dart';
+import 'package:active_ecommerce_flutter/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -20,7 +21,9 @@ import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:active_ecommerce_flutter/app_config.dart';
 import 'package:active_ecommerce_flutter/helpers/auth_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:toast/toast.dart';
 
+import '../custom/toast_component.dart';
 import '../screens/Payment_info/payment_info_screen.dart';
 import '../screens/description/description.dart';
 import '../screens/option/option.dart';
@@ -54,6 +57,8 @@ class _MainDrawerState extends State<MainDrawer> {
     }),(route)=>false);
   }
 
+  final user = AuthService.firebase().currentUser;
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -65,7 +70,7 @@ class _MainDrawerState extends State<MainDrawer> {
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                is_logged_in.$ == true
+                user != null
                     ? ListTile(
                         leading: CircleAvatar(
                           backgroundImage: NetworkImage(
@@ -115,7 +120,7 @@ class _MainDrawerState extends State<MainDrawer> {
                       }));
                     }),
                 Divider(),
-                is_logged_in.$ == true
+                user != null
                     ? Column(
                         children: [
                           ListTile(
@@ -320,6 +325,33 @@ class _MainDrawerState extends State<MainDrawer> {
                                       return Option();
                                     }));
                               }),
+
+                          //TEMPORARY LOGOUT BUTTON
+                          Divider(),
+                          ListTile(
+                              visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                              leading: Icon(Icons.logout),
+                                  // height: 16, color: Color.fromRGBO(153, 153, 153, 1)),
+                              title: Text( "Logout",
+                                  style: TextStyle(
+                                      color: MyTheme.primary_color,
+                                      fontSize: 18)),
+                              onTap: () async {
+                                await AuthService.firebase().logOut();
+                                final user = AuthService.firebase().currentUser;
+                                if (user == null) {
+                                  ToastComponent.showDialog('Logout Successful',
+                                      gravity: Toast.center, duration: Toast.lengthLong);
+                                } else {
+                                  ToastComponent.showDialog('Still logged in',
+                                      gravity: Toast.center, duration: Toast.lengthLong);
+                                }
+                                Navigator.pushAndRemoveUntil(context,
+                                  MaterialPageRoute(builder: (context) {
+                                    return  Login();// Main(go_back: false,);
+                                  },
+                                  ),(route)=>false,);
+                              }),
                          /* ListTile(
                               visualDensity: VisualDensity(horizontal: -4, vertical: -4),
                               leading: Image.asset("assets/home.png",
@@ -359,7 +391,7 @@ class _MainDrawerState extends State<MainDrawer> {
                       )
                     : Container(),
                 Divider(height: 24),
-                is_logged_in.$ == false
+                user == null
                     ? ListTile(
                         visualDensity:
                             VisualDensity(horizontal: -4, vertical: -4),
@@ -379,7 +411,7 @@ class _MainDrawerState extends State<MainDrawer> {
                         },
                       )
                     : Container(),
-                is_logged_in.$ == true
+                user != null
                     ?  InkWell(
                   onTap: (){
                     onTapLogout(context);
@@ -401,8 +433,6 @@ class _MainDrawerState extends State<MainDrawer> {
                       ),),
                   ),
                 )
-
-
 
                 /*ListTile(
                         visualDensity:

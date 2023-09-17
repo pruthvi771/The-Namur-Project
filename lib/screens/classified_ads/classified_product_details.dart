@@ -279,7 +279,8 @@ class _ClassifiedAdsDetailsState extends State<ClassifiedAdsDetails>
     final double statusBarHeight = MediaQuery.of(context).padding.top;
 
     return Directionality(
-      textDirection: app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
+      textDirection:
+          app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
           extendBody: true,
           body: RefreshIndicator(
@@ -937,7 +938,8 @@ class _ClassifiedAdsDetailsState extends State<ClassifiedAdsDetails>
           Expandable(
             collapsed: Container(
                 height: 50, child: Html(data: _productDetails!.description)),
-            expanded: Container(child: Html(data: _productDetails!.description)),
+            expanded:
+                Container(child: Html(data: _productDetails!.description)),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -1114,7 +1116,7 @@ class _ClassifiedAdsDetailsState extends State<ClassifiedAdsDetails>
             width: 64,
             child: Scrollbar(
               controller: _imageScrollController,
-              isAlwaysShown: false,
+              thumbVisibility: false,
               thickness: 4.0,
               child: Padding(
                 padding: app_language_rtl.$!
