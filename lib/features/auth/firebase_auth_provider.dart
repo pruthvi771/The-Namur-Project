@@ -1,5 +1,3 @@
-
-
 import 'dart:async';
 
 import 'package:active_ecommerce_flutter/features/auth/auth_user.dart';
@@ -7,34 +5,32 @@ import 'package:active_ecommerce_flutter/features/auth/auth_provider.dart';
 import 'package:active_ecommerce_flutter/features/auth/auth_exceptions.dart';
 
 import 'package:firebase_auth/firebase_auth.dart'
-    show FirebaseAuth, FirebaseAuthException, GoogleAuthProvider, PhoneAuthCredential, PhoneAuthProvider;
+    show
+        FirebaseAuth,
+        FirebaseAuthException,
+        GoogleAuthProvider,
+        // PhoneAuthCredential,
+        PhoneAuthProvider;
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:toast/toast.dart';
-
-import '../../custom/toast_component.dart';
-import 'otp.dart';
 
 class FirebaseAuthProvider implements AuthProvider {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  @override
   AuthUser? get currentUser {
     final user = _firebaseAuth.currentUser;
     return user == null ? null : AuthUser.fromFirebase(user);
   }
 
-  @override
   Future<AuthUser> loginWithEmail({
     required String email,
     required String password,
   }) async {
     try {
-      final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
+      await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
 
       final user = currentUser;
       return user != null ? user : throw UserNotFoundAuthException();
-
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         throw UserNotFoundAuthException();
@@ -42,6 +38,8 @@ class FirebaseAuthProvider implements AuthProvider {
         throw WrongPasswordAuthException();
       } else if (e.code == 'invalid-email') {
         throw InvalidEmailAuthException();
+      } else if (e.code == 'user-disabled') {
+        throw UserDisabledAuthException();
       } else {
         throw GenericAuthException();
       }
@@ -50,18 +48,16 @@ class FirebaseAuthProvider implements AuthProvider {
     }
   }
 
-  @override
   Future<AuthUser> createUserWithEmail({
     required String email,
     required String password,
   }) async {
     try {
-      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+      await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
 
       final user = currentUser;
       return user != null ? user : throw UserNotFoundAuthException();
-
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         throw WeakPasswordAuthException();
@@ -69,6 +65,10 @@ class FirebaseAuthProvider implements AuthProvider {
         throw EmailAlreadyInUseAuthException();
       } else if (e.code == 'invalid-email') {
         throw InvalidEmailAuthException();
+      } else if (e.code == 'operation-not-allowed') {
+        throw OperationNotAllowedAuthException();
+      } else if (e.code == 'user-disabled') {
+        throw UserDisabledAuthException();
       } else {
         throw GenericAuthException();
       }
@@ -77,7 +77,6 @@ class FirebaseAuthProvider implements AuthProvider {
     }
   }
 
-  @override
   Future<void> logOut() async {
     final user = _firebaseAuth.currentUser;
 
@@ -94,7 +93,6 @@ class FirebaseAuthProvider implements AuthProvider {
     }
   }
 
-  @override
   Future<void> sendEmailVerification() async {
     final user = _firebaseAuth.currentUser;
     if (user != null) {
@@ -104,25 +102,38 @@ class FirebaseAuthProvider implements AuthProvider {
     }
   }
 
-  @override
   Future<AuthUser> loginWithGoogle() async {
-    final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
+    try {
+      final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
 
-    final GoogleSignInAuthentication gAuth = await gUser!.authentication;
+      final GoogleSignInAuthentication gAuth = await gUser!.authentication;
 
-    final credential = GoogleAuthProvider.credential(
-      accessToken: gAuth.accessToken,
-      idToken: gAuth.idToken,
-    );
+      final credential = GoogleAuthProvider.credential(
+        accessToken: gAuth.accessToken,
+        idToken: gAuth.idToken,
+      );
 
-    await _firebaseAuth.signInWithCredential(credential);
+      await _firebaseAuth.signInWithCredential(credential);
 
-    final user = currentUser;
-    return user != null ? user : throw UserNotFoundAuthException();
-
+      final user = currentUser;
+      return user != null ? user : throw UserNotFoundAuthException();
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'account-exists-with-different-credential') {
+        throw AccountExistsWithDifferentCredentialAuthException();
+        // } else if (e.code == 'invalid-credential') {
+        //   throw InvalidCredentialAuthException();
+      } else if (e.code == 'operation-not-allowed') {
+        throw OperationNotAllowedAuthException();
+      } else if (e.code == 'user-disabled') {
+        throw UserDisabledAuthException();
+      } else {
+        throw GenericAuthException();
+      }
+    } catch (_) {
+      throw GenericAuthException();
+    }
   }
 
-  @override
   Future<String?> phoneNumberVerification({
     required String phone,
   }) async {
@@ -142,16 +153,14 @@ class FirebaseAuthProvider implements AuthProvider {
         print('OTP sent to your phone number');
         verificationIdCompleter.complete(verificationId);
       },
-      codeAutoRetrievalTimeout: (String verificationId) {
-      },
+      codeAutoRetrievalTimeout: (String verificationId) {},
     );
 
     return verificationIdCompleter.future;
   }
 
-
-  @override
-  Future<AuthUser?> loginWithPhone({required String verificationId, required String otp}) async {
+  Future<AuthUser?> loginWithPhone(
+      {required String verificationId, required String otp}) async {
     final credentials = PhoneAuthProvider.credential(
       verificationId: verificationId,
       smsCode: otp,
@@ -163,8 +172,8 @@ class FirebaseAuthProvider implements AuthProvider {
       // return user != null ? user : throw UserNotFoundAuthException();
 
       if (user != null) {
-        return user;
         print('User logged in successfully');
+        return user;
       } else {
         throw UserNotFoundAuthException();
       }
@@ -185,7 +194,6 @@ class FirebaseAuthProvider implements AuthProvider {
     }
   }
 
-  @override
   Future<void> resetPasswordForEmail({required String email}) async {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email);

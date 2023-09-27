@@ -138,6 +138,9 @@ class _LoginState extends State<Login> {
       } on InvalidEmailAuthException {
         ToastComponent.showDialog('Invalid email. Please try again.',
             gravity: Toast.center, duration: Toast.lengthLong);
+      } on UserDisabledAuthException {
+        ToastComponent.showDialog('User is disabled. Please contact support.',
+            gravity: Toast.center, duration: Toast.lengthLong);
       } on TooManyRequestsAuthException {
         ToastComponent.showDialog(
             'Maximum requests limit reached. Please try again later',
@@ -151,14 +154,35 @@ class _LoginState extends State<Login> {
   }
 
   onPressedGoogleLogin() async {
-    final user = await AuthService.firebase().loginWithGoogle();
+    try {
+      final user = await AuthService.firebase().loginWithGoogle();
 
-    ToastComponent.showDialog('Logged in successfully',
-        gravity: Toast.center, duration: Toast.lengthLong);
+      ToastComponent.showDialog('Logged in successfully',
+          gravity: Toast.center, duration: Toast.lengthLong);
 
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) {
-      return Main();
-    }), (newRoute) => false);
+      Navigator.pushAndRemoveUntil(context,
+          MaterialPageRoute(builder: (context) {
+        return Main();
+      }), (newRoute) => false);
+    } on AccountExistsWithDifferentCredentialAuthException {
+      ToastComponent.showDialog(
+        'This email is already in use by a different login method.',
+        gravity: Toast.center,
+        duration: Toast.lengthLong,
+      );
+    } on OperationNotAllowedAuthException {
+      ToastComponent.showDialog(
+        'Something went wrong. Please contact support.',
+        gravity: Toast.center,
+        duration: Toast.lengthLong,
+      );
+    } on UserDisabledAuthException {
+      ToastComponent.showDialog('User is disabled. Please contact support.',
+          gravity: Toast.center, duration: Toast.lengthLong);
+    } on GenericAuthException {
+      ToastComponent.showDialog('Something went wrong. Please try again.',
+          gravity: Toast.center, duration: Toast.lengthLong);
+    }
   }
 
   onPressedFacebookLogin() async {

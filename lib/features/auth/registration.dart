@@ -51,7 +51,6 @@ class _RegistrationState extends State<Registration> {
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _passwordConfirmController = TextEditingController();
 
-
   @override
   void initState() {
     //on Splash Screen hide statusbar
@@ -116,8 +115,7 @@ class _RegistrationState extends State<Registration> {
       ToastComponent.showDialog(
           AppLocalizations.of(context)!.passwords_do_not_match,
           gravity: Toast.center,
-          duration: Toast.lengthLong
-      );
+          duration: Toast.lengthLong);
       return;
     }
 
@@ -129,31 +127,27 @@ class _RegistrationState extends State<Registration> {
           email: email,
           password: password,
         );
-
       } on EmailAlreadyInUseAuthException {
         ToastComponent.showDialog(
             'The email address is already in use by another account.',
             gravity: Toast.center,
-            duration: Toast.lengthLong
-        );
+            duration: Toast.lengthLong);
       } on InvalidEmailAuthException {
-        ToastComponent.showDialog(
-            'The email address is not valid.',
-            gravity: Toast.center,
-            duration: Toast.lengthLong
-        );
+        ToastComponent.showDialog('The email address is not valid.',
+            gravity: Toast.center, duration: Toast.lengthLong);
       } on WeakPasswordAuthException {
+        ToastComponent.showDialog('The password is not strong enough.',
+            gravity: Toast.center, duration: Toast.lengthLong);
+      } on OperationNotAllowedAuthException {
         ToastComponent.showDialog(
-            'The password is not strong enough.',
+            'Something went wrong. Please contact support.',
             gravity: Toast.center,
-            duration: Toast.lengthLong
-        );
+            duration: Toast.lengthLong);
       } on GenericAuthException {
         ToastComponent.showDialog(
             'Something went wrong. Please try again later.',
             gravity: Toast.center,
-            duration: Toast.lengthLong
-        );
+            duration: Toast.lengthLong);
       }
     }
   }

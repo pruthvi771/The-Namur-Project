@@ -1,6 +1,5 @@
 //sign-in exceptions
-class UserNotFoundAuthException implements Exception {
-}
+class UserNotFoundAuthException implements Exception {}
 
 class WrongPasswordAuthException implements Exception {}
 
@@ -22,4 +21,12 @@ class InvalidOTPAuthException implements Exception {}
 
 class ExpiredOTPAuthException implements Exception {}
 
+class UserDisabledAuthException implements Exception {}
 
+class OperationNotAllowedAuthException implements Exception {}
+
+class InvalidVerificationCodeAuthException implements Exception {}
+
+class InvalidCredentialAuthException implements Exception {}
+
+class AccountExistsWithDifferentCredentialAuthException implements Exception {}
