@@ -431,6 +431,7 @@ class _LoginState extends State<Login> {
                   ],
                 ),
               ),
+
               //login with email/phone button
               if (_login_by == "email")
                 Padding(

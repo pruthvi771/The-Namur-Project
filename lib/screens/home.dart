@@ -27,7 +27,7 @@ import '../ui_sections/drawer.dart';
 import 'auction_products_details.dart';
 import 'brand_products.dart';
 import 'home_widget/hexagonal_widget.dart';
-import 'home_widget/title_bar_widget.dart';
+import '../features/profile/title_bar_widget.dart';
 
 class Home extends StatefulWidget {
   Home({
@@ -124,7 +124,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 builder: (context, child) {
                   return Stack(
                     children: [
-                  //    Positioned.fill(child: _buildGrid(context, type ,1)),
+                      //    Positioned.fill(child: _buildGrid(context, type ,1)),
                       RefreshIndicator(
                         color: MyTheme.accent_color,
                         backgroundColor: Colors.white,
@@ -138,17 +138,20 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                             SliverList(
                               delegate: SliverChildListDelegate([
                                 TitleBar(),
-
                                 SizedBox(height: 24),
-
                                 BuySellButton(),
-
                                 SizedBox(
                                   height: 24,
                                 ),
                                 InkWell(
-                                  onTap: (){
-                                    Navigator.push(context, MaterialPageRoute(builder: (context)=>AuctionProductsDetails(id: 1,)));
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AuctionProductsDetails(
+                                                  id: 1,
+                                                )));
                                   },
                                   child: HexagonalWidget(
                                     size: 115,
@@ -174,7 +177,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                           color: Colors.red,
                                           child: Stack(
                                             children: [
-                                              *//* Positioned(
+                                              */ /* Positioned(
                                           left: 20,
                                           top: 0,
                                           child: AnimatedBuilder(
@@ -188,7 +191,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                                       .value,
                                                   color: Colors.white,
                                                 );
-                                              })),*//*
+                                              })),*/ /*
                                               Center(
                                                 child: Padding(
                                                   padding:
@@ -353,7 +356,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           ],
                         ),
                       ),
-                     /* Align(
+                      /* Align(
                           alignment: Alignment.center,
                           child: buildProductLoadingContainer(homeData))*/
                     ],
@@ -1084,11 +1087,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   }
 }
 
-
-
 void main() {
   runApp(MaterialApp(
       // home: HexagonalWidget(),
       ));
 }
-

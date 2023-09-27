@@ -16,7 +16,7 @@ import 'package:active_ecommerce_flutter/screens/messenger_list.dart';
 import 'package:active_ecommerce_flutter/screens/order_details.dart';
 import 'package:active_ecommerce_flutter/screens/order_list.dart';
 import 'package:active_ecommerce_flutter/screens/product_reviews.dart';
-import 'package:active_ecommerce_flutter/screens/profile.dart';
+import 'package:active_ecommerce_flutter/features/profile/profile.dart';
 import 'package:active_ecommerce_flutter/screens/refund_request.dart';
 import 'package:active_ecommerce_flutter/screens/splash_screen.dart';
 import 'package:active_ecommerce_flutter/screens/todays_deal_products.dart';

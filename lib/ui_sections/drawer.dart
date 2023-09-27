@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:active_ecommerce_flutter/screens/main.dart';
-import 'package:active_ecommerce_flutter/screens/profile.dart';
+import 'package:active_ecommerce_flutter/features/profile/profile.dart';
 import 'package:active_ecommerce_flutter/screens/order_list.dart';
 import 'package:active_ecommerce_flutter/screens/wishlist.dart';
 
@@ -54,7 +54,7 @@ class _MainDrawerState extends State<MainDrawer> {
     // }
     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) {
       return Main();
-    }),(route)=>false);
+    }), (route) => false);
   }
 
   final user = AuthService.firebase().currentUser;
@@ -74,16 +74,19 @@ class _MainDrawerState extends State<MainDrawer> {
                     ? ListTile(
                         leading: CircleAvatar(
                           backgroundImage: NetworkImage(
-                             "${avatar_original.$}",
+                            "${avatar_original.$}",
                           ),
                         ),
-                        title: Text("${user_name.$}",style: TextStyle(color: MyTheme.primary_color, ),),
+                        title: Text(
+                          "${user_name.$}",
+                          style: TextStyle(
+                            color: MyTheme.primary_color,
+                          ),
+                        ),
                         subtitle: Text(
-                        
                           "${user_email.$ != "" && user_email.$ != null ? user_email.$ : user_phone.$ != "" && user_phone.$ != null ? user_phone.$ : ''}",
                         ))
-                    : Text(
-                        AppLocalizations.of(context)!.not_logged_in_ucf,
+                    : Text(AppLocalizations.of(context)!.not_logged_in_ucf,
                         style: TextStyle(
                             color: Color.fromRGBO(153, 153, 153, 1),
                             fontSize: 14)),
@@ -93,11 +96,9 @@ class _MainDrawerState extends State<MainDrawer> {
                     leading: Image.asset("assets/language.png",
                         height: 16, color: Color.fromRGBO(153, 153, 153, 1)),
                     title: Text(
-                        AppLocalizations.of(context)!
-                            .change_language_ucf,
+                        AppLocalizations.of(context)!.change_language_ucf,
                         style: TextStyle(
-                            color: MyTheme.primary_color,
-                            fontSize: 14)),
+                            color: MyTheme.primary_color, fontSize: 14)),
                     onTap: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
@@ -111,8 +112,7 @@ class _MainDrawerState extends State<MainDrawer> {
                         height: 16, color: Color.fromRGBO(153, 153, 153, 1)),
                     title: Text(AppLocalizations.of(context)!.home_ucf,
                         style: TextStyle(
-                            color: MyTheme.primary_color,
-                            fontSize: 14)),
+                            color: MyTheme.primary_color, fontSize: 14)),
                     onTap: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
@@ -130,8 +130,7 @@ class _MainDrawerState extends State<MainDrawer> {
                                   height: 16,
                                   color: Color.fromRGBO(153, 153, 153, 1)),
                               title: Text(
-                                  AppLocalizations.of(context)!
-                                      .acccount_ucf,
+                                  AppLocalizations.of(context)!.acccount_ucf,
                                   style: TextStyle(
                                       color: MyTheme.primary_color,
                                       fontSize: 14)),
@@ -141,8 +140,8 @@ class _MainDrawerState extends State<MainDrawer> {
                                   return MyAccount(show_back_button: true);
                                 }));
                               }),
-                         Divider(),
-                         /* ListTile(
+                          Divider(),
+                          /* ListTile(
                               visualDensity: VisualDensity(horizontal: -4, vertical: -4),
                               leading: Image.asset("assets/home.png",
                                   height: 16, color: Color.fromRGBO(153, 153, 153, 1)),
@@ -156,8 +155,8 @@ class _MainDrawerState extends State<MainDrawer> {
                                       return RazorpayScreen();
                                     }));
                               }),*/
-                         // Divider(),
-                        /*  ListTile(
+                          // Divider(),
+                          /*  ListTile(
                               visualDensity: VisualDensity(horizontal: -4, vertical: -4),
                               leading: Image.asset("assets/home.png",
                                   height: 16, color: Color.fromRGBO(153, 153, 153, 1)),
@@ -171,54 +170,56 @@ class _MainDrawerState extends State<MainDrawer> {
                                       return Main();
                                     }));
                               }),*/
-                        //  Divider(),
-                         Visibility(
+                          //  Divider(),
+                          Visibility(
                             visible: conversation_system_status.$,
                             child: ListTile(
                                 visualDensity:
-                                VisualDensity(horizontal: -4, vertical: -4),
+                                    VisualDensity(horizontal: -4, vertical: -4),
                                 leading: Image.asset("assets/chat.png",
                                     height: 16,
                                     color: Color.fromRGBO(153, 153, 153, 1)),
                                 title: Text(
-                                    AppLocalizations.of(context)!
-                                        .call_chat_ucf,
+                                    AppLocalizations.of(context)!.call_chat_ucf,
                                     style: TextStyle(
                                         color: MyTheme.primary_color,
                                         fontSize: 14)),
                                 onTap: () {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
-                                        return MessengerList();
-                                      }));
+                                    return MessengerList();
+                                  }));
                                 }),
                           ),
                           Divider(),
                           ListTile(
-                              visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                              visualDensity:
+                                  VisualDensity(horizontal: -4, vertical: -4),
                               leading: Image.asset("assets/home.png",
-                                  height: 16, color: Color.fromRGBO(153, 153, 153, 1)),
-                              title: Text( AppLocalizations.of(context)!
-                                  .inbox_ucf,
+                                  height: 16,
+                                  color: Color.fromRGBO(153, 153, 153, 1)),
+                              title: Text(
+                                  AppLocalizations.of(context)!.inbox_ucf,
                                   style: TextStyle(
                                       color: MyTheme.primary_color,
                                       fontSize: 14)),
                               onTap: () {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
-                                      return NotificationScreen();
-                                    }));
+                                  return NotificationScreen();
+                                }));
                               }),
                           Divider(),
-                         ListTile(
+                          ListTile(
                               visualDensity:
                                   VisualDensity(horizontal: -4, vertical: -4),
-                              leading: Image.asset("assets/wallet.png",
-                                  height: 16,
-                                color: Color.fromRGBO(153, 153, 153, 1),),
+                              leading: Image.asset(
+                                "assets/wallet.png",
+                                height: 16,
+                                color: Color.fromRGBO(153, 153, 153, 1),
+                              ),
                               title: Text(
-                                  AppLocalizations.of(context)!
-                                      .wallet_ucf,
+                                  AppLocalizations.of(context)!.wallet_ucf,
                                   style: TextStyle(
                                       color: MyTheme.primary_color,
                                       fontSize: 14)),
@@ -229,9 +230,9 @@ class _MainDrawerState extends State<MainDrawer> {
                                 }));
                               }),
                           Divider(),
-                            ListTile(
+                          ListTile(
                               visualDensity:
-                              VisualDensity(horizontal: -4, vertical: -4),
+                                  VisualDensity(horizontal: -4, vertical: -4),
                               leading: Image.asset("assets/order.png",
                                   height: 16,
                                   color: Color.fromRGBO(153, 153, 153, 1)),
@@ -244,95 +245,106 @@ class _MainDrawerState extends State<MainDrawer> {
                               onTap: () {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
-                                      return OrderList(from_checkout: false);
-                                    }));
-                              }),
-                            Divider(),
-                          ListTile(
-                              visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-                              leading: Image.asset("assets/home.png",
-                                  height: 16, color: Color.fromRGBO(153, 153, 153, 1)),
-                              title: Text(AppLocalizations.of(context)!
-                                  .setting_ucf,
-                                  style: TextStyle(
-                                      color: MyTheme.primary_color,
-                                      fontSize: 14)),
-                              onTap: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                      return Setting();
-                                    }));
+                                  return OrderList(from_checkout: false);
+                                }));
                               }),
                           Divider(),
                           ListTile(
-                              visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                              visualDensity:
+                                  VisualDensity(horizontal: -4, vertical: -4),
                               leading: Image.asset("assets/home.png",
-                                  height: 16, color: Color.fromRGBO(153, 153, 153, 1)),
-                              title: Text( AppLocalizations.of(context)!
-                                  .contact_ucf,
+                                  height: 16,
+                                  color: Color.fromRGBO(153, 153, 153, 1)),
+                              title: Text(
+                                  AppLocalizations.of(context)!.setting_ucf,
                                   style: TextStyle(
                                       color: MyTheme.primary_color,
                                       fontSize: 14)),
                               onTap: () {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
-                                      return ContactUs();
-                                    }));
+                                  return Setting();
+                                }));
                               }),
                           Divider(),
                           ListTile(
-                              visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                              visualDensity:
+                                  VisualDensity(horizontal: -4, vertical: -4),
                               leading: Image.asset("assets/home.png",
-                                  height: 16, color: Color.fromRGBO(153, 153, 153, 1)),
-                              title: Text( AppLocalizations.of(context)!
-                                  .about_ucf,
+                                  height: 16,
+                                  color: Color.fromRGBO(153, 153, 153, 1)),
+                              title: Text(
+                                  AppLocalizations.of(context)!.contact_ucf,
                                   style: TextStyle(
                                       color: MyTheme.primary_color,
                                       fontSize: 14)),
                               onTap: () {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
-                                      return AboutUs();
-                                    }));
+                                  return ContactUs();
+                                }));
+                              }),
+                          Divider(),
+                          ListTile(
+                              visualDensity:
+                                  VisualDensity(horizontal: -4, vertical: -4),
+                              leading: Image.asset("assets/home.png",
+                                  height: 16,
+                                  color: Color.fromRGBO(153, 153, 153, 1)),
+                              title: Text(
+                                  AppLocalizations.of(context)!.about_ucf,
+                                  style: TextStyle(
+                                      color: MyTheme.primary_color,
+                                      fontSize: 14)),
+                              onTap: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return AboutUs();
+                                }));
                               }),
 
                           ListTile(
-                              visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                              visualDensity:
+                                  VisualDensity(horizontal: -4, vertical: -4),
                               leading: Image.asset("assets/home.png",
-                                  height: 16, color: Color.fromRGBO(153, 153, 153, 1)),
-                              title: Text( "Payment Info",
+                                  height: 16,
+                                  color: Color.fromRGBO(153, 153, 153, 1)),
+                              title: Text("Payment Info",
                                   style: TextStyle(
                                       color: MyTheme.primary_color,
                                       fontSize: 14)),
                               onTap: () {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
-                                      return PaymentInfo();
-                                    }));
+                                  return PaymentInfo();
+                                }));
                               }),
 
                           ListTile(
-                              visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                              visualDensity:
+                                  VisualDensity(horizontal: -4, vertical: -4),
                               leading: Image.asset("assets/home.png",
-                                  height: 16, color: Color.fromRGBO(153, 153, 153, 1)),
-                              title: Text( "Option",
+                                  height: 16,
+                                  color: Color.fromRGBO(153, 153, 153, 1)),
+                              title: Text("Option",
                                   style: TextStyle(
                                       color: MyTheme.primary_color,
                                       fontSize: 14)),
                               onTap: () {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
-                                      return Option();
-                                    }));
+                                  return Option();
+                                }));
                               }),
 
                           //TEMPORARY LOGOUT BUTTON
                           Divider(),
                           ListTile(
-                              visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                              visualDensity:
+                                  VisualDensity(horizontal: -4, vertical: -4),
                               leading: Icon(Icons.logout),
-                                  // height: 16, color: Color.fromRGBO(153, 153, 153, 1)),
-                              title: Text( "Logout",
+                              // height: 16, color: Color.fromRGBO(153, 153, 153, 1)),
+                              title: Text("Logout",
                                   style: TextStyle(
                                       color: MyTheme.primary_color,
                                       fontSize: 18)),
@@ -341,18 +353,24 @@ class _MainDrawerState extends State<MainDrawer> {
                                 final user = AuthService.firebase().currentUser;
                                 if (user == null) {
                                   ToastComponent.showDialog('Logout Successful',
-                                      gravity: Toast.center, duration: Toast.lengthLong);
+                                      gravity: Toast.center,
+                                      duration: Toast.lengthLong);
                                 } else {
                                   ToastComponent.showDialog('Still logged in',
-                                      gravity: Toast.center, duration: Toast.lengthLong);
+                                      gravity: Toast.center,
+                                      duration: Toast.lengthLong);
                                 }
-                                Navigator.pushAndRemoveUntil(context,
-                                  MaterialPageRoute(builder: (context) {
-                                    return  Login();// Main(go_back: false,);
-                                  },
-                                  ),(route)=>false,);
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return Login(); // Main(go_back: false,);
+                                    },
+                                  ),
+                                  (route) => false,
+                                );
                               }),
-                         /* ListTile(
+                          /* ListTile(
                               visualDensity: VisualDensity(horizontal: -4, vertical: -4),
                               leading: Image.asset("assets/home.png",
                                   height: 16, color: Color.fromRGBO(153, 153, 153, 1)),
@@ -366,8 +384,8 @@ class _MainDrawerState extends State<MainDrawer> {
                                       return Description();
                                     }));
                               }),*/
-                         // wallet_system_status.$
-                             /* ? ListTile(
+                          // wallet_system_status.$
+                          /* ? ListTile(
                                   visualDensity: VisualDensity(
                                       horizontal: -4, vertical: -4),
                                   leading: Image.asset("assets/wallet.png",
@@ -412,29 +430,32 @@ class _MainDrawerState extends State<MainDrawer> {
                       )
                     : Container(),
                 user != null
-                    ?  InkWell(
-                  onTap: (){
-                    onTapLogout(context);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
-                    child: Container(height: 40,
-                      width: 100,
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),
-                          color: MyTheme.primary_color),
-                      child: Center(
-                        child: Text(
-                            AppLocalizations.of(context)!.back_ucf,
-                            style: TextStyle(
-                                color: MyTheme.white,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: 'Poppins',
-                                fontSize: 14)),
-                      ),),
-                  ),
-                )
+                    ? InkWell(
+                        onTap: () {
+                          onTapLogout(context);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 20.0),
+                          child: Container(
+                            height: 40,
+                            width: 100,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: MyTheme.primary_color),
+                            child: Center(
+                              child: Text(
+                                  AppLocalizations.of(context)!.back_ucf,
+                                  style: TextStyle(
+                                      color: MyTheme.white,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Poppins',
+                                      fontSize: 14)),
+                            ),
+                          ),
+                        ),
+                      )
 
-                /*ListTile(
+                    /*ListTile(
                         visualDensity:
                             VisualDensity(horizontal: -4, vertical: -4),
                         leading: Image.asset("assets/logout.png",
@@ -449,8 +470,9 @@ class _MainDrawerState extends State<MainDrawer> {
                           onTapLogout(context);
                         })*/
                     : Container(),
-
-                SizedBox(height: 150,)
+                SizedBox(
+                  height: 150,
+                )
               ],
             ),
           ),

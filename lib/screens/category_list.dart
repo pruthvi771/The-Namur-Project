@@ -25,7 +25,7 @@ import '../presenter/home_presenter.dart';
 import 'category/sub_category.dart';
 import 'home_widget/buy_sell_button_widget.dart';
 import 'home_widget/hexagonal_widget.dart';
-import 'home_widget/title_bar_widget.dart';
+import '../features/profile/title_bar_widget.dart';
 import 'package:get/get.dart';
 
 class CategoryList extends StatefulWidget {
@@ -107,7 +107,6 @@ class _CategoryListState extends State<CategoryList> {
       slivers: [
         SliverList(
             delegate: SliverChildListDelegate([
-
           TitleBar(),
 
           SizedBox(height: 24),
@@ -203,12 +202,12 @@ class _CategoryListState extends State<CategoryList> {
 
           SizedBox(height: 24),
 
-              // Category hexagonal widget design start
-               buildCategoryList(),
+          // Category hexagonal widget design start
+          buildCategoryList(),
 
-               //  SizedBox(height:16),
+          //  SizedBox(height:16),
 
-              // Calender widget design start
+          // Calender widget design start
           Column(
             children: [
               Stack(
@@ -252,12 +251,10 @@ class _CategoryListState extends State<CategoryList> {
           Container(
             height: widget.is_base_category ? 90 : 90,
           ),
-
         ]))
       ],
     );
   }
-
 
   // appbar design
   AppBar buildAppBar(BuildContext context) {
@@ -311,7 +308,6 @@ class _CategoryListState extends State<CategoryList> {
 
     return name;
   }
-
 
   buildCategoryList() {
     var data = widget.is_top_category
@@ -423,7 +419,7 @@ class _CategoryListState extends State<CategoryList> {
       // decoration: BoxDecorations.buildBoxDecoration_1(),
       child: InkWell(
         onTap: () {
-           subCategoryCon.GetSubCategory(categoryResponse.categories[index].id);
+          subCategoryCon.GetSubCategory(categoryResponse.categories[index].id);
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -432,7 +428,7 @@ class _CategoryListState extends State<CategoryList> {
                   category_id: categoryResponse.categories[index].id,
                   category_name: categoryResponse.categories[index].name,
                   isvalue: isvalue,
-                );/* CategoryProducts(
+                ); /* CategoryProducts(
                   category_id: categoryResponse.categories[index].id,
                   category_name: categoryResponse.categories[index].name,
                   isvalue: isvalue,

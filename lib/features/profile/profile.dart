@@ -35,12 +35,13 @@ import 'package:active_ecommerce_flutter/screens/club_point.dart';
 import 'package:active_ecommerce_flutter/screens/refund_request.dart';
 import 'package:active_ecommerce_flutter/repositories/profile_repository.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:toast/toast.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../repositories/auth_repository.dart';
+import '../../repositories/auth_repository.dart';
 
 class Profile extends StatefulWidget {
   Profile({Key? key, this.show_back_button = false}) : super(key: key);
@@ -52,7 +53,6 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-
   HomePresenter homeData = HomePresenter();
   ScrollController _mainScrollController = ScrollController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -70,9 +70,10 @@ class _ProfileState extends State<Profile> {
     // TODO: implement initState
     super.initState();
 
-    if (is_logged_in.$ == true) {
-      fetchAll();
-    }
+    // if (is_logged_in.$ == true) {
+
+    fetchAll();
+    // }
   }
 
   void dispose() {
@@ -200,7 +201,7 @@ class _ProfileState extends State<Profile> {
             key: homeData.scaffoldKey,
             drawer: const MainDrawer(),
             backgroundColor: Colors.transparent,
-         //   appBar: buildCustomAppBar(context),
+            //   appBar: buildCustomAppBar(context),
             body: buildBody(),
           ),
         ],
@@ -239,28 +240,28 @@ class _ProfileState extends State<Profile> {
                         )),
                   ],
                 ),
-
-                Positioned(
-                  top: 45,
-                    right: 30,
-                    child:Icon(Icons.settings_outlined,
-                    size: 30,color: Colors.white,
-                    weight: 10,)
-                ),
-
                 Positioned(
                     top: 45,
-                    left: 30,
-                    child:IconButton(
-                        onPressed: () {
-                          homeData.scaffoldKey.currentState?.openDrawer();
-                        },
-                        icon: Icon(Icons.menu,
+                    right: 30,
+                    child: Icon(
+                      Icons.settings_outlined,
+                      size: 30,
+                      color: Colors.white,
+                      weight: 10,
+                    )),
+                Positioned(
+                  top: 45,
+                  left: 30,
+                  child: IconButton(
+                      onPressed: () {
+                        homeData.scaffoldKey.currentState?.openDrawer();
+                      },
+                      icon: Icon(
+                        Icons.menu,
                         color: Colors.white,
-                        size: 30,)),
+                        size: 30,
+                      )),
                 ),
-
-
                 Positioned(
                   bottom: 0,
                   child: Container(
@@ -278,19 +279,20 @@ class _ProfileState extends State<Profile> {
 
             //Profile Name
             Padding(
-              padding: const EdgeInsets.only(left: 20.0),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
               child: Text(
-                "${user_name.$}",
+                // "${user_name.$}",
+                "Chiranthana",
                 style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 25,
                     fontWeight: FontWeight.w600,
                     fontFamily: "Poppins"),
               ),
             ),
 
-            // CircleAvatar
+            // CircleAvatar, Region, Friends and Neighbors texts
             Padding(
-              padding: const EdgeInsets.only(top: 8.0,left: 20,right: 20),
+              padding: const EdgeInsets.only(top: 8.0, left: 20, right: 20),
               child: Container(
                 height: 50,
                 width: MediaQuery.of(context).size.width,
@@ -302,9 +304,7 @@ class _ProfileState extends State<Profile> {
                       width: 130,
                       child: Stack(
                         children: [
-                          for (var i = 0;
-                              i < [1, 2, 3, 4].length;
-                              i++)
+                          for (var i = 0; i < [1, 2, 3, 4].length; i++)
                             Positioned(
                               left: (i * (1 - .4) * 40).toDouble(),
                               top: 0,
@@ -321,12 +321,13 @@ class _ProfileState extends State<Profile> {
                     ),
                     Column(
                       children: [
+                        //Region text
                         SizedBox(
                           height: 20,
                           child: RichText(
                               text: TextSpan(children: [
                             TextSpan(
-                                text: 'Pitlali :',
+                                text: 'Pitlali : ',
                                 style: TextStyle(
                                     fontFamily: 'Poppins',
                                     fontWeight: FontWeight.w500,
@@ -341,25 +342,27 @@ class _ProfileState extends State<Profile> {
                                     color: Colors.black))
                           ])),
                         ),
+
+                        //Friends and Neighbors text
                         SizedBox(
                           height: 20,
                           child: RichText(
                               text: TextSpan(children: [
-                                TextSpan(
-                                    text: '125 Friends & ',
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 15,
-                                        color: Colors.black)),
-                                TextSpan(
-                                    text: 'Neighbors',
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 15,
-                                        color: Colors.black))
-                              ])),
+                            TextSpan(
+                                text: '125 Friends & ',
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 15,
+                                    color: Colors.black)),
+                            TextSpan(
+                                text: 'Neighbors',
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 15,
+                                    color: Colors.black))
+                          ])),
                         ),
                       ],
                     )
@@ -368,8 +371,9 @@ class _ProfileState extends State<Profile> {
               ),
             ),
 
+            //Updates, Market and My Strock navigation buttons
             Padding(
-              padding: const EdgeInsets.only(left: 20.0,right: 20,top: 16),
+              padding: const EdgeInsets.only(left: 20.0, right: 20, top: 16),
               child: Container(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -378,58 +382,61 @@ class _ProfileState extends State<Profile> {
                       width: 100,
                       height: 44,
                       decoration: BoxDecoration(
-                        color: MyTheme.primary_color,
-                        borderRadius: BorderRadius.circular(10)
-                      ),
+                          color: MyTheme.primary_color,
+                          borderRadius: BorderRadius.circular(10)),
                       child: Center(
-                        child: Text("Updates",
-                        style: TextStyle(color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                            letterSpacing: .5,
-                        fontFamily: "Poppins",
-                        fontSize: 15),),
+                        child: Text(
+                          "Updates",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: .5,
+                              fontFamily: "Poppins",
+                              fontSize: 15),
+                        ),
                       ),
                     ),
-
                     Container(
                       width: 100,
                       height: 44,
                       decoration: BoxDecoration(
                           color: MyTheme.primary_color,
-                          borderRadius: BorderRadius.circular(10)
-                      ),
+                          borderRadius: BorderRadius.circular(10)),
                       child: Center(
-                        child: Text("Market",
-                          style: TextStyle(color: Colors.white,
+                        child: Text(
+                          "Market",
+                          style: TextStyle(
+                              color: Colors.white,
                               fontWeight: FontWeight.w600,
                               fontFamily: "Poppins",
                               letterSpacing: .5,
-                              fontSize: 15),),
+                              fontSize: 15),
+                        ),
                       ),
                     ),
-
                     Container(
                       width: 100,
                       height: 44,
                       decoration: BoxDecoration(
-                          color: MyTheme.primary_color,
-                          borderRadius: BorderRadius.circular(10)
-                      ),
+                          // color: MyTheme.primary_color,
+                          color: MyTheme.field_color,
+                          borderRadius: BorderRadius.circular(10)),
                       child: Center(
-                        child: Text("My Strock",
-                          style: TextStyle(color: Colors.white,
+                        child: Text(
+                          "My Stock",
+                          style: TextStyle(
+                              color: Colors.black,
                               fontWeight: FontWeight.w600,
                               fontFamily: "Poppins",
                               letterSpacing: .5,
-                              fontSize: 15),),
+                              fontSize: 15),
+                        ),
                       ),
                     )
                   ],
                 ),
               ),
             ),
-
-
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 18.0),
@@ -640,44 +647,43 @@ class _ProfileState extends State<Profile> {
               ],
             ),
 
-          if (is_logged_in.$)
-            Column(
-              children: [
-                buildBottomVerticalCardListItem("assets/shop.png",
-                    LangText(context).local!.followed_sellers_ucf,
-                    onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return FollowedSellers();
-                  }));
-                }),
-                Divider(
-                  thickness: 1,
-                  color: MyTheme.light_grey,
-                ),
-              ],
-            ),
+          // if (is_logged_in.$)
+          Column(
+            children: [
+              buildBottomVerticalCardListItem("assets/shop.png",
+                  LangText(context).local!.followed_sellers_ucf, onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return FollowedSellers();
+                }));
+              }),
+              Divider(
+                thickness: 1,
+                color: MyTheme.light_grey,
+              ),
+            ],
+          ),
 
-          if (is_logged_in.$)
-            Column(
-              children: [
-                buildBottomVerticalCardListItem("assets/delete.png",
-                    LangText(context).local!.delete_my_account, onPressed: () {
-                  deleteWarningDialog();
+          // if (is_logged_in.$)
+          Column(
+            children: [
+              buildBottomVerticalCardListItem("assets/delete.png",
+                  LangText(context).local!.delete_my_account, onPressed: () {
+                deleteWarningDialog();
 
-                  // Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  //   return Filter(
-                  //     selected_filter: "sellers",
-                  //   );
-                  // }
-                  //)
-                  //);
-                }),
-                Divider(
-                  thickness: 1,
-                  color: MyTheme.light_grey,
-                ),
-              ],
-            ),
+                // Navigator.push(context, MaterialPageRoute(builder: (context) {
+                //   return Filter(
+                //     selected_filter: "sellers",
+                //   );
+                // }
+                //)
+                //);
+              }),
+              Divider(
+                thickness: 1,
+                color: MyTheme.light_grey,
+              ),
+            ],
+          ),
 
           if (false)
             buildBottomVerticalCardListItem(
@@ -770,10 +776,12 @@ class _ProfileState extends State<Profile> {
             ),
           ),
           buildHorizontalSettingItem(
-              is_logged_in.$,
+              // is_logged_in.$,
+              true,
               "assets/edit.png",
               AppLocalizations.of(context)!.edit_profile_ucf,
-              is_logged_in.$
+              // is_logged_in.$
+              true
                   ? () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
@@ -784,10 +792,12 @@ class _ProfileState extends State<Profile> {
                     }
                   : () => showLoginWarning()),
           buildHorizontalSettingItem(
-              is_logged_in.$,
+              // is_logged_in.$,
+              true,
               "assets/location.png",
               AppLocalizations.of(context)!.address_ucf,
-              is_logged_in.$
+              // is_logged_in.$
+              true
                   ? () {
                       Navigator.push(
                         context,
@@ -1014,7 +1024,8 @@ class _ProfileState extends State<Profile> {
           buildSettingAndAddonsHorizontalMenuItem(
               "assets/orders.png",
               AppLocalizations.of(context)!.orders_ucf,
-              is_logged_in.$
+              // is_logged_in.$
+              true
                   ? () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
@@ -1025,7 +1036,8 @@ class _ProfileState extends State<Profile> {
           buildSettingAndAddonsHorizontalMenuItem(
               "assets/heart.png",
               AppLocalizations.of(context)!.my_wishlist_ucf,
-              is_logged_in.$
+              // is_logged_in.$
+              true
                   ? () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
@@ -1037,7 +1049,8 @@ class _ProfileState extends State<Profile> {
             buildSettingAndAddonsHorizontalMenuItem(
                 "assets/points.png",
                 AppLocalizations.of(context)!.earned_points_ucf,
-                is_logged_in.$
+                // is_logged_in.$
+                true
                     ? () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
@@ -1049,7 +1062,8 @@ class _ProfileState extends State<Profile> {
             buildSettingAndAddonsHorizontalMenuItem(
                 "assets/refund.png",
                 AppLocalizations.of(context)!.refund_requests_ucf,
-                is_logged_in.$
+                // is_logged_in.$
+                true
                     ? () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
@@ -1061,7 +1075,8 @@ class _ProfileState extends State<Profile> {
             buildSettingAndAddonsHorizontalMenuItem(
                 "assets/messages.png",
                 AppLocalizations.of(context)!.messages_ucf,
-                is_logged_in.$
+                // is_logged_in.$
+                true
                     ? () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
@@ -1074,7 +1089,8 @@ class _ProfileState extends State<Profile> {
             buildSettingAndAddonsHorizontalMenuItem(
                 "assets/auction.png",
                 AppLocalizations.of(context)!.auction_ucf,
-                is_logged_in.$
+                // is_logged_in.$
+                true
                     ? () {
                         // Navigator.push(context,
                         //     MaterialPageRoute(builder: (context) {
@@ -1086,7 +1102,8 @@ class _ProfileState extends State<Profile> {
             buildSettingAndAddonsHorizontalMenuItem(
                 "assets/classified_product.png",
                 AppLocalizations.of(context)!.classified_products,
-                is_logged_in.$
+                // is_logged_in.$
+                true
                     ? () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
@@ -1098,7 +1115,8 @@ class _ProfileState extends State<Profile> {
           buildSettingAndAddonsHorizontalMenuItem(
               "assets/download.png",
               AppLocalizations.of(context)!.downloads_ucf,
-              is_logged_in.$
+              // is_logged_in.$
+              true
                   ? () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
@@ -1118,7 +1136,8 @@ class _ProfileState extends State<Profile> {
       // color: Colors.red,
       // width: DeviceInfo(context).width / 4,
       child: InkWell(
-        onTap: is_logged_in.$
+        // onTap: is_logged_in.$
+        onTap: true
             ? onTap
             : () {
                 showLoginWarning();
@@ -1130,9 +1149,8 @@ class _ProfileState extends State<Profile> {
               img,
               width: 16,
               height: 16,
-              color: is_logged_in.$
-                  ? MyTheme.dark_font_grey
-                  : MyTheme.medium_grey_50,
+              // color: is_logged_in.$
+              color: true ? MyTheme.dark_font_grey : MyTheme.medium_grey_50,
             ),
             SizedBox(
               height: 10,
@@ -1142,9 +1160,8 @@ class _ProfileState extends State<Profile> {
               textAlign: TextAlign.center,
               maxLines: 1,
               style: TextStyle(
-                  color: is_logged_in.$
-                      ? MyTheme.dark_font_grey
-                      : MyTheme.medium_grey_50,
+                  // color: is_logged_in.$
+                  color: true ? MyTheme.dark_font_grey : MyTheme.medium_grey_50,
                   fontSize: 12),
             )
           ],
@@ -1504,7 +1521,8 @@ class _ProfileState extends State<Profile> {
                 border: Border.all(color: MyTheme.white, width: 1),
                 //shape: BoxShape.rectangle,
               ),
-              child: is_logged_in.$
+              // child: is_logged_in.$
+              child: true
                   ? ClipRRect(
                       clipBehavior: Clip.hardEdge,
                       borderRadius: BorderRadius.all(Radius.circular(100.0)),
@@ -1533,7 +1551,8 @@ class _ProfileState extends State<Profile> {
                   borderRadius: BorderRadius.circular(6),
                   side: BorderSide(color: MyTheme.white)),
               child: Text(
-                is_logged_in.$
+                // is_logged_in.$
+                true
                     ? AppLocalizations.of(context)!.logout_ucf
                     : LangText(context).local!.login_ucf,
                 style: TextStyle(
@@ -1542,7 +1561,8 @@ class _ProfileState extends State<Profile> {
                     fontWeight: FontWeight.w500),
               ),
               onPressed: () {
-                if (is_logged_in.$)
+                // if (is_logged_in.$)
+                if (true)
                   onTapLogout(context);
                 else
                   Navigator.push(context,
@@ -1556,7 +1576,8 @@ class _ProfileState extends State<Profile> {
   }
 
   Widget buildUserInfo() {
-    return is_logged_in.$
+    // return is_logged_in.$
+    return true
         ? Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
