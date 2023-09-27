@@ -1,3 +1,5 @@
+//modified
+
 import 'package:active_ecommerce_flutter/app_config.dart';
 import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
@@ -11,7 +13,10 @@ import 'package:active_ecommerce_flutter/repositories/auth_repository.dart';
 import 'package:active_ecommerce_flutter/screens/common_webview_screen.dart';
 import 'package:active_ecommerce_flutter/features/auth/login.dart';
 import 'package:active_ecommerce_flutter/features/auth/otp.dart';
+import 'package:active_ecommerce_flutter/features/auth/auth_exceptions.dart';
+import 'package:active_ecommerce_flutter/features/auth/auth_service.dart';
 import 'package:active_ecommerce_flutter/ui_elements/auth_ui.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,14 +25,14 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:toast/toast.dart';
 import 'package:validators/validators.dart';
 
-import '../repositories/address_repository.dart';
+import '../../repositories/address_repository.dart';
 
-class Registration2 extends StatefulWidget {
+class Registration extends StatefulWidget {
   @override
-  _Registration2State createState() => _Registration2State();
+  _RegistrationState createState() => _RegistrationState();
 }
 
-class _Registration2State extends State<Registration2> {
+class _RegistrationState extends State<Registration> {
   String _register_by = "email"; //phone or email
   String initialCountry = 'US';
 
@@ -45,6 +50,7 @@ class _Registration2State extends State<Registration2> {
   TextEditingController _phoneNumberController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _passwordConfirmController = TextEditingController();
+
 
   @override
   void initState() {
@@ -110,42 +116,44 @@ class _Registration2State extends State<Registration2> {
       ToastComponent.showDialog(
           AppLocalizations.of(context)!.passwords_do_not_match,
           gravity: Toast.center,
-          duration: Toast.lengthLong);
+          duration: Toast.lengthLong
+      );
       return;
     }
 
-    var signupResponse = await AuthRepository().getSignupResponse(
-        name,
-        _register_by == 'email' ? email : _phone,
-        password,
-        password_confirm,
-        _register_by,
-        googleRecaptchaKey);
-
-    if (signupResponse.result == false) {
-      var message = "";
-      signupResponse.message.forEach((key, value) {
-        value.forEach((messages) {
-          message += messages + "\n";
-        });
-      });
-
-      ToastComponent.showDialog(message, gravity: Toast.center, duration: 3);
+    if (_register_by == "phone") {
+      print('phone login attempted');
     } else {
-      ToastComponent.showDialog(signupResponse.message,
-          gravity: Toast.center, duration: Toast.lengthLong);
-      if ((mail_verification_status.$ && _register_by == "email") ||
-          _register_by == "phone") {
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return Otp(
-            verify_by: _register_by,
-            user_id: signupResponse.user_id,
-          );
-        }));
-      } else {
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return Login();
-        }));
+      try {
+        final newUser = await AuthService.firebase().createUserWithEmail(
+          email: email,
+          password: password,
+        );
+
+      } on EmailAlreadyInUseAuthException {
+        ToastComponent.showDialog(
+            'The email address is already in use by another account.',
+            gravity: Toast.center,
+            duration: Toast.lengthLong
+        );
+      } on InvalidEmailAuthException {
+        ToastComponent.showDialog(
+            'The email address is not valid.',
+            gravity: Toast.center,
+            duration: Toast.lengthLong
+        );
+      } on WeakPasswordAuthException {
+        ToastComponent.showDialog(
+            'The password is not strong enough.',
+            gravity: Toast.center,
+            duration: Toast.lengthLong
+        );
+      } on GenericAuthException {
+        ToastComponent.showDialog(
+            'Something went wrong. Please try again later.',
+            gravity: Toast.center,
+            duration: Toast.lengthLong
+        );
       }
     }
   }

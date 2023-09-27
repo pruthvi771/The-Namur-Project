@@ -5,7 +5,7 @@ import 'package:active_ecommerce_flutter/screens/contact_us/contact_us.dart';
 import 'package:active_ecommerce_flutter/screens/my_account/my_account.dart';
 import 'package:active_ecommerce_flutter/screens/notification/notification_screen.dart';
 import 'package:active_ecommerce_flutter/screens/setting/setting.dart';
-import 'package:active_ecommerce_flutter/services/auth_service.dart';
+import 'package:active_ecommerce_flutter/features/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -14,7 +14,7 @@ import 'package:active_ecommerce_flutter/screens/profile.dart';
 import 'package:active_ecommerce_flutter/screens/order_list.dart';
 import 'package:active_ecommerce_flutter/screens/wishlist.dart';
 
-import 'package:active_ecommerce_flutter/screens/login.dart';
+import 'package:active_ecommerce_flutter/features/auth/login.dart';
 import 'package:active_ecommerce_flutter/screens/messenger_list.dart';
 import 'package:active_ecommerce_flutter/screens/wallet.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';

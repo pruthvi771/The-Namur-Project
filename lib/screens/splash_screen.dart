@@ -7,14 +7,14 @@ import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/presenter/currency_presenter.dart';
 import 'package:active_ecommerce_flutter/providers/locale_provider.dart';
-import 'package:active_ecommerce_flutter/screens/login.dart';
+import 'package:active_ecommerce_flutter/features/auth/login.dart';
 import 'package:active_ecommerce_flutter/screens/main.dart';
-import 'package:active_ecommerce_flutter/services/auth_service.dart';
+import 'package:active_ecommerce_flutter/features/auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 
-import '../services/auth_user.dart';
+import '../features/auth/auth_user.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
