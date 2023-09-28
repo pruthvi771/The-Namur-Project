@@ -30,7 +30,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             // lastName: event.lastName,
             // businessName: event.businessName,
             );
-        emit(Authenticated());
+        emit(Success());
       } catch (e) {
         emit(AuthError(e.toString()));
         emit(UnAuthenticated());

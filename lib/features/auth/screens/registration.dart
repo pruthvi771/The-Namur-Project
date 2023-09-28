@@ -7,9 +7,13 @@ import 'package:active_ecommerce_flutter/custom/google_recaptcha.dart';
 import 'package:active_ecommerce_flutter/custom/input_decorations.dart';
 import 'package:active_ecommerce_flutter/custom/intl_phone_input.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_bloc.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_event.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_state.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
-import 'package:active_ecommerce_flutter/repositories/auth_repository.dart';
+// import 'package:active_ecommerce_flutter/repositories/auth_repository.dart';
 import 'package:active_ecommerce_flutter/screens/common_webview_screen.dart';
 import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
 import 'package:active_ecommerce_flutter/features/auth/screens/otp.dart';
@@ -20,6 +24,7 @@ import 'package:active_ecommerce_flutter/ui_elements/auth_ui.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:toast/toast.dart';
@@ -73,7 +78,7 @@ class _RegistrationState extends State<Registration> {
     super.dispose();
   }
 
-  onPressSignUp() async {
+  onPressSignUp(BuildContext buildContext) async {
     var name = _nameController.text.toString();
     var email = _emailController.text.toString();
     var password = _passwordController.text.toString();
@@ -85,7 +90,7 @@ class _RegistrationState extends State<Registration> {
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     } else if (_register_by == 'email' && (email == "" || !isEmail(email))) {
-      ToastComponent.showDialog(AppLocalizations.of(context)!.enter_email,
+      ToastComponent.showDialog('Enter a valid email address',
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     } else if (_register_by == 'phone' && _phone == "") {
@@ -122,10 +127,8 @@ class _RegistrationState extends State<Registration> {
     if (_register_by == "phone") {
       print('phone login attempted');
     } else {
-      // final newUser = await AuthService.firebase().createUserWithEmail(
-      //   email: email,
-      //   password: password,
-      // );
+      BlocProvider.of<AuthBloc>(buildContext)
+          .add(SignUpWithEmailRequested(email, password));
     }
   }
 
@@ -133,10 +136,40 @@ class _RegistrationState extends State<Registration> {
   Widget build(BuildContext context) {
     final _screen_height = MediaQuery.of(context).size.height;
     final _screen_width = MediaQuery.of(context).size.width;
-    return AuthScreen.buildScreen(
-        context,
-        "${AppLocalizations.of(context)!.join_ucf} " + AppConfig.app_name,
-        buildBody(context, _screen_width));
+    AuthRepository _authRepository = AuthRepository();
+    return BlocProvider(
+      create: (context) => AuthBloc(authRepository: _authRepository),
+      child: BlocListener<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is Success) {
+            Navigator.pop(context);
+            ToastComponent.showDialog('User created successfully.',
+                gravity: Toast.center, duration: Toast.lengthLong);
+          }
+          if (state is AuthError) {
+            final errorMessage =
+                state.error.toString().replaceAll('Exception:', '');
+            ToastComponent.showDialog(errorMessage.trim(),
+                gravity: Toast.center, duration: Toast.lengthLong);
+          }
+        },
+        child: BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, state) {
+            if (state is Loading)
+              return Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            return AuthScreen.buildScreen(
+                context,
+                "${AppLocalizations.of(context)!.join_ucf} " +
+                    AppConfig.app_name,
+                buildBody(context, _screen_width));
+          },
+        ),
+      ),
+    );
   }
 
   Column buildBody(BuildContext context, double _screen_width) {
@@ -482,7 +515,7 @@ class _RegistrationState extends State<Registration> {
                     ),
                     onPressed: _isAgree!
                         ? () {
-                            onPressSignUp();
+                            onPressSignUp(context);
                           }
                         : null,
                   ),

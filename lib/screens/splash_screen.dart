@@ -9,6 +9,7 @@ import 'package:active_ecommerce_flutter/presenter/currency_presenter.dart';
 import 'package:active_ecommerce_flutter/providers/locale_provider.dart';
 import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
 import 'package:active_ecommerce_flutter/screens/main.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
@@ -51,27 +52,29 @@ class _SplashScreenState extends State<SplashScreen> {
             .setLocale(app_mobile_language.$!);
 
         // user = AuthService.firebase().currentUser;
-        // if (user != null) {
-        //   Navigator.pushAndRemoveUntil(
-        //     context,
-        //     MaterialPageRoute(
-        //       builder: (context) {
-        //         return Main(); // Main(go_back: false,);
-        //       },
-        //     ),
-        //     (newRoute) => false,
-        //   );
-        // } else {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return Login(); // Main(go_back: false,);
-            },
-          ),
-          (route) => false,
-        );
-        // }
+        final FirebaseAuth auth = FirebaseAuth.instance;
+        final User? user = auth.currentUser;
+        if (user != null) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return Main(); // Main(go_back: false,);
+              },
+            ),
+            (newRoute) => false,
+          );
+        } else {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return Login(); // Main(go_back: false,);
+              },
+            ),
+            (route) => false,
+          );
+        }
       });
     });
   }

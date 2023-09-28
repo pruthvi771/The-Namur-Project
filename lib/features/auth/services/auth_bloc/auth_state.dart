@@ -24,6 +24,11 @@ class UnAuthenticated extends AuthState {
   List<Object?> get props => [];
 }
 
+class Success extends AuthState {
+  @override
+  List<Object?> get props => [];
+}
+
 class PhoneVerificationCompleted extends AuthState {
   final String? verificationId;
 

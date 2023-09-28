@@ -111,14 +111,17 @@ class _LoginState extends State<Login> {
     } else {
       print('calling begins');
       BlocProvider.of<AuthBloc>(buildContext).add(
-        SignInWithEmailRequested(_emailController.text.toString(),
-            _passwordController.text.toString()),
+        SignInWithEmailRequested(email, password),
       );
       print('calling ends');
     }
   }
 
-  onPressedGoogleLogin() async {}
+  onPressedGoogleLogin(BuildContext buildContext) async {
+    BlocProvider.of<AuthBloc>(buildContext).add(
+      GoogleSignInRequested(),
+    );
+  }
 
   onPressedFacebookLogin() async {
     print('Facebook login attempted');
@@ -140,6 +143,8 @@ class _LoginState extends State<Login> {
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is Authenticated) {
+            ToastComponent.showDialog('Login Successful',
+                gravity: Toast.center, duration: Toast.lengthLong);
             Navigator.pushAndRemoveUntil(context,
                 MaterialPageRoute(builder: (context) {
               return Main();
@@ -517,7 +522,7 @@ class _LoginState extends State<Login> {
                   children: [
                     InkWell(
                       onTap: () {
-                        onPressedGoogleLogin();
+                        onPressedGoogleLogin(context);
                         // print('google');
                       },
                       child: Container(
@@ -539,44 +544,44 @@ class _LoginState extends State<Login> {
               //       },
               //     ),
               //   ),
-              Container(
-                child: Center(
-                  child: Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Visibility(
-                          visible: allow_google_login.$,
-                          child: InkWell(
-                            onTap: () {
-                              onPressedGoogleLogin();
-                              // print('google');
-                            },
-                            child: Container(
-                              width: 28,
-                              child: Image.asset("assets/google_logo.png"),
-                            ),
-                          ),
-                        ),
-                        if (allow_twitter_login.$)
-                          Padding(
-                            padding: const EdgeInsets.only(left: 15.0),
-                            child: InkWell(
-                              onTap: () {
-                                // onPressedTwitterLogin();
-                                print('Twitter');
-                              },
-                              child: Container(
-                                width: 28,
-                                child: Image.asset("assets/twitter_logo.png"),
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+              // Container(
+              //   child: Center(
+              //     child: Container(
+              //       child: Row(
+              //         mainAxisAlignment: MainAxisAlignment.center,
+              //         children: [
+              //           Visibility(
+              //             visible: allow_google_login.$,
+              //             child: InkWell(
+              //               onTap: () {
+              //                 onPressedGoogleLogin(context);
+              //                 // print('google');
+              //               },
+              //               child: Container(
+              //                 width: 28,
+              //                 child: Image.asset("assets/google_logo.png"),
+              //               ),
+              //             ),
+              //           ),
+              //           if (allow_twitter_login.$)
+              //             Padding(
+              //               padding: const EdgeInsets.only(left: 15.0),
+              //               child: InkWell(
+              //                 onTap: () {
+              //                   // onPressedTwitterLogin();
+              //                   print('Twitter');
+              //                 },
+              //                 child: Container(
+              //                   width: 28,
+              //                   child: Image.asset("assets/twitter_logo.png"),
+              //                 ),
+              //               ),
+              //             ),
+              //         ],
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         )

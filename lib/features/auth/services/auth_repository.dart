@@ -135,26 +135,39 @@ class AuthRepository {
   Future<String?> phoneNumberVerification({
     required String phone,
   }) async {
-    Completer<String?> verificationIdCompleter = Completer<String?>();
+    try {
+      Completer<String?> verificationIdCompleter = Completer<String?>();
 
-    await _firebaseAuth.verifyPhoneNumber(
-      phoneNumber: phone,
-      verificationCompleted: (_) {
-        print('Phone number automatically verified and user signed in: ');
-      },
-      verificationFailed: (FirebaseAuthException e) {
-        print(e.code);
-        print(e.message);
-        verificationIdCompleter.completeError('Verification failed');
-      },
-      codeSent: (String verificationId, int? resendToken) {
-        print('OTP sent to your phone number');
-        verificationIdCompleter.complete(verificationId);
-      },
-      codeAutoRetrievalTimeout: (String verificationId) {},
-    );
+      await _firebaseAuth.verifyPhoneNumber(
+        phoneNumber: phone,
+        verificationCompleted: (_) {
+          print('Phone number automatically verified and user signed in: ');
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          print(e.code);
+          print(e.message);
+          verificationIdCompleter.completeError('Verification failed');
+        },
+        codeSent: (String verificationId, int? resendToken) {
+          print('OTP sent to your phone number');
+          verificationIdCompleter.complete(verificationId);
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {},
+      );
 
-    return verificationIdCompleter.future;
+      return verificationIdCompleter.future;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'invalid-phone-number') {
+        throw Exception('Invalid phone number. Please try again.');
+      } else if (e.code == 'too-many-requests') {
+        throw Exception(
+            'Maximum requests limit reached. Please try again later');
+      } else {
+        throw Exception('Something went wrong. Please try again.');
+      }
+    } catch (_) {
+      throw Exception('Something went wrong. Please try again.');
+    }
   }
 
   Future<void> loginWithPhone(
