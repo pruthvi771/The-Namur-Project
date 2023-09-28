@@ -46,6 +46,7 @@ import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:toast/toast.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../repositories/auth_repository.dart';
 
@@ -234,6 +235,16 @@ class _ProfileState extends State<Profile> {
       'assets/bugs.png',
       'assets/orange (1).png',
     ];
+
+    _launchYouTubeVideo(url) async {
+      print('clicked');
+      final Uri _url = Uri.parse(url);
+      if (await canLaunchUrl(_url)) {
+        await launchUrl(_url);
+      } else {
+        throw 'Could not launch';
+      }
+    }
 
     return CustomScrollView(
       controller: _mainScrollController,
@@ -497,9 +508,42 @@ class _ProfileState extends State<Profile> {
             ),
 
             if (_profileSection == ProfileSection.updates)
-              Text(
-                'updates',
+              Column(
+                children: [
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: InkWell(
+                        onTap: () async {
+                          await _launchYouTubeVideo(
+                              'https://www.youtube.com/watch?v=o5DGLMY7jsc');
+                        },
+                        child: Image.network(
+                            'https://i.ytimg.com/vi/o5DGLMY7jsc/maxresdefault.jpg'),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: InkWell(
+                        onTap: () async {
+                          await _launchYouTubeVideo(
+                              'https://www.youtube.com/watch?v=VeO_kVYPmmg');
+                        },
+                        child: Image.network(
+                            'https://i.ytimg.com/vi/VeO_kVYPmmg/maxresdefault.jpg'),
+                      ),
+                    ),
+                  ),
+                ],
               ),
+
             if (_profileSection == ProfileSection.market)
               Text(
                 'market',
@@ -529,7 +573,7 @@ class _ProfileState extends State<Profile> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
                         color: (index % 5 == 0)
-                            ? MyTheme.green_light
+                            ? MyTheme.green_neon
                             : MyTheme.white,
                       ),
                       child: Column(
@@ -561,39 +605,39 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
 
-            //divider
-            SizedBox(
-              height: 20,
-            ),
-            Container(
-              padding: const EdgeInsets.all(8.0),
-              child: Divider(
-                thickness: 30,
-                color: Colors.red,
-              ),
-            ),
+            // //divider
+            // SizedBox(
+            //   height: 20,
+            // ),
+            // Container(
+            //   padding: const EdgeInsets.all(8.0),
+            //   child: Divider(
+            //     thickness: 30,
+            //     color: Colors.red,
+            //   ),
+            // ),
 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18.0),
-              child: buildCountersRow(),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18.0),
-              child: buildHorizontalSettings(),
-            ),
             // Padding(
             //   padding: const EdgeInsets.symmetric(horizontal: 18.0),
-            //   child: buildSettingAndAddonsVerticalMenu(),
+            //   child: buildCountersRow(),
             // ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18.0),
-              child: buildSettingAndAddonsHorizontalMenu(),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18.0),
-              child: buildBottomVerticalCardList(),
-            ),
+
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 18.0),
+            //   child: buildHorizontalSettings(),
+            // ),
+            // // Padding(
+            // //   padding: const EdgeInsets.symmetric(horizontal: 18.0),
+            // //   child: buildSettingAndAddonsVerticalMenu(),
+            // // ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 18.0),
+            //   child: buildSettingAndAddonsHorizontalMenu(),
+            // ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 18.0),
+            //   child: buildBottomVerticalCardList(),
+            // ),
           ]),
         )
       ],

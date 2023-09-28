@@ -28,7 +28,7 @@ class MyTheme {
   static Color golden_shadow = Color.fromRGBO(255, 168, 0, .4);
   static Color green = Colors.green;
   static Color? green_light = Colors.green[200];
-  static Color green_neon = const Color(0xff00FF00);
+  static Color green_neon = Color.fromARGB(255, 160, 255, 160);
   static Color shimmer_base = Colors.grey.shade50;
   static Color shimmer_highlighted = Colors.grey.shade200;
   static Color primary_color = const Color(0xff107B28);
