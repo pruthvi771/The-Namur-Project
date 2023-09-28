@@ -41,7 +41,7 @@ import 'package:toast/toast.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../repositories/auth_repository.dart';
-import '../../features/auth/services/auth_service.dart';
+// import '../../features/auth/services/auth_service.text';
 import '../notification/notification_screen.dart';
 
 class MyAccount extends StatefulWidget {
@@ -64,7 +64,8 @@ class _MyAccountState extends State<MyAccount> {
   String _orderCounterString = "00";
   late BuildContext loadingcontext;
 
-  var user = AuthService.firebase().currentUser;
+  // var user = AuthService.firebase().currentUser;
+  var user = null;
 
   @override
   void initState() {

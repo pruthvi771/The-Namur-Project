@@ -14,7 +14,7 @@ import 'package:active_ecommerce_flutter/screens/common_webview_screen.dart';
 import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
 import 'package:active_ecommerce_flutter/features/auth/screens/otp.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_exceptions.dart';
-import 'package:active_ecommerce_flutter/features/auth/services/auth_service.dart';
+// import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
 import 'package:active_ecommerce_flutter/ui_elements/auth_ui.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -123,10 +123,10 @@ class _RegistrationState extends State<Registration> {
       print('phone login attempted');
     } else {
       try {
-        final newUser = await AuthService.firebase().createUserWithEmail(
-          email: email,
-          password: password,
-        );
+        // final newUser = await AuthService.firebase().createUserWithEmail(
+        //   email: email,
+        //   password: password,
+        // );
       } on EmailAlreadyInUseAuthException {
         ToastComponent.showDialog(
             'The email address is already in use by another account.',

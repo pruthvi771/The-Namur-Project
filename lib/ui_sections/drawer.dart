@@ -5,7 +5,7 @@ import 'package:active_ecommerce_flutter/screens/contact_us/contact_us.dart';
 import 'package:active_ecommerce_flutter/screens/my_account/my_account.dart';
 import 'package:active_ecommerce_flutter/screens/notification/notification_screen.dart';
 import 'package:active_ecommerce_flutter/screens/setting/setting.dart';
-import 'package:active_ecommerce_flutter/features/auth/services/auth_service.dart';
+// import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -57,7 +57,8 @@ class _MainDrawerState extends State<MainDrawer> {
     }), (route) => false);
   }
 
-  final user = AuthService.firebase().currentUser;
+  // final user = AuthService.firebase().currentUser;
+  final user = null;
 
   @override
   Widget build(BuildContext context) {
@@ -349,8 +350,9 @@ class _MainDrawerState extends State<MainDrawer> {
                                       color: MyTheme.primary_color,
                                       fontSize: 18)),
                               onTap: () async {
-                                await AuthService.firebase().logOut();
-                                final user = AuthService.firebase().currentUser;
+                                // await AuthService.firebase().logOut();
+                                // final user = AuthService.firebase().currentUser;
+                                final user = null;
                                 if (user == null) {
                                   ToastComponent.showDialog('Logout Successful',
                                       gravity: Toast.center,

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
-import 'package:active_ecommerce_flutter/features/auth/services/auth_provider.dart';
+// import 'package:active_ecommerce_flutter/features/auth/services/auth_provider.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_exceptions.dart';
 
 import 'package:firebase_auth/firebase_auth.dart'
@@ -13,7 +13,7 @@ import 'package:firebase_auth/firebase_auth.dart'
         PhoneAuthProvider;
 import 'package:google_sign_in/google_sign_in.dart';
 
-class FirebaseAuthProvider implements AuthProvider {
+class AuthRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   AuthUser? get currentUser {

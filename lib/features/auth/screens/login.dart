@@ -4,12 +4,16 @@ import 'package:active_ecommerce_flutter/features/auth/screens/otp.dart';
 import 'package:active_ecommerce_flutter/features/auth/screens/password_forget.dart';
 // import 'package:active_ecommerce_flutter/screens/password_otp.dart';
 import 'package:active_ecommerce_flutter/features/auth/screens/registration.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_bloc.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_state.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_exceptions.dart';
-import 'package:active_ecommerce_flutter/features/auth/services/auth_service.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
+// import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 // import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -27,6 +31,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../repositories/address_repository.dart';
 import '../../../ui_elements/auth_ui.dart';
 import '../../../screens/main.dart';
+import '../services/auth_bloc/auth_event.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -101,18 +106,18 @@ class _LoginState extends State<Login> {
       try {
         print('+91 $phone');
 
-        final String? verificationId = await AuthService.firebase()
-            .phoneNumberVerification(phone: '+91 $phone');
-        print('response $verificationId');
+        // final String? verificationId = await AuthService.firebase()
+        //     .phoneNumberVerification(phone: '+91 $phone');
+        // print('response $verificationId');
 
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => Otp(
-                      verify_by: 'phone',
-                      verificationId: verificationId.toString(),
-                      // resendToken: resendToken,
-                    )));
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (context) => Otp(
+        //               verify_by: 'phone',
+        //               verificationId: verificationId.toString(),
+        //               // resendToken: resendToken,
+        //             )));
         ToastComponent.showDialog('OTP sent to your phone number',
             gravity: Toast.center, duration: Toast.lengthLong);
       } on GenericAuthException {
@@ -121,8 +126,13 @@ class _LoginState extends State<Login> {
       }
     } else {
       try {
-        final user = await AuthService.firebase()
-            .loginWithEmail(email: email, password: password);
+        // final user = await AuthService.firebase()
+        //     .loginWithEmail(email: email, password: password);
+        // context.read<AuthBloc>().add(SignInWithEmailRequested(email, password));
+        // BlocProvider.of<AuthBloc>(context).add(
+        //   SignInWithEmailRequested(
+        //       email, password),
+        // );
 
         // print(user);
         Navigator.pushAndRemoveUntil(context,
@@ -155,7 +165,7 @@ class _LoginState extends State<Login> {
 
   onPressedGoogleLogin() async {
     try {
-      final user = await AuthService.firebase().loginWithGoogle();
+      // final user = await AuthService.firebase().loginWithGoogle();
 
       ToastComponent.showDialog('Logged in successfully',
           gravity: Toast.center, duration: Toast.lengthLong);
@@ -199,13 +209,47 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     final _screen_height = MediaQuery.of(context).size.height;
     final _screen_width = MediaQuery.of(context).size.width;
+    AuthRepository _authRepository = AuthRepository();
     // return Scaffold(
     //     body: LoginScreenUI(_screen_width, context));
-    return Scaffold(
-      body: AuthScreen.buildScreen(
-          context,
-          "${AppLocalizations.of(context)!.login_to} " + AppConfig.app_name,
-          buildBody(context, _screen_width)),
+    return BlocProvider(
+      create: (context) => AuthBloc(authRepository: _authRepository),
+      child: BlocListener<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is Authenticated) {
+            Navigator.pushAndRemoveUntil(context,
+                MaterialPageRoute(builder: (context) {
+              return Main();
+            }), (newRoute) => false);
+          }
+          if (state is AuthError) {
+            // Showing the error message if the user has entered invalid credentials
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(state.error)));
+          }
+        },
+        child: BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, state) {
+            if (state is Loading)
+             return Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+            if (state is Authenticated)
+              return Scaffold(
+                body: Center(child: Text('It fucking worked.'),),
+            );
+            return Scaffold(
+              body: AuthScreen.buildScreen(
+                  context,
+                  "${AppLocalizations.of(context)!.login_to} " +
+                      AppConfig.app_name,
+                  buildBody(context, _screen_width)),
+            );
+          },
+        ),
+      ),
     );
   }
 
@@ -448,7 +492,10 @@ class _LoginState extends State<Login> {
                               fontWeight: FontWeight.w500),
                         ),
                         onPressed: () {
-                          onPressedLogin();
+                          // onPressedLogin();
+                          BlocProvider.of<AuthBloc>(context).add(
+                            SignInWithEmailRequested(),
+                          );
                         },
                       ),
                     ),

@@ -1,7 +1,7 @@
 import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_exceptions.dart';
-import 'package:active_ecommerce_flutter/features/auth/services/auth_service.dart';
+// import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -94,10 +94,10 @@ class _OtpState extends State<Otp> {
     // );
 
     try {
-      final user = await AuthService.firebase()
-          .loginWithPhone(verificationId: widget.verificationId, otp: code);
+      // final user = await AuthService.firebase()
+      //     .loginWithPhone(verificationId: widget.verificationId, otp: code);
 
-      print('User: ${user?.userId.toString()}');
+      // print('User: ${user?.userId.toString()}');
       ToastComponent.showDialog(
         'Login Successful',
         gravity: Toast.center,
