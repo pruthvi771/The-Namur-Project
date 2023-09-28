@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:active_ecommerce_flutter/features/auth/auth_user.dart';
-import 'package:active_ecommerce_flutter/features/auth/auth_provider.dart';
-import 'package:active_ecommerce_flutter/features/auth/auth_exceptions.dart';
+import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_provider.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_exceptions.dart';
 
 import 'package:firebase_auth/firebase_auth.dart'
     show

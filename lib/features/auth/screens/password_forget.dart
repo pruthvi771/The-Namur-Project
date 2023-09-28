@@ -1,7 +1,7 @@
 import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
-import 'package:active_ecommerce_flutter/features/auth/auth_exceptions.dart';
-import 'package:active_ecommerce_flutter/features/auth/auth_service.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_exceptions.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_service.dart';
 import 'package:active_ecommerce_flutter/ui_elements/auth_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -64,17 +64,15 @@ class _PasswordForgetState extends State<PasswordForget> {
     //       duration: Toast.lengthLong);
     //   return;
     // }
-    try { 
-
+    try {
       await AuthService.firebase().resetPasswordForEmail(email: email);
       ToastComponent.showDialog('Password reset link sent to your email.',
           gravity: Toast.center, duration: Toast.lengthLong);
 
       Navigator.pushAndRemoveUntil(context,
           MaterialPageRoute(builder: (context) {
-            return Login();
-          }), (newRoute) => false);
-
+        return Login();
+      }), (newRoute) => false);
     } on InvalidEmailAuthException {
       ToastComponent.showDialog('Invalid email',
           gravity: Toast.center, duration: Toast.lengthLong);
@@ -82,13 +80,14 @@ class _PasswordForgetState extends State<PasswordForget> {
       ToastComponent.showDialog('User not found. Please register first',
           gravity: Toast.center, duration: Toast.lengthLong);
     } on TooManyRequestsAuthException {
-      ToastComponent.showDialog('Maximum requests limit reached. Please try again later',
-          gravity: Toast.center, duration: Toast.lengthLong);
+      ToastComponent.showDialog(
+          'Maximum requests limit reached. Please try again later',
+          gravity: Toast.center,
+          duration: Toast.lengthLong);
     } on GenericAuthException {
       ToastComponent.showDialog('Something went wrong. Please try again.',
           gravity: Toast.center, duration: Toast.lengthLong);
     }
-
 
     // var passwordForgetResponse = await AuthRepository()
     //     .getPasswordForgetResponse(

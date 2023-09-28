@@ -1,12 +1,12 @@
 import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
-import 'package:active_ecommerce_flutter/features/auth/auth_exceptions.dart';
-import 'package:active_ecommerce_flutter/features/auth/auth_service.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_exceptions.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_service.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:active_ecommerce_flutter/custom/input_decorations.dart';
-import 'package:active_ecommerce_flutter/features/auth/login.dart';
+import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
 import 'package:active_ecommerce_flutter/repositories/auth_repository.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:otp_text_field/style.dart';
@@ -15,11 +15,16 @@ import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 
-import '../../screens/main.dart';
+import 'package:active_ecommerce_flutter/screens/main.dart';
 // import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 
 class Otp extends StatefulWidget {
-  Otp({Key? key, this.verify_by = "email", this.user_id, required this.verificationId}) : super(key: key);
+  Otp(
+      {Key? key,
+      this.verify_by = "email",
+      this.user_id,
+      required this.verificationId})
+      : super(key: key);
   final String verify_by;
   final int? user_id;
   final String verificationId;
@@ -62,7 +67,6 @@ class _OtpState extends State<Otp> {
   }
 
   onPressConfirm() async {
-
     // var code = _verificationController.toString();
     String code = otp.join('');
     print('OTP: $code');
@@ -89,35 +93,35 @@ class _OtpState extends State<Otp> {
     //   smsCode: code,
     // );
 
-
     try {
-      final user = await AuthService.firebase().loginWithPhone(verificationId: widget.verificationId, otp: code);
+      final user = await AuthService.firebase()
+          .loginWithPhone(verificationId: widget.verificationId, otp: code);
 
-        print('User: ${user?.userId.toString()}');
-        ToastComponent.showDialog(
-          'Login Successful',
-          gravity: Toast.center,
-          duration: Toast.lengthLong,
-        );
-        Navigator.pushAndRemoveUntil(context,
-            MaterialPageRoute(builder: (context) {
-              return Main();
-            }), (newRoute) => false);
-
+      print('User: ${user?.userId.toString()}');
+      ToastComponent.showDialog(
+        'Login Successful',
+        gravity: Toast.center,
+        duration: Toast.lengthLong,
+      );
+      Navigator.pushAndRemoveUntil(context,
+          MaterialPageRoute(builder: (context) {
+        return Main();
+      }), (newRoute) => false);
     } on InvalidOTPAuthException {
       ToastComponent.showDialog('Invalid OTP',
           gravity: Toast.center, duration: Toast.lengthLong);
-    }  on TooManyRequestsAuthException {
-      ToastComponent.showDialog('Maximum requests limit reached. Please try again later',
-          gravity: Toast.center, duration: Toast.lengthLong);
-    }  on ExpiredOTPAuthException {
+    } on TooManyRequestsAuthException {
+      ToastComponent.showDialog(
+          'Maximum requests limit reached. Please try again later',
+          gravity: Toast.center,
+          duration: Toast.lengthLong);
+    } on ExpiredOTPAuthException {
       ToastComponent.showDialog('OTP Expired.',
           gravity: Toast.center, duration: Toast.lengthLong);
     } on GenericAuthException {
       ToastComponent.showDialog('Something went wrong. Please try again.',
           gravity: Toast.center, duration: Toast.lengthLong);
     }
-
 
     // var confirmCodeResponse =
     //     await AuthRepository().getConfirmCodeResponse(widget.user_id, code);
@@ -132,7 +136,6 @@ class _OtpState extends State<Otp> {
     //   Navigator.push(context, MaterialPageRoute(builder: (context) {
     //     return Login();
     //   }));
-
   }
 
   List<String> otp = List.filled(6, ''); // Change the size to 6
@@ -193,8 +196,7 @@ class _OtpState extends State<Otp> {
                       ),
                     ),*/
                         Padding(
-                          padding:
-                              const EdgeInsets.only(bottom: 20.0, top: 20),
+                          padding: const EdgeInsets.only(bottom: 20.0, top: 20),
                           child: Text(
                             "Enter OTP Code",
                             /*  + (_verify_by == "email"
@@ -303,9 +305,8 @@ class _OtpState extends State<Otp> {
                                           MediaQuery.of(context).size.width,
                                       color: MyTheme.accent_color,
                                       shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              const BorderRadius.all(
-                                                  Radius.circular(12.0))),
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(12.0))),
                                       child: Text(
                                         AppLocalizations.of(context)!
                                             .confirm_ucf,

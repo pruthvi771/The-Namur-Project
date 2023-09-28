@@ -11,10 +11,10 @@ import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/repositories/auth_repository.dart';
 import 'package:active_ecommerce_flutter/screens/common_webview_screen.dart';
-import 'package:active_ecommerce_flutter/features/auth/login.dart';
-import 'package:active_ecommerce_flutter/features/auth/otp.dart';
-import 'package:active_ecommerce_flutter/features/auth/auth_exceptions.dart';
-import 'package:active_ecommerce_flutter/features/auth/auth_service.dart';
+import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
+import 'package:active_ecommerce_flutter/features/auth/screens/otp.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_exceptions.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_service.dart';
 import 'package:active_ecommerce_flutter/ui_elements/auth_ui.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -25,7 +25,7 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:toast/toast.dart';
 import 'package:validators/validators.dart';
 
-import '../../repositories/address_repository.dart';
+import '../../../repositories/address_repository.dart';
 
 class Registration extends StatefulWidget {
   @override

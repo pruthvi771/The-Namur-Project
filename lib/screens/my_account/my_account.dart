@@ -15,7 +15,7 @@ import 'package:active_ecommerce_flutter/screens/digital_product/digital_product
 import 'package:active_ecommerce_flutter/screens/digital_product/purchased_digital_produts.dart';
 import 'package:active_ecommerce_flutter/screens/filter.dart';
 import 'package:active_ecommerce_flutter/screens/followed_sellers.dart';
-import 'package:active_ecommerce_flutter/features/auth/login.dart';
+import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
 import 'package:active_ecommerce_flutter/screens/main.dart';
 import 'package:active_ecommerce_flutter/screens/messenger_list.dart';
 import 'package:active_ecommerce_flutter/screens/whole_sale_products.dart';
@@ -41,7 +41,7 @@ import 'package:toast/toast.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../repositories/auth_repository.dart';
-import '../../features/auth/auth_service.dart';
+import '../../features/auth/services/auth_service.dart';
 import '../notification/notification_screen.dart';
 
 class MyAccount extends StatefulWidget {

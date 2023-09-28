@@ -9,7 +9,7 @@ import 'package:active_ecommerce_flutter/screens/address.dart';
 import 'package:active_ecommerce_flutter/screens/cart.dart';
 import 'package:active_ecommerce_flutter/screens/category_list.dart';
 import 'package:active_ecommerce_flutter/screens/digital_product/digital_products.dart';
-import 'package:active_ecommerce_flutter/features/auth/login.dart';
+import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
 import 'package:active_ecommerce_flutter/screens/main.dart';
 import 'package:active_ecommerce_flutter/screens/map_location.dart';
 import 'package:active_ecommerce_flutter/screens/messenger_list.dart';
@@ -61,6 +61,8 @@ import 'screens/package/packages.dart';
 import 'screens/product_details.dart';
 import 'screens/seller_details.dart';
 import 'screens/seller_products.dart';
+
+// import 'package:bloc/bloc.dart';
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();

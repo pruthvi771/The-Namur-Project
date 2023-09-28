@@ -1,32 +1,32 @@
 import 'dart:io' show Platform;
 
-import 'package:active_ecommerce_flutter/features/auth/otp.dart';
-import 'package:active_ecommerce_flutter/features/auth/password_forget.dart';
-import 'package:active_ecommerce_flutter/screens/password_otp.dart';
-import 'package:active_ecommerce_flutter/features/auth/registration.dart';
-import 'package:active_ecommerce_flutter/features/auth/auth_exceptions.dart';
-import 'package:active_ecommerce_flutter/features/auth/auth_service.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:active_ecommerce_flutter/features/auth/screens/otp.dart';
+import 'package:active_ecommerce_flutter/features/auth/screens/password_forget.dart';
+// import 'package:active_ecommerce_flutter/screens/password_otp.dart';
+import 'package:active_ecommerce_flutter/features/auth/screens/registration.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_exceptions.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_service.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+// import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+// import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:toast/toast.dart';
 
-import '../../app_config.dart';
-import '../../custom/btn.dart';
-import '../../custom/input_decorations.dart';
-import '../../custom/intl_phone_input.dart';
-import '../../custom/toast_component.dart';
-import '../../helpers/shared_value_helper.dart';
-import '../../my_theme.dart';
+import '../../../app_config.dart';
+import '../../../custom/btn.dart';
+import '../../../custom/input_decorations.dart';
+import '../../../custom/intl_phone_input.dart';
+import '../../../custom/toast_component.dart';
+import '../../../helpers/shared_value_helper.dart';
+import '../../../my_theme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../repositories/address_repository.dart';
-import '../../ui_elements/auth_ui.dart';
-import '../../screens/main.dart';
+import '../../../repositories/address_repository.dart';
+import '../../../ui_elements/auth_ui.dart';
+import '../../../screens/main.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);

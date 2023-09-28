@@ -7,14 +7,14 @@ import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/presenter/currency_presenter.dart';
 import 'package:active_ecommerce_flutter/providers/locale_provider.dart';
-import 'package:active_ecommerce_flutter/features/auth/login.dart';
+import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
 import 'package:active_ecommerce_flutter/screens/main.dart';
-import 'package:active_ecommerce_flutter/features/auth/auth_service.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 
-import '../features/auth/auth_user.dart';
+import '../features/auth/models/auth_user.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -45,26 +45,34 @@ class _SplashScreenState extends State<SplashScreen> {
     // TODO: implement initState
     super.initState();
     _initPackageInfo();
-    getSharedValueHelperData().then((value){
+    getSharedValueHelperData().then((value) {
       Future.delayed(Duration(seconds: 3)).then((value) {
-        Provider.of<LocaleProvider>(context,listen: false).setLocale(app_mobile_language.$!);
+        Provider.of<LocaleProvider>(context, listen: false)
+            .setLocale(app_mobile_language.$!);
 
         user = AuthService.firebase().currentUser;
         if (user != null) {
-          Navigator.pushAndRemoveUntil(context,
-            MaterialPageRoute(builder: (context) {
-              return  Main();// Main(go_back: false,);
-            },
-            ),(newRoute)=>false,);
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return Main(); // Main(go_back: false,);
+              },
+            ),
+            (newRoute) => false,
+          );
         } else {
-          Navigator.pushAndRemoveUntil(context,
-            MaterialPageRoute(builder: (context) {
-              return  Login();// Main(go_back: false,);
-            },
-            ),(route)=>false,);
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return Login(); // Main(go_back: false,);
+              },
+            ),
+            (route) => false,
+          );
         }
-      }
-      );
+      });
     });
   }
 
@@ -77,24 +85,23 @@ class _SplashScreenState extends State<SplashScreen> {
     return Container(
       width: DeviceInfo(context).height,
       height: DeviceInfo(context).height,
-      color:  Colors.white,
+      color: Colors.white,
       child: InkWell(
         child: Column(
-           mainAxisAlignment: MainAxisAlignment.center,
-           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             CircleAvatar(
               backgroundColor: Colors.white,
               child: Hero(
                 tag: "backgroundImageInSplash",
                 child: Container(
-                  child: Image.asset(
-                      "assets/splash.png"),
+                  child: Image.asset("assets/splash.png"),
                 ),
               ),
               radius: 300.11,
             ),
-           /* Positioned.fill(
+            /* Positioned.fill(
               top: DeviceInfo(context).height!/2-72,
               child: Column(
                 children: [
@@ -140,8 +147,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
 */
 
-
-           /* Positioned.fill(
+            /* Positioned.fill(
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
@@ -176,7 +182,7 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  Future<String?>  getSharedValueHelperData()async{
+  Future<String?> getSharedValueHelperData() async {
     access_token.load().whenComplete(() {
       AuthHelper().fetch_and_set();
     });
@@ -192,6 +198,5 @@ class _SplashScreenState extends State<SplashScreen> {
     // print("new splash screen app_language_rtl ${app_language_rtl.$}");
 
     return app_mobile_language.$;
-
   }
 }
