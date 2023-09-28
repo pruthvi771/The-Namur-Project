@@ -87,55 +87,19 @@ class _OtpState extends State<Otp> {
       );
       return;
     }
-    //
-    // final credential = PhoneAuthProvider.credential(
-    //   verificationId: widget.verificationId,
-    //   smsCode: code,
-    // );
 
-    try {
-      // final user = await AuthService.firebase()
-      //     .loginWithPhone(verificationId: widget.verificationId, otp: code);
+    // final user = await AuthService.firebase()
+    //     .loginWithPhone(verificationId: widget.verificationId, otp: code);
 
-      // print('User: ${user?.userId.toString()}');
-      ToastComponent.showDialog(
-        'Login Successful',
-        gravity: Toast.center,
-        duration: Toast.lengthLong,
-      );
-      Navigator.pushAndRemoveUntil(context,
-          MaterialPageRoute(builder: (context) {
-        return Main();
-      }), (newRoute) => false);
-    } on InvalidOTPAuthException {
-      ToastComponent.showDialog('Invalid OTP',
-          gravity: Toast.center, duration: Toast.lengthLong);
-    } on TooManyRequestsAuthException {
-      ToastComponent.showDialog(
-          'Maximum requests limit reached. Please try again later',
-          gravity: Toast.center,
-          duration: Toast.lengthLong);
-    } on ExpiredOTPAuthException {
-      ToastComponent.showDialog('OTP Expired.',
-          gravity: Toast.center, duration: Toast.lengthLong);
-    } on GenericAuthException {
-      ToastComponent.showDialog('Something went wrong. Please try again.',
-          gravity: Toast.center, duration: Toast.lengthLong);
-    }
-
-    // var confirmCodeResponse =
-    //     await AuthRepository().getConfirmCodeResponse(widget.user_id, code);
-    //
-    // if (confirmCodeResponse.result == false) {
-    //   ToastComponent.showDialog(confirmCodeResponse.message!,
-    //       gravity: Toast.center, duration: Toast.lengthLong);
-    // } else {
-    //   ToastComponent.showDialog(confirmCodeResponse.message!,
-    //       gravity: Toast.center, duration: Toast.lengthLong);
-    //
-    //   Navigator.push(context, MaterialPageRoute(builder: (context) {
-    //     return Login();
-    //   }));
+    // print('User: ${user?.userId.toString()}');
+    ToastComponent.showDialog(
+      'Login Successful',
+      gravity: Toast.center,
+      duration: Toast.lengthLong,
+    );
+    // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) {
+    //   return Main();
+    // }), (newRoute) => false);
   }
 
   List<String> otp = List.filled(6, ''); // Change the size to 6

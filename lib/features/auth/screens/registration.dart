@@ -122,33 +122,10 @@ class _RegistrationState extends State<Registration> {
     if (_register_by == "phone") {
       print('phone login attempted');
     } else {
-      try {
-        // final newUser = await AuthService.firebase().createUserWithEmail(
-        //   email: email,
-        //   password: password,
-        // );
-      } on EmailAlreadyInUseAuthException {
-        ToastComponent.showDialog(
-            'The email address is already in use by another account.',
-            gravity: Toast.center,
-            duration: Toast.lengthLong);
-      } on InvalidEmailAuthException {
-        ToastComponent.showDialog('The email address is not valid.',
-            gravity: Toast.center, duration: Toast.lengthLong);
-      } on WeakPasswordAuthException {
-        ToastComponent.showDialog('The password is not strong enough.',
-            gravity: Toast.center, duration: Toast.lengthLong);
-      } on OperationNotAllowedAuthException {
-        ToastComponent.showDialog(
-            'Something went wrong. Please contact support.',
-            gravity: Toast.center,
-            duration: Toast.lengthLong);
-      } on GenericAuthException {
-        ToastComponent.showDialog(
-            'Something went wrong. Please try again later.',
-            gravity: Toast.center,
-            duration: Toast.lengthLong);
-      }
+      // final newUser = await AuthService.firebase().createUserWithEmail(
+      //   email: email,
+      //   password: password,
+      // );
     }
   }
 

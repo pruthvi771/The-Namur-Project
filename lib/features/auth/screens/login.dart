@@ -125,75 +125,23 @@ class _LoginState extends State<Login> {
             gravity: Toast.center, duration: Toast.lengthLong);
       }
     } else {
-      try {
-        // final user = await AuthService.firebase()
-        //     .loginWithEmail(email: email, password: password);
-        // context.read<AuthBloc>().add(SignInWithEmailRequested(email, password));
-        // BlocProvider.of<AuthBloc>(context).add(
-        //   SignInWithEmailRequested(
-        //       email, password),
-        // );
+      // final user = await AuthService.firebase()
+      //     .loginWithEmail(email: email, password: password);
+      // context.read<AuthBloc>().add(SignInWithEmailRequested(email, password));
+      // BlocProvider.of<AuthBloc>(context).add(
+      //   SignInWithEmailRequested(
+      //       email, password),
+      // );
 
-        // print(user);
-        Navigator.pushAndRemoveUntil(context,
-            MaterialPageRoute(builder: (context) {
-          return Main();
-        }), (newRoute) => false);
-      } on UserNotFoundAuthException {
-        ToastComponent.showDialog('User not found. Please register first.',
-            gravity: Toast.center, duration: Toast.lengthLong);
-      } on WrongPasswordAuthException {
-        ToastComponent.showDialog('Wrong password. Please try again.',
-            gravity: Toast.center, duration: Toast.lengthLong);
-      } on InvalidEmailAuthException {
-        ToastComponent.showDialog('Invalid email. Please try again.',
-            gravity: Toast.center, duration: Toast.lengthLong);
-      } on UserDisabledAuthException {
-        ToastComponent.showDialog('User is disabled. Please contact support.',
-            gravity: Toast.center, duration: Toast.lengthLong);
-      } on TooManyRequestsAuthException {
-        ToastComponent.showDialog(
-            'Maximum requests limit reached. Please try again later',
-            gravity: Toast.center,
-            duration: Toast.lengthLong);
-      } on GenericAuthException {
-        ToastComponent.showDialog('Something went wrong. Please try again.',
-            gravity: Toast.center, duration: Toast.lengthLong);
-      }
+      // print(user);
+      // Navigator.pushAndRemoveUntil(context,
+      //     MaterialPageRoute(builder: (context) {
+      //   return Main();
+      // }), (newRoute) => false);
     }
   }
 
-  onPressedGoogleLogin() async {
-    try {
-      // final user = await AuthService.firebase().loginWithGoogle();
-
-      ToastComponent.showDialog('Logged in successfully',
-          gravity: Toast.center, duration: Toast.lengthLong);
-
-      Navigator.pushAndRemoveUntil(context,
-          MaterialPageRoute(builder: (context) {
-        return Main();
-      }), (newRoute) => false);
-    } on AccountExistsWithDifferentCredentialAuthException {
-      ToastComponent.showDialog(
-        'This email is already in use by a different login method.',
-        gravity: Toast.center,
-        duration: Toast.lengthLong,
-      );
-    } on OperationNotAllowedAuthException {
-      ToastComponent.showDialog(
-        'Something went wrong. Please contact support.',
-        gravity: Toast.center,
-        duration: Toast.lengthLong,
-      );
-    } on UserDisabledAuthException {
-      ToastComponent.showDialog('User is disabled. Please contact support.',
-          gravity: Toast.center, duration: Toast.lengthLong);
-    } on GenericAuthException {
-      ToastComponent.showDialog('Something went wrong. Please try again.',
-          gravity: Toast.center, duration: Toast.lengthLong);
-    }
-  }
+  onPressedGoogleLogin() async {}
 
   onPressedFacebookLogin() async {
     print('Facebook login attempted');
@@ -210,36 +158,50 @@ class _LoginState extends State<Login> {
     final _screen_height = MediaQuery.of(context).size.height;
     final _screen_width = MediaQuery.of(context).size.width;
     AuthRepository _authRepository = AuthRepository();
-    // return Scaffold(
-    //     body: LoginScreenUI(_screen_width, context));
     return BlocProvider(
       create: (context) => AuthBloc(authRepository: _authRepository),
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-          if (state is Authenticated) {
-            Navigator.pushAndRemoveUntil(context,
-                MaterialPageRoute(builder: (context) {
-              return Main();
-            }), (newRoute) => false);
-          }
+          // if (state is Authenticated) {
+          //   Navigator.pushAndRemoveUntil(context,
+          //       MaterialPageRoute(builder: (context) {
+          //     return Main();
+          //   }), (newRoute) => false);
+          // }
           if (state is AuthError) {
-            // Showing the error message if the user has entered invalid credentials
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(state.error)));
+            final errorMessage =
+                state.error.toString().replaceAll('Exception:', '');
+            ToastComponent.showDialog(errorMessage.trim(),
+                gravity: Toast.center, duration: Toast.lengthLong);
+          }
+          if (state is PhoneVerificationCompleted) {
+            ToastComponent.showDialog('OTP sent to your phone number',
+                gravity: Toast.center, duration: Toast.lengthLong);
+
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Otp(
+                        verify_by: 'phone',
+                        verificationId: state.verificationId.toString()
+                        // resendToken: resendToken
+                        )));
           }
         },
         child: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
             if (state is Loading)
-             return Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
+              return Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
             if (state is Authenticated)
               return Scaffold(
-                body: Center(child: Text('It fucking worked.'),),
-            );
+                body: Center(
+                  child: Text('It fucking worked.'),
+                ),
+              );
             return Scaffold(
               body: AuthScreen.buildScreen(
                   context,
@@ -494,7 +456,9 @@ class _LoginState extends State<Login> {
                         onPressed: () {
                           // onPressedLogin();
                           BlocProvider.of<AuthBloc>(context).add(
-                            SignInWithEmailRequested(),
+                            SignInWithEmailRequested(
+                                _emailController.text.toString(),
+                                _passwordController.text.toString()),
                           );
                         },
                       ),

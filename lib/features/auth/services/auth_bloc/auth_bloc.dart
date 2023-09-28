@@ -9,19 +9,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;
   AuthBloc({required this.authRepository}) : super(UnAuthenticated()) {
     on<SignInWithEmailRequested>((event, emit) async {
-      print('function called');
-      emit(Authenticated());
-      Future.delayed(Duration(seconds: 3)).then((value) {
+      emit(Loading());
+      try {
+        await authRepository.loginWithEmail(
+            email: event.email, password: event.password);
         emit(Authenticated());
-      });
-      // try {
-      //   await authRepository.loginWithEmail(
-      //       email: event.email, password: event.password);
-      //   emit(Authenticated());
-      // } catch (e) {
-      //   emit(AuthError(e.toString()));
-      //   emit(UnAuthenticated());
-      // }
+      } catch (e) {
+        emit(AuthError(e.toString()));
+        emit(UnAuthenticated());
+      }
     });
 
     on<SignUpWithEmailRequested>((event, emit) async {
@@ -41,10 +37,49 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
 
     // When User Presses the SignOut Button, we will send the SignOutRequested Event to the AuthBloc to handle it and emit the UnAuthenticated State
-    // on<LogOutRequested>((event, emit) async {
-    //   emit(Loading());
-    //   await authRepository.signOut();
-    //   emit(UnAuthenticated());
-    // });
+    on<LogOutRequested>((event, emit) async {
+      emit(Loading());
+      try {
+        await authRepository.logOut();
+        emit(UnAuthenticated());
+      } catch (e) {
+        emit(AuthError(e.toString()));
+      }
+    });
+
+    on<GoogleSignInRequested>((event, emit) async {
+      emit(Loading());
+      try {
+        await authRepository.loginWithGoogle();
+        emit(Authenticated());
+      } catch (e) {
+        emit(AuthError(e.toString()));
+        emit(UnAuthenticated());
+      }
+    });
+
+    on<PhoneVerificationRequested>((event, emit) async {
+      emit(Loading());
+      try {
+        final verificationId = await authRepository.phoneNumberVerification(
+            phone: event.phoneNumber);
+        emit(PhoneVerificationCompleted(verificationId: verificationId));
+      } catch (e) {
+        emit(AuthError(e.toString()));
+        emit(UnAuthenticated());
+      }
+    });
+
+    on<SignInWithPhoneNumberRequested>((event, emit) async {
+      emit(Loading());
+      try {
+        await authRepository.loginWithPhone(
+            verificationId: event.verificationId, otp: event.otp);
+        emit(Authenticated());
+      } catch (e) {
+        emit(AuthError(e.toString()));
+        emit(UnAuthenticated());
+      }
+    });
   }
 }

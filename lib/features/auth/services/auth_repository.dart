@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
-// import 'package:active_ecommerce_flutter/features/auth/services/auth_provider.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_exceptions.dart';
 
 import 'package:firebase_auth/firebase_auth.dart'
@@ -21,66 +20,60 @@ class AuthRepository {
     return user == null ? null : AuthUser.fromFirebase(user);
   }
 
-  Future<AuthUser> loginWithEmail({
+  Future<void> loginWithEmail({
     required String email,
     required String password,
   }) async {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
-
-      final user = currentUser;
-      return user != null ? user : throw UserNotFoundAuthException();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        throw UserNotFoundAuthException();
+        throw Exception('User not found. Please register first.');
       } else if (e.code == 'wrong-password') {
-        throw WrongPasswordAuthException();
+        throw Exception('Wrong password. Please try again.');
       } else if (e.code == 'invalid-email') {
-        throw InvalidEmailAuthException();
+        throw Exception('Invalid email. Please try again.');
       } else if (e.code == 'user-disabled') {
-        throw UserDisabledAuthException();
+        throw Exception('User is disabled. Please contact support.');
       } else {
-        throw GenericAuthException();
+        throw Exception('Something went wrong. Please try again.');
       }
     } catch (_) {
-      throw GenericAuthException();
+      throw Exception('Something went wrong. Please try again.');
     }
   }
 
-  Future<AuthUser> createUserWithEmail({
+  Future<void> createUserWithEmail({
     required String email,
     required String password,
   }) async {
     try {
       await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
-
-      final user = currentUser;
-      return user != null ? user : throw UserNotFoundAuthException();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        throw WeakPasswordAuthException();
+        throw Exception('The password is not strong enough.');
       } else if (e.code == 'email-already-in-use') {
-        throw EmailAlreadyInUseAuthException();
+        throw Exception(
+            'The email address is already in use by another account.');
       } else if (e.code == 'invalid-email') {
-        throw InvalidEmailAuthException();
+        throw Exception('The email address is not valid.');
       } else if (e.code == 'operation-not-allowed') {
-        throw OperationNotAllowedAuthException();
-      } else if (e.code == 'user-disabled') {
-        throw UserDisabledAuthException();
+        throw Exception('Something went wrong. Please contact support.');
       } else {
-        throw GenericAuthException();
+        throw Exception('Something went wrong. Please try again later.');
       }
     } catch (_) {
-      throw GenericAuthException();
+      throw Exception('Something went wrong. Please try again later.');
     }
   }
 
   Future<void> logOut() async {
-    final user = _firebaseAuth.currentUser;
+    // final user = _firebaseAuth.currentUser;
 
-    if (user != null) {
+    // if (user != null) {
+    try {
       await _firebaseAuth.signOut();
       try {
         final googleSignIn = GoogleSignIn();
@@ -88,8 +81,14 @@ class AuthRepository {
       } catch (_) {
         // ignore
       }
-    } else {
-      throw UserNotLoggedInAuthException();
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'network-request-failed') {
+        throw Exception('No internet connection');
+      } else {
+        throw Exception(e.toString());
+      }
+    } catch (e) {
+      throw Exception(e);
     }
   }
 
@@ -102,7 +101,7 @@ class AuthRepository {
     }
   }
 
-  Future<AuthUser> loginWithGoogle() async {
+  Future<void> loginWithGoogle() async {
     try {
       final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
 
@@ -115,22 +114,21 @@ class AuthRepository {
 
       await _firebaseAuth.signInWithCredential(credential);
 
-      final user = currentUser;
-      return user != null ? user : throw UserNotFoundAuthException();
+      // final user = currentUser;
+      // return user != null ? user : throw UserNotFoundAuthException();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'account-exists-with-different-credential') {
-        throw AccountExistsWithDifferentCredentialAuthException();
-        // } else if (e.code == 'invalid-credential') {
-        //   throw InvalidCredentialAuthException();
+        throw Exception(
+            'This email is already in use by a different login method.');
       } else if (e.code == 'operation-not-allowed') {
-        throw OperationNotAllowedAuthException();
+        throw Exception('Something went wrong. Please contact support.');
       } else if (e.code == 'user-disabled') {
-        throw UserDisabledAuthException();
+        throw Exception('User is disabled. Please contact support.');
       } else {
-        throw GenericAuthException();
+        throw Exception('Something went wrong. Please try again.');
       }
     } catch (_) {
-      throw GenericAuthException();
+      throw Exception('Something went wrong. Please try again.');
     }
   }
 
@@ -159,7 +157,7 @@ class AuthRepository {
     return verificationIdCompleter.future;
   }
 
-  Future<AuthUser?> loginWithPhone(
+  Future<void> loginWithPhone(
       {required String verificationId, required String otp}) async {
     final credentials = PhoneAuthProvider.credential(
       verificationId: verificationId,
@@ -171,26 +169,24 @@ class AuthRepository {
       final user = currentUser;
       // return user != null ? user : throw UserNotFoundAuthException();
 
-      if (user != null) {
-        print('User logged in successfully');
-        return user;
-      } else {
-        throw UserNotFoundAuthException();
+      if (user == null) {
+        throw Exception('Something went wrong. Please try again.');
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-verification-code') {
-        throw InvalidOTPAuthException();
+        throw Exception('Invalid OTP. Please try again.');
       } else if (e.code == 'too-many-requests') {
-        throw TooManyRequestsAuthException();
+        throw Exception(
+            'Maximum requests limit reached. Please try again later');
       } else if (e.code == 'session-expired') {
-        throw ExpiredOTPAuthException();
+        throw Exception('OTP expired. Please try again.');
       } else {
-        print(e);
-        throw GenericAuthException();
+        // print(e);
+        throw Exception('Something went wrong. Please try again.');
       }
     } catch (_) {
-      print(_);
-      throw GenericAuthException();
+      // print(_);
+      throw Exception('Something went wrong. Please try again.');
     }
   }
 

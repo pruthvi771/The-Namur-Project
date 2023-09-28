@@ -7,10 +7,10 @@ abstract class AuthEvent extends Equatable {
 }
 
 class SignInWithEmailRequested extends AuthEvent {
-  // final String email;
-  // final String password;
+  final String email;
+  final String password;
 
-  SignInWithEmailRequested();
+  SignInWithEmailRequested(this.email, this.password);
 }
 
 class SignUpWithEmailRequested extends AuthEvent {
@@ -18,4 +18,25 @@ class SignUpWithEmailRequested extends AuthEvent {
   final String password;
 
   SignUpWithEmailRequested(this.email, this.password);
+}
+
+class LogOutRequested extends AuthEvent {
+  LogOutRequested();
+}
+
+class GoogleSignInRequested extends AuthEvent {
+  GoogleSignInRequested();
+}
+
+class PhoneVerificationRequested extends AuthEvent {
+  final String phoneNumber;
+
+  PhoneVerificationRequested(this.phoneNumber);
+}
+
+class SignInWithPhoneNumberRequested extends AuthEvent {
+  final String verificationId;
+  final String otp;
+
+  SignInWithPhoneNumberRequested(this.verificationId, this.otp);
 }
