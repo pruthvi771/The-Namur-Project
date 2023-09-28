@@ -9,6 +9,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;
   AuthBloc({required this.authRepository}) : super(UnAuthenticated()) {
     on<SignInWithEmailRequested>((event, emit) async {
+      print('SignInWithEmailRequested started');
       emit(Loading());
       try {
         await authRepository.loginWithEmail(

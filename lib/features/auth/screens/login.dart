@@ -79,7 +79,8 @@ class _LoginState extends State<Login> {
 
   // late User loggedInUser;
 
-  onPressedLogin() async {
+  onPressedLogin(BuildContext buildContext) async {
+    print('login clicked');
     var email = _emailController.text.toString();
     var phone = _phoneNumberController.text.toString();
     var password = _passwordController.text.toString();
@@ -103,41 +104,17 @@ class _LoginState extends State<Login> {
     }
 
     if (_login_by == "phone") {
-      try {
-        print('+91 $phone');
-
-        // final String? verificationId = await AuthService.firebase()
-        //     .phoneNumberVerification(phone: '+91 $phone');
-        // print('response $verificationId');
-
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (context) => Otp(
-        //               verify_by: 'phone',
-        //               verificationId: verificationId.toString(),
-        //               // resendToken: resendToken,
-        //             )));
-        ToastComponent.showDialog('OTP sent to your phone number',
-            gravity: Toast.center, duration: Toast.lengthLong);
-      } on GenericAuthException {
-        ToastComponent.showDialog('Something went wrong. Please try again.',
-            gravity: Toast.center, duration: Toast.lengthLong);
-      }
+      String newNumber = '+91 $phone';
+      BlocProvider.of<AuthBloc>(buildContext).add(
+        PhoneVerificationRequested(newNumber),
+      );
     } else {
-      // final user = await AuthService.firebase()
-      //     .loginWithEmail(email: email, password: password);
-      // context.read<AuthBloc>().add(SignInWithEmailRequested(email, password));
-      // BlocProvider.of<AuthBloc>(context).add(
-      //   SignInWithEmailRequested(
-      //       email, password),
-      // );
-
-      // print(user);
-      // Navigator.pushAndRemoveUntil(context,
-      //     MaterialPageRoute(builder: (context) {
-      //   return Main();
-      // }), (newRoute) => false);
+      print('calling begins');
+      BlocProvider.of<AuthBloc>(buildContext).add(
+        SignInWithEmailRequested(_emailController.text.toString(),
+            _passwordController.text.toString()),
+      );
+      print('calling ends');
     }
   }
 
@@ -162,12 +139,12 @@ class _LoginState extends State<Login> {
       create: (context) => AuthBloc(authRepository: _authRepository),
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-          // if (state is Authenticated) {
-          //   Navigator.pushAndRemoveUntil(context,
-          //       MaterialPageRoute(builder: (context) {
-          //     return Main();
-          //   }), (newRoute) => false);
-          // }
+          if (state is Authenticated) {
+            Navigator.pushAndRemoveUntil(context,
+                MaterialPageRoute(builder: (context) {
+              return Main();
+            }), (newRoute) => false);
+          }
           if (state is AuthError) {
             final errorMessage =
                 state.error.toString().replaceAll('Exception:', '');
@@ -196,12 +173,12 @@ class _LoginState extends State<Login> {
                   child: CircularProgressIndicator(),
                 ),
               );
-            if (state is Authenticated)
-              return Scaffold(
-                body: Center(
-                  child: Text('It fucking worked.'),
-                ),
-              );
+            // if (state is Authenticated)
+            //   return Scaffold(
+            //     body: Center(
+            //       child: Text('It fucking worked.'),
+            //     ),
+            //   );
             return Scaffold(
               body: AuthScreen.buildScreen(
                   context,
@@ -454,12 +431,12 @@ class _LoginState extends State<Login> {
                               fontWeight: FontWeight.w500),
                         ),
                         onPressed: () {
-                          // onPressedLogin();
-                          BlocProvider.of<AuthBloc>(context).add(
-                            SignInWithEmailRequested(
-                                _emailController.text.toString(),
-                                _passwordController.text.toString()),
-                          );
+                          onPressedLogin(context);
+                          // BlocProvider.of<AuthBloc>(context).add(
+                          //   SignInWithEmailRequested(
+                          //       _emailController.text.toString(),
+                          //       _passwordController.text.toString()),
+                          // );
                         },
                       ),
                     ),
