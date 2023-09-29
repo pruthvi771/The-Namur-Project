@@ -1,4 +1,3 @@
-import 'package:active_ecommerce_flutter/helpers/auth_helper.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class AuthEvent extends Equatable {

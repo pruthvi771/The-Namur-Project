@@ -92,6 +92,8 @@ dependencies:
   flutter_otp_text_field: ^1.1.0+2
   flutter_bloc: ^8.1.1
   bloc: ^8.1.0
+  flutter_expanded_tile: ^0.3.7
+  percent_indicator: ^4.2.3
 
 dev_dependencies:
   flutter_test:

@@ -4,6 +4,8 @@ import 'package:active_ecommerce_flutter/custom/box_decorations.dart';
 import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/custom/lang_text.dart';
+import 'package:active_ecommerce_flutter/features/profile/enum.dart';
+import 'package:active_ecommerce_flutter/features/profile/more_details.dart';
 import 'package:active_ecommerce_flutter/helpers/auth_helper.dart';
 import 'package:active_ecommerce_flutter/presenter/home_presenter.dart';
 import 'package:active_ecommerce_flutter/screens/auction_products.dart';
@@ -18,15 +20,18 @@ import 'package:active_ecommerce_flutter/screens/followed_sellers.dart';
 import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
 import 'package:active_ecommerce_flutter/screens/main.dart';
 import 'package:active_ecommerce_flutter/screens/messenger_list.dart';
+// import 'package:active_ecommerce_flutter/screens/setting/setting.dart';
 import 'package:active_ecommerce_flutter/screens/whole_sale_products.dart';
 import 'package:active_ecommerce_flutter/screens/wishlist.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
+import 'package:active_ecommerce_flutter/sell_screen/more_detail/more_detail.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:flutter/cupertino.dart';
+// import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/ui_sections/drawer.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
-import 'package:active_ecommerce_flutter/app_config.dart';
+// import 'package:active_ecommerce_flutter/app_config.dart';
 import 'package:active_ecommerce_flutter/screens/wallet.dart';
 import 'package:active_ecommerce_flutter/screens/profile_edit.dart';
 import 'package:active_ecommerce_flutter/screens/address.dart';
@@ -35,11 +40,13 @@ import 'package:active_ecommerce_flutter/screens/club_point.dart';
 import 'package:active_ecommerce_flutter/screens/refund_request.dart';
 import 'package:active_ecommerce_flutter/repositories/profile_repository.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:toast/toast.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../repositories/auth_repository.dart';
 
@@ -64,6 +71,8 @@ class _ProfileState extends State<Profile> {
   int? _orderCounter = 0;
   String _orderCounterString = "00";
   late BuildContext loadingcontext;
+
+  ProfileSection _profileSection = ProfileSection.updates;
 
   @override
   void initState() {
@@ -179,47 +188,64 @@ class _ProfileState extends State<Profile> {
     return Directionality(
       textDirection:
           app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
-      child: buildView(context),
+      child: buildView(context, _profileSection),
     );
   }
 
-  Widget buildView(context) {
+  Widget buildView(context, _profileSection) {
     return Container(
       color: Colors.white,
       height: DeviceInfo(context).height,
       child: Stack(
         children: [
-          /* Container(
-              height: DeviceInfo(context).height! / 1.6,
-              width: DeviceInfo(context).width,
-              color: MyTheme.accent_color,
-              alignment: Alignment.topRight,
-              child: Image.asset(
-                "assets/background_1.png",
-              )),*/
           Scaffold(
             key: homeData.scaffoldKey,
             drawer: const MainDrawer(),
             backgroundColor: Colors.transparent,
             //   appBar: buildCustomAppBar(context),
-            body: buildBody(),
+            body: buildBody(_profileSection),
           ),
         ],
       ),
     );
   }
 
-  RefreshIndicator buildBody() {
+  RefreshIndicator buildBody(_profileSection) {
     return RefreshIndicator(
       color: MyTheme.white,
       backgroundColor: MyTheme.primary_color,
       onRefresh: _onPageRefresh,
       displacement: 10,
-      child: buildBodyChildren(),
+      child: buildBodyChildren(_profileSection),
     );
   }
 
-  CustomScrollView buildBodyChildren() {
+  CustomScrollView buildBodyChildren(profileSection) {
+    final stocks = [
+      'assets/onion.png',
+      'assets/coconut 1.png',
+      'assets/bugs.png',
+      'assets/orange (1).png',
+      'assets/onion.png',
+      'assets/coconut 1.png',
+      'assets/bugs.png',
+      'assets/orange (1).png',
+      'assets/onion.png',
+      'assets/coconut 1.png',
+      'assets/bugs.png',
+      'assets/orange (1).png',
+    ];
+
+    _launchYouTubeVideo(url) async {
+      print('clicked');
+      final Uri _url = Uri.parse(url);
+      if (await canLaunchUrl(_url)) {
+        await launchUrl(_url);
+      } else {
+        throw 'Could not launch';
+      }
+    }
+
     return CustomScrollView(
       controller: _mainScrollController,
       physics:
@@ -243,11 +269,19 @@ class _ProfileState extends State<Profile> {
                 Positioned(
                     top: 45,
                     right: 30,
-                    child: Icon(
-                      Icons.settings_outlined,
-                      size: 30,
-                      color: Colors.white,
-                      weight: 10,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return MoreDetails();
+                        }));
+                      },
+                      child: Icon(
+                        Icons.settings_outlined,
+                        size: 30,
+                        color: Colors.white,
+                        weight: 10,
+                      ),
                     )),
                 Positioned(
                   top: 45,
@@ -276,6 +310,9 @@ class _ProfileState extends State<Profile> {
                 )
               ],
             ),
+
+            //test
+            // Text(_profileSection.toString()),
 
             //Profile Name
             Padding(
@@ -378,58 +415,90 @@ class _ProfileState extends State<Profile> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      width: 100,
-                      height: 44,
-                      decoration: BoxDecoration(
-                          color: MyTheme.primary_color,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Center(
-                        child: Text(
-                          "Updates",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: .5,
-                              fontFamily: "Poppins",
-                              fontSize: 15),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _profileSection = ProfileSection.updates;
+                        });
+                      },
+                      child: Container(
+                        width: 100,
+                        height: 44,
+                        decoration: BoxDecoration(
+                            color: _profileSection == ProfileSection.updates
+                                ? MyTheme.primary_color
+                                : MyTheme.field_color,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Center(
+                          child: Text(
+                            "Updates",
+                            style: TextStyle(
+                                color: _profileSection == ProfileSection.updates
+                                    ? Colors.white
+                                    : Colors.black,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: .5,
+                                fontFamily: "Poppins",
+                                fontSize: 15),
+                          ),
                         ),
                       ),
                     ),
-                    Container(
-                      width: 100,
-                      height: 44,
-                      decoration: BoxDecoration(
-                          color: MyTheme.primary_color,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Center(
-                        child: Text(
-                          "Market",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontFamily: "Poppins",
-                              letterSpacing: .5,
-                              fontSize: 15),
+                    GestureDetector(
+                      onTap: () => setState(() {
+                        _profileSection = ProfileSection.market;
+                      }),
+                      child: Container(
+                        width: 100,
+                        height: 44,
+                        decoration: BoxDecoration(
+                            color: _profileSection == ProfileSection.market
+                                ? MyTheme.primary_color
+                                : MyTheme.field_color,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Center(
+                          child: Text(
+                            "Market",
+                            style: TextStyle(
+                                color: _profileSection == ProfileSection.market
+                                    ? Colors.white
+                                    : Colors.black,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: "Poppins",
+                                letterSpacing: .5,
+                                fontSize: 15),
+                          ),
                         ),
                       ),
                     ),
-                    Container(
-                      width: 100,
-                      height: 44,
-                      decoration: BoxDecoration(
-                          // color: MyTheme.primary_color,
-                          color: MyTheme.field_color,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Center(
-                        child: Text(
-                          "My Stock",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w600,
-                              fontFamily: "Poppins",
-                              letterSpacing: .5,
-                              fontSize: 15),
+                    GestureDetector(
+                      onTap: () {
+                        print('clicked');
+                        setState(() {
+                          _profileSection = ProfileSection.myStock;
+                        });
+                      },
+                      child: Container(
+                        width: 100,
+                        height: 44,
+                        decoration: BoxDecoration(
+                            // color: MyTheme.primary_color,
+                            color: _profileSection == ProfileSection.myStock
+                                ? MyTheme.primary_color
+                                : MyTheme.field_color,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Center(
+                          child: Text(
+                            "My Stock",
+                            style: TextStyle(
+                                color: _profileSection == ProfileSection.myStock
+                                    ? Colors.white
+                                    : Colors.black,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: "Poppins",
+                                letterSpacing: .5,
+                                fontSize: 15),
+                          ),
                         ),
                       ),
                     )
@@ -438,27 +507,137 @@ class _ProfileState extends State<Profile> {
               ),
             ),
 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18.0),
-              child: buildCountersRow(),
-            ),
+            if (_profileSection == ProfileSection.updates)
+              Column(
+                children: [
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: InkWell(
+                        onTap: () async {
+                          await _launchYouTubeVideo(
+                              'https://www.youtube.com/watch?v=o5DGLMY7jsc');
+                        },
+                        child: Image.network(
+                            'https://i.ytimg.com/vi/o5DGLMY7jsc/maxresdefault.jpg'),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: InkWell(
+                        onTap: () async {
+                          await _launchYouTubeVideo(
+                              'https://www.youtube.com/watch?v=VeO_kVYPmmg');
+                        },
+                        child: Image.network(
+                            'https://i.ytimg.com/vi/VeO_kVYPmmg/maxresdefault.jpg'),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18.0),
-              child: buildHorizontalSettings(),
-            ),
+            if (_profileSection == ProfileSection.market)
+              Text(
+                'market',
+              ),
+
+            if (_profileSection == ProfileSection.myStock)
+              // Text(
+              //   'updates',
+              // ),
+              SingleChildScrollView(
+                // controller: _xcrollController,
+                /* physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics()),*/
+                child: MasonryGridView.count(
+                  crossAxisCount: 3,
+                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16,
+                  itemCount: stocks.length,
+                  shrinkWrap: true,
+                  padding: EdgeInsets.only(top: 10.0, left: 18, right: 18),
+                  physics: NeverScrollableScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  itemBuilder: (context, index) {
+                    //
+                    return Container(
+                      //  height: 100,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: (index % 5 == 0)
+                            ? MyTheme.green_neon
+                            : MyTheme.white,
+                      ),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Container(
+                              height: 50,
+                              width: 50,
+                              child: Image.asset(
+                                stocks[index],
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                            child: Text(
+                              "Grapes",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w500),
+                            ),
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+
+            // //divider
+            // SizedBox(
+            //   height: 20,
+            // ),
+            // Container(
+            //   padding: const EdgeInsets.all(8.0),
+            //   child: Divider(
+            //     thickness: 30,
+            //     color: Colors.red,
+            //   ),
+            // ),
+
             // Padding(
             //   padding: const EdgeInsets.symmetric(horizontal: 18.0),
-            //   child: buildSettingAndAddonsVerticalMenu(),
+            //   child: buildCountersRow(),
             // ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18.0),
-              child: buildSettingAndAddonsHorizontalMenu(),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18.0),
-              child: buildBottomVerticalCardList(),
-            ),
+
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 18.0),
+            //   child: buildHorizontalSettings(),
+            // ),
+            // // Padding(
+            // //   padding: const EdgeInsets.symmetric(horizontal: 18.0),
+            // //   child: buildSettingAndAddonsVerticalMenu(),
+            // // ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 18.0),
+            //   child: buildSettingAndAddonsHorizontalMenu(),
+            // ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 18.0),
+            //   child: buildBottomVerticalCardList(),
+            // ),
           ]),
         )
       ],
