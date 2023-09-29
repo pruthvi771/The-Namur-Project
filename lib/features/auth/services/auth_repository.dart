@@ -208,16 +208,18 @@ class AuthRepository {
       await _firebaseAuth.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-email') {
-        throw InvalidEmailAuthException();
+        throw Exception('Invalid email');
       } else if (e.code == 'user-not-found') {
-        throw UserNotFoundAuthException();
+        throw Exception('User not found. Please register first.');
       } else if (e.code == 'too-many-requests') {
-        throw TooManyRequestsAuthException();
+        throw Exception(
+            'Maximum requests limit reached. Please try again later');
       } else {
-        throw GenericAuthException();
+        throw Exception('Something went wrong. Please try again.');
       }
     } catch (_) {
-      throw GenericAuthException();
+      throw Exception('Something went wrong. Please try again.');
+      // throw GenericAuthException();
     }
   }
 }

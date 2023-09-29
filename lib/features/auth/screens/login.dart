@@ -109,11 +109,11 @@ class _LoginState extends State<Login> {
         PhoneVerificationRequested(newNumber),
       );
     } else {
-      print('calling begins');
+      // print('calling begins');
       BlocProvider.of<AuthBloc>(buildContext).add(
         SignInWithEmailRequested(email, password),
       );
-      print('calling ends');
+      // print('calling ends');
     }
   }
 

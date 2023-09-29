@@ -40,3 +40,9 @@ class SignInWithPhoneNumberRequested extends AuthEvent {
 
   SignInWithPhoneNumberRequested(this.verificationId, this.otp);
 }
+
+class resetPasswordForEmailRequested extends AuthEvent {
+  final String email;
+
+  resetPasswordForEmailRequested(this.email);
+}

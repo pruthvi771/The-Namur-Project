@@ -40,27 +40,7 @@ class PhoneVerificationCompleted extends AuthState {
   List<Object?> get props => [verificationId];
 }
 
-class EmailSignInScreenRequested extends AuthState {
-  @override
-  List<Object?> get props => [];
-}
-
-class EmailSignUpScreenRequested extends AuthState {
-  @override
-  List<Object?> get props => [];
-}
-
-class PhoneSignInScreenRequested extends AuthState {
-  @override
-  List<Object?> get props => [];
-}
-
-class OtpScreenRequested extends AuthState {
-  @override
-  List<Object?> get props => [];
-}
-
-class ForgotPasswordScreenRequested extends AuthState {
+class resetPasswordForEmailSent extends AuthState {
   @override
   List<Object?> get props => [];
 }

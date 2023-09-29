@@ -1,4 +1,7 @@
 import 'package:active_ecommerce_flutter/custom/btn.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_bloc.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_state.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_exceptions.dart';
 // import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
@@ -7,14 +10,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:active_ecommerce_flutter/custom/input_decorations.dart';
 import 'package:active_ecommerce_flutter/custom/intl_phone_input.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:active_ecommerce_flutter/screens/password_otp.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:toast/toast.dart';
-import 'package:active_ecommerce_flutter/repositories/auth_repository.dart';
+// import 'package:active_ecommerce_flutter/repositories/auth_repository.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../services/auth_bloc/auth_event.dart';
 import 'login.dart';
 
 class PasswordForget extends StatefulWidget {
@@ -48,7 +53,7 @@ class _PasswordForgetState extends State<PasswordForget> {
     super.dispose();
   }
 
-  onPressSendCode() async {
+  onPressSendCode(BuildContext buildContext) async {
     var email = _emailController.text.toString();
 
     // if (_send_code_by == 'email' && email == "") {
@@ -57,63 +62,49 @@ class _PasswordForgetState extends State<PasswordForget> {
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
-    // } else if (_send_code_by == 'phone' && _phone == "") {
-    //   ToastComponent.showDialog(
-    //       AppLocalizations.of(context)!.enter_phone_number,
-    //       gravity: Toast.center,
-    //       duration: Toast.lengthLong);
-    //   return;
-    // }
-    try {
-      // await AuthService.firebase().resetPasswordForEmail(email: email);
-      ToastComponent.showDialog('Password reset link sent to your email.',
-          gravity: Toast.center, duration: Toast.lengthLong);
 
-      Navigator.pushAndRemoveUntil(context,
-          MaterialPageRoute(builder: (context) {
-        return Login();
-      }), (newRoute) => false);
-    } on InvalidEmailAuthException {
-      ToastComponent.showDialog('Invalid email',
-          gravity: Toast.center, duration: Toast.lengthLong);
-    } on UserNotFoundAuthException {
-      ToastComponent.showDialog('User not found. Please register first',
-          gravity: Toast.center, duration: Toast.lengthLong);
-    } on TooManyRequestsAuthException {
-      ToastComponent.showDialog(
-          'Maximum requests limit reached. Please try again later',
-          gravity: Toast.center,
-          duration: Toast.lengthLong);
-    } on GenericAuthException {
-      ToastComponent.showDialog('Something went wrong. Please try again.',
-          gravity: Toast.center, duration: Toast.lengthLong);
-    }
-
-    // var passwordForgetResponse = await AuthRepository()
-    //     .getPasswordForgetResponse(
-    //         _send_code_by == 'email' ? email : _phone, _send_code_by);
-
-    // if (passwordForgetResponse.result == false) {
-    //   ToastComponent.showDialog(passwordForgetResponse.message!,
-    //       gravity: Toast.center, duration: Toast.lengthLong);
-    // } else {
-    //   ToastComponent.showDialog(passwordForgetResponse.message!,
-    //       gravity: Toast.center, duration: Toast.lengthLong);
-    //
-    //   Navigator.push(context, MaterialPageRoute(builder: (context) {
-    //     return PasswordOtp(
-    //       verify_by: _send_code_by,
-    //     );
-    //   }));
-    // }
+    BlocProvider.of<AuthBloc>(buildContext)
+        .add(resetPasswordForEmailRequested(email));
   }
 
   @override
   Widget build(BuildContext context) {
     final _screen_height = MediaQuery.of(context).size.height;
     final _screen_width = MediaQuery.of(context).size.width;
-    return AuthScreen.buildScreen(
-        context, "Forget Password!", buildBody(_screen_width, context));
+
+    AuthRepository _authRepository = AuthRepository();
+
+    return BlocProvider(
+      create: (context) => AuthBloc(authRepository: _authRepository),
+      child: BlocListener<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is AuthError) {
+            final errorMessage =
+                state.error.toString().replaceAll('Exception:', '');
+            ToastComponent.showDialog(errorMessage.trim(),
+                gravity: Toast.center, duration: Toast.lengthLong);
+          }
+          if (state is resetPasswordForEmailSent) {
+            ToastComponent.showDialog('Password reset link sent to your email.',
+                gravity: Toast.center, duration: Toast.lengthLong);
+
+            Navigator.pop(context);
+          }
+        },
+        child: BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, state) {
+            if (state is Loading)
+              return Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            return AuthScreen.buildScreen(
+                context, "Forget Password!", buildBody(_screen_width, context));
+          },
+        ),
+      ),
+    );
   }
 
   Column buildBody(double _screen_width, BuildContext context) {
@@ -154,23 +145,6 @@ class _PasswordForgetState extends State<PasswordForget> {
                             hint_text: "Enter your email"),
                       ),
                     ),
-                    // otp_addon_installed.$
-                    //     ? GestureDetector(
-                    //         onTap: () {
-                    //           setState(() {
-                    //             _send_code_by = "phone";
-                    //           });
-                    //         },
-                    //         child: Text(
-                    //           AppLocalizations.of(context)!
-                    //               .or_send_code_via_phone_number,
-                    //           style: TextStyle(
-                    //               color: MyTheme.accent_color,
-                    //               fontStyle: FontStyle.italic,
-                    //               decoration: TextDecoration.underline),
-                    //         ),
-                    //       )
-                    //     : Container()
                   ],
                 ),
               ),
@@ -194,7 +168,7 @@ class _PasswordForgetState extends State<PasswordForget> {
                           fontWeight: FontWeight.w600),
                     ),
                     onPressed: () {
-                      onPressSendCode();
+                      onPressSendCode(context);
                     },
                   ),
                 ),
