@@ -1,4 +1,5 @@
-import 'package:active_ecommerce_flutter/features/profile/profile.dart';
+import 'package:active_ecommerce_flutter/features/profile/screens/friends_screen.dart';
+import 'package:active_ecommerce_flutter/features/profile/screens/profile.dart';
 import 'package:flutter/material.dart';
 
 import '../../my_theme.dart';
@@ -19,116 +20,180 @@ class _TitleBarState extends State<TitleBar> {
       elevation: 3,
       child: Container(
         color: MyTheme.field_color,
-        height: 85,
+        height: 100,
         width: MediaQuery.of(context).size.width,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Profile()));
-              },
-              child: Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    //Profile Image
-                    Container(
-                      height: 55,
-                      width: 90,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15)),
-                      child: Image.asset("assets/girl.png"),
-                    ),
+            Expanded(
+              flex: 6,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                        color: MyTheme.green_light as Color,
+                      ),
+                      borderRadius: BorderRadius.circular(8)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      //Profile Image
 
-                    //Friends and Groups text
-                    Container(
-                      height: 53,
-                      width: 80,
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                "5 groups",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 14,
-                                    fontFamily: 'Poppins',
-                                    letterSpacing: .5),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Profile()));
+                          },
+                          child: AspectRatio(
+                            aspectRatio: 1 / 1,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.asset(
+                                "assets/girl.png",
+                                fit: BoxFit.fitHeight,
                               ),
                             ),
-                            // SizedBox(height: 1),
-                            Expanded(
-                              flex: 2,
-                              child: Text(
-                                "125 Friends\n & neighbors",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 12,
-                                    fontFamily: 'Poppins',
-                                    color: MyTheme.primary_color,
-                                    letterSpacing: .5,
-                                    height: 1.5),
-                              ),
-                            )
-                          ],
+                          ),
                         ),
                       ),
-                    )
-                  ],
+
+                      //Friends and Groups text
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Friends()));
+                          },
+                          child: Center(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "125 Friends",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 13,
+                                        fontFamily: 'Poppins',
+                                        color: MyTheme.primary_color,
+                                        letterSpacing: .5),
+                                  ),
+                                  // SizedBox(height: 1),
+                                  Text(
+                                    "5 Groups",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 13,
+                                        fontFamily: 'Poppins',
+                                        color: MyTheme.primary_color,
+                                        letterSpacing: .5,
+                                        height: 1.5),
+                                  ),
+
+                                  Text(
+                                    "3 Crops",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 13,
+                                        fontFamily: 'Poppins',
+                                        color: MyTheme.primary_color,
+                                        letterSpacing: .5,
+                                        height: 1.5),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
 
             //Weather and Location
-            Padding(
-              padding: const EdgeInsets.only(right: 15.0),
-              child: Container(
-                height: 68,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => WeatherScreen()));
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          /*  Text("Weather",
-                            style: TextStyle(fontWeight: FontWeight.w500,
-                                fontSize: 14,fontFamily: 'Poppins'),),*/
-                          SizedBox(
-                            width: 40,
-                          ),
-                          SizedBox(
-                            width: 4,
-                          ),
-                          Image.asset('assets/weather.png')
-                        ],
+            Expanded(
+              flex: 4,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 8, right: 8, bottom: 8),
+                child: Container(
+                  // height: 85,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                        color: MyTheme.green_light as Color,
                       ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      "@ Namur  pitlali",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14,
-                          fontFamily: 'Poppins'),
-                    )
-                  ],
+                      borderRadius: BorderRadius.circular(8)),
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    // crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => WeatherScreen()));
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Image.asset('assets/weather.png'),
+                              Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    '38°',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 15,
+                                      fontFamily: 'Poppins',
+                                      color: MyTheme.primary_color,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Rainy',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                      fontFamily: 'Poppins',
+                                      color: MyTheme.primary_color,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      Text(
+                        "@ Namur Pitlali",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 15,
+                          fontFamily: 'Poppins',
+                          color: MyTheme.primary_color,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             )
