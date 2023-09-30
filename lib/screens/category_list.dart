@@ -9,7 +9,7 @@ import 'package:active_ecommerce_flutter/screens/calender/calender.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
-import 'package:active_ecommerce_flutter/ui_sections/drawer.dart';
+import 'package:active_ecommerce_flutter/drawer/drawer.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:toast/toast.dart';

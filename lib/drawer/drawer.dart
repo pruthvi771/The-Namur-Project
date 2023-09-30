@@ -58,7 +58,7 @@ class _MainDrawerState extends State<MainDrawer> {
   }
 
   // final user = AuthService.firebase().currentUser;
-  final user = null;
+  final user = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -157,20 +157,20 @@ class _MainDrawerState extends State<MainDrawer> {
                                     }));
                               }),*/
                           // Divider(),
-                          /*  ListTile(
-                              visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-                              leading: Image.asset("assets/home.png",
-                                  height: 16, color: Color.fromRGBO(153, 153, 153, 1)),
-                              title: Text("wallet",
-                                  style: TextStyle(
-                                      color: MyTheme.primary_color,
-                                      fontSize: 14)),
-                              onTap: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                      return Main();
-                                    }));
-                              }),*/
+                          // ListTile(
+                          //     visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                          //     leading: Image.asset("assets/home.png",
+                          //         height: 16, color: Color.fromRGBO(153, 153, 153, 1)),
+                          //     title: Text("wallet",
+                          //         style: TextStyle(
+                          //             color: MyTheme.primary_color,
+                          //             fontSize: 14)),
+                          //     onTap: () {
+                          //       Navigator.push(context,
+                          //           MaterialPageRoute(builder: (context) {
+                          //             return Main();
+                          //           }));
+                          //     }),
                           //  Divider(),
                           Visibility(
                             visible: conversation_system_status.$,

@@ -5,7 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../custom/device_info.dart';
 import '../../my_theme.dart';
 import '../../presenter/home_presenter.dart';
-import '../../ui_sections/drawer.dart';
+import '../../drawer/drawer.dart';
 import '../product_post/product_post.dart';
 
 class SellerPlatform extends StatefulWidget {
@@ -128,8 +128,11 @@ class _SellerPlatformState extends State<SellerPlatform> {
                         elevation: 1,
                         borderRadius: BorderRadius.circular(15),
                         child: InkWell(
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductInventory()));
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ProductInventory()));
                           },
                           child: Container(
                             decoration: BoxDecoration(
@@ -142,18 +145,16 @@ class _SellerPlatformState extends State<SellerPlatform> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-
                                 Container(
-                                    width: MediaQuery.of(context).size.width / 3,
+                                    width:
+                                        MediaQuery.of(context).size.width / 3,
                                     child: ClipRRect(
                                         borderRadius: BorderRadius.circular(15),
-                                        child: Image.asset("assets/orange.png"))),
-
+                                        child:
+                                            Image.asset("assets/orange.png"))),
                                 SizedBox(),
-
                                 Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
@@ -163,7 +164,6 @@ class _SellerPlatformState extends State<SellerPlatform> {
                                           fontSize: 15,
                                           fontWeight: FontWeight.w600),
                                     ),
-
                                     Text(
                                       "20%off",
                                       maxLines: 2,
@@ -173,46 +173,45 @@ class _SellerPlatformState extends State<SellerPlatform> {
                                           color: MyTheme.dark_grey,
                                           height: 1.2),
                                     ),
-
-                                    SizedBox(height: 15,),
+                                    SizedBox(
+                                      height: 15,
+                                    ),
                                   ],
                                 ),
                                 SizedBox(),
                                 Padding(
                                   padding: const EdgeInsets.only(right: 8.0),
                                   child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
                                     children: [
-
-                                    Text(
-                                      "1kg",
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-
-                                    Text(
-                                      "Rs 10/kg",
-                                      maxLines: 2,
-                                      style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.black,
-                                          height: 1.2),
-                                    ),
-
-                                    Container(
-                                      height: 25,
-                                      width: 50,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color:
-                                              MyTheme.primary_color),
-                                          borderRadius:
-                                          BorderRadius.circular(8)),
-                                      child: Center(child: Text("Add")),
-                                    )
-                                  ],),
+                                      Text(
+                                        "1kg",
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      Text(
+                                        "Rs 10/kg",
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.black,
+                                            height: 1.2),
+                                      ),
+                                      Container(
+                                        height: 25,
+                                        width: 50,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: MyTheme.primary_color),
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        child: Center(child: Text("Add")),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),

@@ -8,7 +8,7 @@ import '../../sell_screen/more_detail/more_detail.dart';
 import '../../sell_screen/seller_platform/seller_platform.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../ui_sections/drawer.dart';
+import '../../drawer/drawer.dart';
 import '../option/option.dart';
 
 class ManMachine extends StatefulWidget {
@@ -120,7 +120,6 @@ class _ManMachineState extends State<ManMachine> {
   }
 
   bodycontent() {
-
     return Column(
       children: [
         Container(
@@ -172,22 +171,20 @@ class _ManMachineState extends State<ManMachine> {
                               color: Colors.black))
                     ])),
                   ),
-
                 ],
               ),
-
               Padding(
-                padding: const EdgeInsets.only(left: 8.0,right: 8.0),
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                 child: Row(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 8.0,right: 8.0),
-                      child: Text("Buy",style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600
-                      ),),
+                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                      child: Text(
+                        "Buy",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
                     ),
-
                     Container(
                       //  margin: EdgeInsets.only(right: 50),
                       height: 30,
@@ -201,7 +198,7 @@ class _ManMachineState extends State<ManMachine> {
                           inactiveTrackColor: Colors.grey.shade400,
                           splashRadius: 50.0,
                           // boolean variable value
-                          value : isSwitched,
+                          value: isSwitched,
                           // changes the state of the switch
                           onChanged: (value) {
                             setState(() {
@@ -211,13 +208,13 @@ class _ManMachineState extends State<ManMachine> {
                         ),
                       ),
                     ),
-
                     Padding(
-                      padding: const EdgeInsets.only(left: 8.0,right: 8.0),
-                      child: Text("Rent",style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600
-                      ),),
+                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                      child: Text(
+                        "Rent",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
                     ),
                   ],
                 ),
@@ -237,9 +234,8 @@ class _ManMachineState extends State<ManMachine> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-
                 InkWell(
-                  onTap: (){
+                  onTap: () {
                     setState(() {
                       isvalue = "tractor";
                     });
@@ -247,25 +243,29 @@ class _ManMachineState extends State<ManMachine> {
                   child: Container(
                     height: 44,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                        color: isvalue == "tractor"? MyTheme.primary_color: Colors.white
-                    ),
+                        borderRadius: BorderRadius.circular(10),
+                        color: isvalue == "tractor"
+                            ? MyTheme.primary_color
+                            : Colors.white),
                     child: Center(
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 20.0,right: 20),
-                        child: Text("Tractor",
-                        style: TextStyle(fontSize: 14,
-                        letterSpacing: .5,
-                        fontWeight: FontWeight.w600,
-                            color: isvalue == "tractor"? Colors.white:Colors.black),),
+                        padding: const EdgeInsets.only(left: 20.0, right: 20),
+                        child: Text(
+                          "Tractor",
+                          style: TextStyle(
+                              fontSize: 14,
+                              letterSpacing: .5,
+                              fontWeight: FontWeight.w600,
+                              color: isvalue == "tractor"
+                                  ? Colors.white
+                                  : Colors.black),
+                        ),
                       ),
                     ),
                   ),
                 ),
-
-
                 InkWell(
-                  onTap: (){
+                  onTap: () {
                     setState(() {
                       isvalue = "jcb";
                     });
@@ -274,24 +274,28 @@ class _ManMachineState extends State<ManMachine> {
                     height: 44,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: isvalue == "jcb"? MyTheme.primary_color: Colors.white
-                    ),
+                        color: isvalue == "jcb"
+                            ? MyTheme.primary_color
+                            : Colors.white),
                     child: Center(
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 20.0,right: 20),
-                        child: Text("JCB",
-                          style: TextStyle(fontSize: 14,
+                        padding: const EdgeInsets.only(left: 20.0, right: 20),
+                        child: Text(
+                          "JCB",
+                          style: TextStyle(
+                              fontSize: 14,
                               letterSpacing: .5,
                               fontWeight: FontWeight.w600,
-                              color: isvalue == "jcb"? Colors.white:Colors.black
-                          ),),
+                              color: isvalue == "jcb"
+                                  ? Colors.white
+                                  : Colors.black),
+                        ),
                       ),
                     ),
                   ),
                 ),
-
                 InkWell(
-                  onTap: (){
+                  onTap: () {
                     setState(() {
                       isvalue = "equi";
                     });
@@ -300,27 +304,30 @@ class _ManMachineState extends State<ManMachine> {
                     height: 44,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: isvalue == "equi"? MyTheme.primary_color: Colors.white
-                    ),
+                        color: isvalue == "equi"
+                            ? MyTheme.primary_color
+                            : Colors.white),
                     child: Center(
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 20.0,right: 20),
-                        child: Text("Equipments",
-                          style: TextStyle(fontSize: 14,
+                        padding: const EdgeInsets.only(left: 20.0, right: 20),
+                        child: Text(
+                          "Equipments",
+                          style: TextStyle(
+                              fontSize: 14,
                               letterSpacing: .5,
                               fontWeight: FontWeight.w600,
-                              color: isvalue == "equi"? Colors.white:Colors.black),),
+                              color: isvalue == "equi"
+                                  ? Colors.white
+                                  : Colors.black),
+                        ),
                       ),
                     ),
                   ),
                 ),
-
               ],
             ),
           ),
         ),
-
-
         Expanded(
           child: SizedBox(
             child: MasonryGridView.count(
@@ -329,19 +336,20 @@ class _ManMachineState extends State<ManMachine> {
               crossAxisSpacing: 16,
               itemCount: 20,
               shrinkWrap: true,
-              padding:
-              EdgeInsets.only(top: 10.0, left: 18, right: 18),
+              padding: EdgeInsets.only(top: 10.0, left: 18, right: 18),
               scrollDirection: Axis.vertical,
               itemBuilder: (context, index) {
                 //
-                return  InkWell(
-                  onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return Option();
-                    },));
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return Option();
+                      },
+                    ));
                   },
                   child: Container(
-                      height: 100,
+                    height: 100,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
                     ),
@@ -350,20 +358,23 @@ class _ManMachineState extends State<ManMachine> {
                         Container(
                           height: 50,
                           width: 50,
-                          child: Image.asset("assets/tractor.png",
-                            fit: BoxFit.cover,),
+                          child: Image.asset(
+                            "assets/tractor.png",
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                        SizedBox(height: 10,),
-                        Text("Tractor",
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "Tractor",
                           style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600
-                          ),)
+                              fontSize: 16, fontWeight: FontWeight.w600),
+                        )
                       ],
                     ),
                   ),
                 );
-
               },
             ),
           ),

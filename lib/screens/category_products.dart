@@ -13,11 +13,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import '../presenter/home_presenter.dart';
-import '../ui_sections/drawer.dart';
+import '../drawer/drawer.dart';
 import 'category/sub_category.dart';
 
 class CategoryProducts extends StatefulWidget {
-  CategoryProducts({Key? key, this.category_name, this.category_id, this.isvalue})
+  CategoryProducts(
+      {Key? key, this.category_name, this.category_id, this.isvalue})
       : super(key: key);
   final String? category_name;
   final int? category_id;
@@ -42,7 +43,6 @@ class _CategoryProductsState extends State<CategoryProducts> {
   int? _totalData = 0;
   bool _showLoadingContainer = false;
   bool _showSearchBar = false;
-
 
   getSubCategory() async {
     var res =
@@ -109,6 +109,7 @@ class _CategoryProductsState extends State<CategoryProducts> {
     reset();
     fetchAllDate();
   }
+
   var _index = 0;
   var id;
   @override
@@ -121,43 +122,47 @@ class _CategoryProductsState extends State<CategoryProducts> {
         body: Column(
           children: [
             Container(
-              height: 100,
-              width:MediaQuery.of(context).size.width,
-              color: MyTheme.light_grey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(height: 25,),
-                    SizedBox(
-                      height: 50,
-                      child: CircleAvatarwidget(),
-                    ),
-                    SizedBox(
-                      height: 25,
-                    )
-              ])
-            ),
+                height: 100,
+                width: MediaQuery.of(context).size.width,
+                color: MyTheme.light_grey,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        height: 25,
+                      ),
+                      SizedBox(
+                        height: 50,
+                        child: CircleAvatarwidget(),
+                      ),
+                      SizedBox(
+                        height: 25,
+                      )
+                    ])),
 
             SizedBox(height: 16),
 
             // Sub category
             Padding(
-              padding: const EdgeInsets.only(left: 20.0,right: 20),
+              padding: const EdgeInsets.only(left: 20.0, right: 20),
               child: Container(
-                  decoration: BoxDecoration(border: Border.all(
-                      color: MyTheme.titlebar_color
-                  ),borderRadius: BorderRadius.circular(15)),
-                  height:44,
-                  child:  ListView.separated(
-                      padding: EdgeInsets.only(left: 18, right: 18, ),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: MyTheme.titlebar_color),
+                      borderRadius: BorderRadius.circular(15)),
+                  height: 44,
+                  child: ListView.separated(
+                      padding: EdgeInsets.only(
+                        left: 18,
+                        right: 18,
+                      ),
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
                         return InkWell(
                           onTap: () {
                             setState(() {
                               _index = index;
-                                 var id = "${_subCategoryList[index].id}";
-                             // buildProductList();
+                              var id = "${_subCategoryList[index].id}";
+                              // buildProductList();
 
                               SubCategory(
                                 category_id: _subCategoryList[index].id,
@@ -177,20 +182,24 @@ class _CategoryProductsState extends State<CategoryProducts> {
                             );
                           },
                           child: Container(
-                            height:  44,
-                             width:  90,
-                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),
-                                color: _index == index? MyTheme.primary_color:Colors.white),
+                            height: 44,
+                            width: 90,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: _index == index
+                                    ? MyTheme.primary_color
+                                    : Colors.white),
                             alignment: Alignment.center,
-
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                "${ _subCategoryList[index].name!}",
+                                "${_subCategoryList[index].name!}",
                                 style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w600,
-                                    color: _index == index? Colors.white:MyTheme.font_grey,
+                                    color: _index == index
+                                        ? Colors.white
+                                        : MyTheme.font_grey,
                                     fontFamily: 'Poppins'),
                                 textAlign: TextAlign.center,
                               ),
@@ -204,8 +213,8 @@ class _CategoryProductsState extends State<CategoryProducts> {
                         );
                       },
                       itemCount: _subCategoryList.length)
-                // !_isInitial ? buildSubCategory() : buildSubCategory(),
-              ),
+                  // !_isInitial ? buildSubCategory() : buildSubCategory(),
+                  ),
             ),
 
             buildProductList(),
@@ -321,32 +330,29 @@ class _CategoryProductsState extends State<CategoryProducts> {
           ? DeviceInfo(context).height! / 12
           : DeviceInfo(context).height! / 12,
       flexibleSpace: Container(
-        height: DeviceInfo(context).height! / 4,
-        width: DeviceInfo(context).width,
-       // color: MyTheme.primary_color,
-        alignment: Alignment.topRight,
+          height: DeviceInfo(context).height! / 4,
+          width: DeviceInfo(context).width,
+          // color: MyTheme.primary_color,
+          alignment: Alignment.topRight,
 
-        /*child: Image.asset(
+          /*child: Image.asset(
           "assets/background_1.png",
         ),
-*/  decoration: BoxDecoration(
-          gradient:LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors:[Color(0xff107B28),Color(0xff4C7B10)]
-          ))
-      ),
+*/
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xff107B28), Color(0xff4C7B10)]))),
 
       //bottom appbar
-     /* bottom: PreferredSize(
+      /* bottom: PreferredSize(
           child: AnimatedContainer(
             height: _subCategoryList.isEmpty ? 0 : 60,
             duration: Duration(milliseconds: 500),
            child: !_isInitial ? buildSubCategory() : buildSubCategory(),
           ),
           preferredSize: Size.fromHeight(0.0)),*/
-
-
 
       /*leading: Builder(
         builder: (context) => IconButton(
@@ -392,7 +398,6 @@ class _CategoryProductsState extends State<CategoryProducts> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-
           Container(
             padding: EdgeInsets.only(left: 50),
             width: DeviceInfo(context).width! / 2,
@@ -400,8 +405,10 @@ class _CategoryProductsState extends State<CategoryProducts> {
               widget.category_name!,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600,
-              fontFamily: 'Poppins'),
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Poppins'),
             ),
           ),
           Spacer(),
@@ -409,7 +416,7 @@ class _CategoryProductsState extends State<CategoryProducts> {
             width: 20,
             child: UsefulElements.backButton(context, color: "white"),
           ),
-        /*  SizedBox(
+          /*  SizedBox(
             width: 20,
             child: IconButton(
                 onPressed: () {
@@ -477,7 +484,10 @@ class _CategoryProductsState extends State<CategoryProducts> {
   ListView buildSubCategory() {
     var _index = 0;
     return ListView.separated(
-        padding: EdgeInsets.only(left: 18, right: 18, ),
+        padding: EdgeInsets.only(
+          left: 18,
+          right: 18,
+        ),
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
           return InkWell(
@@ -504,9 +514,11 @@ class _CategoryProductsState extends State<CategoryProducts> {
             },
             child: Container(
               height: _subCategoryList.isEmpty ? 0 : 44,
-           //   width: _subCategoryList.isEmpty ? 0 : 70,
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),
-                color: _index == index? MyTheme.primary_color:Colors.white),
+              //   width: _subCategoryList.isEmpty ? 0 : 70,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color:
+                      _index == index ? MyTheme.primary_color : Colors.white),
               alignment: Alignment.center,
 
               child: Padding(
@@ -516,7 +528,7 @@ class _CategoryProductsState extends State<CategoryProducts> {
                   style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: _index == index? Colors.white:MyTheme.font_grey,
+                      color: _index == index ? Colors.white : MyTheme.font_grey,
                       fontFamily: 'Poppins'),
                   textAlign: TextAlign.center,
                 ),
@@ -551,23 +563,23 @@ class _CategoryProductsState extends State<CategoryProducts> {
             crossAxisCount: 3,
             mainAxisSpacing: 16,
             crossAxisSpacing: 16,
-            itemCount:   _productList.length,
+            itemCount: _productList.length,
             shrinkWrap: true,
-            padding:
-                EdgeInsets.only(top: 10.0, left: 18, right: 18),
+            padding: EdgeInsets.only(top: 10.0, left: 18, right: 18),
             physics: NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               // 3
               return ProductCard(
-                  id: _productList[index].id,
-                  image: _productList[index].thumbnail_image,
-                  name: _productList[index].name,
-                  main_price: _productList[index].main_price,
-                  stroked_price: _productList[index].stroked_price,
-                  discount: _productList[index].discount,
-                  is_wholesale: _productList[index].isWholesale,
-                  has_discount: _productList[index].has_discount,
-              isvalue: widget.isvalue ,);
+                id: _productList[index].id,
+                image: _productList[index].thumbnail_image,
+                name: _productList[index].name,
+                main_price: _productList[index].main_price,
+                stroked_price: _productList[index].stroked_price,
+                discount: _productList[index].discount,
+                is_wholesale: _productList[index].isWholesale,
+                has_discount: _productList[index].has_discount,
+                isvalue: widget.isvalue,
+              );
             },
           ),
         ),
@@ -580,7 +592,7 @@ class _CategoryProductsState extends State<CategoryProducts> {
     }
   }
 
-  CircleAvatarwidget () {
+  CircleAvatarwidget() {
     return Container(
       width: MediaQuery.of(context).size.width,
       child: Row(
@@ -607,15 +619,23 @@ class _CategoryProductsState extends State<CategoryProducts> {
           ),
           SizedBox(
             height: 40,
-             child: RichText(text: TextSpan(
-                children: [
-                  TextSpan(text: '200+${_subCategoryList.length}',style: TextStyle(fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w600,fontSize: 15,color: Colors.black)),
-                  TextSpan(text: '\nFarmer',
-                      style: TextStyle(fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w600,fontSize: 15,color: Colors.black))
-                ]
-            )),
+            child: RichText(
+                text: TextSpan(children: [
+              TextSpan(
+                  text: '200+${_subCategoryList.length}',
+                  style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15,
+                      color: Colors.black)),
+              TextSpan(
+                  text: '\nFarmer',
+                  style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15,
+                      color: Colors.black))
+            ])),
           )
         ],
       ),
@@ -637,8 +657,8 @@ class _CategoryProductsState extends State<CategoryProducts> {
         onRefresh: _onRefresh,
         child: SingleChildScrollView(
           controller: _xcrollController,
-         *//* physics: const BouncingScrollPhysics(
-              parent: AlwaysScrollableScrollPhysics()),*//*
+         */ /* physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics()),*/ /*
           child: MasonryGridView.count(
             crossAxisCount: 3,
             mainAxisSpacing: 16,

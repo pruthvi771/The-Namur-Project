@@ -23,7 +23,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:provider/provider.dart';
 
-import '../ui_sections/drawer.dart';
+import '../drawer/drawer.dart';
 import 'auction_products_details.dart';
 import 'brand_products.dart';
 import 'home_widget/hexagonal_widget.dart';

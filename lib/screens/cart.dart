@@ -11,7 +11,7 @@ import 'package:active_ecommerce_flutter/screens/shipping_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
-import 'package:active_ecommerce_flutter/ui_sections/drawer.dart';
+import 'package:active_ecommerce_flutter/drawer/drawer.dart';
 import 'package:flutter/widgets.dart';
 import 'package:active_ecommerce_flutter/repositories/cart_repository.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
@@ -40,7 +40,6 @@ class Cart extends StatefulWidget {
 }
 
 class _CartState extends State<Cart> {
-
   HomePresenter homeData = HomePresenter();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -101,7 +100,7 @@ class _CartState extends State<Cart> {
                 ((cart_item.price + cart_item.tax) * cart_item.quantity)
                     .toStringAsFixed(2));
             _cartTotalString =
-                " ${SystemConfig.systemCurrency!.symbol } ${ _cartTotal.toStringAsFixed(2)}";
+                " ${SystemConfig.systemCurrency!.symbol} ${_cartTotal.toStringAsFixed(2)}";
           });
         }
       });
@@ -378,7 +377,7 @@ class _CartState extends State<Cart> {
             Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 8.0,right: 10,left: 20),
+                  padding: const EdgeInsets.only(top: 8.0, right: 10, left: 20),
                   child: Container(
                     width: (MediaQuery.of(context).size.width - 100) * (2 / 4),
                     height: 58,
@@ -431,13 +430,13 @@ class _CartState extends State<Cart> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 8.0,right: 20),
+                  padding: const EdgeInsets.only(top: 8.0, right: 20),
                   child: Container(
                     height: 58,
                     width: (MediaQuery.of(context).size.width - 100) * (2 / 4),
                     decoration: BoxDecoration(
                         color: Colors.white,
-                       // border:
+                        // border:
                         //    Border.all(color: MyTheme.primary_color, width: 1),
                         borderRadius: app_language_rtl.$!
                             ? const BorderRadius.only(
@@ -474,7 +473,8 @@ class _CartState extends State<Cart> {
                         padding: const EdgeInsets.only(left: 30.0),
                         child: Center(
                           child: Text(
-                            AppLocalizations.of(context)!.proceed_to_shipping_ucf,
+                            AppLocalizations.of(context)!
+                                .proceed_to_shipping_ucf,
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 13,
@@ -508,11 +508,11 @@ class _CartState extends State<Cart> {
         ),
       ),
       centerTitle: true,
-       leading: IconButton(
-        onPressed: () {
-      homeData.scaffoldKey.currentState?.openDrawer();
-    },
-    icon: Icon(Icons.menu)),
+      leading: IconButton(
+          onPressed: () {
+            homeData.scaffoldKey.currentState?.openDrawer();
+          },
+          icon: Icon(Icons.menu)),
       /*Builder(
         builder: (context) => widget.from_navigation
             ? UsefulElements.backToMain(context, go_back: false)
@@ -555,7 +555,7 @@ class _CartState extends State<Cart> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-               /* Padding(
+                /* Padding(
                   padding: const EdgeInsets.only(bottom: 12.0),
                   child: Row(
                     children: [
@@ -732,7 +732,8 @@ class _CartState extends State<Cart> {
                           .cart_items[item_index]
                           .quantity
                           .toString(),
-                      style: TextStyle(color: MyTheme.accent_color, fontSize: 16),
+                      style:
+                          TextStyle(color: MyTheme.accent_color, fontSize: 16),
                     ),
                   ),
                   GestureDetector(

@@ -5,7 +5,7 @@ import '../../data_model/calender/cultivation_tips_model.dart';
 import '../../data_model/calender/pests_control_model.dart';
 import '../../my_theme.dart';
 import '../../presenter/home_presenter.dart';
-import '../../ui_sections/drawer.dart';
+import '../../drawer/drawer.dart';
 
 class CultivationTips extends StatefulWidget {
   const CultivationTips({Key? key}) : super(key: key);
@@ -15,8 +15,7 @@ class CultivationTips extends StatefulWidget {
 }
 
 class _CultivationTipsState extends State<CultivationTips> {
-
-  List <PlantingStage> plantinstagelist = [
+  List<PlantingStage> plantinstagelist = [
     PlantingStage(
       image: "assets/onion.png",
       title: "cxmvnxdlk,",
@@ -36,50 +35,18 @@ class _CultivationTipsState extends State<CultivationTips> {
   ];
 
   List<CultivationTipsModel> cultivationtipslist = [
+    CultivationTipsModel(image: "assets/grape (3).png", title: "Select Plant"),
+    CultivationTipsModel(image: "assets/grape (3).png", title: "Planting"),
+    CultivationTipsModel(image: "assets/grape (3).png", title: "Monitoring"),
+    CultivationTipsModel(image: "assets/grape (3).png", title: "Select Site"),
+    CultivationTipsModel(image: "assets/grape (3).png", title: "Weeding"),
+    CultivationTipsModel(image: "assets/grape (3).png", title: "Irrigation"),
+    CultivationTipsModel(image: "assets/grape (3).png", title: "Fertilization"),
+    CultivationTipsModel(image: "assets/grape (3).png", title: "Precautions"),
+    CultivationTipsModel(image: "assets/grape (3).png", title: "Protection"),
     CultivationTipsModel(
-      image: "assets/grape (3).png",
-      title: "Select Plant"
-    ),
-    CultivationTipsModel(
-        image: "assets/grape (3).png",
-        title: "Planting"
-    ),
-    CultivationTipsModel(
-        image: "assets/grape (3).png",
-        title: "Monitoring"
-    ),
-    CultivationTipsModel(
-        image: "assets/grape (3).png",
-        title: "Select Site"
-    ),
-    CultivationTipsModel(
-        image: "assets/grape (3).png",
-        title: "Weeding"
-    ),
-    CultivationTipsModel(
-        image: "assets/grape (3).png",
-        title: "Irrigation"
-    ),
-    CultivationTipsModel(
-        image:"assets/grape (3).png",
-        title: "Fertilization"
-    ),
-    CultivationTipsModel(
-        image: "assets/grape (3).png",
-        title: "Precautions"
-    ),
-    CultivationTipsModel(
-        image: "assets/grape (3).png",
-        title: "Protection"
-    ),
-    CultivationTipsModel(
-        image: "assets/orange (1) (3).png",
-        title: "Harvesting"
-    ),
-    CultivationTipsModel(
-        image: "assets/grape (3).png",
-        title: "Post Harvest"
-    ),
+        image: "assets/orange (1) (3).png", title: "Harvesting"),
+    CultivationTipsModel(image: "assets/grape (3).png", title: "Post Harvest"),
   ];
   HomePresenter homeData = HomePresenter();
 
@@ -94,15 +61,14 @@ class _CultivationTipsState extends State<CultivationTips> {
     super.initState();
   }
 
-  var colordata =  1;
+  var colordata = 1;
 
-  value(){
+  value() {
     var i = 1;
-    do{
+    do {
       colordata = 1;
       i++;
-    }while(i<40);
-
+    } while (i < 40);
   }
 
   @override
@@ -211,7 +177,7 @@ class _CultivationTipsState extends State<CultivationTips> {
                       child: ListView.builder(
                           itemCount: plantinstagelist.length,
                           scrollDirection: Axis.horizontal,
-                          itemBuilder: ( context,index) {
+                          itemBuilder: (context, index) {
                             return Row(
                               children: [
                                 Container(
@@ -222,7 +188,8 @@ class _CultivationTipsState extends State<CultivationTips> {
                                     border: Border.all(
                                         color: MyTheme.primary_color),
                                   ),
-                                  child: Image.asset("${plantinstagelist.elementAt(index).image}"),
+                                  child: Image.asset(
+                                      "${plantinstagelist.elementAt(index).image}"),
                                 ),
                                 SizedBox(
                                   width: 15,
@@ -244,9 +211,10 @@ class _CultivationTipsState extends State<CultivationTips> {
             Container(
               height: MediaQuery.of(context).size.height,
               child: Padding(
-                padding: const EdgeInsets.only(left: 20.0,right: 20),
+                padding: const EdgeInsets.only(left: 20.0, right: 20),
                 child: GridView.builder(
-                    itemCount: cultivationtipslist.length, // The number of items in the grid
+                    itemCount: cultivationtipslist
+                        .length, // The number of items in the grid
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3, // Number of columns in the grid
                       crossAxisSpacing: 20.0, // Spacing between columns
@@ -257,28 +225,28 @@ class _CultivationTipsState extends State<CultivationTips> {
 
                       return Container(
                         decoration: BoxDecoration(
-                          color:index == colordata? MyTheme.green_light:Colors.white,
-
-                        borderRadius: BorderRadius.circular(15)),
-                       
+                            color: index == colordata
+                                ? MyTheme.green_light
+                                : Colors.white,
+                            borderRadius: BorderRadius.circular(15)),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Container(
-                              height:70,
-                                child: Image.asset("${cultivationtipslist.elementAt(index).image}",
-                                fit: BoxFit.fill,)),
-
+                                height: 70,
+                                child: Image.asset(
+                                  "${cultivationtipslist.elementAt(index).image}",
+                                  fit: BoxFit.fill,
+                                )),
                             Center(
                               child: Padding(
                                 padding: const EdgeInsets.only(),
                                 child: Text(
                                   ' $index. ${cultivationtipslist.elementAt(index).title}',
                                   style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 13.0,
-                                    fontWeight: FontWeight.w600
-                                  ),
+                                      color: Colors.black,
+                                      fontSize: 13.0,
+                                      fontWeight: FontWeight.w600),
                                 ),
                               ),
                             ),
