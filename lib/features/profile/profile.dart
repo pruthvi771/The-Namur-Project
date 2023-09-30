@@ -415,89 +415,74 @@ class _ProfileState extends State<Profile> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _profileSection = ProfileSection.updates;
-                        });
-                      },
-                      child: Container(
-                        width: 100,
-                        height: 44,
-                        decoration: BoxDecoration(
-                            color: _profileSection == ProfileSection.updates
-                                ? MyTheme.primary_color
-                                : MyTheme.field_color,
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Center(
-                          child: Text(
-                            "Updates",
-                            style: TextStyle(
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 4),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _profileSection = ProfileSection.updates;
+                            });
+                          },
+                          child: Container(
+                            width: 100,
+                            height: 44,
+                            decoration: BoxDecoration(
                                 color: _profileSection == ProfileSection.updates
-                                    ? Colors.white
-                                    : Colors.black,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: .5,
-                                fontFamily: "Poppins",
-                                fontSize: 15),
+                                    ? MyTheme.primary_color
+                                    : MyTheme.field_color,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Center(
+                              child: Text(
+                                "Updates",
+                                style: TextStyle(
+                                    color: _profileSection ==
+                                            ProfileSection.updates
+                                        ? Colors.white
+                                        : Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: .5,
+                                    fontFamily: "Poppins",
+                                    fontSize: 15),
+                              ),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () => setState(() {
-                        _profileSection = ProfileSection.market;
-                      }),
-                      child: Container(
-                        width: 100,
-                        height: 44,
-                        decoration: BoxDecoration(
-                            color: _profileSection == ProfileSection.market
-                                ? MyTheme.primary_color
-                                : MyTheme.field_color,
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Center(
-                          child: Text(
-                            "Market",
-                            style: TextStyle(
-                                color: _profileSection == ProfileSection.market
-                                    ? Colors.white
-                                    : Colors.black,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: "Poppins",
-                                letterSpacing: .5,
-                                fontSize: 15),
-                          ),
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        print('clicked');
-                        setState(() {
-                          _profileSection = ProfileSection.myStock;
-                        });
-                      },
-                      child: Container(
-                        width: 100,
-                        height: 44,
-                        decoration: BoxDecoration(
-                            // color: MyTheme.primary_color,
-                            color: _profileSection == ProfileSection.myStock
-                                ? MyTheme.primary_color
-                                : MyTheme.field_color,
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Center(
-                          child: Text(
-                            "My Stock",
-                            style: TextStyle(
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 4),
+                        child: GestureDetector(
+                          onTap: () {
+                            print('clicked');
+                            setState(() {
+                              _profileSection = ProfileSection.myStock;
+                            });
+                          },
+                          child: Container(
+                            // width: 100,
+                            height: 44,
+                            decoration: BoxDecoration(
+                                // color: MyTheme.primary_color,
                                 color: _profileSection == ProfileSection.myStock
-                                    ? Colors.white
-                                    : Colors.black,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: "Poppins",
-                                letterSpacing: .5,
-                                fontSize: 15),
+                                    ? MyTheme.primary_color
+                                    : MyTheme.field_color,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Center(
+                              child: Text(
+                                "My Stock",
+                                style: TextStyle(
+                                    color: _profileSection ==
+                                            ProfileSection.myStock
+                                        ? Colors.white
+                                        : Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: "Poppins",
+                                    letterSpacing: .5,
+                                    fontSize: 15),
+                              ),
+                            ),
                           ),
                         ),
                       ),
