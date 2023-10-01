@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:active_ecommerce_flutter/screens/main.dart';
-import 'package:active_ecommerce_flutter/features/profile/profile.dart';
+import 'package:active_ecommerce_flutter/features/profile/screens/profile.dart';
 import 'package:active_ecommerce_flutter/screens/order_list.dart';
 import 'package:active_ecommerce_flutter/screens/wishlist.dart';
 

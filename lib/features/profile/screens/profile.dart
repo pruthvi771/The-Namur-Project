@@ -5,7 +5,7 @@ import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/custom/lang_text.dart';
 import 'package:active_ecommerce_flutter/features/profile/enum.dart';
-import 'package:active_ecommerce_flutter/features/profile/more_details.dart';
+import 'package:active_ecommerce_flutter/features/profile/screens/more_details.dart';
 import 'package:active_ecommerce_flutter/helpers/auth_helper.dart';
 import 'package:active_ecommerce_flutter/presenter/home_presenter.dart';
 import 'package:active_ecommerce_flutter/screens/auction_products.dart';
@@ -41,14 +41,10 @@ import 'package:active_ecommerce_flutter/screens/refund_request.dart';
 import 'package:active_ecommerce_flutter/repositories/profile_repository.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:toast/toast.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../repositories/auth_repository.dart';
 
 class Profile extends StatefulWidget {
   Profile({Key? key, this.show_back_button = false}) : super(key: key);
@@ -122,20 +118,20 @@ class _ProfileState extends State<Profile> {
     setState(() {});
   }
 
-  deleteAccountReq() async {
-    loading();
-    var response = await AuthRepository().getAccountDeleteResponse();
+  // deleteAccountReq() async {
+  //   loading();
+  //   var response = await AuthRepository().getAccountDeleteResponse();
 
-    if (response.result!) {
-      AuthHelper().clearUserData();
-      Navigator.pop(loadingcontext);
-      Navigator.pushAndRemoveUntil(context,
-          MaterialPageRoute(builder: (context) {
-        return Main();
-      }), (route) => false);
-    }
-    ToastComponent.showDialog(response.message!);
-  }
+  //   if (response.result!) {
+  //     AuthHelper().clearUserData();
+  //     Navigator.pop(loadingcontext);
+  //     Navigator.pushAndRemoveUntil(context,
+  //         MaterialPageRoute(builder: (context) {
+  //       return Main();
+  //     }), (route) => false);
+  //   }
+  //   ToastComponent.showDialog(response.message!);
+  // }
 
   String counterText(String txt, {default_length = 3}) {
     var blank_zeros = default_length == 3 ? "000" : "00";
@@ -408,7 +404,7 @@ class _ProfileState extends State<Profile> {
               ),
             ),
 
-            //Updates, Market and My Strock navigation buttons
+            //Updates, My Strock navigation buttons
             Padding(
               padding: const EdgeInsets.only(left: 20.0, right: 20, top: 16),
               child: Container(
@@ -417,7 +413,7 @@ class _ProfileState extends State<Profile> {
                   children: [
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.only(right: 4),
+                        padding: const EdgeInsets.only(right: 5),
                         child: GestureDetector(
                           onTap: () {
                             setState(() {
@@ -452,7 +448,7 @@ class _ProfileState extends State<Profile> {
                     ),
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 4),
+                        padding: const EdgeInsets.only(left: 5),
                         child: GestureDetector(
                           onTap: () {
                             print('clicked');
@@ -527,11 +523,6 @@ class _ProfileState extends State<Profile> {
                     ),
                   ),
                 ],
-              ),
-
-            if (_profileSection == ProfileSection.market)
-              Text(
-                'market',
               ),
 
             if (_profileSection == ProfileSection.myStock)
@@ -1034,7 +1025,7 @@ class _ProfileState extends State<Profile> {
                 TextButton(
                     onPressed: () {
                       pop(context);
-                      deleteAccountReq();
+                      // deleteAccountReq();
                     },
                     child: Text(LangText(context).local!.yes_ucf))
               ],

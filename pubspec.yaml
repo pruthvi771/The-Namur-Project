@@ -94,6 +94,7 @@ dependencies:
   bloc: ^8.1.0
   flutter_expanded_tile: ^0.3.7
   percent_indicator: ^4.2.3
+  table_calendar: ^3.0.9
 
 dev_dependencies:
   flutter_test:

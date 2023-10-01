@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 
 class MyTheme {
@@ -34,6 +37,7 @@ class MyTheme {
   static Color primary_color = const Color(0xff107B28);
   static Color field_color = const Color(0xffEFEFEF);
   static Color titlebar_color = const Color(0xffBFB2B2);
+  static const Color green_lighter = Color.fromARGB(199, 180, 251, 149);
   //testing shimmer
   /*static Color shimmer_base = Colors.redAccent;
   static Color shimmer_highlighted = Colors.yellow;*/

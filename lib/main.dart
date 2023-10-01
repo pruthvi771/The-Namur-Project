@@ -1,5 +1,6 @@
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_bloc.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
+import 'package:active_ecommerce_flutter/features/weather/bloc/weather_bloc.dart';
 import 'package:active_ecommerce_flutter/helpers/addons_helper.dart';
 import 'package:active_ecommerce_flutter/helpers/auth_helper.dart';
 import 'package:active_ecommerce_flutter/helpers/business_setting_helper.dart';
@@ -19,7 +20,7 @@ import 'package:active_ecommerce_flutter/screens/messenger_list.dart';
 import 'package:active_ecommerce_flutter/screens/order_details.dart';
 import 'package:active_ecommerce_flutter/screens/order_list.dart';
 import 'package:active_ecommerce_flutter/screens/product_reviews.dart';
-import 'package:active_ecommerce_flutter/features/profile/profile.dart';
+import 'package:active_ecommerce_flutter/features/profile/screens/profile.dart';
 import 'package:active_ecommerce_flutter/screens/refund_request.dart';
 import 'package:active_ecommerce_flutter/screens/splash_screen.dart';
 import 'package:active_ecommerce_flutter/screens/todays_deal_products.dart';
@@ -96,6 +97,8 @@ main() async {
     systemNavigationBarDividerColor: Colors.transparent,
   ));
 
+  await Firebase.initializeApp();
+
   runApp(
     SharedValue.wrapApp(
       MyApp(),
@@ -114,27 +117,36 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-
-    Future.delayed(Duration.zero).then(
-      (value) async {
-        Firebase.initializeApp().then((value) {
-          if (OtherConfig.USE_PUSH_NOTIFICATION) {
-            Future.delayed(Duration(milliseconds: 10), () async {
-              PushNotificationService().initialise();
-            });
-          }
-        });
-      },
-    );
+    // Firebase.initializeApp();
+    // Future.delayed(Duration.zero).then(
+    //   (value) async {
+    //     Firebase.initializeApp().then((value) {
+    //       // if (OtherConfig.USE_PUSH_NOTIFICATION) {
+    //       //   Future.delayed(Duration(milliseconds: 10), () async {
+    //       //     PushNotificationService().initialise();
+    //       //   });
+    //       }
+    //     });
+    //   },
+    // );
   }
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    return BlocProvider(
-        create: (context) => AuthBloc(
-              authRepository: RepositoryProvider.of<AuthRepository>(context),
-            ),
+    AuthRepository authRepository = AuthRepository();
+    return MultiBlocProvider(
+        // create: (context) => AuthBloc(
+        //       authRepository: RepositoryProvider.of<AuthRepository>(context),
+        //     ),
+        providers: [
+          BlocProvider<WeatherBloc>(
+            create: (context) => WeatherBloc(),
+          ),
+          BlocProvider<AuthBloc>(
+            create: (context) => AuthBloc(authRepository: authRepository),
+          ),
+        ],
         child: MultiProvider(
             providers: [
               ChangeNotifierProvider(create: (_) => LocaleProvider()),

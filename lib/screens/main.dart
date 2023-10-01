@@ -6,15 +6,15 @@ import 'package:active_ecommerce_flutter/presenter/cart_counter.dart';
 import 'package:active_ecommerce_flutter/screens/address.dart';
 import 'package:active_ecommerce_flutter/screens/cart.dart';
 import 'package:active_ecommerce_flutter/screens/category_list.dart';
-import 'package:active_ecommerce_flutter/screens/home.dart';
-import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
-import 'package:active_ecommerce_flutter/features/profile/profile.dart';
+// import 'package:active_ecommerce_flutter/screens/home.dart';
+// import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
+// import 'package:active_ecommerce_flutter/features/profile/screens/profile.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:route_transitions/route_transitions.dart';
+// import 'package:route_transitions/route_transitions.dart';
 
 import 'my_account/my_account.dart';
 
