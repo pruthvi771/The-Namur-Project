@@ -44,200 +44,196 @@ class _FriendsState extends State<Friends> {
         // drawer: const MainDrawer(),
         backgroundColor: Colors.transparent,
         appBar: buildCustomAppBar(context),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              children: [
-                // Top bar section
-                Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Container(
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                        color: MyTheme.green_lighter,
-                        borderRadius: BorderRadius.circular(15)),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            padding: EdgeInsets.all(3),
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: Stack(
-                                children: [
-                                  ClipRRect(
-                                    child: CircleAvatar(
-                                      backgroundColor: MyTheme.white,
-                                      radius: 45,
-                                    ),
-                                  ),
-                                  Positioned(
-                                    top: 5,
-                                    left: 5,
-                                    child: ClipRRect(
-                                      child: CircleAvatar(
-                                        backgroundImage:
-                                            AssetImage("assets/girl.png"),
-                                        radius: 40,
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    bottom: 0,
-                                    left: 55,
-                                    child: ClipRRect(
-                                      child: CircleAvatar(
-                                        radius: 12,
-                                        backgroundColor: MyTheme.green,
-                                        child: Icon(
-                                          Icons.check,
-                                          size: 17.0,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('10 friends & neighbours',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 13.0,
-                                      color: Colors.black)),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text('20 Groups',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 13.0,
-                                      color: Colors.black)),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text('Society: Pitlali 577511',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 13.0,
-                                      color: Colors.black)),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-
-                // Groups Text
-                Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text('Groups',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                            letterSpacing: .5,
-                            fontFamily: 'Poppins',
-                            decoration: TextDecoration.underline,
-                          )),
-                    )),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Container(
-                    height: 100,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        GroupWidget(image: "assets/onion.png"),
-                        GroupWidget(image: "assets/onion.png"),
-                        GroupWidget(image: "assets/onion.png"),
-                        GroupWidget(image: "assets/onion.png"),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text('Society: Pitlali 577511 (125 Members)',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                            letterSpacing: .5,
-                            fontFamily: 'Poppins',
-                            decoration: TextDecoration.underline,
-                          )),
-                    )),
-                MasonryGridView.count(
-                  crossAxisCount: 4,
-                  mainAxisSpacing: 4,
-                  crossAxisSpacing: 4,
-                  itemCount: 50,
-                  shrinkWrap: true,
-                  padding: EdgeInsets.only(top: 8),
-                  physics: NeverScrollableScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  itemBuilder: (context, index) {
-                    //
-                    return ClipOval(
-                      child: InkWell(
-                        onTap: () => print('tapped $index'),
+        body: ListView(
+            padding: EdgeInsets.all(8),
+            physics: BouncingScrollPhysics(),
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      color: MyTheme.green_lighter,
+                      borderRadius: BorderRadius.circular(15)),
+                  child: Row(
+                    children: [
+                      Expanded(
                         child: Container(
-                          // height: 50,
-                          // width: 50,
-                          child: Stack(children: [
-                            AspectRatio(
-                              aspectRatio: 1 / 1,
-                              child: Image.asset(
-                                (index % 3 == 0)
-                                    ? 'assets/Ellipse2.png'
-                                    : 'assets/Ellipse3.png',
-                                fit: BoxFit.fill,
-                              ),
-                            ),
-                            (index % 3 == 0)
-                                ? Positioned(
-                                    bottom: 10,
-                                    left: 50,
-                                    child: ClipRRect(
-                                      child: CircleAvatar(
-                                        radius: 10,
-                                        backgroundColor: MyTheme.green,
-                                        child: Icon(
-                                          Icons.check,
-                                          size: 15.0,
-                                          color: Colors.white,
-                                        ),
+                          padding: EdgeInsets.all(3),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Stack(
+                              children: [
+                                ClipRRect(
+                                  child: CircleAvatar(
+                                    backgroundColor: MyTheme.white,
+                                    radius: 45,
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 5,
+                                  left: 5,
+                                  child: ClipRRect(
+                                    child: CircleAvatar(
+                                      backgroundImage:
+                                          AssetImage("assets/girl.png"),
+                                      radius: 40,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: 0,
+                                  left: 55,
+                                  child: ClipRRect(
+                                    child: CircleAvatar(
+                                      radius: 12,
+                                      backgroundColor: MyTheme.green,
+                                      child: Icon(
+                                        Icons.check,
+                                        size: 17.0,
+                                        color: Colors.white,
                                       ),
                                     ),
-                                  )
-                                : SizedBox.shrink()
-                          ]),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
-                    );
-                  },
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('10 friends & neighbours',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 13.0,
+                                    color: Colors.black)),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text('20 Groups',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 13.0,
+                                    color: Colors.black)),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text('Society: Pitlali 577511',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 13.0,
+                                    color: Colors.black)),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ],
-            ),
-          ),
-        ),
+              ),
+
+              // Groups Text
+              Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('Groups',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: .5,
+                          fontFamily: 'Poppins',
+                          decoration: TextDecoration.underline,
+                        )),
+                  )),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Container(
+                  height: 100,
+                  child: ListView(
+                    physics: BouncingScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      GroupWidget(image: "assets/onion.png"),
+                      GroupWidget(image: "assets/onion.png"),
+                      GroupWidget(image: "assets/onion.png"),
+                      GroupWidget(image: "assets/onion.png"),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('Society: Pitlali 577511 (125 Members)',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: .5,
+                          fontFamily: 'Poppins',
+                          decoration: TextDecoration.underline,
+                        )),
+                  )),
+              MasonryGridView.count(
+                crossAxisCount: 4,
+                mainAxisSpacing: 4,
+                crossAxisSpacing: 4,
+                itemCount: 50,
+                shrinkWrap: true,
+                padding: EdgeInsets.only(top: 8),
+                physics: NeverScrollableScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                itemBuilder: (context, index) {
+                  //
+                  return ClipOval(
+                    child: InkWell(
+                      onTap: () => print('tapped $index'),
+                      child: Container(
+                        // height: 50,
+                        // width: 50,
+                        child: Stack(children: [
+                          AspectRatio(
+                            aspectRatio: 1 / 1,
+                            child: Image.asset(
+                              (index % 3 == 0)
+                                  ? 'assets/Ellipse2.png'
+                                  : 'assets/Ellipse3.png',
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                          (index % 3 == 0)
+                              ? Positioned(
+                                  bottom: 10,
+                                  left: 50,
+                                  child: ClipRRect(
+                                    child: CircleAvatar(
+                                      radius: 10,
+                                      backgroundColor: MyTheme.green,
+                                      child: Icon(
+                                        Icons.check,
+                                        size: 15.0,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : SizedBox.shrink()
+                        ]),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ]),
       ),
     );
   }

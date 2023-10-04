@@ -160,18 +160,26 @@ class _TitleBarState extends State<TitleBar> {
               },
               child: BlocBuilder<WeatherBloc, WeatherState>(
                 builder: (context, state) {
-                  if (state is Loading ||
-                      state is WeatherSectionInfoNotReceived) {
+                  if (state is Loading) {
                     return WeatherSection(
                       temperature: '-',
                       description: '-',
                       location: '---',
                     );
                   }
+                  if (state is WeatherSectionInfoReceived) {
+                    return WeatherSection(
+                      temperature:
+                          '${state.responseData.currentData.tempC.toInt().toString()} °C',
+                      description:
+                          state.responseData.currentData.condition.text,
+                      location: '@Paris',
+                    );
+                  }
                   return WeatherSection(
-                    temperature: temperature,
-                    description: description,
-                    location: location,
+                    temperature: '00',
+                    description: '00',
+                    location: '00',
                   );
                 },
               ),
@@ -219,7 +227,7 @@ class WeatherSection extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => WeatherScreen()));
                 },
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -241,7 +249,7 @@ class WeatherSection extends StatelessWidget {
                             description,
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
-                              fontSize: 14,
+                              fontSize: 11,
                               fontFamily: 'Poppins',
                               color: MyTheme.primary_color,
                             ),

@@ -12,3 +12,7 @@ abstract class WeatherEvent extends Equatable {
 class WeatherSectionInfoRequested extends WeatherEvent {
   WeatherSectionInfoRequested();
 }
+
+class WeatherSreenDataRequested extends WeatherEvent {
+  WeatherSreenDataRequested();
+}

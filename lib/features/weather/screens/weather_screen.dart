@@ -1,6 +1,10 @@
+import 'package:active_ecommerce_flutter/features/weather/bloc/weather_bloc.dart';
+import 'package:active_ecommerce_flutter/features/weather/bloc/weather_event.dart';
+import 'package:active_ecommerce_flutter/features/weather/bloc/weather_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:table_calendar/table_calendar.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../custom/device_info.dart';
 import '../../../my_theme.dart';
@@ -18,6 +22,14 @@ class _WeatherScreenState extends State<WeatherScreen> {
     // fetchAll();
   }
 
+  void initState() {
+    super.initState();
+    // fetchAll();
+    BlocProvider.of<WeatherBloc>(context).add(
+      WeatherSreenDataRequested(),
+    );
+  }
+
   bool _switchValue = false;
 
   _launchURL(url) async {
@@ -28,6 +40,28 @@ class _WeatherScreenState extends State<WeatherScreen> {
     } else {
       throw 'Could not launch';
     }
+  }
+
+  String formatDate(String inputDate) {
+    // Parse inputDate into a DateTime object
+    DateTime parsedDate = DateTime.parse(inputDate);
+    print('input: $inputDate');
+
+    // Define month names
+    List<String> months = [
+      '', // Empty string to make months list 1-indexed
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct',
+      'Nov', 'Dec'
+    ];
+
+    // Extract day, month, and year components
+    int day = parsedDate.day;
+    int month = parsedDate.month;
+
+    // Format the output string as '2 Oct'
+    String formattedDate = '$day ${months[month]}';
+
+    return formattedDate;
   }
 
   @override
@@ -120,127 +154,311 @@ class _WeatherScreenState extends State<WeatherScreen> {
     var data2 = '13';
     var data3 = '3';
     return SingleChildScrollView(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Container(
-                height: 44,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  border: Border.all(color: MyTheme.textfield_grey),
-                  color: MyTheme.light_grey,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Icon(Icons.search),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Pitlali 577511",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 15),
+      child: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Container(
+                  height: 44,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: MyTheme.textfield_grey),
+                    color: MyTheme.light_grey,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(Icons.search),
                       ),
-                    )
-                  ],
-                )),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  WeatherDayCard(
-                    context: context,
-                    data: '22 Oct',
-                    name: name,
-                    data2: data2,
-                    data3: data3,
-                  ),
-                  WeatherDayCard(
-                    context: context,
-                    data: data,
-                    name: name,
-                    data2: data2,
-                    data3: data3,
-                  ),
-                  WeatherDayCard(
-                    context: context,
-                    data: '24 Oct',
-                    name: name,
-                    data2: data2,
-                    data3: data3,
-                  ),
-                ]),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                    child: Padding(
-                  padding: const EdgeInsets.only(right: 20),
-                  child: ElevatedButtonWidget(
-                    "Previous",
-                    () {},
-                  ),
-                )),
-                Expanded(
-                    child: Padding(
-                  padding: const EdgeInsets.only(left: 20),
-                  child: ElevatedButtonWidget(
-                    "Next",
-                    () {},
-                  ),
-                )),
-              ],
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Pitlali 577511",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 15),
+                        ),
+                      )
+                    ],
+                  )),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 10,
-            ),
-            child: Text(
-              "Details View",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
-                decoration: TextDecoration.underline,
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 10),
-            child: InkWell(
-              onTap: () async {
-                _launchURL('https://zoom.earth/');
+            BlocBuilder<WeatherBloc, WeatherState>(
+              builder: (context, state) {
+                if (state is Loading)
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          WeatherDayCard(
+                            context: context,
+                            date: ' -- ',
+                            image: name,
+                            min: '--',
+                            max: '--',
+                            desc: '--',
+                          ),
+                          WeatherDayCard(
+                            context: context,
+                            date: ' -- ',
+                            image: name,
+                            min: '--',
+                            max: '--',
+                            desc: '--',
+                          ),
+                          WeatherDayCard(
+                            context: context,
+                            date: ' -- ',
+                            image: name,
+                            min: '--',
+                            max: '--',
+                            desc: '--',
+                          ),
+                        ]),
+                  );
+                if (state is WeatherSreenDataReceived) {
+                  var responseData = state.responseData;
+                  var currentTemp2 = 19.5;
+                  var currentTemp = currentTemp2.toInt();
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 10),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Container(
+                              width: double.infinity,
+                              height: 150,
+                              decoration: BoxDecoration(
+                                color: Color(0xff4C7B10),
+                              ),
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    flex: 10,
+                                    child: Container(
+                                      padding: EdgeInsets.only(left: 15),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          'Current Weather',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 17,
+                                            color: MyTheme.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 25,
+                                    child: Container(
+                                      padding: EdgeInsets.only(bottom: 5),
+                                      color: MyTheme.light_grey,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 20),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.baseline,
+                                              textBaseline:
+                                                  TextBaseline.alphabetic,
+                                              children: [
+                                                Text(
+                                                  '$currentTemp°',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 60,
+                                                    color:
+                                                        MyTheme.dark_font_grey,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  'C',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 30,
+                                                    color:
+                                                        MyTheme.dark_font_grey,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 20, top: 15, bottom: 20),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Flexible(
+                                                  child: Text(
+                                                    'Clear sky patch',
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 20,
+                                                      color: Colors.grey[800],
+                                                      fontFamily: 'Courier New',
+                                                    ),
+                                                  ),
+                                                ),
+                                                Text('Humidity: 23.76',
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 13,
+                                                      color: Colors.grey[800],
+                                                    )),
+                                                Text('Wind: 23.98',
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 13,
+                                                      color: Colors.grey[800],
+                                                    )),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 25, top: 10, bottom: 10),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Forecast',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 17,
+                                color: MyTheme.dark_font_grey,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              WeatherDayCard(
+                                context: context,
+                                date: formatDate(responseData['day0']['date']),
+                                image: name,
+                                min: responseData['day0']['mintemp'].toString(),
+                                max: responseData['day0']['maxtemp'].toString(),
+                                desc: responseData['day0']['desc'],
+                              ),
+                              WeatherDayCard(
+                                context: context,
+                                date: formatDate(responseData['day1']['date']),
+                                image: name,
+                                min: responseData['day1']['mintemp'].toString(),
+                                max: responseData['day1']['maxtemp'].toString(),
+                                desc: responseData['day1']['desc'],
+                              ),
+                              WeatherDayCard(
+                                context: context,
+                                date: formatDate(responseData['day2']['date']),
+                                image: name,
+                                min: responseData['day2']['mintemp'].toString(),
+                                max: responseData['day2']['maxtemp'].toString(),
+                                desc: responseData['day2']['desc'],
+                              ),
+                            ]),
+                      ],
+                    ),
+                  );
+                }
+                return Text('error');
               },
-              child: Image.asset("assets/satelite.png"),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(
-              20,
-            ),
-            child: Text(
-              "Satellite View",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
-                decoration: TextDecoration.underline,
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 30),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: [
+            //       Expanded(
+            //           child: Padding(
+            //         padding: const EdgeInsets.only(right: 20),
+            //         child: ElevatedButtonWidget(
+            //           "Previous",
+            //           () {},
+            //         ),
+            //       )),
+            //       Expanded(
+            //           child: Padding(
+            //         padding: const EdgeInsets.only(left: 20),
+            //         child: ElevatedButtonWidget(
+            //           "Next",
+            //           () {},
+            //         ),
+            //       )),
+            //     ],
+            //   ),
+            // ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 10,
+              ),
+              child: Text(
+                "Details View",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  decoration: TextDecoration.underline,
+                ),
               ),
             ),
-          )
-        ],
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 10),
+              child: InkWell(
+                onTap: () async {
+                  _launchURL('https://zoom.earth/');
+                },
+                child: Image.asset("assets/satelite.png"),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(
+                20,
+              ),
+              child: Text(
+                "Satellite View",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -268,17 +486,19 @@ class WeatherDayCard extends StatelessWidget {
   const WeatherDayCard({
     super.key,
     required this.context,
-    required this.data,
-    required this.name,
-    required this.data2,
-    required this.data3,
+    required this.date,
+    required this.image,
+    required this.min,
+    required this.max,
+    required this.desc,
   });
 
   final BuildContext context;
-  final String data;
-  final String name;
-  final String data2;
-  final String data3;
+  final String date;
+  final String image;
+  final String min;
+  final String max;
+  final String desc;
 
   @override
   Widget build(BuildContext context) {
@@ -287,10 +507,10 @@ class WeatherDayCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
         color: MyTheme.light_grey,
       ),
-      height: MediaQuery.of(context).size.height / 4.5,
+      height: MediaQuery.of(context).size.height / 4,
       width: MediaQuery.of(context).size.width / 4,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        // mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
             width: double.infinity,
@@ -303,7 +523,7 @@ class WeatherDayCard extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               child: Center(
                 child: Text(
-                  data,
+                  date,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 15,
@@ -313,37 +533,58 @@ class WeatherDayCard extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Image.asset(
-                name,
-                fit: BoxFit.fitWidth,
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 11),
+            child: Container(
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Image.asset(
+                  image,
+                  fit: BoxFit.fitWidth,
+                ),
               ),
             ),
           ),
           Padding(
             padding:
                 const EdgeInsets.only(top: 5, bottom: 12, right: 10, left: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Center(
-                  child: Text(
-                    '$data2° |',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                      color: Colors.grey[700],
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Center(
+                      child: Text(
+                        '$min° |',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                          color: Colors.grey[700],
+                        ),
+                      ),
                     ),
-                  ),
+                    Text(
+                      ' $max°',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 2,
                 ),
                 Text(
-                  ' $data3°',
+                  desc.toUpperCase(),
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                    color: Colors.grey[700],
+                    fontSize: 10.5,
+                    color: Colors.grey[500],
+                    fontFamily: 'Courier New',
                   ),
                 ),
               ],
