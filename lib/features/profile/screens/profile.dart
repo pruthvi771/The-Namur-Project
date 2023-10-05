@@ -5,6 +5,7 @@ import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/custom/lang_text.dart';
 import 'package:active_ecommerce_flutter/features/profile/enum.dart';
+import 'package:active_ecommerce_flutter/features/profile/screens/edit_profile.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/more_details.dart';
 import 'package:active_ecommerce_flutter/helpers/auth_helper.dart';
 import 'package:active_ecommerce_flutter/presenter/home_presenter.dart';
@@ -522,6 +523,15 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                   ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return EditProfileScreen();
+                      }));
+                    },
+                    child: Text('Profile Edit'),
+                  )
                 ],
               ),
 
