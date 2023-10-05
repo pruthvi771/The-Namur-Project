@@ -37,6 +37,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/screens/splash.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_value/shared_value.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'dart:async';
@@ -101,6 +103,7 @@ main() async {
   ));
 
   await Firebase.initializeApp();
+  await Hive.initFlutter();
 
   runApp(
     SharedValue.wrapApp(

@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:hive/hive.dart';
 import '../../../custom/device_info.dart';
 
 import 'package:flutter_expanded_tile/flutter_expanded_tile.dart';
@@ -25,6 +26,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final String title = 'KYC';
   var _textController = TextEditingController();
   String hintText = "Email ID";
+
+  Future<void> openBox() async {
+    var box = await Hive.openBox('testBox');
+
+    box.put('name', 'David');
+    print('Name: ${box.get('name')}');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +120,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             Row(
               children: [
                 Expanded(child: SizedBox()),
-                TextButton(onPressed: () {}, child: Text('Add Record')),
+                TextButton(onPressed: openBox, child: Text('Add Record')),
               ],
             ),
             SizedBox(
