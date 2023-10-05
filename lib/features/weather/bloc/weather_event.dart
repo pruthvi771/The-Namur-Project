@@ -9,9 +9,9 @@ abstract class WeatherEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class WeatherSectionInfoRequested extends WeatherEvent {
-  WeatherSectionInfoRequested();
-}
+// class WeatherSectionInfoRequested extends WeatherEvent {
+//   WeatherSectionInfoRequested();
+// }
 
 class WeatherSreenDataRequested extends WeatherEvent {
   WeatherSreenDataRequested();

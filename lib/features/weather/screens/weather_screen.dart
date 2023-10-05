@@ -185,214 +185,243 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     ],
                   )),
             ),
-            BlocBuilder<WeatherBloc, WeatherState>(
-              builder: (context, state) {
-                if (state is Loading)
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          WeatherDayCard(
-                            context: context,
-                            date: ' -- ',
-                            image: name,
-                            min: '--',
-                            max: '--',
-                            desc: '--',
-                          ),
-                          WeatherDayCard(
-                            context: context,
-                            date: ' -- ',
-                            image: name,
-                            min: '--',
-                            max: '--',
-                            desc: '--',
-                          ),
-                          WeatherDayCard(
-                            context: context,
-                            date: ' -- ',
-                            image: name,
-                            min: '--',
-                            max: '--',
-                            desc: '--',
-                          ),
-                        ]),
-                  );
+            BlocListener<WeatherBloc, WeatherState>(
+              listener: (context, state) {
                 if (state is WeatherSreenDataReceived) {
-                  var responseData = state.responseData;
-                  var currentTemp2 = 19.5;
-                  var currentTemp = currentTemp2.toInt();
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 10),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Container(
-                              width: double.infinity,
-                              height: 150,
-                              decoration: BoxDecoration(
-                                color: Color(0xff4C7B10),
-                              ),
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    flex: 10,
-                                    child: Container(
-                                      padding: EdgeInsets.only(left: 15),
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          'Current Weather',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 17,
-                                            color: MyTheme.white,
+                  print('state is WeatherSreenDataReceived');
+                } else if (state is Loading) {
+                  print('state is LOADING');
+                } else {
+                  print('state: $state');
+                  // BlocProvider.of<WeatherBloc>(context).add(
+                  //   WeatherSectionInfoRequested(),
+                  // );
+                }
+              },
+              child: BlocBuilder<WeatherBloc, WeatherState>(
+                builder: (context, state) {
+                  if (state is Loading)
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            WeatherDayCard(
+                              context: context,
+                              date: ' -- ',
+                              image: name,
+                              min: '--',
+                              max: '--',
+                              desc: '--',
+                            ),
+                            WeatherDayCard(
+                              context: context,
+                              date: ' -- ',
+                              image: name,
+                              min: '--',
+                              max: '--',
+                              desc: '--',
+                            ),
+                            WeatherDayCard(
+                              context: context,
+                              date: ' -- ',
+                              image: name,
+                              min: '--',
+                              max: '--',
+                              desc: '--',
+                            ),
+                          ]),
+                    );
+                  if (state is WeatherSreenDataReceived) {
+                    var responseData = state.responseData;
+                    var currentTemp2 = 19.5;
+                    var currentTemp = currentTemp2.toInt();
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 10),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Container(
+                                width: double.infinity,
+                                height: 150,
+                                decoration: BoxDecoration(
+                                  color: Color(0xff4C7B10),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                      flex: 10,
+                                      child: Container(
+                                        padding: EdgeInsets.only(left: 15),
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            'Current Weather',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 17,
+                                              color: MyTheme.white,
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  Expanded(
-                                    flex: 25,
-                                    child: Container(
-                                      padding: EdgeInsets.only(bottom: 5),
-                                      color: MyTheme.light_grey,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(left: 20),
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.baseline,
-                                              textBaseline:
-                                                  TextBaseline.alphabetic,
-                                              children: [
-                                                Text(
-                                                  '$currentTemp°',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 60,
-                                                    color:
-                                                        MyTheme.dark_font_grey,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  'C',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 30,
-                                                    color:
-                                                        MyTheme.dark_font_grey,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 20, top: 15, bottom: 20),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Flexible(
-                                                  child: Text(
-                                                    'Clear sky patch',
+                                    Expanded(
+                                      flex: 25,
+                                      child: Container(
+                                        padding: EdgeInsets.only(bottom: 5),
+                                        color: MyTheme.light_grey,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 20),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.baseline,
+                                                textBaseline:
+                                                    TextBaseline.alphabetic,
+                                                children: [
+                                                  Text(
+                                                    '$currentTemp°',
                                                     style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      fontSize: 20,
-                                                      color: Colors.grey[800],
-                                                      fontFamily: 'Courier New',
+                                                      fontSize: 60,
+                                                      color: MyTheme
+                                                          .dark_font_grey,
                                                     ),
                                                   ),
-                                                ),
-                                                Text('Humidity: 23.76',
+                                                  Text(
+                                                    'C',
                                                     style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      fontSize: 13,
-                                                      color: Colors.grey[800],
-                                                    )),
-                                                Text('Wind: 23.98',
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 13,
-                                                      color: Colors.grey[800],
-                                                    )),
-                                              ],
+                                                      fontSize: 30,
+                                                      color: MyTheme
+                                                          .dark_font_grey,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 20,
+                                                  top: 15,
+                                                  bottom: 20),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Flexible(
+                                                    child: Text(
+                                                      'Clear sky patch',
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 20,
+                                                        color: Colors.grey[800],
+                                                        fontFamily:
+                                                            'Courier New',
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Text('Humidity: 23.76',
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 13,
+                                                        color: Colors.grey[800],
+                                                      )),
+                                                  Text('Wind: 23.98',
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 13,
+                                                        color: Colors.grey[800],
+                                                      )),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 25, top: 10, bottom: 10),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              'Forecast',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17,
-                                color: MyTheme.dark_font_grey,
-                                decoration: TextDecoration.underline,
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 25, top: 10, bottom: 10),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'Forecast',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 17,
+                                  color: MyTheme.dark_font_grey,
+                                  decoration: TextDecoration.underline,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              WeatherDayCard(
-                                context: context,
-                                date: formatDate(responseData['day0']['date']),
-                                image: name,
-                                min: responseData['day0']['mintemp'].toString(),
-                                max: responseData['day0']['maxtemp'].toString(),
-                                desc: responseData['day0']['desc'],
-                              ),
-                              WeatherDayCard(
-                                context: context,
-                                date: formatDate(responseData['day1']['date']),
-                                image: name,
-                                min: responseData['day1']['mintemp'].toString(),
-                                max: responseData['day1']['maxtemp'].toString(),
-                                desc: responseData['day1']['desc'],
-                              ),
-                              WeatherDayCard(
-                                context: context,
-                                date: formatDate(responseData['day2']['date']),
-                                image: name,
-                                min: responseData['day2']['mintemp'].toString(),
-                                max: responseData['day2']['maxtemp'].toString(),
-                                desc: responseData['day2']['desc'],
-                              ),
-                            ]),
-                      ],
-                    ),
-                  );
-                }
-                return Text('error');
-              },
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                WeatherDayCard(
+                                  context: context,
+                                  date:
+                                      formatDate(responseData['day0']['date']),
+                                  image: name,
+                                  min: responseData['day0']['mintemp']
+                                      .toString(),
+                                  max: responseData['day0']['maxtemp']
+                                      .toString(),
+                                  desc: responseData['day0']['desc'],
+                                ),
+                                WeatherDayCard(
+                                  context: context,
+                                  date:
+                                      formatDate(responseData['day1']['date']),
+                                  image: name,
+                                  min: responseData['day1']['mintemp']
+                                      .toString(),
+                                  max: responseData['day1']['maxtemp']
+                                      .toString(),
+                                  desc: responseData['day1']['desc'],
+                                ),
+                                WeatherDayCard(
+                                  context: context,
+                                  date:
+                                      formatDate(responseData['day2']['date']),
+                                  image: name,
+                                  min: responseData['day2']['mintemp']
+                                      .toString(),
+                                  max: responseData['day2']['maxtemp']
+                                      .toString(),
+                                  desc: responseData['day2']['desc'],
+                                ),
+                              ]),
+                        ],
+                      ),
+                    );
+                  }
+                  return Text('error');
+                },
+              ),
             ),
             // Padding(
             //   padding: const EdgeInsets.symmetric(horizontal: 30),

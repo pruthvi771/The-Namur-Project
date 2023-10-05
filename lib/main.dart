@@ -2,6 +2,7 @@ import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_b
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_bloc/firestore_bloc.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
+import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_bloc.dart';
 import 'package:active_ecommerce_flutter/features/weather/bloc/weather_bloc.dart';
 import 'package:active_ecommerce_flutter/helpers/addons_helper.dart';
 import 'package:active_ecommerce_flutter/helpers/auth_helper.dart';
@@ -145,6 +146,9 @@ class _MyAppState extends State<MyApp> {
         providers: [
           BlocProvider<WeatherBloc>(
             create: (context) => WeatherBloc(),
+          ),
+          BlocProvider(
+            create: (context) => WeatherSectionBloc(),
           ),
           BlocProvider<AuthBloc>(
             create: (context) => AuthBloc(authRepository: authRepository),
