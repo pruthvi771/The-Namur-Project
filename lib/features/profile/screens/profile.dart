@@ -308,9 +308,6 @@ class _ProfileState extends State<Profile> {
               ],
             ),
 
-            //test
-            // Text(_profileSection.toString()),
-
             //Profile Name
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
@@ -523,15 +520,15 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return EditProfileScreen();
-                      }));
-                    },
-                    child: Text('Profile Edit'),
-                  )
+                  // ElevatedButton(
+                  //   onPressed: () {
+                  //     Navigator.push(context,
+                  //         MaterialPageRoute(builder: (context) {
+                  //       return EditProfileScreen();
+                  //     }));
+                  //   },
+                  //   child: Text('Profile Edit'),
+                  // )
                 ],
               ),
 

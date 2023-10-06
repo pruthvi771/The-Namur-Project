@@ -5,6 +5,7 @@ import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_bloc.da
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_event.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_state.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
+import 'package:active_ecommerce_flutter/features/profile/screens/more_details.dart';
 import 'package:flutter/material.dart';
 
 import 'package:active_ecommerce_flutter/features/profile/expanded_tile_widget.dart';
@@ -142,19 +143,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     var savedData = dataBox.get('profile');
 
-    // if (savedData == null) {
-    // var kyc = KYC()
-    //   ..aadhar = ''
-    //   ..pan = ''
-    //   ..gst = '';
-    // var emptyProfileData = ProfileData()
-    //   ..id = 'profile'
-    //   ..updated = true
-    //   ..address = []
-    //   ..kyc = kyc
-    //   ..land = [];
-    // dataBox.put(emptyProfileData.id, emptyProfileData);
-    // }
+    if (savedData == null) {
+      var kyc = KYC()
+        ..aadhar = ''
+        ..pan = ''
+        ..gst = '';
+      var emptyProfileData = ProfileData()
+        ..id = 'profile'
+        ..updated = true
+        ..address = []
+        ..kyc = kyc
+        ..land = [];
+      dataBox.put(emptyProfileData.id, emptyProfileData);
+    }
     BlocProvider.of<HiveBloc>(context).add(
       HiveDataRequested(),
       // HiveAppendAddress(context: context),
@@ -737,6 +738,10 @@ PreferredSize buildCustomAppBar(context) {
                   child: InkWell(
                     //padding: EdgeInsets.zero,
                     onTap: () {
+                      // Navigator.push(context,
+                      //     MaterialPageRoute(builder: (context) {
+                      //   return MoreDetails();
+                      // }));
                       Navigator.pop(context);
                     },
                     child: Icon(
