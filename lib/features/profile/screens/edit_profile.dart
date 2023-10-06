@@ -38,10 +38,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController _villageController = TextEditingController();
 
   void _viewDataFromHive() {
-    var dataBox = Hive.box<ProfileData>('profileDataBox2');
+    var dataBox = Hive.box<ProfileData>('profileDataBox3');
 
     // dataBox.clear();
-    print('so it begins and ens');
+    print('viewing them');
 
     var savedData = dataBox.get('profile');
 
@@ -58,14 +58,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void _clearHive() {
-    var dataBox = Hive.box<ProfileData>('profileDataBox2');
+    var dataBox = Hive.box<ProfileData>('profileDataBox3');
 
-    dataBox.clear();
+    // dataBox.clear();
     print('Hive cleared');
   }
 
-  void _addDataToHive(district, taluk, hobli, village) {
-    var dataBox = Hive.box<ProfileData>('profileDataBox2');
+  void _addDataToHive(district, taluk, hobli, village) async {
+    var dataBox = Hive.box<ProfileData>('profileDataBox3');
 
     // dataBox.clear();
     print('so it begins and ens');
@@ -78,17 +78,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ..hobli = hobli
       ..village = village;
 
-    var kyc = KYC()
-      ..aadhar = 'Aadhar Number'
-      ..pan = 'PAN Number'
-      ..gst = 'GST Number';
+    // var kyc = KYC()
+    //   ..aadhar = ''
+    //   ..pan = ''
+    //   ..gst = '';
 
-    var land = Land()
-      ..village = 'Village Name'
-      ..syno = 'Syno Number'
-      ..area = 123.45
-      ..crops = ['Crop 1', 'Crop 2']
-      ..equipments = ['Equipment 1', 'Equipment 2'];
+    // var land = Land()
+    //   ..village = ''
+    //   ..syno = ''
+    //   ..area = 123.45
+    //   ..crops = []
+    //   ..equipments = [];
 
     // var newData = ProfileData()
     //   ..id = 'profile'
@@ -98,6 +98,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     if (savedData != null) {
       print('object detected');
+      print(savedData.id);
       var newData = ProfileData()
         ..id = savedData.id
         ..updated = savedData.updated
@@ -105,27 +106,47 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ..kyc = savedData.kyc
         ..land = savedData.land;
 
-      dataBox.put(newData.id, newData);
+      await dataBox.put(newData.id, newData);
       print('object updated');
-    } else {
-      print('null object detected');
-      var newData = ProfileData()
-        ..id = 'profile'
-        ..updated = true
-        ..address = [address]
-        ..kyc = kyc
-        ..land = [land];
-
-      dataBox.put(newData.id, newData);
-      print('object created');
     }
-  }
+    // else {
+    //   print('null object detected');
+    //   var newData = ProfileData()
+    //     ..id = 'profile'
+    //     ..updated = true
+    //     ..address = [address]
+    //     ..kyc = kyc
+    //     ..land = [land];
 
-  late ValueNotifier<ProfileData> profileDataNotifier;
-  // profileDataNotifier.value = updatedData;
+    //   await dataBox.put(newData.id, newData);
+    //   print('object created');
+    // }
+
+    BlocProvider.of<HiveBloc>(context).add(
+      HiveDataRequested(),
+      // HiveAppendAddress(context: context),
+    );
+  }
 
   void initState() {
     super.initState();
+    var dataBox = Hive.box<ProfileData>('profileDataBox3');
+
+    var savedData = dataBox.get('profile');
+
+    // if (savedData == null) {
+    // var kyc = KYC()
+    //   ..aadhar = ''
+    //   ..pan = ''
+    //   ..gst = '';
+    // var emptyProfileData = ProfileData()
+    //   ..id = 'profile'
+    //   ..updated = true
+    //   ..address = []
+    //   ..kyc = kyc
+    //   ..land = [];
+    // dataBox.put(emptyProfileData.id, emptyProfileData);
+    // }
     BlocProvider.of<HiveBloc>(context).add(
       HiveDataRequested(),
       // HiveAppendAddress(context: context),
@@ -191,7 +212,58 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       height: 20,
                     ),
                     HeadingTextWidget('Address Details'),
-
+                    // Column(
+                    //   children: state.profileData.address.map((item) {
+                    //     return Row(children: [
+                    //       Text(item.district),
+                    //       Text(item.taluk),
+                    //       Text(item.hobli),
+                    //       Text(item.village),
+                    //     ]);
+                    //   }).toList(),
+                    // ),
+                    Column(
+                      children: List.generate(
+                        state.profileData.address.length,
+                        (index) {
+                          var item = state.profileData.address[index];
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8.0, vertical: 3),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: MyTheme.green_lighter,
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 5),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(child: Text(item.district)),
+                                  Expanded(child: Text(item.taluk)),
+                                  Expanded(child: Text(item.hobli)),
+                                  Expanded(child: Text(item.village)),
+                                  CircleAvatar(
+                                    radius: 12,
+                                    backgroundColor: MyTheme.green,
+                                    child: Icon(
+                                      Icons.delete,
+                                      size: 15.0,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
                     TextFieldWidget(
                         'District', _districtController, 'Enter District'),
                     TextFieldWidget('Taluk', _talukController, 'Enter Taluk'),

@@ -78,7 +78,7 @@ class _ProfileState extends State<Profile> {
 
     // if (is_logged_in.$ == true) {
 
-    fetchAll();
+    // fetchAll();
     // }
   }
 
@@ -89,35 +89,35 @@ class _ProfileState extends State<Profile> {
 
   Future<void> _onPageRefresh() async {
     reset();
-    fetchAll();
+    // fetchAll();
   }
 
   onPopped(value) async {
     reset();
-    fetchAll();
+    // fetchAll();
   }
 
-  fetchAll() {
-    fetchCounters();
-  }
+  // fetchAll() {
+  //   fetchCounters();
+  // }
 
-  fetchCounters() async {
-    var profileCountersResponse =
-        await ProfileRepository().getProfileCountersResponse();
+  // fetchCounters() async {
+  //   var profileCountersResponse =
+  //       await ProfileRepository().getProfileCountersResponse();
 
-    _cartCounter = profileCountersResponse.cart_item_count;
-    _wishlistCounter = profileCountersResponse.wishlist_item_count;
-    _orderCounter = profileCountersResponse.order_count;
+  //   _cartCounter = profileCountersResponse.cart_item_count;
+  //   _wishlistCounter = profileCountersResponse.wishlist_item_count;
+  //   _orderCounter = profileCountersResponse.order_count;
 
-    _cartCounterString =
-        counterText(_cartCounter.toString(), default_length: 2);
-    _wishlistCounterString =
-        counterText(_wishlistCounter.toString(), default_length: 2);
-    _orderCounterString =
-        counterText(_orderCounter.toString(), default_length: 2);
+  //   _cartCounterString =
+  //       counterText(_cartCounter.toString(), default_length: 2);
+  //   _wishlistCounterString =
+  //       counterText(_wishlistCounter.toString(), default_length: 2);
+  //   _orderCounterString =
+  //       counterText(_orderCounter.toString(), default_length: 2);
 
-    setState(() {});
-  }
+  //   setState(() {});
+  // }
 
   // deleteAccountReq() async {
   //   loading();

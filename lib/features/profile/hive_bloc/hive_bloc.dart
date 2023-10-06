@@ -9,7 +9,7 @@ class HiveBloc extends Bloc<HiveEvent, HiveState> {
     on<HiveDataRequested>((event, emit) async {
       // emit(Loading());
 
-      var dataBox = Hive.box<ProfileData>('profileDataBox2');
+      var dataBox = Hive.box<ProfileData>('profileDataBox3');
 
       var savedData = dataBox.get('profile');
 

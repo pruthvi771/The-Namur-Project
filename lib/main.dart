@@ -111,7 +111,7 @@ main() async {
   Hive.registerAdapter(hiveModels.KYCAdapter());
   Hive.registerAdapter(hiveModels.LandAdapter());
   Hive.registerAdapter(hiveModels.ProfileDataAdapter());
-  await Hive.openBox<hiveModels.ProfileData>('profileDataBox2');
+  await Hive.openBox<hiveModels.ProfileData>('profileDataBox3');
 
   runApp(
     SharedValue.wrapApp(
