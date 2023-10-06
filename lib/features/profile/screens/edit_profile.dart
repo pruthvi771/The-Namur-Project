@@ -1,5 +1,6 @@
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/custom/input_decorations.dart';
+import 'package:active_ecommerce_flutter/features/profile/enum.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_event.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_state.dart';
@@ -37,6 +38,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController _hobliController = TextEditingController();
   TextEditingController _villageController = TextEditingController();
 
+  TextEditingController _village2Controller = TextEditingController();
+  TextEditingController _synoController = TextEditingController();
+  TextEditingController _areaController = TextEditingController();
+
+  TextEditingController _aadharController = TextEditingController();
+  TextEditingController _panController = TextEditingController();
+  TextEditingController _gstController = TextEditingController();
+
   void _viewDataFromHive() {
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
 
@@ -64,11 +73,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     print('Hive cleared');
   }
 
-  void _addDataToHive(district, taluk, hobli, village) async {
+  void _addAddressToHive(district, taluk, hobli, village) async {
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
-
-    // dataBox.clear();
-    print('so it begins and ens');
 
     var savedData = dataBox.get('profile');
 
@@ -77,24 +83,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ..taluk = taluk
       ..hobli = hobli
       ..village = village;
-
-    // var kyc = KYC()
-    //   ..aadhar = ''
-    //   ..pan = ''
-    //   ..gst = '';
-
-    // var land = Land()
-    //   ..village = ''
-    //   ..syno = ''
-    //   ..area = 123.45
-    //   ..crops = []
-    //   ..equipments = [];
-
-    // var newData = ProfileData()
-    //   ..id = 'profile'
-    //   ..updated = true
-    //   ..kyc = kyc
-    //   ..land = [land]; // Assuming you want to store a list of lands
 
     if (savedData != null) {
       print('object detected');
@@ -109,18 +97,38 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       await dataBox.put(newData.id, newData);
       print('object updated');
     }
-    // else {
-    //   print('null object detected');
-    //   var newData = ProfileData()
-    //     ..id = 'profile'
-    //     ..updated = true
-    //     ..address = [address]
-    //     ..kyc = kyc
-    //     ..land = [land];
 
-    //   await dataBox.put(newData.id, newData);
-    //   print('object created');
-    // }
+    BlocProvider.of<HiveBloc>(context).add(
+      HiveDataRequested(),
+      // HiveAppendAddress(context: context),
+    );
+  }
+
+  void _addLandToHive(area, syno, village) async {
+    var dataBox = Hive.box<ProfileData>('profileDataBox3');
+
+    var savedData = dataBox.get('profile');
+
+    var land = Land()
+      ..area = area
+      ..syno = syno
+      ..village = village
+      ..crops = []
+      ..equipments = [];
+
+    if (savedData != null) {
+      print('object detected');
+      print(savedData.id);
+      var newData = ProfileData()
+        ..id = savedData.id
+        ..updated = savedData.updated
+        ..address = savedData.address
+        ..kyc = savedData.kyc
+        ..land = [...savedData.land, land];
+
+      await dataBox.put(newData.id, newData);
+      print('object updated');
+    }
 
     BlocProvider.of<HiveBloc>(context).add(
       HiveDataRequested(),
@@ -153,9 +161,61 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
+  void _saveKycToHive(KycSection kycSection, value) async {
+    var dataBox = Hive.box<ProfileData>('profileDataBox3');
+
+    var savedData = dataBox.get('profile');
+
+    if (savedData != null) {
+      var kyc = KYC()
+        ..aadhar =
+            kycSection == KycSection.aadhar ? value : savedData.kyc.aadhar
+        ..pan = kycSection == KycSection.pan ? value : savedData.kyc.pan
+        ..gst = kycSection == KycSection.gst ? value : savedData.kyc.gst;
+
+      var newData = ProfileData()
+        ..id = savedData.id
+        ..updated = savedData.updated
+        ..address = savedData.address
+        ..kyc = kyc
+        ..land = savedData.land;
+
+      await dataBox.put(newData.id, newData);
+    }
+
+    BlocProvider.of<HiveBloc>(context).add(
+      HiveDataRequested(),
+    );
+  }
+
+  void _deleteDataFromHive(DataCollectionType dataCollectionType, index) async {
+    var dataBox = Hive.box<ProfileData>('profileDataBox3');
+
+    var savedData = dataBox.get('profile');
+
+    if (dataCollectionType == DataCollectionType.address) {
+      savedData!.address.removeAt(index);
+    } else if (dataCollectionType == DataCollectionType.land) {
+      savedData!.land.removeAt(index);
+    }
+
+    var newData = ProfileData()
+      ..id = savedData!.id
+      ..updated = savedData.updated
+      ..address = savedData.address
+      ..kyc = savedData.kyc
+      ..land = savedData.land;
+
+    await dataBox.put(newData.id, newData);
+
+    BlocProvider.of<HiveBloc>(context).add(
+      HiveDataRequested(),
+      // HiveAppendAddress(context: context),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    var headingText = 'KYC  ';
     return Container(
       color: Colors.white,
       height: DeviceInfo(context).height,
@@ -188,29 +248,193 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   padding: EdgeInsets.all(15),
                   children: [
                     // The top bar section
-                    Container(
-                      height: 40,
-                      //"Email_ Id" text field
-                      child: TextField(
-                        controller: TextEditingController(text: "Email Id"),
-                        autofocus: false,
-                        decoration: InputDecorations.buildInputDecoration_1(
-                            hint_text: "Email Id"),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    HeadingTextWidget('KYC'),
+                    if (state.profileData.kyc.aadhar.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 3),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: MyTheme.green_lighter,
+                          ),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                  child: Text(
+                                      'Aadhar: ${state.profileData.kyc.aadhar}')),
+                              // Expanded(child: Text('PAN')),
+                              InkWell(
+                                onTap: () {
+                                  _saveKycToHive(KycSection.aadhar, '');
+                                },
+                                child: CircleAvatar(
+                                  radius: 12,
+                                  backgroundColor: MyTheme.green,
+                                  child: Icon(
+                                    Icons.delete,
+                                    size: 15.0,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
+                    if (state.profileData.kyc.pan.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 3),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: MyTheme.green_lighter,
+                          ),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                  child: Text(
+                                      'PAN: ${state.profileData.kyc.pan}')),
+                              // Expanded(child: Text('PAN')),
+                              InkWell(
+                                onTap: () {
+                                  _saveKycToHive(KycSection.pan, '');
+                                },
+                                child: CircleAvatar(
+                                  radius: 12,
+                                  backgroundColor: MyTheme.green,
+                                  child: Icon(
+                                    Icons.delete,
+                                    size: 15.0,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    if (state.profileData.kyc.gst.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 3),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: MyTheme.green_lighter,
+                          ),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                  child: Text(
+                                      'GST: ${state.profileData.kyc.gst}')),
+                              // Expanded(child: Text('PAN')),
+                              InkWell(
+                                onTap: () {
+                                  _saveKycToHive(KycSection.gst, '');
+                                },
+                                child: CircleAvatar(
+                                  radius: 12,
+                                  backgroundColor: MyTheme.green,
+                                  child: Icon(
+                                    Icons.delete,
+                                    size: 15.0,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    if (state.profileData.kyc.aadhar.isEmpty)
+                      Column(
+                        children: [
+                          TextFieldWidget('Aadhar Card', _aadharController,
+                              'Enter Aadhar Card Number'),
+                          Row(
+                            children: [
+                              Expanded(child: SizedBox()),
+                              TextButton(
+                                child: Text('Save'),
+                                onPressed: () {
+                                  _saveKycToHive(KycSection.aadhar,
+                                      _aadharController.text);
+                                  _aadharController.clear();
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    if (state.profileData.kyc.pan.isEmpty)
+                      Column(
+                        children: [
+                          TextFieldWidget('PAN Card', _panController,
+                              'Enter PAN Card Number'),
+                          Row(
+                            children: [
+                              Expanded(child: SizedBox()),
+                              TextButton(
+                                child: Text('Save'),
+                                onPressed: () {
+                                  _saveKycToHive(
+                                      KycSection.pan, _panController.text);
+                                  _panController.clear();
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    if (state.profileData.kyc.gst.isEmpty)
+                      Column(
+                        children: [
+                          TextFieldWidget(
+                              'GST', _gstController, 'Enter GST Number'),
+                          Row(
+                            children: [
+                              Expanded(child: SizedBox()),
+                              TextButton(
+                                child: Text('Save'),
+                                onPressed: () {
+                                  _saveKycToHive(
+                                      KycSection.gst, _gstController.text);
+                                  _gstController.clear();
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Divider(
+                      // color: MyTheme.grey_153,
+                      thickness: 2,
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 12,
                     ),
-                    HeadingTextWidget(headingText),
-                    TextFieldWidget(
-                        'Aadhar', _textController, 'Enter Aadhar Card Number'),
-                    TextFieldWidget(
-                        'PAN Card', _textController, 'Enter PAN Card Number'),
-                    TextFieldWidget(
-                        'GST Details', _textController, 'Enter GST Number'),
-                    SizedBox(
-                      height: 20,
-                    ),
+
                     HeadingTextWidget('Address Details'),
                     // Column(
                     //   children: state.profileData.address.map((item) {
@@ -245,13 +469,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   Expanded(child: Text(item.taluk)),
                                   Expanded(child: Text(item.hobli)),
                                   Expanded(child: Text(item.village)),
-                                  CircleAvatar(
-                                    radius: 12,
-                                    backgroundColor: MyTheme.green,
-                                    child: Icon(
-                                      Icons.delete,
-                                      size: 15.0,
-                                      color: Colors.white,
+                                  InkWell(
+                                    onTap: () {
+                                      _deleteDataFromHive(
+                                        DataCollectionType.address,
+                                        index,
+                                      );
+                                    },
+                                    child: CircleAvatar(
+                                      radius: 12,
+                                      backgroundColor: MyTheme.green,
+                                      child: Icon(
+                                        Icons.delete,
+                                        size: 15.0,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -281,71 +513,34 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             print('hobli: ${_hobliController.text}');
                             print('village: ${_villageController.text}');
 
-                            _addDataToHive(
+                            _addAddressToHive(
                                 _districtController.text,
                                 _talukController.text,
                                 _hobliController.text,
                                 _villageController.text);
+
+                            _districtController.clear();
+                            _talukController.clear();
+                            _hobliController.clear();
+                            _villageController.clear();
                           },
                         ),
                       ],
                     ),
-                    Row(
-                      children: [
-                        Expanded(child: SizedBox()),
-                        TextButton(
-                            onPressed: _viewDataFromHive,
-                            child: Text('View Record')),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(child: SizedBox()),
-                        TextButton(onPressed: _clearHive, child: Text('Clear')),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    Divider(
-                      // color: MyTheme.grey_153,
-                      thickness: 2,
-                    ),
-                    SizedBox(
-                      height: 12,
-                    ),
-                    HeadingTextWidget('Land Details'),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: MyTheme.green_lighter,
-                        ),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(child: Text('1. Adhaar Card')),
-                            Expanded(child: Text('7848749257')),
-                            CircleAvatar(
-                              radius: 12,
-                              backgroundColor: MyTheme.green,
-                              child: Icon(
-                                Icons.check,
-                                size: 15.0,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    TextFieldWidget(
-                        'Village', _textController, 'Enter Village'),
-                    TextFieldWidget('Syno', _textController, 'Enter Syno'),
-                    TextFieldWidget('Area', _textController, 'Enter Area'),
+                    // Row(
+                    //   children: [
+                    //     Expanded(child: SizedBox()),
+                    //     TextButton(
+                    //         onPressed: _viewDataFromHive,
+                    //         child: Text('View Record')),
+                    //   ],
+                    // ),
+                    // Row(
+                    //   children: [
+                    //     Expanded(child: SizedBox()),
+                    //     TextButton(onPressed: _clearHive, child: Text('Clear')),
+                    //   ],
+                    // ),
 
                     SizedBox(
                       height: 8,
@@ -357,8 +552,93 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     SizedBox(
                       height: 12,
                     ),
-                    HeadingTextWidget('Crops Grown and Planned'),
-                    TextFieldWidget('Crop', _textController, 'Enter Crop Name'),
+
+                    HeadingTextWidget('Land Details'),
+                    Column(
+                      children: List.generate(
+                        state.profileData.land.length,
+                        (index) {
+                          var item = state.profileData.land[index];
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8.0, vertical: 3),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: MyTheme.green_lighter,
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 5),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(child: Text(item.village)),
+                                  Expanded(child: Text(item.syno)),
+                                  Expanded(child: Text(item.area.toString())),
+                                  // Expanded(child: Text(item.village)),
+                                  InkWell(
+                                    onTap: () {
+                                      _deleteDataFromHive(
+                                        DataCollectionType.land,
+                                        index,
+                                      );
+                                    },
+                                    child: CircleAvatar(
+                                      radius: 12,
+                                      backgroundColor: MyTheme.green,
+                                      child: Icon(
+                                        Icons.delete,
+                                        size: 15.0,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    TextFieldWidget(
+                        'Village', _village2Controller, 'Enter Village'),
+                    TextFieldWidget('Syno', _synoController, 'Enter Syno'),
+                    TextFieldWidget(
+                        'Area', _areaController, 'Enter Area (in acres)'),
+                    Row(
+                      children: [
+                        Expanded(child: SizedBox()),
+                        TextButton(
+                          child: Text('Add Record'),
+                          onPressed: () {
+                            _addLandToHive(
+                              int.parse(_areaController.text).toDouble(),
+                              _synoController.text,
+                              _village2Controller.text,
+                            );
+                            _areaController.clear();
+                            _synoController.clear();
+                            _village2Controller.clear();
+                          },
+                        ),
+                      ],
+                    ),
+                    // SizedBox(
+                    //   height: 8,
+                    // ),
+                    // Divider(
+                    //   // color: MyTheme.grey_153,
+                    //   thickness: 2,
+                    // ),
+                    // SizedBox(
+                    //   height: 12,
+                    // ),
+                    // HeadingTextWidget('Crops Grown and Planned'),
+                    // TextFieldWidget('Crop', _textController, 'Enter Crop Name'),
                   ],
                 );
               return Container(
