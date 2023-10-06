@@ -104,6 +104,7 @@ dev_dependencies:
   json_serializable: ^6.2.0
   flutter_launcher_icons: ^0.13.1
   google_maps_flutter: ^2.0.11
+  hive_generator: ^2.0.1
 
 
 
