@@ -738,11 +738,11 @@ PreferredSize buildCustomAppBar(context) {
                   child: InkWell(
                     //padding: EdgeInsets.zero,
                     onTap: () {
-                      // Navigator.push(context,
-                      //     MaterialPageRoute(builder: (context) {
-                      //   return MoreDetails();
-                      // }));
-                      Navigator.pop(context);
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) {
+                        return MoreDetails();
+                      }));
+                      // Navigator.pop(context);
                     },
                     child: Icon(
                       Icons.keyboard_arrow_left,
