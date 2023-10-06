@@ -48,16 +48,19 @@ class Land {
 }
 
 @HiveType(typeId: 3)
-class Data {
+class ProfileData {
   @HiveField(0)
-  late bool updated;
+  late String id;
 
   @HiveField(1)
-  late Address address;
+  late bool updated;
 
   @HiveField(2)
-  late KYC kyc;
+  late List<Address> address;
 
   @HiveField(3)
-  late Land land;
+  late KYC kyc;
+
+  @HiveField(4)
+  late List<Land> land;
 }

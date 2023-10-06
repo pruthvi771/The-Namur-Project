@@ -2,6 +2,8 @@ import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_b
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_bloc/firestore_bloc.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
+import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart'
+    as hiveModels;
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_bloc.dart';
 import 'package:active_ecommerce_flutter/features/weather/bloc/weather_bloc.dart';
 import 'package:active_ecommerce_flutter/helpers/addons_helper.dart';
@@ -104,6 +106,11 @@ main() async {
 
   await Firebase.initializeApp();
   await Hive.initFlutter();
+  await Hive.openBox<hiveModels.ProfileData>('profileDataBox2');
+  Hive.registerAdapter(hiveModels.AddressAdapter());
+  Hive.registerAdapter(hiveModels.KYCAdapter());
+  Hive.registerAdapter(hiveModels.LandAdapter());
+  Hive.registerAdapter(hiveModels.ProfileDataAdapter());
 
   runApp(
     SharedValue.wrapApp(

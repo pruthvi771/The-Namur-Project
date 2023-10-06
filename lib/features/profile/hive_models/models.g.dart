@@ -132,34 +132,37 @@ class LandAdapter extends TypeAdapter<Land> {
           typeId == other.typeId;
 }
 
-class DataAdapter extends TypeAdapter<Data> {
+class ProfileDataAdapter extends TypeAdapter<ProfileData> {
   @override
   final int typeId = 3;
 
   @override
-  Data read(BinaryReader reader) {
+  ProfileData read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Data()
-      ..updated = fields[0] as bool
-      ..address = fields[1] as Address
-      ..kyc = fields[2] as KYC
-      ..land = fields[3] as Land;
+    return ProfileData()
+      ..id = fields[0] as String
+      ..updated = fields[1] as bool
+      ..address = (fields[2] as List).cast<Address>()
+      ..kyc = fields[3] as KYC
+      ..land = (fields[4] as List).cast<Land>();
   }
 
   @override
-  void write(BinaryWriter writer, Data obj) {
+  void write(BinaryWriter writer, ProfileData obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
-      ..write(obj.updated)
+      ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.address)
+      ..write(obj.updated)
       ..writeByte(2)
-      ..write(obj.kyc)
+      ..write(obj.address)
       ..writeByte(3)
+      ..write(obj.kyc)
+      ..writeByte(4)
       ..write(obj.land);
   }
 
@@ -169,7 +172,7 @@ class DataAdapter extends TypeAdapter<Data> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is DataAdapter &&
+      other is ProfileDataAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

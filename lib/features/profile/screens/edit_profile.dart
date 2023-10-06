@@ -1,5 +1,6 @@
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/custom/input_decorations.dart';
+import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
 import 'package:flutter/material.dart';
 
 import 'package:active_ecommerce_flutter/features/profile/expanded_tile_widget.dart';
@@ -32,6 +33,77 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     box.put('name', 'David');
     print('Name: ${box.get('name')}');
+  }
+
+  void _addDataToHive() {
+    var dataBox = Hive.box<ProfileData>('profileDataBox2');
+
+    // dataBox.clear();
+    print('so it begins and ens');
+
+    var savedData = dataBox.get('profile');
+
+    if (savedData != null) {
+      print('Length: ${savedData.address.length}');
+      print(
+          'Address0: ${savedData.address[0].district}, ${savedData.address[0].taluk}, ${savedData.address[0].hobli}, ${savedData.address[0].village}');
+      // print('Address1: ${savedData.address[1]}');
+
+      for (var address in savedData.address) {
+        print(
+            'Address: ${address.district}, ${address.taluk}, ${address.hobli}, ${address.village}');
+      }
+    } else {
+      print('Data not found');
+    }
+
+    var address = Address()
+      ..district = 'delhi'
+      ..taluk = 'west'
+      ..hobli = 'delho hobti'
+      ..village = 'gurgaon';
+
+    var kyc = KYC()
+      ..aadhar = 'Aadhar Number'
+      ..pan = 'PAN Number'
+      ..gst = 'GST Number';
+
+    var land = Land()
+      ..village = 'Village Name'
+      ..syno = 'Syno Number'
+      ..area = 123.45
+      ..crops = ['Crop 1', 'Crop 2']
+      ..equipments = ['Equipment 1', 'Equipment 2'];
+
+    // var newData = ProfileData()
+    //   ..id = 'profile'
+    //   ..updated = true
+    //   ..kyc = kyc
+    //   ..land = [land]; // Assuming you want to store a list of lands
+
+    if (savedData != null) {
+      print('object detected');
+      var newData = ProfileData()
+        ..id = savedData.id
+        ..updated = savedData.updated
+        ..address = [...savedData.address, address]
+        ..kyc = savedData.kyc
+        ..land = savedData.land;
+
+      // dataBox.put(newData.id, newData);
+      print('object updated');
+    } else {
+      print('null object detected');
+      var newData = ProfileData()
+        ..id = 'profile'
+        ..updated = true
+        ..address = [address]
+        ..kyc = kyc
+        ..land = [land];
+
+      dataBox.put(newData.id, newData);
+      print('object created');
+    }
   }
 
   @override
@@ -120,7 +192,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             Row(
               children: [
                 Expanded(child: SizedBox()),
-                TextButton(onPressed: openBox, child: Text('Add Record')),
+                TextButton(
+                    onPressed: _addDataToHive, child: Text('Add Record')),
               ],
             ),
             SizedBox(
