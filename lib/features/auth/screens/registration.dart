@@ -11,6 +11,9 @@ import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_b
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_event.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_state.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/firestore_bloc/firestore_bloc.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/firestore_bloc/firestore_event.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 // import 'package:active_ecommerce_flutter/repositories/auth_repository.dart';
@@ -142,6 +145,10 @@ class _RegistrationState extends State<Registration> {
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is Success) {
+            BlocProvider.of<FirestoreBloc>(context).add(
+                AddUserToBuyerSellerColections(_nameController.text.toString(),
+                    _emailController.text.toString(), 'userid12345'));
+
             Navigator.pop(context);
             ToastComponent.showDialog('User created successfully.',
                 gravity: Toast.center, duration: Toast.lengthLong);
@@ -208,18 +215,6 @@ class _RegistrationState extends State<Registration> {
               SizedBox(
                 height: 5,
               ),
-              /* Padding(
-                padding:
-                    const EdgeInsets.only(bottom: 4.0, right: 20, left: 20),
-                child: Text(
-                  _register_by == "email"
-                      ? AppLocalizations.of(context)!.email_ucf
-                      : AppLocalizations.of(context)!.phone_ucf,
-                  style: TextStyle(
-                      color: MyTheme.primary_color,
-                      fontWeight: FontWeight.w600),
-                ),
-              ),*/
               if (_register_by == "email")
                 Padding(
                   padding:
@@ -334,10 +329,23 @@ class _RegistrationState extends State<Registration> {
                     ],
                   ),
                 ),
-              SizedBox(
-                height: 5,
-              ),
-
+              // SizedBox(
+              //   height: 5,
+              // ),
+              if (_register_by == "phone")
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Container(
+                    // padding: EdgeInsets.symmetric(horizontal: 20),
+                    height: 40,
+                    child: TextField(
+                      controller: _emailController,
+                      autofocus: false,
+                      decoration: InputDecorations.buildInputDecoration_1(
+                          hint_text: "Email Id"),
+                    ),
+                  ),
+                ),
               /*  Padding(
                 padding: const EdgeInsets.only(bottom: 4.0, left: 20),
                 child: Text(

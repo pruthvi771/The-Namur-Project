@@ -5,6 +5,7 @@ import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/custom/lang_text.dart';
 import 'package:active_ecommerce_flutter/features/profile/enum.dart';
+import 'package:active_ecommerce_flutter/features/profile/screens/edit_profile.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/more_details.dart';
 import 'package:active_ecommerce_flutter/helpers/auth_helper.dart';
 import 'package:active_ecommerce_flutter/presenter/home_presenter.dart';
@@ -77,7 +78,7 @@ class _ProfileState extends State<Profile> {
 
     // if (is_logged_in.$ == true) {
 
-    fetchAll();
+    // fetchAll();
     // }
   }
 
@@ -88,35 +89,35 @@ class _ProfileState extends State<Profile> {
 
   Future<void> _onPageRefresh() async {
     reset();
-    fetchAll();
+    // fetchAll();
   }
 
   onPopped(value) async {
     reset();
-    fetchAll();
+    // fetchAll();
   }
 
-  fetchAll() {
-    fetchCounters();
-  }
+  // fetchAll() {
+  //   fetchCounters();
+  // }
 
-  fetchCounters() async {
-    var profileCountersResponse =
-        await ProfileRepository().getProfileCountersResponse();
+  // fetchCounters() async {
+  //   var profileCountersResponse =
+  //       await ProfileRepository().getProfileCountersResponse();
 
-    _cartCounter = profileCountersResponse.cart_item_count;
-    _wishlistCounter = profileCountersResponse.wishlist_item_count;
-    _orderCounter = profileCountersResponse.order_count;
+  //   _cartCounter = profileCountersResponse.cart_item_count;
+  //   _wishlistCounter = profileCountersResponse.wishlist_item_count;
+  //   _orderCounter = profileCountersResponse.order_count;
 
-    _cartCounterString =
-        counterText(_cartCounter.toString(), default_length: 2);
-    _wishlistCounterString =
-        counterText(_wishlistCounter.toString(), default_length: 2);
-    _orderCounterString =
-        counterText(_orderCounter.toString(), default_length: 2);
+  //   _cartCounterString =
+  //       counterText(_cartCounter.toString(), default_length: 2);
+  //   _wishlistCounterString =
+  //       counterText(_wishlistCounter.toString(), default_length: 2);
+  //   _orderCounterString =
+  //       counterText(_orderCounter.toString(), default_length: 2);
 
-    setState(() {});
-  }
+  //   setState(() {});
+  // }
 
   // deleteAccountReq() async {
   //   loading();
@@ -306,9 +307,6 @@ class _ProfileState extends State<Profile> {
                 )
               ],
             ),
-
-            //test
-            // Text(_profileSection.toString()),
 
             //Profile Name
             Padding(
@@ -522,6 +520,15 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                   ),
+                  // ElevatedButton(
+                  //   onPressed: () {
+                  //     Navigator.push(context,
+                  //         MaterialPageRoute(builder: (context) {
+                  //       return EditProfileScreen();
+                  //     }));
+                  //   },
+                  //   child: Text('Profile Edit'),
+                  // )
                 ],
               ),
 

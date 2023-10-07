@@ -1,13 +1,15 @@
+import 'dart:async';
+
 import 'package:active_ecommerce_flutter/features/profile/screens/friends_screen.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/profile.dart';
-import 'package:active_ecommerce_flutter/features/weather/bloc/weather_bloc.dart';
-import 'package:active_ecommerce_flutter/features/weather/bloc/weather_state.dart';
+import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_bloc.dart';
+import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_event.dart';
+import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../my_theme.dart';
 import '../weather/screens/weather_screen.dart';
-import '../weather/bloc/weather_event.dart';
 
 class TitleBar extends StatefulWidget {
   const TitleBar({Key? key}) : super(key: key);
@@ -17,15 +19,20 @@ class TitleBar extends StatefulWidget {
 }
 
 class _TitleBarState extends State<TitleBar> {
+  @override
   void initState() {
     super.initState();
-    BlocProvider.of<WeatherBloc>(context).add(
-      WeatherSectionInfoRequested(),
+    BlocProvider.of<WeatherSectionBloc>(context).add(
+      WeatherSectionDataRequested(),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    // BlocProvider.of<WeatherSectionBloc>(context).add(
+    //   WeatherSectionInfoRequested(),
+    // );
+
     var temperature = '38°';
     var description = 'Rainy';
     var location = "@ Namur Pitlali";
@@ -146,34 +153,44 @@ class _TitleBarState extends State<TitleBar> {
             //     },
             //     child: Text('Click')),
             //Weather and Location
-            BlocListener<WeatherBloc, WeatherState>(
+            BlocListener<WeatherSectionBloc, WeatherSectionState>(
               listener: (context, state) {
-                if (state is WeatherSectionInfoReceived) {
-                  print('state is WeatherSectionInfoReceived');
-                }
-                if (state is Loading) {
+                if (state is WeatherSectionDataReceived) {
+                  print('state is WeatherSectionDataReceived');
+                } else if (state is LoadingSection) {
                   print('state is LOADING');
+                } else if (state is WeatherSectionDataNotReceived) {
+                  // print('state is WeatherSectionDataNotReceived');
                 }
-                if (state is WeatherSectionInfoNotReceived) {
-                  print('state is WeatherSectionInfoNotReceived');
-                }
+                // else {
+                //   BlocProvider.of<WeatherBloc>(context).add(
+                //     WeatherSectionInfoRequested(),
+                //   );
+                // }
               },
-              child: BlocBuilder<WeatherBloc, WeatherState>(
+              child: BlocBuilder<WeatherSectionBloc, WeatherSectionState>(
                 builder: (context, state) {
-                  if (state is Loading) {
+                  if (state is LoadingSection) {
                     return WeatherSection(
                       temperature: '-',
                       description: '-',
                       location: '---',
                     );
                   }
-                  if (state is WeatherSectionInfoReceived) {
+                  if (state is WeatherSectionDataReceived) {
                     return WeatherSection(
                       temperature:
                           '${state.responseData.currentData.tempC.toInt().toString()} °C',
                       description:
                           state.responseData.currentData.condition.text,
                       location: '@Paris',
+                    );
+                  }
+                  if (state is WeatherSectionDataNotReceived) {
+                    return WeatherSection(
+                      temperature: '==',
+                      description: '==',
+                      location: '==',
                     );
                   }
                   return WeatherSection(
@@ -207,26 +224,26 @@ class WeatherSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       flex: 4,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 8, right: 8, bottom: 8),
-        child: Container(
-          // height: 85,
-          decoration: BoxDecoration(
-              border: Border.all(
-                color: MyTheme.green_light as Color,
-              ),
-              borderRadius: BorderRadius.circular(8)),
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            // crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              InkWell(
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => WeatherScreen()));
-                },
-                child: Padding(
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => WeatherScreen()));
+        },
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8, right: 8, bottom: 8),
+          child: Container(
+            // height: 85,
+            decoration: BoxDecoration(
+                border: Border.all(
+                  color: MyTheme.green_light as Color,
+                ),
+                borderRadius: BorderRadius.circular(8)),
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              // crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 5.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -259,17 +276,17 @@ class WeatherSection extends StatelessWidget {
                     ],
                   ),
                 ),
-              ),
-              Text(
-                location,
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 15,
-                  fontFamily: 'Poppins',
-                  color: MyTheme.primary_color,
-                ),
-              )
-            ],
+                Text(
+                  location,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
+                    fontFamily: 'Poppins',
+                    color: MyTheme.primary_color,
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

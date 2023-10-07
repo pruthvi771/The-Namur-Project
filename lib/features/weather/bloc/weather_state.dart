@@ -9,21 +9,21 @@ import 'package:equatable/equatable.dart';
 
 abstract class WeatherState extends Equatable {}
 
-final class WeatherSectionInfoReceived extends WeatherState {
-  final CurrentWeatherResponse responseData;
+// final class WeatherSectionInfoReceived extends WeatherState {
+//   final CurrentWeatherResponse responseData;
 
-  WeatherSectionInfoReceived({
-    required this.responseData,
-  });
+//   WeatherSectionInfoReceived({
+//     required this.responseData,
+//   });
 
-  @override
-  List<Object?> get props => [responseData];
-}
+//   @override
+//   List<Object?> get props => [responseData];
+// }
 
-final class WeatherSectionInfoNotReceived extends WeatherState {
-  @override
-  List<Object?> get props => [];
-}
+// final class WeatherSectionInfoNotReceived extends WeatherState {
+//   @override
+//   List<Object?> get props => [];
+// }
 
 final class Loading extends WeatherState {
   @override
@@ -39,6 +39,11 @@ final class WeatherSreenDataReceived extends WeatherState {
 
   @override
   List<Object?> get props => [responseData];
+}
+
+final class WeatherScreenDataNotReceived extends WeatherState {
+  @override
+  List<Object?> get props => [];
 }
 
 final class Error extends WeatherState {
