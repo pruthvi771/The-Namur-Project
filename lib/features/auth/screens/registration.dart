@@ -130,9 +130,13 @@ class _RegistrationState extends State<Registration> {
 
     if (_register_by == "phone") {
       print('phone login attempted');
+      String newNumber = '+91 $phone_confirm';
+      BlocProvider.of<AuthBloc>(buildContext).add(
+        PhoneVerificationRequested(newNumber),
+      );
     } else {
       BlocProvider.of<AuthBloc>(buildContext)
-          .add(SignUpWithEmailRequested(email, password));
+          .add(SignUpWithEmailRequested(email, password, name));
     }
   }
 
@@ -146,10 +150,6 @@ class _RegistrationState extends State<Registration> {
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is Success) {
-            BlocProvider.of<FirestoreBloc>(context).add(
-                AddUserToBuyerSellerColections(_nameController.text.toString(),
-                    _emailController.text.toString(), 'userid12345'));
-
             Navigator.pop(context);
             ToastComponent.showDialog('User created successfully.',
                 gravity: Toast.center, duration: Toast.lengthLong);

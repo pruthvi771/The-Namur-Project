@@ -162,7 +162,9 @@ class _MyAppState extends State<MyApp> {
             create: (context) => WeatherSectionBloc(),
           ),
           BlocProvider<AuthBloc>(
-            create: (context) => AuthBloc(authRepository: authRepository),
+            create: (context) => AuthBloc(
+              authRepository: authRepository,
+            ),
           ),
           BlocProvider<HiveBloc>(
             create: (context) => HiveBloc(),

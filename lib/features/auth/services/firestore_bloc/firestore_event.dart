@@ -5,13 +5,6 @@ abstract class FirestoreEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class SignInWithEmailRequested extends FirestoreEvent {
-  final String email;
-  final String password;
-
-  SignInWithEmailRequested(this.email, this.password);
-}
-
 class AddUserToBuyerSellerColections extends FirestoreEvent {
   final String name;
   final String email;

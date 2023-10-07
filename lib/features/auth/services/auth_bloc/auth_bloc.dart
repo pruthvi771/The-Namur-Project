@@ -1,6 +1,7 @@
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_event.dart';
 // import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'auth_state.dart';
@@ -24,12 +25,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SignUpWithEmailRequested>((event, emit) async {
       emit(Loading());
       try {
-        await authRepository.createUserWithEmail(
-            email: event.email, password: event.password
-            // firstName: event.firstName,
-            // lastName: event.lastName,
-            // businessName: event.businessName,
-            );
+        var userCredentials = await authRepository.createUserWithEmail(
+          email: event.email, password: event.password, name: event.name,
+          // firstName: event.firstName,
+          // lastName: event.lastName,
+          // businessName: event.businessName,
+        );
         emit(Success());
       } catch (e) {
         emit(AuthError(e.toString()));

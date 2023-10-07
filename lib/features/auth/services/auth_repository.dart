@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_exceptions.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 
 import 'package:firebase_auth/firebase_auth.dart'
     show
@@ -14,6 +15,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirestoreRepository firestoreRepository = FirestoreRepository();
 
   AuthUser? get currentUser {
     final user = _firebaseAuth.currentUser;
@@ -47,10 +49,16 @@ class AuthRepository {
   Future<void> createUserWithEmail({
     required String email,
     required String password,
+    required String name,
   }) async {
     try {
-      await _firebaseAuth.createUserWithEmailAndPassword(
+      var userCredentials = await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
+
+      firestoreRepository.addUserToBuyerSellerCollections(
+          userId: userCredentials.user!.uid,
+          name: name,
+          email: userCredentials.user!.email!);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         throw Exception('The password is not strong enough.');
