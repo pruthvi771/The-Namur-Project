@@ -4,7 +4,11 @@ import 'package:active_ecommerce_flutter/custom/box_decorations.dart';
 import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/custom/lang_text.dart';
+import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 import 'package:active_ecommerce_flutter/features/profile/enum.dart';
+import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/edit_profile.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/more_details.dart';
 import 'package:active_ecommerce_flutter/helpers/auth_helper.dart';
@@ -75,11 +79,19 @@ class _ProfileState extends State<Profile> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _buyerUserDataFuture = _getUserData();
 
     // if (is_logged_in.$ == true) {
 
     // fetchAll();
     // }
+  }
+
+  late Future<BuyerData> _buyerUserDataFuture;
+
+  Future<BuyerData> _getUserData() async {
+    AuthUser user = AuthRepository().currentUser!;
+    return FirestoreRepository().getBuyerData(userId: user.userId);
   }
 
   void dispose() {
@@ -249,382 +261,420 @@ class _ProfileState extends State<Profile> {
         parent: AlwaysScrollableScrollPhysics(),
       ),
       slivers: [
-        SliverList(
-          delegate: SliverChildListDelegate([
-            Stack(
-              children: [
-                Column(
-                  children: [
-                    Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height / 2,
-                        child: Image.asset(
-                          "assets/girl1.png",
-                          fit: BoxFit.cover,
-                        )),
-                  ],
-                ),
-                Positioned(
-                  top: 45,
-                  right: 30,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return MoreDetails();
-                      }));
-                    },
-                    child: Icon(
-                      Icons.settings_outlined,
-                      size: 30,
-                      color: Colors.white,
-                      weight: 10,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 45,
-                  left: 30,
-                  child: IconButton(
-                      onPressed: () {
-                        homeData.scaffoldKey.currentState?.openDrawer();
-                      },
-                      icon: Icon(
-                        Icons.menu,
-                        color: Colors.white,
-                        size: 30,
-                      )),
-                ),
-                Positioned(
-                  bottom: 0,
-                  child: Container(
-                    height: 15,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                        color: MyTheme.white,
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(20),
-                            topLeft: Radius.circular(20))),
-                  ),
-                )
-              ],
-            ),
-
-            //Profile Name
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
-              child: Text(
-                // "${user_name.$}",
-                "Chiranthana",
-                style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: "Poppins"),
-              ),
-            ),
-
-            // CircleAvatar, Region, Friends and Neighbors texts
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0, left: 20, right: 20),
-              child: Container(
-                height: 50,
-                width: MediaQuery.of(context).size.width,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      height: 50,
-                      width: 130,
-                      child: Stack(
-                        children: [
-                          for (var i = 0; i < [1, 2, 3, 4].length; i++)
-                            Positioned(
-                              left: (i * (1 - .4) * 40).toDouble(),
-                              top: 0,
-                              child: CircleAvatar(
-                                radius: 28,
-                                backgroundColor: Colors.transparent,
-                                // Set the background color to transparent
-                                backgroundImage: AssetImage(
-                                    'assets/Ellipse2.png'), // Provide the asset image path
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                    Column(
+        FutureBuilder(
+            future: _buyerUserDataFuture,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                BuyerData buyerUserData = snapshot.data as BuyerData;
+                return SliverList(
+                  delegate: SliverChildListDelegate([
+                    Stack(
                       children: [
-                        //Region text
-                        SizedBox(
-                          height: 20,
-                          child: RichText(
-                              text: TextSpan(children: [
-                            TextSpan(
-                                text: 'Pitlali : ',
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 15,
-                                    color: Colors.black)),
-                            TextSpan(
-                                text: '577511',
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 15,
-                                    color: Colors.black))
-                          ])),
+                        Column(
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height / 2,
+                              // child: Image.asset(
+                              //   "assets/girl1.png",
+                              //   fit: BoxFit.cover,
+                              // ),
+                              child: !(buyerUserData.photoURL == null ||
+                                      buyerUserData.photoURL == '')
+                                  ? Image.asset(
+                                      "assets/girl1.png",
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.network(
+                                      buyerUserData.photoURL!,
+                                      fit: BoxFit.cover,
+                                    ),
+                            ),
+                          ],
                         ),
-
-                        //Friends and Neighbors text
-                        SizedBox(
-                          height: 20,
-                          child: RichText(
-                              text: TextSpan(children: [
-                            TextSpan(
-                                text: '125 Friends & ',
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 15,
-                                    color: Colors.black)),
-                            TextSpan(
-                                text: 'Neighbors',
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 15,
-                                    color: Colors.black))
-                          ])),
+                        Positioned(
+                          top: 45,
+                          right: 30,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return MoreDetails();
+                              }));
+                            },
+                            child: Icon(
+                              Icons.settings_outlined,
+                              size: 30,
+                              color: Colors.white,
+                              weight: 10,
+                            ),
+                          ),
                         ),
+                        Positioned(
+                          top: 45,
+                          left: 30,
+                          child: IconButton(
+                              onPressed: () {
+                                homeData.scaffoldKey.currentState?.openDrawer();
+                              },
+                              icon: Icon(
+                                Icons.menu,
+                                color: Colors.white,
+                                size: 30,
+                              )),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          child: Container(
+                            height: 15,
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                                color: MyTheme.white,
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(20),
+                                    topLeft: Radius.circular(20))),
+                          ),
+                        )
                       ],
-                    )
-                  ],
-                ),
-              ),
-            ),
+                    ),
 
-            //Updates, My Strock navigation buttons
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0, right: 20, top: 16),
-              child: Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 5),
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _profileSection = ProfileSection.updates;
-                            });
-                          },
-                          child: Container(
-                            width: 100,
-                            height: 44,
-                            decoration: BoxDecoration(
-                                color: _profileSection == ProfileSection.updates
-                                    ? MyTheme.primary_color
-                                    : MyTheme.field_color,
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Center(
-                              child: Text(
-                                "Updates",
-                                style: TextStyle(
-                                    color: _profileSection ==
-                                            ProfileSection.updates
-                                        ? Colors.white
-                                        : Colors.black,
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: .5,
-                                    fontFamily: "Poppins",
-                                    fontSize: 15),
-                              ),
-                            ),
-                          ),
-                        ),
+                    //Profile Name
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 25),
+                      child: Text(
+                        // "${user_name.$}",
+                        // "Chiranthana",
+                        buyerUserData.name,
+                        style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: "Poppins"),
                       ),
                     ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 5),
-                        child: GestureDetector(
-                          onTap: () {
-                            print('clicked');
-                            setState(() {
-                              _profileSection = ProfileSection.myStock;
-                            });
-                          },
-                          child: Container(
-                            // width: 100,
-                            height: 44,
-                            decoration: BoxDecoration(
-                                // color: MyTheme.primary_color,
-                                color: _profileSection == ProfileSection.myStock
-                                    ? MyTheme.primary_color
-                                    : MyTheme.field_color,
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Center(
-                              child: Text(
-                                "My Stock",
-                                style: TextStyle(
-                                    color: _profileSection ==
-                                            ProfileSection.myStock
-                                        ? Colors.white
-                                        : Colors.black,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: "Poppins",
-                                    letterSpacing: .5,
-                                    fontSize: 15),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
 
-            if (_profileSection == ProfileSection.updates)
-              Column(
-                children: [
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: InkWell(
-                        onTap: () async {
-                          await _launchYouTubeVideo(
-                              'https://www.youtube.com/watch?v=o5DGLMY7jsc');
-                        },
-                        child: Image.network(
-                            'https://i.ytimg.com/vi/o5DGLMY7jsc/maxresdefault.jpg'),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: InkWell(
-                        onTap: () async {
-                          await _launchYouTubeVideo(
-                              'https://www.youtube.com/watch?v=VeO_kVYPmmg');
-                        },
-                        child: Image.network(
-                            'https://i.ytimg.com/vi/VeO_kVYPmmg/maxresdefault.jpg'),
-                      ),
-                    ),
-                  ),
-                  // ElevatedButton(
-                  //   onPressed: () {
-                  //     Navigator.push(context,
-                  //         MaterialPageRoute(builder: (context) {
-                  //       return EditProfileScreen();
-                  //     }));
-                  //   },
-                  //   child: Text('Profile Edit'),
-                  // )
-                ],
-              ),
-
-            if (_profileSection == ProfileSection.myStock)
-              // Text(
-              //   'updates',
-              // ),
-              SingleChildScrollView(
-                // controller: _xcrollController,
-                /* physics: const BouncingScrollPhysics(
-              parent: AlwaysScrollableScrollPhysics()),*/
-                child: MasonryGridView.count(
-                  crossAxisCount: 3,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                  itemCount: stocks.length,
-                  shrinkWrap: true,
-                  padding: EdgeInsets.only(top: 10.0, left: 18, right: 18),
-                  physics: NeverScrollableScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  itemBuilder: (context, index) {
-                    //
-                    return Container(
-                      //  height: 100,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: (index % 5 == 0)
-                            ? MyTheme.green_neon
-                            : MyTheme.white,
-                      ),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Container(
+                    // CircleAvatar, Region, Friends and Neighbors texts
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(top: 8.0, left: 20, right: 20),
+                      child: Container(
+                        height: 50,
+                        width: MediaQuery.of(context).size.width,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
                               height: 50,
-                              width: 50,
-                              child: Image.asset(
-                                stocks[index],
-                                fit: BoxFit.cover,
+                              width: 130,
+                              child: Stack(
+                                children: [
+                                  for (var i = 0; i < [1, 2, 3, 4].length; i++)
+                                    Positioned(
+                                      left: (i * (1 - .4) * 40).toDouble(),
+                                      top: 0,
+                                      child: CircleAvatar(
+                                        radius: 28,
+                                        backgroundColor: Colors.transparent,
+                                        // Set the background color to transparent
+                                        backgroundImage: AssetImage(
+                                            'assets/Ellipse2.png'), // Provide the asset image path
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                            Column(
+                              children: [
+                                //Region text
+                                SizedBox(
+                                  height: 20,
+                                  child: RichText(
+                                      text: TextSpan(children: [
+                                    TextSpan(
+                                        text: 'Pitlali : ',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 15,
+                                            color: Colors.black)),
+                                    TextSpan(
+                                        text: '577511',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 15,
+                                            color: Colors.black))
+                                  ])),
+                                ),
+
+                                //Friends and Neighbors text
+                                SizedBox(
+                                  height: 20,
+                                  child: RichText(
+                                      text: TextSpan(children: [
+                                    TextSpan(
+                                        text: '125 Friends & ',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 15,
+                                            color: Colors.black)),
+                                    TextSpan(
+                                        text: 'Neighbors',
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 15,
+                                            color: Colors.black))
+                                  ])),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    //Updates, My Strock navigation buttons
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 20.0, right: 20, top: 16),
+                      child: Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 5),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _profileSection = ProfileSection.updates;
+                                    });
+                                  },
+                                  child: Container(
+                                    width: 100,
+                                    height: 44,
+                                    decoration: BoxDecoration(
+                                        color: _profileSection ==
+                                                ProfileSection.updates
+                                            ? MyTheme.primary_color
+                                            : MyTheme.field_color,
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Center(
+                                      child: Text(
+                                        "Updates",
+                                        style: TextStyle(
+                                            color: _profileSection ==
+                                                    ProfileSection.updates
+                                                ? Colors.white
+                                                : Colors.black,
+                                            fontWeight: FontWeight.w600,
+                                            letterSpacing: .5,
+                                            fontFamily: "Poppins",
+                                            fontSize: 15),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 5),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    print('clicked');
+                                    setState(() {
+                                      _profileSection = ProfileSection.myStock;
+                                    });
+                                  },
+                                  child: Container(
+                                    // width: 100,
+                                    height: 44,
+                                    decoration: BoxDecoration(
+                                        // color: MyTheme.primary_color,
+                                        color: _profileSection ==
+                                                ProfileSection.myStock
+                                            ? MyTheme.primary_color
+                                            : MyTheme.field_color,
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Center(
+                                      child: Text(
+                                        "My Stock",
+                                        style: TextStyle(
+                                            color: _profileSection ==
+                                                    ProfileSection.myStock
+                                                ? Colors.white
+                                                : Colors.black,
+                                            fontWeight: FontWeight.w600,
+                                            fontFamily: "Poppins",
+                                            letterSpacing: .5,
+                                            fontSize: 15),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    if (_profileSection == ProfileSection.updates)
+                      Column(
+                        children: [
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: InkWell(
+                                onTap: () async {
+                                  await _launchYouTubeVideo(
+                                      'https://www.youtube.com/watch?v=o5DGLMY7jsc');
+                                },
+                                child: Image.network(
+                                    'https://i.ytimg.com/vi/o5DGLMY7jsc/maxresdefault.jpg'),
                               ),
                             ),
                           ),
                           Padding(
-                            padding:
-                                const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                            child: Text(
-                              "Grapes",
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
+                            padding: const EdgeInsets.all(16.0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: InkWell(
+                                onTap: () async {
+                                  await _launchYouTubeVideo(
+                                      'https://www.youtube.com/watch?v=VeO_kVYPmmg');
+                                },
+                                child: Image.network(
+                                    'https://i.ytimg.com/vi/VeO_kVYPmmg/maxresdefault.jpg'),
+                              ),
                             ),
-                          )
+                          ),
+                          // ElevatedButton(
+                          //   onPressed: () {
+                          //     Navigator.push(context,
+                          //         MaterialPageRoute(builder: (context) {
+                          //       return EditProfileScreen();
+                          //     }));
+                          //   },
+                          //   child: Text('Profile Edit'),
+                          // )
                         ],
                       ),
-                    );
-                  },
-                ),
-              ),
 
-            // //divider
-            // SizedBox(
-            //   height: 20,
-            // ),
-            // Container(
-            //   padding: const EdgeInsets.all(8.0),
-            //   child: Divider(
-            //     thickness: 30,
-            //     color: Colors.red,
-            //   ),
-            // ),
+                    if (_profileSection == ProfileSection.myStock)
+                      // Text(
+                      //   'updates',
+                      // ),
+                      SingleChildScrollView(
+                        // controller: _xcrollController,
+                        /* physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics()),*/
+                        child: MasonryGridView.count(
+                          crossAxisCount: 3,
+                          mainAxisSpacing: 16,
+                          crossAxisSpacing: 16,
+                          itemCount: stocks.length,
+                          shrinkWrap: true,
+                          padding:
+                              EdgeInsets.only(top: 10.0, left: 18, right: 18),
+                          physics: NeverScrollableScrollPhysics(),
+                          scrollDirection: Axis.vertical,
+                          itemBuilder: (context, index) {
+                            //
+                            return Container(
+                              //  height: 100,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: (index % 5 == 0)
+                                    ? MyTheme.green_neon
+                                    : MyTheme.white,
+                              ),
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Container(
+                                      height: 50,
+                                      width: 50,
+                                      child: Image.asset(
+                                        stocks[index],
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 8.0, bottom: 8.0),
+                                    child: Text(
+                                      "Grapes",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
 
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 18.0),
-            //   child: buildCountersRow(),
-            // ),
+                    // //divider
+                    // SizedBox(
+                    //   height: 20,
+                    // ),
+                    // Container(
+                    //   padding: const EdgeInsets.all(8.0),
+                    //   child: Divider(
+                    //     thickness: 30,
+                    //     color: Colors.red,
+                    //   ),
+                    // ),
 
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 18.0),
-            //   child: buildHorizontalSettings(),
-            // ),
-            // // Padding(
-            // //   padding: const EdgeInsets.symmetric(horizontal: 18.0),
-            // //   child: buildSettingAndAddonsVerticalMenu(),
-            // // ),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 18.0),
-            //   child: buildSettingAndAddonsHorizontalMenu(),
-            // ),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 18.0),
-            //   child: buildBottomVerticalCardList(),
-            // ),
-          ]),
-        )
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                    //   child: buildCountersRow(),
+                    // ),
+
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                    //   child: buildHorizontalSettings(),
+                    // ),
+                    // // Padding(
+                    // //   padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                    // //   child: buildSettingAndAddonsVerticalMenu(),
+                    // // ),
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                    //   child: buildSettingAndAddonsHorizontalMenu(),
+                    // ),
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                    //   child: buildBottomVerticalCardList(),
+                    // ),
+                  ]),
+                );
+              }
+              return SliverList(
+                delegate: SliverChildListDelegate([
+                  Container(
+                    height: DeviceInfo(context).height,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                ]),
+              );
+            }),
       ],
     );
   }
