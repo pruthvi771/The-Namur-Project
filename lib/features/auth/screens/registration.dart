@@ -191,15 +191,6 @@ class _RegistrationState extends State<Registration> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              /*  Padding(
-                padding: const EdgeInsets.only(bottom: 4.0, left: 20),
-                child: Text(
-                  AppLocalizations.of(context)!.name_ucf,
-                  style: TextStyle(
-                      color: MyTheme.primary_color,
-                      fontWeight: FontWeight.w600),
-                ),
-              ),*/
               Padding(
                 padding:
                     const EdgeInsets.only(bottom: 8.0, right: 20, left: 20),
@@ -344,15 +335,6 @@ class _RegistrationState extends State<Registration> {
                     ),
                   ),
                 ),
-              /*  Padding(
-                padding: const EdgeInsets.only(bottom: 4.0, left: 20),
-                child: Text(
-                  AppLocalizations.of(context)!.password_ucf,
-                  style: TextStyle(
-                      color: MyTheme.primary_color,
-                      fontWeight: FontWeight.w600),
-                ),
-              ),*/
 
               Padding(
                 padding:
@@ -363,31 +345,51 @@ class _RegistrationState extends State<Registration> {
                     Container(
                       height: 40,
                       child: TextField(
-                        controller: _passwordController,
-                        autofocus: false,
-                        obscureText: !_passwordVisible,
-                        //add a button to view password
+                          controller: _passwordController,
+                          autofocus: false,
+                          obscureText: !_passwordVisible,
+                          //add a button to view password
 
-                        enableSuggestions: false,
-                        autocorrect: false,
-                        decoration: InputDecoration(
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _passwordVisible
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                              color: Colors.grey,
+                          enableSuggestions: false,
+                          autocorrect: false,
+                          decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _passwordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Colors.grey,
+                              ),
+                              onPressed: () {
+                                setState(
+                                  () {
+                                    _passwordVisible = !_passwordVisible;
+                                  },
+                                );
+                              },
                             ),
-                            onPressed: () {
-                              setState(
-                                () {
-                                  _passwordVisible = !_passwordVisible;
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                      ),
+                            hintText: 'Password',
+                            filled: true,
+                            fillColor: MyTheme.white,
+                            hintStyle: TextStyle(
+                                fontSize: 12.0, color: MyTheme.dark_grey),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: MyTheme.dark_grey, width: 0.5),
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(10.0),
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: MyTheme.light_grey, width: 0.5),
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(10.0),
+                              ),
+                            ),
+                            contentPadding:
+                                EdgeInsets.symmetric(horizontal: 16.0),
+                          )),
                     ),
                     Text(
                       AppLocalizations.of(context)!
@@ -438,6 +440,26 @@ class _RegistrationState extends State<Registration> {
                           );
                         },
                       ),
+                      hintText: 'Confirm Password',
+                      filled: true,
+                      fillColor: MyTheme.white,
+                      hintStyle:
+                          TextStyle(fontSize: 12.0, color: MyTheme.dark_grey),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: MyTheme.dark_grey, width: 0.5),
+                        borderRadius: const BorderRadius.all(
+                          const Radius.circular(10.0),
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: MyTheme.light_grey, width: 0.5),
+                        borderRadius: const BorderRadius.all(
+                          const Radius.circular(10.0),
+                        ),
+                      ),
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
                     ),
                   ),
                 ),

@@ -26,12 +26,11 @@ class MoreDetails extends StatefulWidget {
 }
 
 class _MoreDetailsState extends State<MoreDetails> {
-  final _controller1 = ExpandedTileController();
-  final _controller2 = new ExpandedTileController();
-  final _controller3 = new ExpandedTileController();
-  final _controller35 = new ExpandedTileController();
-  final _controller4 = new ExpandedTileController();
-  final _controller5 = new ExpandedTileController();
+  final _kycController = ExpandedTileController(isExpanded: true);
+  final _addressController = new ExpandedTileController(isExpanded: true);
+  final _landDetailsController = new ExpandedTileController();
+  final _cropsController = new ExpandedTileController(isExpanded: true);
+  final _machinesController = new ExpandedTileController(isExpanded: true);
 
   late double progress;
   late ProfileData? profileData;
@@ -234,7 +233,7 @@ class _MoreDetailsState extends State<MoreDetails> {
 
             //KYC Section
             ExpandedTileWidget(
-              controller: _controller1,
+              controller: _kycController,
               title: 'KYC',
               children: Padding(
                 padding:
@@ -350,7 +349,7 @@ class _MoreDetailsState extends State<MoreDetails> {
 
             //Address Section
             ExpandedTileWidget(
-              controller: _controller2,
+              controller: _addressController,
               title: 'District, Taluk, Hobli, Village',
               children: Padding(
                 padding:
@@ -523,7 +522,7 @@ class _MoreDetailsState extends State<MoreDetails> {
 
             //Crops Section
             ExpandedTileWidget(
-              controller: _controller4,
+              controller: _cropsController,
               title: 'Crops Grown and Planned',
               children: Padding(
                 padding:
@@ -556,7 +555,7 @@ class _MoreDetailsState extends State<MoreDetails> {
 
             //Machines Section
             ExpandedTileWidget(
-              controller: _controller4,
+              controller: _machinesController,
               title: 'Tractor, JCB, Tiller, Rotovotator',
               children: Padding(
                 padding: const EdgeInsets.all(10.0),

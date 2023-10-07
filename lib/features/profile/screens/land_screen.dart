@@ -1,8 +1,10 @@
 import 'package:active_ecommerce_flutter/features/profile/expanded_tile_widget.dart';
+import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:hive/hive.dart';
 import '../../../custom/device_info.dart';
 
 import 'package:flutter_expanded_tile/flutter_expanded_tile.dart';
@@ -19,10 +21,28 @@ class LandScreen extends StatefulWidget {
 
 class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
   // final _controller1 = ExpandedTileController();
-  final _controller2 = new ExpandedTileController();
+  final _areaController = new ExpandedTileController(isExpanded: true);
+  final _cropController = new ExpandedTileController(isExpanded: true);
+  final _landController = new ExpandedTileController(isExpanded: true);
 
   String title = "KYC";
   final double progress = 0.80;
+  late ProfileData? profileData;
+
+  void initState() {
+    super.initState();
+    void initState() {
+      super.initState();
+      var dataBox = Hive.box<ProfileData>('profileDataBox3');
+
+      profileData = dataBox.get('profile');
+
+      // BlocProvider.of<HiveBloc>(context).add(
+      //   HiveDataRequested(),
+      //   // HiveAppendAddress(context: context),
+      // );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,29 +95,29 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
                             ),
                           ),
                         ),
-                        Tab(
-                          child: Text(
-                            '2. Bale Tota',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: .5,
-                              color: Color.fromARGB(255, 212, 212, 212),
-                            ),
-                          ),
-                        ),
-                        Tab(
-                          child: Text(
-                            '3. Koplu Gadde',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: .5,
-                              color: Color.fromARGB(255, 212, 212, 212),
-                              // color: Color.fromARGB(255, 234, 234, 234),
-                            ),
-                          ),
-                        ),
+                        // Tab(
+                        //   child: Text(
+                        //     '2. Bale Tota',
+                        //     style: TextStyle(
+                        //       fontSize: 15,
+                        //       fontWeight: FontWeight.w800,
+                        //       letterSpacing: .5,
+                        //       color: Color.fromARGB(255, 212, 212, 212),
+                        //     ),
+                        //   ),
+                        // ),
+                        // Tab(
+                        //   child: Text(
+                        //     '3. Koplu Gadde',
+                        //     style: TextStyle(
+                        //       fontSize: 15,
+                        //       fontWeight: FontWeight.w800,
+                        //       letterSpacing: .5,
+                        //       color: Color.fromARGB(255, 212, 212, 212),
+                        //       // color: Color.fromARGB(255, 234, 234, 234),
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -112,8 +132,8 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
                             height: 10,
                           ),
                           LandExpandedTile(
-                            controller2: _controller2,
-                            title: title,
+                            controller2: _areaController,
+                            title: 'Land Area Size',
                             content: Container(
                               padding: EdgeInsets.only(top: 8),
                               height: 150,
@@ -199,26 +219,54 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
                               ),
                             ),
                           ),
+                          SizedBox(
+                            height: 10,
+                          ),
                           LandExpandedTile(
-                            controller2: _controller2,
-                            title: title,
+                            controller2: _cropController,
+                            title: 'Crop Detail',
                             content: Container(
-                                padding: EdgeInsets.only(top: 8),
-                                height: 150,
-                                child: ListView(
-                                  scrollDirection: Axis.horizontal,
-                                  children: [
-                                    Text('tab1'),
-                                    Text('tab1'),
-                                    Text('tab1'),
-                                    Text('tab1'),
-                                  ],
-                                )),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12),
+                              height: 100,
+                              child: ListView(
+                                physics: BouncingScrollPhysics(),
+                                scrollDirection: Axis.horizontal,
+                                children: [
+                                  CropWidget(image: "assets/onion.png"),
+                                  CropWidget(image: "assets/onion.png"),
+                                  CropWidget(image: "assets/onion.png"),
+                                  CropWidget(image: "assets/onion.png"),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          LandExpandedTile(
+                            controller2: _landController,
+                            title: 'Crop Detail',
+                            content: Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12),
+                              height: 100,
+                              child: ListView(
+                                physics: BouncingScrollPhysics(),
+                                scrollDirection: Axis.horizontal,
+                                children: [
+                                  CropWidget(image: "assets/onion.png"),
+                                  CropWidget(image: "assets/onion.png"),
+                                  CropWidget(image: "assets/onion.png"),
+                                  CropWidget(image: "assets/onion.png"),
+                                ],
+                              ),
+                            ),
                           ),
                         ],
                       ),
-                      Center(child: Text('tab2')),
-                      Center(child: Text('tab3')),
+                      // Center(child: Text('tab2')),
+                      // Center(child: Text('tab3')),
                     ],
                   ),
                 ),
@@ -337,6 +385,31 @@ class LandExpandedTile extends StatelessWidget {
           ),
         ),
         content: content,
+      ),
+    );
+  }
+}
+
+class CropWidget extends StatelessWidget {
+  const CropWidget({
+    super.key,
+    required this.image,
+  });
+
+  final String image;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(6),
+      child: Container(
+        child: AspectRatio(
+          aspectRatio: 1 / 1,
+          child: Image.asset(
+            image,
+            fit: BoxFit.cover,
+          ),
+        ),
       ),
     );
   }

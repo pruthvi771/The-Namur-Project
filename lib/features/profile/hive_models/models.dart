@@ -41,7 +41,7 @@ class Land {
   late double area;
 
   @HiveField(3)
-  late List<String> crops;
+  late List<Crop> crops;
 
   @HiveField(4)
   late List<String> equipments;
@@ -63,4 +63,10 @@ class ProfileData {
 
   @HiveField(4)
   late List<Land> land;
+}
+
+@HiveType(typeId: 4)
+class Crop {
+  @HiveField(0)
+  late String name;
 }

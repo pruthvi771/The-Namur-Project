@@ -101,7 +101,7 @@ class LandAdapter extends TypeAdapter<Land> {
       ..village = fields[0] as String
       ..syno = fields[1] as String
       ..area = fields[2] as double
-      ..crops = (fields[3] as List).cast<String>()
+      ..crops = (fields[3] as List).cast<Crop>()
       ..equipments = (fields[4] as List).cast<String>();
   }
 
@@ -173,6 +173,38 @@ class ProfileDataAdapter extends TypeAdapter<ProfileData> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is ProfileDataAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class CropAdapter extends TypeAdapter<Crop> {
+  @override
+  final int typeId = 4;
+
+  @override
+  Crop read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return Crop()..name = fields[0] as String;
+  }
+
+  @override
+  void write(BinaryWriter writer, Crop obj) {
+    writer
+      ..writeByte(1)
+      ..writeByte(0)
+      ..write(obj.name);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CropAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
