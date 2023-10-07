@@ -6,15 +6,15 @@ import 'package:active_ecommerce_flutter/presenter/cart_counter.dart';
 import 'package:active_ecommerce_flutter/screens/address.dart';
 import 'package:active_ecommerce_flutter/screens/cart.dart';
 import 'package:active_ecommerce_flutter/screens/category_list.dart';
-import 'package:active_ecommerce_flutter/screens/home.dart';
-import 'package:active_ecommerce_flutter/screens/login.dart';
-import 'package:active_ecommerce_flutter/screens/profile.dart';
+// import 'package:active_ecommerce_flutter/screens/home.dart';
+// import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
+// import 'package:active_ecommerce_flutter/features/profile/screens/profile.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:route_transitions/route_transitions.dart';
+// import 'package:route_transitions/route_transitions.dart';
 
 import 'my_account/my_account.dart';
 
@@ -43,7 +43,7 @@ class _MainState extends State<Main> {
 
   void onTapped(int i) {
     fetchAll();
-   /* if (!is_logged_in.$ && (i == 2)) {
+    /* if (!is_logged_in.$ && (i == 2)) {
       Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
       return;
     }
@@ -67,7 +67,7 @@ class _MainState extends State<Main> {
 
   void initState() {
     _children = [
-    //  Home(),
+      //  Home(),
       CategoryList(
         is_base_category: true,
       ),
@@ -78,14 +78,14 @@ class _MainState extends State<Main> {
         counter: counter,
       ),
       Address(
-     //   is_base_category: true,
-      ),
+          //   is_base_category: true,
+          ),
     ];
     fetchAll();
     // TODO: implement initState
     //re appear statusbar in case it was not there in the previous page
-    SystemChrome.setEnabledSystemUIMode(
-        SystemUiMode.manual, overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);
     super.initState();
   }
 

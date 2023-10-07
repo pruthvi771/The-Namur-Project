@@ -16,7 +16,7 @@ import 'package:active_ecommerce_flutter/screens/brand_products.dart';
 import 'package:active_ecommerce_flutter/screens/cart.dart';
 import 'package:active_ecommerce_flutter/screens/chat.dart';
 import 'package:active_ecommerce_flutter/screens/common_webview_screen.dart';
-import 'package:active_ecommerce_flutter/screens/login.dart';
+import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
 import 'package:active_ecommerce_flutter/screens/seller_details.dart';
 import 'package:active_ecommerce_flutter/screens/video_description_screen.dart';
 import 'package:carousel_slider/carousel_slider.dart';

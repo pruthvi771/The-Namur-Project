@@ -3,7 +3,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../custom/device_info.dart';
 import '../../my_theme.dart';
 import '../../presenter/home_presenter.dart';
-import '../../ui_sections/drawer.dart';
+import '../../drawer/drawer.dart';
+
 class Tutorial extends StatefulWidget {
   const Tutorial({Key? key}) : super(key: key);
 
@@ -25,15 +26,14 @@ class _TutorialState extends State<Tutorial> {
     super.initState();
   }
 
-  var colordata =  1;
+  var colordata = 1;
 
-  value(){
+  value() {
     var i = 1;
-    do{
+    do {
       colordata = 1;
       i++;
-    }while(i<40);
-
+    } while (i < 40);
   }
 
   @override
@@ -81,7 +81,9 @@ class _TutorialState extends State<Tutorial> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(width: 30,),
+                SizedBox(
+                  width: 30,
+                ),
                 /* IconButton(
                   onPressed: () {
                     homeData.scaffoldKey.currentState?.openDrawer();
@@ -92,8 +94,7 @@ class _TutorialState extends State<Tutorial> {
                   ),
                 ),*/
                 Center(
-                  child: Text(
-                      AppLocalizations.of(context)!.tutorial_ucf,
+                  child: Text(AppLocalizations.of(context)!.tutorial_ucf,
                       style: TextStyle(
                           color: MyTheme.white,
                           fontSize: 18,
@@ -130,61 +131,63 @@ class _TutorialState extends State<Tutorial> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-         Padding(
-           padding: const EdgeInsets.only(left: 20.0,right: 20,top: 20,bottom: 10),
-           child: Text("Youtube Videos",
-           style: TextStyle(fontWeight: FontWeight.bold,
-           fontSize: 17),),
-         ),
         Padding(
-          padding: const EdgeInsets.only(left: 20.0,right: 20),
+          padding:
+              const EdgeInsets.only(left: 20.0, right: 20, top: 20, bottom: 10),
+          child: Text(
+            "Youtube Videos",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 20.0, right: 20),
           child: Image.asset("assets/Group 185.png"),
         ),
-        SizedBox(height: 15,),
+        SizedBox(
+          height: 15,
+        ),
         Padding(
-          padding: const EdgeInsets.only(left: 20.0,right: 20,top: 20),
+          padding: const EdgeInsets.only(left: 20.0, right: 20, top: 20),
           child: Image.asset("assets/Group 185.png"),
         ),
-                 Spacer(),
+        Spacer(),
         Padding(
-          padding: const EdgeInsets.only(left: 20.0,right: 20,top: 20,bottom: 10),
-          child: Text("2. Products",
-            style: TextStyle(fontWeight: FontWeight.bold,
-                fontSize: 17),),
+          padding:
+              const EdgeInsets.only(left: 20.0, right: 20, top: 20, bottom: 10),
+          child: Text(
+            "2. Products",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+          ),
         ),
-
         Container(
           height: 100,
           width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-            color: Color(0xffD9D9D9)
-          ),
+          decoration: BoxDecoration(color: Color(0xffD9D9D9)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Container(
-                decoration:BoxDecoration(
-                  borderRadius: BorderRadius.circular(10)
-                ),
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(10)),
                 child: Column(
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Image.asset("assets/select.png"),
                     ),
-                    Text("Select Site",
-                      style: TextStyle(fontWeight: FontWeight.bold,
-                          fontSize: 15),)
+                    Text(
+                      "Select Site",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    )
                   ],
                 ),
               ),
-
               Container(
-                decoration:BoxDecoration(
+                decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
-                        color:MyTheme.green_light,
-                  border: Border.all(color: Colors.black)
-                ),
+                    color: MyTheme.green_light,
+                    border: Border.all(color: Colors.black)),
                 child: Padding(
                   padding: const EdgeInsets.all(7.0),
                   child: Column(
@@ -193,36 +196,36 @@ class _TutorialState extends State<Tutorial> {
                         padding: const EdgeInsets.all(0.0),
                         child: Image.asset("assets/prepare_site.png"),
                       ),
-                      Text("Prepare Site",
-                        style: TextStyle(fontWeight: FontWeight.bold,
-                            fontSize: 15),)
+                      Text(
+                        "Prepare Site",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 15),
+                      )
                     ],
                   ),
                 ),
               ),
-
               Container(
-                decoration:BoxDecoration(
-                    borderRadius: BorderRadius.circular(10)
-                ),
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(10)),
                 child: Column(
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Image.asset("assets/weeding.png"),
                     ),
-                    Text("Weeding",
-                      style: TextStyle(fontWeight: FontWeight.bold,
-                          fontSize: 15),)
+                    Text(
+                      "Weeding",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    )
                   ],
                 ),
               )
-
             ],
-          ),)
-
+          ),
+        )
       ],
     );
   }
 }
-

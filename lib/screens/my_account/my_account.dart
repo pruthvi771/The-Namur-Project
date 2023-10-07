@@ -15,7 +15,7 @@ import 'package:active_ecommerce_flutter/screens/digital_product/digital_product
 import 'package:active_ecommerce_flutter/screens/digital_product/purchased_digital_produts.dart';
 import 'package:active_ecommerce_flutter/screens/filter.dart';
 import 'package:active_ecommerce_flutter/screens/followed_sellers.dart';
-import 'package:active_ecommerce_flutter/screens/login.dart';
+import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
 import 'package:active_ecommerce_flutter/screens/main.dart';
 import 'package:active_ecommerce_flutter/screens/messenger_list.dart';
 import 'package:active_ecommerce_flutter/screens/whole_sale_products.dart';
@@ -24,7 +24,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
-import 'package:active_ecommerce_flutter/ui_sections/drawer.dart';
+import 'package:active_ecommerce_flutter/drawer/drawer.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:active_ecommerce_flutter/app_config.dart';
 import 'package:active_ecommerce_flutter/screens/wallet.dart';
@@ -41,7 +41,7 @@ import 'package:toast/toast.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../repositories/auth_repository.dart';
-import '../../services/auth_service.dart';
+// import '../../features/auth/services/auth_service.text';
 import '../notification/notification_screen.dart';
 
 class MyAccount extends StatefulWidget {
@@ -64,7 +64,8 @@ class _MyAccountState extends State<MyAccount> {
   String _orderCounterString = "00";
   late BuildContext loadingcontext;
 
-  var user = AuthService.firebase().currentUser;
+  // var user = AuthService.firebase().currentUser;
+  var user = null;
 
   @override
   void initState() {

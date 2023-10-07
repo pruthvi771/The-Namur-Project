@@ -17,23 +17,27 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../sell_screen/product_post/product_post.dart';
 import 'package:get/get.dart';
 import '../../ui_elements/product_card.dart';
-import '../../ui_sections/drawer.dart';
+import '../../drawer/drawer.dart';
 import '../auction_products_details.dart';
 import '../option/option.dart';
 import '../product_details.dart';
+
 class SubCategory extends StatefulWidget {
-   SubCategory({Key? key, this.category_id,this.isvalue,this.category_name,}) : super(key: key);
-   int? category_id;
-   bool? isvalue;
-   final String? category_name;
+  SubCategory({
+    Key? key,
+    this.category_id,
+    this.isvalue,
+    this.category_name,
+  }) : super(key: key);
+  int? category_id;
+  bool? isvalue;
+  final String? category_name;
 
   @override
   State<SubCategory> createState() => _SubCategoryState();
 }
 
 class _SubCategoryState extends State<SubCategory> {
-
-
   HomePresenter homeData = HomePresenter();
   ScrollController _scrollController = ScrollController();
   ScrollController _xcrollController = ScrollController();
@@ -122,54 +126,55 @@ class _SubCategoryState extends State<SubCategory> {
   var _index = 0;
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      key: homeData.scaffoldKey,
+      drawer: const MainDrawer(),
+      backgroundColor: Colors.white,
+      appBar: buildAppBar(context),
+      body: Column(
+        children: [
+          Container(
+              height: 100,
+              width: MediaQuery.of(context).size.width,
+              color: MyTheme.light_grey,
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      height: 25,
+                    ),
+                    SizedBox(
+                      height: 50,
+                      child: CircleAvatarwidget(),
+                    ),
+                    SizedBox(
+                      height: 25,
+                    )
+                  ])),
 
-     return Scaffold(
-       key: homeData.scaffoldKey,
-       drawer: const MainDrawer(),
-       backgroundColor: Colors.white,
-       appBar: buildAppBar(context),
-       body: Column(
-         children: [
-           Container(
-               height: 100,
-               width:MediaQuery.of(context).size.width,
-               color: MyTheme.light_grey,
-               child: Column(
-                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                   children: [
-                     SizedBox(height: 25,),
-                     SizedBox(
-                       height: 50,
-                       child: CircleAvatarwidget(),
-                     ),
-                     SizedBox(
-                       height: 25,
-                     )
-                   ])
-           ),
+          SizedBox(height: 16),
 
-           SizedBox(height: 16),
-
-           // Sub category
-           Padding(
-             padding: const EdgeInsets.only(left: 20.0,right: 20),
-             child: Container(
-                 decoration: BoxDecoration(border: Border.all(
-                     color: MyTheme.titlebar_color
-                 ),borderRadius: BorderRadius.circular(15)),
-                 height:44,
-                 child:  ListView.separated(
-                     padding: EdgeInsets.only(left: 18, right: 18, ),
-                     scrollDirection: Axis.horizontal,
-                     itemBuilder: (context, index) {
-
-                       return InkWell(
-                         onTap: () {
-                           setState(() {
-                             _index = index;
-
-                           });
-                           /*setState(() {
+          // Sub category
+          Padding(
+            padding: const EdgeInsets.only(left: 20.0, right: 20),
+            child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: MyTheme.titlebar_color),
+                    borderRadius: BorderRadius.circular(15)),
+                height: 44,
+                child: ListView.separated(
+                    padding: EdgeInsets.only(
+                      left: 18,
+                      right: 18,
+                    ),
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            _index = index;
+                          });
+                          /*setState(() {
                              print("data${_subCategoryList[index].id}");
                              _index = index;
                              print("mm$index");
@@ -183,55 +188,58 @@ class _SubCategoryState extends State<SubCategory> {
                                isvalue: widget.isvalue,
                              );
                             // fetchData();*/
-                           },
-                         child: Container(
-                           height:  44,
-                           width:  90,
-                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),
-                               color: _index == index? MyTheme.primary_color:Colors.white),
-                           alignment: Alignment.center,
-
-                           child: Padding(
-                             padding: const EdgeInsets.all(8.0),
-                             child: Text(
-                               "${subCategoryCon.subcategoryList.value.data?.elementAt(index).name}",
+                        },
+                        child: Container(
+                          height: 44,
+                          width: 90,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: _index == index
+                                  ? MyTheme.primary_color
+                                  : Colors.white),
+                          alignment: Alignment.center,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "${subCategoryCon.subcategoryList.value.data?.elementAt(index).name}",
                               // "${ _subCategoryList[index].name!}",
-                               style: TextStyle(
-                                   fontSize: 13,
-                                   fontWeight: FontWeight.w600,
-                                   color: _index == index? Colors.white:MyTheme.font_grey,
-                                   fontFamily: 'Poppins'),
-                               textAlign: TextAlign.center,
-                             ),
-                           ),
-                         ),
-                       );
-                     },
-                     separatorBuilder: (context, index) {
-                       return SizedBox(
-                         width: 10,
-                       );
-                     },
-                     itemCount: int.parse("${subCategoryCon.subcategoryList.value.data?.length}"))
-               // !_isInitial ? buildSubCategory() : buildSubCategory(),
-             ),
-           ),
-           Container(
-             height: 500,
-             child: ListView(
-               children: [
-                 grid_category(),
-               ],
-             ) ,
-           )
-
-         ],
-       ),
-     );
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: _index == index
+                                      ? Colors.white
+                                      : MyTheme.font_grey,
+                                  fontFamily: 'Poppins'),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                    separatorBuilder: (context, index) {
+                      return SizedBox(
+                        width: 10,
+                      );
+                    },
+                    itemCount: int.parse(
+                        "${subCategoryCon.subcategoryList.value.data?.length}"))
+                // !_isInitial ? buildSubCategory() : buildSubCategory(),
+                ),
+          ),
+          Container(
+            height: 500,
+            child: ListView(
+              children: [
+                grid_category(),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
   }
 
-
-  grid_category(){
+  grid_category() {
     if (_isInitial && _productList.length == 0) {
       return SingleChildScrollView(
           child: ShimmerHelper()
@@ -250,27 +258,32 @@ class _SubCategoryState extends State<SubCategory> {
             crossAxisCount: 3,
             mainAxisSpacing: 16,
             crossAxisSpacing: 16,
-            itemCount:   _productList.length,
+            itemCount: _productList.length,
             shrinkWrap: true,
-            padding:
-            EdgeInsets.only(top: 10.0, left: 18, right: 18),
+            padding: EdgeInsets.only(top: 10.0, left: 18, right: 18),
             physics: NeverScrollableScrollPhysics(),
             scrollDirection: Axis.vertical,
             itemBuilder: (context, index) {
               //
-              return  InkWell(
-                onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return widget.isvalue == false ? SellerPlatform():Option(id:  _productList[index].id,);
+              return InkWell(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (context) {
+                      return widget.isvalue == false
+                          ? SellerPlatform()
+                          : Option(
+                              id: _productList[index].id,
+                            );
 
-                 //   AuctionProductsDetails(id: _productList[index].id) :
-                  //  ListSublist(
-                 //     id:  _productList[index].id,
-                 //  );
-                    /*  ProductDetails(
+                      //   AuctionProductsDetails(id: _productList[index].id) :
+                      //  ListSublist(
+                      //     id:  _productList[index].id,
+                      //  );
+                      /*  ProductDetails(
                       id:  _productList[index].id,
                     );*/
-                },));
+                    },
+                  ));
                 },
                 child: Container(
                   //  height: 100,
@@ -285,23 +298,24 @@ class _SubCategoryState extends State<SubCategory> {
                         child: Container(
                           height: 50,
                           width: 50,
-                          child: Image.asset("assets/animal.png",
-                            fit: BoxFit.cover,),
+                          child: Image.asset(
+                            "assets/animal.png",
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 8.0,bottom: 8.0),
-                        child: Text("Grapes",
+                        padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                        child: Text(
+                          "Grapes",
                           style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500
-                          ),),
+                              fontSize: 16, fontWeight: FontWeight.w500),
+                        ),
                       )
                     ],
                   ),
                 ),
               );
-
             },
           ),
         ),
@@ -314,7 +328,7 @@ class _SubCategoryState extends State<SubCategory> {
     }
   }
 
-  CircleAvatarwidget () {
+  CircleAvatarwidget() {
     return Container(
       width: MediaQuery.of(context).size.width,
       child: Row(
@@ -341,15 +355,23 @@ class _SubCategoryState extends State<SubCategory> {
           ),
           SizedBox(
             height: 40,
-            child: RichText(text: TextSpan(
-                children: [
-                  TextSpan(text: '200+${_subCategoryList.length}',style: TextStyle(fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w600,fontSize: 15,color: Colors.black)),
-                  TextSpan(text: '\nFarmer',
-                      style: TextStyle(fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w600,fontSize: 15,color: Colors.black))
-                ]
-            )),
+            child: RichText(
+                text: TextSpan(children: [
+              TextSpan(
+                  text: '200+${_subCategoryList.length}',
+                  style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15,
+                      color: Colors.black)),
+              TextSpan(
+                  text: '\nFarmer',
+                  style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15,
+                      color: Colors.black))
+            ])),
           )
         ],
       ),
@@ -376,13 +398,12 @@ class _SubCategoryState extends State<SubCategory> {
           /*child: Image.asset(
           "assets/background_1.png",
         ),
-*/  decoration: BoxDecoration(
-          gradient:LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors:[Color(0xff107B28),Color(0xff4C7B10)]
-          ))
-      ),
+*/
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xff107B28), Color(0xff4C7B10)]))),
 
       //bottom appbar
       /* bottom: PreferredSize(
@@ -392,8 +413,6 @@ class _SubCategoryState extends State<SubCategory> {
            child: !_isInitial ? buildSubCategory() : buildSubCategory(),
           ),
           preferredSize: Size.fromHeight(0.0)),*/
-
-
 
       /*leading: Builder(
         builder: (context) => IconButton(
@@ -439,7 +458,6 @@ class _SubCategoryState extends State<SubCategory> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-
           Container(
             padding: EdgeInsets.only(left: 50),
             width: DeviceInfo(context).width! / 2,
@@ -447,7 +465,9 @@ class _SubCategoryState extends State<SubCategory> {
               widget.category_name!,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600,
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
                   fontFamily: 'Poppins'),
             ),
           ),
@@ -520,5 +540,4 @@ class _SubCategoryState extends State<SubCategory> {
       ),
     );
   }
-
 }
