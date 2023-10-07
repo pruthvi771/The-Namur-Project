@@ -5,6 +5,7 @@ import 'package:active_ecommerce_flutter/screens/contact_us/contact_us.dart';
 import 'package:active_ecommerce_flutter/screens/my_account/my_account.dart';
 import 'package:active_ecommerce_flutter/screens/notification/notification_screen.dart';
 import 'package:active_ecommerce_flutter/screens/setting/setting.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -352,16 +353,17 @@ class _MainDrawerState extends State<MainDrawer> {
                               onTap: () async {
                                 // await AuthService.firebase().logOut();
                                 // final user = AuthService.firebase().currentUser;
-                                final user = null;
-                                if (user == null) {
-                                  ToastComponent.showDialog('Logout Successful',
-                                      gravity: Toast.center,
-                                      duration: Toast.lengthLong);
-                                } else {
-                                  ToastComponent.showDialog('Still logged in',
-                                      gravity: Toast.center,
-                                      duration: Toast.lengthLong);
-                                }
+                                await FirebaseAuth.instance.signOut();
+                                // final user = null;
+                                // if (user == null) {
+                                ToastComponent.showDialog('Logout Successful',
+                                    gravity: Toast.center,
+                                    duration: Toast.lengthLong);
+                                // } else {
+                                //   ToastComponent.showDialog('Still logged in',
+                                //       gravity: Toast.center,
+                                //       duration: Toast.lengthLong);
+                                // }
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(

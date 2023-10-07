@@ -23,6 +23,7 @@ import 'package:active_ecommerce_flutter/features/auth/screens/otp.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_exceptions.dart';
 // import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
 import 'package:active_ecommerce_flutter/ui_elements/auth_ui.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -103,24 +104,24 @@ class _RegistrationState extends State<Registration> {
           gravity: Toast.center,
           duration: Toast.lengthLong);
       return;
-    } else if (password == "") {
+    } else if (_register_by == 'email' && password == "") {
       ToastComponent.showDialog(AppLocalizations.of(context)!.enter_password,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
-    } else if (password_confirm == "") {
+    } else if (_register_by == 'email' && password_confirm == "") {
       ToastComponent.showDialog(
           AppLocalizations.of(context)!.confirm_your_password,
           gravity: Toast.center,
           duration: Toast.lengthLong);
       return;
-    } else if (password.length < 6) {
+    } else if (_register_by == 'email' && password.length < 6) {
       ToastComponent.showDialog(
           AppLocalizations.of(context)!
               .password_must_contain_at_least_6_characters,
           gravity: Toast.center,
           duration: Toast.lengthLong);
       return;
-    } else if (password != password_confirm) {
+    } else if (_register_by == 'email' && password != password_confirm) {
       ToastComponent.showDialog(
           AppLocalizations.of(context)!.passwords_do_not_match,
           gravity: Toast.center,
@@ -130,10 +131,6 @@ class _RegistrationState extends State<Registration> {
 
     if (_register_by == "phone") {
       print('phone login attempted');
-      String newNumber = '+91 $phone_confirm';
-      BlocProvider.of<AuthBloc>(buildContext).add(
-        PhoneVerificationRequested(newNumber),
-      );
     } else {
       BlocProvider.of<AuthBloc>(buildContext)
           .add(SignUpWithEmailRequested(email, password, name));
@@ -181,6 +178,7 @@ class _RegistrationState extends State<Registration> {
   }
 
   Column buildBody(BuildContext context, double _screen_width) {
+    AuthRepository _authRepository = AuthRepository();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -225,19 +223,22 @@ class _RegistrationState extends State<Registration> {
                       ),
                       // otp_addon_installed.$
                       //     ?
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _register_by = "phone";
-                          });
-                        },
-                        child: Text(
-                          AppLocalizations.of(context)!
-                              .or_register_with_a_phone,
-                          style: TextStyle(
-                              color: MyTheme.accent_color,
-                              fontStyle: FontStyle.italic,
-                              decoration: TextDecoration.underline),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _register_by = "phone";
+                            });
+                          },
+                          child: Text(
+                            AppLocalizations.of(context)!
+                                .or_register_with_a_phone,
+                            style: TextStyle(
+                                color: MyTheme.accent_color,
+                                fontStyle: FontStyle.italic,
+                                decoration: TextDecoration.underline),
+                          ),
                         ),
                       )
                       // : Container()
@@ -270,11 +271,11 @@ class _RegistrationState extends State<Registration> {
                           },
                           // Rest of the code...
                           /* onInputChanged: (PhoneNumber number) {
-                            print(number.phoneNumber);
-                            setState(() {
-                              _phone = number.phoneNumber;
-                            });
-                          },*/
+                                print(number.phoneNumber);
+                                setState(() {
+                                  _phone = number.phoneNumber;
+                                });
+                              },*/
                           onInputValidated: (bool value) {
                             print(value);
                           },
@@ -300,19 +301,22 @@ class _RegistrationState extends State<Registration> {
                           }, // Limit input to 10 digits
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _register_by = "email";
-                          });
-                        },
-                        child: Text(
-                          AppLocalizations.of(context)!
-                              .or_register_with_an_email,
-                          style: TextStyle(
-                              color: MyTheme.accent_color,
-                              fontStyle: FontStyle.italic,
-                              decoration: TextDecoration.underline),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _register_by = "email";
+                            });
+                          },
+                          child: Text(
+                            AppLocalizations.of(context)!
+                                .or_register_with_an_email,
+                            style: TextStyle(
+                                color: MyTheme.accent_color,
+                                fontStyle: FontStyle.italic,
+                                decoration: TextDecoration.underline),
+                          ),
                         ),
                       )
                     ],
@@ -335,135 +339,135 @@ class _RegistrationState extends State<Registration> {
                     ),
                   ),
                 ),
+              if (_register_by == "email")
+                Padding(
+                  padding:
+                      const EdgeInsets.only(bottom: 8.0, right: 20, left: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Container(
+                        height: 40,
+                        child: TextField(
+                            controller: _passwordController,
+                            autofocus: false,
+                            obscureText: !_passwordVisible,
+                            //add a button to view password
 
-              Padding(
-                padding:
-                    const EdgeInsets.only(bottom: 8.0, right: 20, left: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Container(
-                      height: 40,
-                      child: TextField(
-                          controller: _passwordController,
-                          autofocus: false,
-                          obscureText: !_passwordVisible,
-                          //add a button to view password
-
-                          enableSuggestions: false,
-                          autocorrect: false,
-                          decoration: InputDecoration(
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _passwordVisible
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                                color: Colors.grey,
+                            enableSuggestions: false,
+                            autocorrect: false,
+                            decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _passwordVisible
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: Colors.grey,
+                                ),
+                                onPressed: () {
+                                  setState(
+                                    () {
+                                      _passwordVisible = !_passwordVisible;
+                                    },
+                                  );
+                                },
                               ),
-                              onPressed: () {
-                                setState(
-                                  () {
-                                    _passwordVisible = !_passwordVisible;
-                                  },
-                                );
-                              },
-                            ),
-                            hintText: 'Password',
-                            filled: true,
-                            fillColor: MyTheme.white,
-                            hintStyle: TextStyle(
-                                fontSize: 12.0, color: MyTheme.dark_grey),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: MyTheme.dark_grey, width: 0.5),
-                              borderRadius: const BorderRadius.all(
-                                const Radius.circular(10.0),
+                              hintText: 'Password',
+                              filled: true,
+                              fillColor: MyTheme.white,
+                              hintStyle: TextStyle(
+                                  fontSize: 12.0, color: MyTheme.dark_grey),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: MyTheme.dark_grey, width: 0.5),
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(10.0),
+                                ),
                               ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: MyTheme.light_grey, width: 0.5),
-                              borderRadius: const BorderRadius.all(
-                                const Radius.circular(10.0),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: MyTheme.light_grey, width: 0.5),
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(10.0),
+                                ),
                               ),
-                            ),
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 16.0),
-                          )),
-                    ),
-                    Text(
-                      AppLocalizations.of(context)!
-                          .password_must_contain_at_least_6_characters,
-                      style: TextStyle(
-                          color: MyTheme.textfield_grey,
-                          fontStyle: FontStyle.italic),
-                    )
-                  ],
+                              contentPadding:
+                                  EdgeInsets.symmetric(horizontal: 16.0),
+                            )),
+                      ),
+                      Text(
+                        AppLocalizations.of(context)!
+                            .password_must_contain_at_least_6_characters,
+                        style: TextStyle(
+                            color: MyTheme.textfield_grey,
+                            fontStyle: FontStyle.italic),
+                      )
+                    ],
+                  ),
                 ),
-              ),
 
               /*Padding(
-                padding: const EdgeInsets.only(bottom: 4.0, left: 20),
-                child: Text(
-                  AppLocalizations.of(context)!.retype_password_ucf,
-                  style: TextStyle(
-                      color: MyTheme.primary_color,
-                      fontWeight: FontWeight.w600),
-                ),
-              ),*/
-
-              Padding(
-                padding:
-                    const EdgeInsets.only(bottom: 8.0, left: 20, right: 20),
-                child: Container(
-                  height: 44,
-                  child: TextField(
-                    controller: _passwordConfirmController,
-                    autofocus: false,
-                    obscureText: !_confirmPasswordVisible,
-                    enableSuggestions: false,
-                    autocorrect: false,
-                    decoration: InputDecoration(
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _confirmPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: Colors.grey,
+                    padding: const EdgeInsets.only(bottom: 4.0, left: 20),
+                    child: Text(
+                      AppLocalizations.of(context)!.retype_password_ucf,
+                      style: TextStyle(
+                          color: MyTheme.primary_color,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),*/
+              if (_register_by == "email")
+                Padding(
+                  padding:
+                      const EdgeInsets.only(bottom: 8.0, left: 20, right: 20),
+                  child: Container(
+                    height: 44,
+                    child: TextField(
+                      controller: _passwordConfirmController,
+                      autofocus: false,
+                      obscureText: !_confirmPasswordVisible,
+                      enableSuggestions: false,
+                      autocorrect: false,
+                      decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _confirmPasswordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: Colors.grey,
+                          ),
+                          onPressed: () {
+                            setState(
+                              () {
+                                _confirmPasswordVisible =
+                                    !_confirmPasswordVisible;
+                              },
+                            );
+                          },
                         ),
-                        onPressed: () {
-                          setState(
-                            () {
-                              _confirmPasswordVisible =
-                                  !_confirmPasswordVisible;
-                            },
-                          );
-                        },
-                      ),
-                      hintText: 'Confirm Password',
-                      filled: true,
-                      fillColor: MyTheme.white,
-                      hintStyle:
-                          TextStyle(fontSize: 12.0, color: MyTheme.dark_grey),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: MyTheme.dark_grey, width: 0.5),
-                        borderRadius: const BorderRadius.all(
-                          const Radius.circular(10.0),
+                        hintText: 'Confirm Password',
+                        filled: true,
+                        fillColor: MyTheme.white,
+                        hintStyle:
+                            TextStyle(fontSize: 12.0, color: MyTheme.dark_grey),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: MyTheme.dark_grey, width: 0.5),
+                          borderRadius: const BorderRadius.all(
+                            const Radius.circular(10.0),
+                          ),
                         ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(color: MyTheme.light_grey, width: 0.5),
-                        borderRadius: const BorderRadius.all(
-                          const Radius.circular(10.0),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: MyTheme.light_grey, width: 0.5),
+                          borderRadius: const BorderRadius.all(
+                            const Radius.circular(10.0),
+                          ),
                         ),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
                       ),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
                     ),
                   ),
                 ),
-              ),
               if (google_recaptcha.$)
                 Container(
                   height: _isCaptchaShowing ? 350 : 50,
@@ -556,34 +560,63 @@ class _RegistrationState extends State<Registration> {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 5.0, left: 20, right: 20),
-                child: Container(
-                  height: 44,
-                  child: Btn.minWidthFixHeight(
-                    minWidth: MediaQuery.of(context).size.width,
-                    height: 50,
-                    color: MyTheme.primary_color,
-                    shape: RoundedRectangleBorder(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10.0))),
-                    child: Text(
-                      AppLocalizations.of(context)!.sign_up_ucf,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600),
+              if (_register_by == "email")
+                Padding(
+                  padding: const EdgeInsets.only(top: 5.0, left: 20, right: 20),
+                  child: Container(
+                    height: 44,
+                    child: Btn.minWidthFixHeight(
+                      minWidth: MediaQuery.of(context).size.width,
+                      height: 50,
+                      color: MyTheme.primary_color,
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10.0))),
+                      child: Text(
+                        'Sign Up with Email',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      onPressed: _isAgree!
+                          ? () {
+                              onPressSignUp(context);
+                            }
+                          : null,
                     ),
-                    onPressed: _isAgree!
-                        ? () {
-                            onPressSignUp(context);
-                          }
-                        : null,
                   ),
                 ),
-              ),
+
+              if (_register_by == "phone")
+                Padding(
+                  padding: const EdgeInsets.only(top: 5.0, left: 20, right: 20),
+                  child: Container(
+                    height: 44,
+                    child: Btn.minWidthFixHeight(
+                      minWidth: MediaQuery.of(context).size.width,
+                      height: 50,
+                      color: MyTheme.primary_color,
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10.0))),
+                      child: Text(
+                        'Sign Up with Phone',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      onPressed: _isAgree!
+                          ? () {
+                              onPressSignUp(context);
+                            }
+                          : null,
+                    ),
+                  ),
+                ),
               Padding(
-                padding: const EdgeInsets.only(top: 0.0, left: 20),
+                padding: const EdgeInsets.only(top: 10.0, left: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
