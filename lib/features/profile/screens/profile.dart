@@ -245,8 +245,9 @@ class _ProfileState extends State<Profile> {
 
     return CustomScrollView(
       controller: _mainScrollController,
-      physics:
-          const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+      physics: const BouncingScrollPhysics(
+        parent: AlwaysScrollableScrollPhysics(),
+      ),
       slivers: [
         SliverList(
           delegate: SliverChildListDelegate([
@@ -264,22 +265,23 @@ class _ProfileState extends State<Profile> {
                   ],
                 ),
                 Positioned(
-                    top: 45,
-                    right: 30,
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return MoreDetails();
-                        }));
-                      },
-                      child: Icon(
-                        Icons.settings_outlined,
-                        size: 30,
-                        color: Colors.white,
-                        weight: 10,
-                      ),
-                    )),
+                  top: 45,
+                  right: 30,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return MoreDetails();
+                      }));
+                    },
+                    child: Icon(
+                      Icons.settings_outlined,
+                      size: 30,
+                      color: Colors.white,
+                      weight: 10,
+                    ),
+                  ),
+                ),
                 Positioned(
                   top: 45,
                   left: 30,
