@@ -1,7 +1,11 @@
 import 'dart:convert';
 
+import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 import 'package:active_ecommerce_flutter/features/profile/expanded_tile_widget.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
+import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/edit_profile.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/land_screen.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/profile.dart';
@@ -60,6 +64,7 @@ class _MoreDetailsState extends State<MoreDetails> {
   @override
   void initState() {
     super.initState();
+    _buyerUserDataFuture = _getUserData();
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
     var savedData = dataBox.get('profile');
     if (savedData == null) {
@@ -83,6 +88,13 @@ class _MoreDetailsState extends State<MoreDetails> {
     // print('json: ${json.encode(profileData)}');
     // print(profileData!.toJson());
     calculatingProgress(profileData);
+  }
+
+  late Future<BuyerData> _buyerUserDataFuture;
+
+  Future<BuyerData> _getUserData() async {
+    AuthUser user = AuthRepository().currentUser!;
+    return FirestoreRepository().getBuyerData(userId: user.userId);
   }
 
   // @override
@@ -123,458 +135,488 @@ class _MoreDetailsState extends State<MoreDetails> {
         // drawer: const MainDrawer(),
         backgroundColor: Colors.transparent,
         appBar: buildCustomAppBar(context),
-        body: ListView(
-          physics: BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
-          children: [
-            // The top bar section
-            Container(
-              padding: EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                  border: Border.all(
-                    color: MyTheme.dark_grey,
-                  ),
-                  borderRadius: BorderRadius.circular(15)),
-              child: Row(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(3),
-                    child: Stack(
-                      children: [
-                        ClipRRect(
-                          child: CircleAvatar(
-                            backgroundColor: MyTheme.light_grey,
-                            radius: 40,
-                          ),
-                        ),
-                        Positioned(
-                          top: 0,
-                          left: 0,
-                          child: ClipRRect(
-                            child: CircleAvatar(
-                              backgroundImage: AssetImage("assets/girl.png"),
-                              radius: 40,
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          // top: 10,
-                          // left: 5,
-                          bottom: 0,
-                          left: 55,
-                          child: ClipRRect(
-                            child: CircleAvatar(
-                              radius: 12,
-                              backgroundColor: MyTheme.green,
-                              child: Icon(
-                                Icons.check,
-                                size: 17.0,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CircularPercentIndicator(
-                      center: new Text(
-                        "${(progress * 100).toInt()}%",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13.0,
-                            color: MyTheme.dark_grey),
-                      ),
-                      radius: 30.0,
-                      lineWidth: 10.0,
-                      percent: progress,
-                      backgroundColor: MyTheme.dark_grey,
-                      progressColor: MyTheme.green,
-                    ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('10 friends & neighbours',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 13.0,
-                                color: Colors.black)),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text('20 Groups',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 13.0,
-                                color: Colors.black)),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text('Society: Pitlali 577511',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 13.0,
-                                color: Colors.black)),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-
-            SizedBox(
-              height: 20,
-            ),
-
-            //KYC Section
-            ExpandedTileWidget(
-              controller: _kycController,
-              title: 'KYC',
-              children: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                child: Column(
+        body: FutureBuilder(
+            future: _buyerUserDataFuture,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                BuyerData buyerUserData = snapshot.data as BuyerData;
+                return ListView(
+                  physics: BouncingScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 20.0, vertical: 20),
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5, left: 7, right: 7),
+                    // The top bar section
+                    Container(
+                      padding: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            color: MyTheme.dark_grey,
+                          ),
+                          borderRadius: BorderRadius.circular(15)),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Expanded(
-                              child: Text(
-                            '1. Adhaar Card',
-                            style: TextStyle(
-                              fontSize: 13,
+                          Container(
+                            padding: EdgeInsets.all(3),
+                            child: Stack(
+                              children: [
+                                ClipRRect(
+                                  child: CircleAvatar(
+                                    backgroundColor: MyTheme.light_grey,
+                                    radius: 40,
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 0,
+                                  left: 0,
+                                  child: ClipOval(
+                                    child: CircleAvatar(
+                                      child: (buyerUserData.photoURL == null ||
+                                              buyerUserData.photoURL == '')
+                                          ? Image.asset(
+                                              "assets/default_profile2.png",
+                                              fit: BoxFit.cover,
+                                            )
+                                          : Image.network(
+                                              buyerUserData.photoURL!,
+                                              fit: BoxFit.cover,
+                                            ),
+                                      radius: 40,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  // top: 10,
+                                  // left: 5,
+                                  bottom: 0,
+                                  left: 55,
+                                  child: ClipRRect(
+                                    child: CircleAvatar(
+                                      radius: 12,
+                                      backgroundColor: MyTheme.green,
+                                      child: Icon(
+                                        Icons.check,
+                                        size: 17.0,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          )),
-                          (profileData!.kyc.aadhar.isNotEmpty)
-                              ? Expanded(
-                                  child: Text(
-                                  profileData!.kyc.aadhar,
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                  ),
-                                ))
-                              : Expanded(
-                                  child: Text(
-                                  'Not Added',
-                                  style: TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 13,
-                                  ),
-                                )),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CircularPercentIndicator(
+                              center: new Text(
+                                "${(progress * 100).toInt()}%",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13.0,
+                                    color: MyTheme.dark_grey),
+                              ),
+                              radius: 30.0,
+                              lineWidth: 10.0,
+                              percent: progress,
+                              backgroundColor: MyTheme.dark_grey,
+                              progressColor: MyTheme.green,
+                            ),
+                          ),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('10 friends & neighbours',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 13.0,
+                                        color: Colors.black)),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text('20 Groups',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 13.0,
+                                        color: Colors.black)),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text('Society: Pitlali 577511',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 13.0,
+                                        color: Colors.black)),
+                              ],
+                            ),
+                          )
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5, left: 7, right: 7),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                              child: Text(
-                            '2. PAN Card',
-                            style: TextStyle(
-                              fontSize: 13,
-                            ),
-                          )),
-                          (profileData!.kyc.pan.isNotEmpty)
-                              ? Expanded(
-                                  child: Text(
-                                  profileData!.kyc.pan,
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                  ),
-                                ))
-                              : Expanded(
-                                  child: Text(
-                                  'Not Added',
-                                  style: TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 13,
-                                  ),
-                                )),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5, left: 7, right: 7),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                              child: Text(
-                            '3. GST',
-                            style: TextStyle(
-                              fontSize: 13,
-                            ),
-                          )),
-                          (profileData!.kyc.gst.isNotEmpty)
-                              ? Expanded(
-                                  child: Text(
-                                  profileData!.kyc.gst,
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                  ),
-                                ))
-                              : Expanded(
-                                  child: Text(
-                                  'Not Added',
-                                  style: TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 13,
-                                  ),
-                                )),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
 
-            //Address Section
-            ExpandedTileWidget(
-              controller: _addressController,
-              title: 'District, Taluk, Hobli, Village',
-              children: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-                child: (profileData!.address.length > 0)
-                    ? Column(
-                        children: List.generate(
-                          profileData!.address.length,
-                          (index) {
-                            var item = profileData!.address[index];
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8.0, vertical: 6),
+                    SizedBox(
+                      height: 20,
+                    ),
+
+                    //KYC Section
+                    ExpandedTileWidget(
+                      controller: _kycController,
+                      title: 'KYC',
+                      children: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 15),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 5, left: 7, right: 7),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
-                                    child: Text(
-                                      '${index + 1}. ${item.district}',
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                      ),
+                                      child: Text(
+                                    '1. Adhaar Card',
+                                    style: TextStyle(
+                                      fontSize: 13,
                                     ),
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Expanded(
-                                    child: Text(item.taluk,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontSize: 13,
+                                  )),
+                                  (profileData!.kyc.aadhar.isNotEmpty)
+                                      ? Expanded(
+                                          child: Text(
+                                          profileData!.kyc.aadhar,
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                          ),
+                                        ))
+                                      : Expanded(
+                                          child: Text(
+                                          'Not Added',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                            fontSize: 13,
+                                          ),
                                         )),
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Expanded(
-                                    child: Text(item.hobli,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                        )),
-                                  ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Expanded(
-                                    child: Text(item.village,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                        )),
-                                  ),
-                                  // Expanded(child: Text(item.village)),
                                 ],
                               ),
-                            );
-                          },
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 5, left: 7, right: 7),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                      child: Text(
+                                    '2. PAN Card',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                    ),
+                                  )),
+                                  (profileData!.kyc.pan.isNotEmpty)
+                                      ? Expanded(
+                                          child: Text(
+                                          profileData!.kyc.pan,
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                          ),
+                                        ))
+                                      : Expanded(
+                                          child: Text(
+                                          'Not Added',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                            fontSize: 13,
+                                          ),
+                                        )),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 5, left: 7, right: 7),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                      child: Text(
+                                    '3. GST',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                    ),
+                                  )),
+                                  (profileData!.kyc.gst.isNotEmpty)
+                                      ? Expanded(
+                                          child: Text(
+                                          profileData!.kyc.gst,
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                          ),
+                                        ))
+                                      : Expanded(
+                                          child: Text(
+                                          'Not Added',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                            fontSize: 13,
+                                          ),
+                                        )),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                      )
-                    : Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text('No Address Added',
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+
+                    //Address Section
+                    ExpandedTileWidget(
+                      controller: _addressController,
+                      title: 'District, Taluk, Hobli, Village',
+                      children: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 8),
+                        child: (profileData!.address.length > 0)
+                            ? Column(
+                                children: List.generate(
+                                  profileData!.address.length,
+                                  (index) {
+                                    var item = profileData!.address[index];
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0, vertical: 6),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              '${index + 1}. ${item.district}',
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Expanded(
+                                            child: Text(item.taluk,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                )),
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Expanded(
+                                            child: Text(item.hobli,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                )),
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Expanded(
+                                            child: Text(item.village,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                )),
+                                          ),
+                                          // Expanded(child: Text(item.village)),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                              )
+                            : Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text('No Address Added',
+                                        style: TextStyle(
+                                            fontSize: 13, color: Colors.red)),
+                                  ),
+                                ],
+                              ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+
+                    // ExpandedTileWidget(
+                    //   controller: _controller3,
+                    //   title: 'Village, Land Details',
+                    //   children: Padding(
+                    //     padding:
+                    //         const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                    //     child: Column(
+                    //       children: [
+                    //         ExpandedTileWidget(
+                    //           controller: _controller35,
+                    //           title: 'Embedded',
+                    //           children: Column(
+                    //             children: [
+                    //               Text('Text inside embedded'),
+                    //             ],
+                    //           ),
+                    //         ),
+                    //         Row(
+                    //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //           children: [
+                    //             Expanded(child: Text('1. Adhaar Card')),
+                    //             Expanded(child: Text('7848749257')),
+                    //             CircleAvatar(
+                    //               radius: 12,
+                    //               backgroundColor: MyTheme.green,
+                    //               child: Icon(
+                    //                 Icons.check,
+                    //                 size: 15.0,
+                    //                 color: Colors.white,
+                    //               ),
+                    //             ),
+                    //           ],
+                    //         ),
+                    //         SizedBox(
+                    //           height: 3,
+                    //         ),
+                    //         Row(
+                    //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //           children: [
+                    //             Expanded(child: Text('2. Pan Card')),
+                    //             Expanded(child: Text('DLFJF8248D')),
+                    //             Icon(
+                    //               Icons.upload_file_outlined,
+                    //               size: 23.0,
+                    //               color: MyTheme.green,
+                    //             ),
+                    //           ],
+                    //         ),
+                    //         Row(
+                    //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //           children: [
+                    //             Expanded(child: Text('3. GST Details')),
+                    //             Expanded(child: Text('HTFJF8245544148D')),
+                    //             Icon(
+                    //               Icons.upload_file_outlined,
+                    //               size: 23.0,
+                    //               color: MyTheme.green,
+                    //             ),
+                    //           ],
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
+                    // SizedBox(
+                    //   height: 15,
+                    // ),
+
+                    //Land Section
+                    InkWell(
+                      borderRadius: BorderRadius.circular(12.0),
+                      onTap: () {
+                        // Handle tap event here
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return LandScreen();
+                        }));
+                      },
+                      child: IgnorePointer(
+                        ignoring: true,
+                        child: Ink(
+                          child: ExpandedTileWidget(
+                              controller: new ExpandedTileController(),
+                              title:
+                                  'Land Details (Village, Syno, Plot size..)',
+                              children: SizedBox.shrink()),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+
+                    //Crops Section
+                    ExpandedTileWidget(
+                      controller: _cropsController,
+                      title: 'Crops Grown and Planned',
+                      children: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 8),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                children: [
+                                  Text('No Crops Added',
+                                      style: TextStyle(
+                                          fontSize: 13, color: Colors.red)),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text('Add them by going to Land Details',
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          color: Colors.grey[600])),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+
+                    //Machines Section
+                    ExpandedTileWidget(
+                      controller: _machinesController,
+                      title: 'Tractor, JCB, Tiller, Rotovotator',
+                      children: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          children: [
+                            Text('No Machines Added',
                                 style:
                                     TextStyle(fontSize: 13, color: Colors.red)),
-                          ),
-                        ],
-                      ),
-              ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-
-            // ExpandedTileWidget(
-            //   controller: _controller3,
-            //   title: 'Village, Land Details',
-            //   children: Padding(
-            //     padding:
-            //         const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-            //     child: Column(
-            //       children: [
-            //         ExpandedTileWidget(
-            //           controller: _controller35,
-            //           title: 'Embedded',
-            //           children: Column(
-            //             children: [
-            //               Text('Text inside embedded'),
-            //             ],
-            //           ),
-            //         ),
-            //         Row(
-            //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //           children: [
-            //             Expanded(child: Text('1. Adhaar Card')),
-            //             Expanded(child: Text('7848749257')),
-            //             CircleAvatar(
-            //               radius: 12,
-            //               backgroundColor: MyTheme.green,
-            //               child: Icon(
-            //                 Icons.check,
-            //                 size: 15.0,
-            //                 color: Colors.white,
-            //               ),
-            //             ),
-            //           ],
-            //         ),
-            //         SizedBox(
-            //           height: 3,
-            //         ),
-            //         Row(
-            //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //           children: [
-            //             Expanded(child: Text('2. Pan Card')),
-            //             Expanded(child: Text('DLFJF8248D')),
-            //             Icon(
-            //               Icons.upload_file_outlined,
-            //               size: 23.0,
-            //               color: MyTheme.green,
-            //             ),
-            //           ],
-            //         ),
-            //         Row(
-            //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //           children: [
-            //             Expanded(child: Text('3. GST Details')),
-            //             Expanded(child: Text('HTFJF8245544148D')),
-            //             Icon(
-            //               Icons.upload_file_outlined,
-            //               size: 23.0,
-            //               color: MyTheme.green,
-            //             ),
-            //           ],
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ),
-            // SizedBox(
-            //   height: 15,
-            // ),
-
-            //Land Section
-            InkWell(
-              borderRadius: BorderRadius.circular(12.0),
-              onTap: () {
-                // Handle tap event here
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return LandScreen();
-                }));
-              },
-              child: IgnorePointer(
-                ignoring: true,
-                child: Ink(
-                  child: ExpandedTileWidget(
-                      controller: new ExpandedTileController(),
-                      title: 'Land Details (Village, Syno, Plot size..)',
-                      children: SizedBox.shrink()),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-
-            //Crops Section
-            ExpandedTileWidget(
-              controller: _cropsController,
-              title: 'Crops Grown and Planned',
-              children: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        children: [
-                          Text('No Crops Added',
-                              style:
-                                  TextStyle(fontSize: 13, color: Colors.red)),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text('Add them by going to Land Details',
-                              style: TextStyle(
-                                  fontSize: 13, color: Colors.grey[600])),
-                        ],
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text('Add them by going to Land Details',
+                                style: TextStyle(
+                                    fontSize: 13, color: Colors.grey[600])),
+                          ],
+                        ),
                       ),
                     ),
                   ],
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-
-            //Machines Section
-            ExpandedTileWidget(
-              controller: _machinesController,
-              title: 'Tractor, JCB, Tiller, Rotovotator',
-              children: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  children: [
-                    Text('No Machines Added',
-                        style: TextStyle(fontSize: 13, color: Colors.red)),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text('Add them by going to Land Details',
-                        style:
-                            TextStyle(fontSize: 13, color: Colors.grey[600])),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+                );
+              }
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }),
       ),
     );
   }

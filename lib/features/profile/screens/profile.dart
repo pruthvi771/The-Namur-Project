@@ -279,10 +279,10 @@ class _ProfileState extends State<Profile> {
                               //   "assets/girl1.png",
                               //   fit: BoxFit.cover,
                               // ),
-                              child: !(buyerUserData.photoURL == null ||
+                              child: (buyerUserData.photoURL == null ||
                                       buyerUserData.photoURL == '')
                                   ? Image.asset(
-                                      "assets/girl1.png",
+                                      "assets/default_profile2.png",
                                       fit: BoxFit.cover,
                                     )
                                   : Image.network(
