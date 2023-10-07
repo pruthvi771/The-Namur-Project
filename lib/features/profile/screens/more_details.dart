@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:active_ecommerce_flutter/features/profile/expanded_tile_widget.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/edit_profile.dart';
@@ -79,6 +81,8 @@ class _MoreDetailsState extends State<MoreDetails> {
     //   calculatingProgress(profileData);
     // });
     profileData = dataBox.get('profile');
+    // print('json: ${json.encode(profileData)}');
+    // print(profileData!.toJson());
     calculatingProgress(profileData);
   }
 

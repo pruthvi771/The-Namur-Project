@@ -47,7 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     _initPackageInfo();
     getSharedValueHelperData().then((value) {
-      Future.delayed(Duration(seconds: 3)).then((value) {
+      Future.delayed(Duration(milliseconds: 1200)).then((value) {
         Provider.of<LocaleProvider>(context, listen: false)
             .setLocale(app_mobile_language.$!);
 

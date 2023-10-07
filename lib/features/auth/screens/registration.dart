@@ -51,7 +51,8 @@ class _RegistrationState extends State<Registration> {
   bool? _isAgree = false;
   bool _isCaptchaShowing = false;
   String googleRecaptchaKey = "";
-
+  bool _passwordVisible = false;
+  bool _confirmPasswordVisible = false;
   //controllers
   TextEditingController _nameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
@@ -295,14 +296,11 @@ class _RegistrationState extends State<Registration> {
                           autoValidateMode: AutovalidateMode.disabled,
                           selectorTextStyle:
                               TextStyle(color: MyTheme.font_grey),
-                          // initialValue: PhoneNumber(
-                          //     isoCode: countries_code[0].toString()),
+
                           textFieldController: _phoneNumberController,
                           formatInput: false, // Disable default formatting
                           keyboardType: TextInputType.number,
-                          /* formatInput: true,
-                          keyboardType: TextInputType.numberWithOptions(
-                              signed: true, decimal: true),*/
+
                           inputDecoration:
                               InputDecorations.buildInputDecoration_phone(
                                   hint_text: "Phone Number"),
@@ -367,11 +365,28 @@ class _RegistrationState extends State<Registration> {
                       child: TextField(
                         controller: _passwordController,
                         autofocus: false,
-                        obscureText: true,
+                        obscureText: !_passwordVisible,
+                        //add a button to view password
+
                         enableSuggestions: false,
                         autocorrect: false,
-                        decoration: InputDecorations.buildInputDecoration_1(
-                            hint_text: "Enter your password"),
+                        decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _passwordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Colors.grey,
+                            ),
+                            onPressed: () {
+                              setState(
+                                () {
+                                  _passwordVisible = !_passwordVisible;
+                                },
+                              );
+                            },
+                          ),
+                        ),
                       ),
                     ),
                     Text(
@@ -403,11 +418,27 @@ class _RegistrationState extends State<Registration> {
                   child: TextField(
                     controller: _passwordConfirmController,
                     autofocus: false,
-                    obscureText: true,
+                    obscureText: !_confirmPasswordVisible,
                     enableSuggestions: false,
                     autocorrect: false,
-                    decoration: InputDecorations.buildInputDecoration_1(
-                        hint_text: "Enter your password"),
+                    decoration: InputDecoration(
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _confirmPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () {
+                          setState(
+                            () {
+                              _confirmPasswordVisible =
+                                  !_confirmPasswordVisible;
+                            },
+                          );
+                        },
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -551,10 +582,10 @@ class _RegistrationState extends State<Registration> {
                             fontWeight: FontWeight.w600),
                       ),
                       onTap: () {
-                        Navigator.push(context,
+                        Navigator.pushAndRemoveUntil(context,
                             MaterialPageRoute(builder: (context) {
                           return Login();
-                        }));
+                        }), (route) => false);
                       },
                     ),
                   ],

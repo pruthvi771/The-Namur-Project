@@ -62,6 +62,7 @@ class _LoginState extends State<Login> {
         overlays: [SystemUiOverlay.bottom]);
     super.initState();
     fetch_country();
+    
   }
 
   fetch_country() async {
@@ -211,10 +212,11 @@ class _LoginState extends State<Login> {
               Text(
                 "ನಮ್ಮೂರ್",
                 style: TextStyle(
-                    color: MyTheme.primary_color,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 15,
-                    fontFamily: 'Poppins'),
+                  color: MyTheme.primary_color,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 15,
+                  fontFamily: 'Poppins',
+                ),
               ),
               Text(
                 "Welcome to namur",
