@@ -1,5 +1,6 @@
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/custom/input_decorations.dart';
+import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/profile/enum.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_event.dart';
@@ -17,6 +18,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:hive/hive.dart';
+import 'package:toast/toast.dart';
 import '../../../custom/device_info.dart';
 
 import 'package:flutter_expanded_tile/flutter_expanded_tile.dart';
@@ -106,6 +108,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void _addLandToHive(area, syno, village) async {
+    if (area.isEmpty) {
+      ToastComponent.showDialog('Enter Area name',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+    if (syno.isEmpty) {
+      ToastComponent.showDialog('Enter Sy No',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    if (village.isEmpty) {
+      ToastComponent.showDialog('Enter Village name',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
 
     var savedData = dataBox.get('profile');
@@ -130,6 +149,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       await dataBox.put(newData.id, newData);
       print('object updated');
     }
+
+    _areaController.clear();
+    _synoController.clear();
+    _village2Controller.clear();
 
     BlocProvider.of<HiveBloc>(context).add(
       HiveDataRequested(),
@@ -163,6 +186,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void _saveKycToHive(KycSection kycSection, value) async {
+    if (kycSection == KycSection.aadhar && value.length != 12) {
+      ToastComponent.showDialog('Enter a valid Aadhar Number',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    if (kycSection == KycSection.pan && value.length != 12) {
+      ToastComponent.showDialog('Enter a valid PAN Card Number',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    if (kycSection == KycSection.gst && value.length != 15) {
+      ToastComponent.showDialog('Enter a valid GST Number',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
 
     var savedData = dataBox.get('profile');
@@ -173,6 +214,32 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             kycSection == KycSection.aadhar ? value : savedData.kyc.aadhar
         ..pan = kycSection == KycSection.pan ? value : savedData.kyc.pan
         ..gst = kycSection == KycSection.gst ? value : savedData.kyc.gst;
+
+      var newData = ProfileData()
+        ..id = savedData.id
+        ..updated = savedData.updated
+        ..address = savedData.address
+        ..kyc = kyc
+        ..land = savedData.land;
+
+      await dataBox.put(newData.id, newData);
+    }
+
+    BlocProvider.of<HiveBloc>(context).add(
+      HiveDataRequested(),
+    );
+  }
+
+  void _deleteKycFromHive(KycSection kycSection) async {
+    var dataBox = Hive.box<ProfileData>('profileDataBox3');
+
+    var savedData = dataBox.get('profile');
+
+    if (savedData != null) {
+      var kyc = KYC()
+        ..aadhar = kycSection == KycSection.aadhar ? '' : savedData.kyc.aadhar
+        ..pan = kycSection == KycSection.pan ? '' : savedData.kyc.pan
+        ..gst = kycSection == KycSection.gst ? '' : savedData.kyc.gst;
 
       var newData = ProfileData()
         ..id = savedData.id
@@ -273,7 +340,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               // Expanded(child: Text('PAN')),
                               InkWell(
                                 onTap: () {
-                                  _saveKycToHive(KycSection.aadhar, '');
+                                  _deleteKycFromHive(KycSection.aadhar);
                                 },
                                 child: CircleAvatar(
                                   radius: 12,
@@ -309,7 +376,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               // Expanded(child: Text('PAN')),
                               InkWell(
                                 onTap: () {
-                                  _saveKycToHive(KycSection.pan, '');
+                                  _deleteKycFromHive(KycSection.pan);
                                 },
                                 child: CircleAvatar(
                                   radius: 12,
@@ -345,7 +412,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               // Expanded(child: Text('PAN')),
                               InkWell(
                                 onTap: () {
-                                  _saveKycToHive(KycSection.gst, '');
+                                  _deleteKycFromHive(KycSection.gst);
                                 },
                                 child: CircleAvatar(
                                   radius: 12,
@@ -377,7 +444,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 onPressed: () {
                                   _saveKycToHive(KycSection.aadhar,
                                       _aadharController.text);
-                                  _aadharController.clear();
                                 },
                               ),
                             ],
@@ -397,7 +463,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 onPressed: () {
                                   _saveKycToHive(
                                       KycSection.pan, _panController.text);
-                                  _panController.clear();
                                 },
                               ),
                             ],
@@ -417,7 +482,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 onPressed: () {
                                   _saveKycToHive(
                                       KycSection.gst, _gstController.text);
-                                  _gstController.clear();
                                 },
                               ),
                             ],
@@ -621,9 +685,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               _synoController.text,
                               _village2Controller.text,
                             );
-                            _areaController.clear();
-                            _synoController.clear();
-                            _village2Controller.clear();
                           },
                         ),
                       ],

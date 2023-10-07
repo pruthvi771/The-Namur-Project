@@ -191,8 +191,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                   child: CurrentWeatherWidget(
                     currentTemperature:
                         state.responseData.currentData.tempC.toInt().toString(),
-                    // currentDesc: state.responseData.currentData.condition.text,
-                    currentDesc: 'Sunny patchy weather',
+                    currentDesc: state.responseData.currentData.condition.text,
+                    // currentDesc: 'Sunny patchy weather',
                     currentHumidity:
                         state.responseData.currentData.humidity.toString(),
                     currentWind:
@@ -352,7 +352,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 35, top: 10, bottom: 10),
+            padding: const EdgeInsets.only(left: 25, top: 10, bottom: 10),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -452,7 +452,7 @@ class CurrentWeatherWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 20),
+                      padding: const EdgeInsets.only(left: 20, right: 10),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.baseline,
                         textBaseline: TextBaseline.alphabetic,

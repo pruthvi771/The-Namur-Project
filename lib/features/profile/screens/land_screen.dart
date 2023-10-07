@@ -233,10 +233,18 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
                                 physics: BouncingScrollPhysics(),
                                 scrollDirection: Axis.horizontal,
                                 children: [
-                                  CropWidget(image: "assets/onion.png"),
-                                  CropWidget(image: "assets/onion.png"),
-                                  CropWidget(image: "assets/onion.png"),
-                                  CropWidget(image: "assets/onion.png"),
+                                  CropWidget(
+                                      image:
+                                          "assets/ikons/fruitsAndVeg/mushroom.png"),
+                                  CropWidget(
+                                      image:
+                                          "assets/ikons/fruitsAndVeg/banana.png"),
+                                  CropWidget(
+                                      image:
+                                          "assets/ikons/fruitsAndVeg/capsicum.png"),
+                                  CropWidget(
+                                      image:
+                                          "assets/ikons/fruitsAndVeg/carrot.png"),
                                 ],
                               ),
                             ),
@@ -246,7 +254,7 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
                           ),
                           LandExpandedTile(
                             controller2: _landController,
-                            title: 'Crop Detail',
+                            title: 'Machines',
                             content: Container(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 12),
@@ -255,10 +263,12 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
                                 physics: BouncingScrollPhysics(),
                                 scrollDirection: Axis.horizontal,
                                 children: [
-                                  CropWidget(image: "assets/onion.png"),
-                                  CropWidget(image: "assets/onion.png"),
-                                  CropWidget(image: "assets/onion.png"),
-                                  CropWidget(image: "assets/onion.png"),
+                                  CropWidget(
+                                      image:
+                                          "assets/ikons/manAndMcs/loader.png"),
+                                  CropWidget(
+                                      image:
+                                          "assets/ikons/manAndMcs/tractor.png"),
                                 ],
                               ),
                             ),
@@ -401,8 +411,16 @@ class CropWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(6),
+      padding: const EdgeInsets.all(5),
       child: Container(
+        padding: const EdgeInsets.all(6),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: Colors.black12,
+            width: 3,
+          ),
+        ),
         child: AspectRatio(
           aspectRatio: 1 / 1,
           child: Image.asset(

@@ -121,6 +121,10 @@ flutter:
   uses-material-design: true
   generate: true
   assets:
+    - assets/ikons/
+    - assets/ikons/animals/
+    - assets/ikons/fruitsAndVeg/
+    - assets/ikons/manAndMcs/
     - assets/
     - assets/htmls/
     - dummy_assets/

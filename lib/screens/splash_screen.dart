@@ -99,7 +99,9 @@ class _SplashScreenState extends State<SplashScreen> {
               child: Hero(
                 tag: "backgroundImageInSplash",
                 child: Container(
-                  child: Image.asset("assets/splash.png"),
+                  height: MediaQuery.of(context).size.height / 4.5,
+                  // child: Image.asset("assets/splash.png"),
+                  child: Image.asset("assets/pp.png"),
                 ),
               ),
               radius: 300.11,

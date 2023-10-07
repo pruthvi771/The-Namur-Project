@@ -183,7 +183,7 @@ class _TitleBarState extends State<TitleBar> {
                           '${state.responseData.currentData.tempC.toInt().toString()} °C',
                       description:
                           state.responseData.currentData.condition.text,
-                      location: '@Paris',
+                      location: '@Pitlali',
                     );
                   }
                   if (state is WeatherSectionDataNotReceived) {
