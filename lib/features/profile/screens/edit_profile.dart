@@ -36,10 +36,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   var _textController = TextEditingController();
   String hintText = "Email ID";
 
-  TextEditingController _districtController = TextEditingController();
-  TextEditingController _talukController = TextEditingController();
-  TextEditingController _hobliController = TextEditingController();
-  TextEditingController _villageController = TextEditingController();
+  // TextEditingController _districtController = TextEditingController();
+  // TextEditingController _talukController = TextEditingController();
+  // TextEditingController _hobliController = TextEditingController();
+  // TextEditingController _villageController = TextEditingController();
 
   TextEditingController _village2Controller = TextEditingController();
   TextEditingController _synoController = TextEditingController();
@@ -48,6 +48,59 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController _aadharController = TextEditingController();
   TextEditingController _panController = TextEditingController();
   TextEditingController _gstController = TextEditingController();
+
+  String districtDropdownValue = '';
+  String talukDropdownValue = '';
+  String hobliDropdownValue = '';
+  String villageDropdownValue = '';
+
+  var districtList = [
+    '',
+    'District 1',
+    'District 2',
+    'District 3',
+    'District 4',
+    'District 5',
+    'District 6',
+    'District 7',
+    'District 8',
+  ];
+
+  var talukList = [
+    '',
+    'Taluk A',
+    'Taluk B',
+    'Taluk C',
+    'Taluk D',
+    'Taluk E',
+    'Taluk F',
+    'Taluk G',
+    'Taluk H',
+  ];
+
+  var hobliList = [
+    '',
+    'Hobli X',
+    'Hobli Y',
+    'Hobli Z',
+    'Hobli P',
+    'Hobli Q',
+    'Hobli R',
+    'Hobli S',
+    'Hobli T',
+  ];
+
+  var villageList = [
+    '',
+    'Village 1',
+    'Village 2',
+    'Village 3',
+    'Village 4',
+    'Village 5',
+    'Village 6',
+    'Village 7',
+    'Village 8',
+  ];
 
   void _viewDataFromHive() {
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
@@ -76,7 +129,59 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     print('Hive cleared');
   }
 
+  // void _addAddressToHive(district, taluk, hobli, village) async {
+  //   var dataBox = Hive.box<ProfileData>('profileDataBox3');
+
+  //   var savedData = dataBox.get('profile');
+
+  //   var address = Address()
+  //     ..district = district
+  //     ..taluk = taluk
+  //     ..hobli = hobli
+  //     ..village = village;
+
+  //   if (savedData != null) {
+  //     print('object detected');
+  //     print(savedData.id);
+  //     var newData = ProfileData()
+  //       ..id = savedData.id
+  //       ..updated = savedData.updated
+  //       ..address = [...savedData.address, address]
+  //       ..kyc = savedData.kyc
+  //       ..land = savedData.land;
+
+  //     await dataBox.put(newData.id, newData);
+  //     print('object updated');
+  //   }
+
+  //   BlocProvider.of<HiveBloc>(context).add(
+  //     HiveDataRequested(),
+  //     // HiveAppendAddress(context: context),
+  //   );
+  // }
+
   void _addAddressToHive(district, taluk, hobli, village) async {
+    if (district.isEmpty) {
+      ToastComponent.showDialog('Select District',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+    if (taluk.isEmpty) {
+      ToastComponent.showDialog('Select Taluk',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+    if (hobli.isEmpty) {
+      ToastComponent.showDialog('Select Hobli',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+    if (village.isEmpty) {
+      ToastComponent.showDialog('Select Village',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
 
     var savedData = dataBox.get('profile');
@@ -108,7 +213,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void _addLandToHive(area, syno, village) async {
-    if (area.isEmpty) {
+    if (area == 0) {
       ToastComponent.showDialog('Enter Area name',
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
@@ -501,16 +606,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
 
                     HeadingTextWidget('Address Details'),
-                    // Column(
-                    //   children: state.profileData.address.map((item) {
-                    //     return Row(children: [
-                    //       Text(item.district),
-                    //       Text(item.taluk),
-                    //       Text(item.hobli),
-                    //       Text(item.village),
-                    //     ]);
-                    //   }).toList(),
-                    // ),
                     Column(
                       children: List.generate(
                         state.profileData.address.length,
@@ -561,51 +656,61 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     SizedBox(
                       height: 10,
                     ),
-                    TextFieldWidget(
-                        'District', _districtController, 'Enter District'),
-                    TextFieldWidget('Taluk', _talukController, 'Enter Taluk'),
-                    TextFieldWidget('Hobli', _hobliController, 'Enter Hobli'),
-                    TextFieldWidget(
-                        'Village', _villageController, 'Enter Village'),
+                    // TextFieldWidget(
+                    //     'District', _districtController, 'Enter District'),
+                    DropdownButtonWidget(
+                        'District', districtList, districtDropdownValue,
+                        (value) {
+                      setState(() {
+                        districtDropdownValue = value;
+                      });
+                    }),
+                    DropdownButtonWidget('Taluk', talukList, talukDropdownValue,
+                        (value) {
+                      setState(() {
+                        talukDropdownValue = value;
+                      });
+                    }),
+                    DropdownButtonWidget('Hobli', hobliList, hobliDropdownValue,
+                        (value) {
+                      setState(() {
+                        hobliDropdownValue = value;
+                      });
+                    }),
+                    DropdownButtonWidget(
+                        'Village', villageList, villageDropdownValue, (value) {
+                      setState(() {
+                        villageDropdownValue = value;
+                      });
+                    }),
                     Row(
                       children: [
                         Expanded(child: SizedBox()),
                         TextButton(
                           child: Text('Add Record'),
                           onPressed: () {
-                            print('District: ${_districtController.text}');
-                            print('taluk: ${_talukController.text}');
-                            print('hobli: ${_hobliController.text}');
-                            print('village: ${_villageController.text}');
-
+                            // print('District: ${_districtController.text}');
+                            // print('taluk: ${_talukController.text}');
+                            // print('hobli: ${_hobliController.text}');
+                            // print('village: ${_villageController.text}');
+                            // _addAddressToHive(
+                            //     _districtController.text,
+                            //     _talukController.text,
+                            //     _hobliController.text,
+                            //     _villageController.text);
+                            // _districtController.clear();
+                            // _talukController.clear();
+                            // _hobliController.clear();
+                            // _villageController.clear();
                             _addAddressToHive(
-                                _districtController.text,
-                                _talukController.text,
-                                _hobliController.text,
-                                _villageController.text);
-
-                            _districtController.clear();
-                            _talukController.clear();
-                            _hobliController.clear();
-                            _villageController.clear();
+                                districtDropdownValue,
+                                talukDropdownValue,
+                                hobliDropdownValue,
+                                villageDropdownValue);
                           },
                         ),
                       ],
                     ),
-                    // Row(
-                    //   children: [
-                    //     Expanded(child: SizedBox()),
-                    //     TextButton(
-                    //         onPressed: _viewDataFromHive,
-                    //         child: Text('View Record')),
-                    //   ],
-                    // ),
-                    // Row(
-                    //   children: [
-                    //     Expanded(child: SizedBox()),
-                    //     TextButton(onPressed: _clearHive, child: Text('Clear')),
-                    //   ],
-                    // ),
 
                     SizedBox(
                       height: 8,
@@ -711,6 +816,62 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Column DropdownButtonWidget(String title, List<String> itemList,
+      String dropdownValue, Function(String) onChanged) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 4, bottom: 5),
+          child: Text(
+            title,
+            style: TextStyle(
+                // color: MyTheme.accent_color,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                letterSpacing: .5,
+                fontFamily: 'Poppins'),
+          ),
+        ),
+        Container(
+          height: 40,
+          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: Colors.grey, // You can customize the border color here
+            ),
+          ),
+          child: DropdownButton<String>(
+            isExpanded: true,
+            value: dropdownValue,
+            icon: Icon(Icons.arrow_drop_down),
+            iconSize: 24,
+            elevation: 16,
+            underline: SizedBox(), // Remove the underline
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.black, // You can customize the text color here
+            ),
+            onChanged: (String? value) {
+              // This is called when the user selects an item.
+              onChanged(value!);
+            },
+            items: itemList.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        )
+      ],
     );
   }
 

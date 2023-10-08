@@ -74,11 +74,11 @@ class _MainDrawerState extends State<MainDrawer> {
               children: <Widget>[
                 user != null
                     ? ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            "${avatar_original.$}",
-                          ),
-                        ),
+                        // leading: CircleAvatar(
+                        //   backgroundImage: NetworkImage(
+                        //     "${avatar_original.$}",
+                        //   ),
+                        // ),
                         title: Text(
                           "${user_name.$}",
                           style: TextStyle(
