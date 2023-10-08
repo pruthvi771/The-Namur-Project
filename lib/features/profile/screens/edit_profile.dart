@@ -100,8 +100,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void _addLandToHive(area, syno, village) async {
-    double areaDouble = double.parse(area);
-
     if (village.isEmpty) {
       ToastComponent.showDialog('Enter Village name',
           gravity: Toast.center, duration: Toast.lengthLong);
@@ -116,6 +114,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     if (area.isEmpty) {
       ToastComponent.showDialog('Enter Area name',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    double areaDouble = 0.0;
+    try {
+      areaDouble = double.parse(area);
+    } catch (e) {
+      ToastComponent.showDialog('Please Enter Valid Area',
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
