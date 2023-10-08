@@ -1,13 +1,14 @@
 import 'dart:async';
-
-import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
+import 'dart:typed_data';
 import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class FirestoreRepository {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  FirebaseStorage _storage = FirebaseStorage.instance;
 
   Future<void> addUserToBuyerSellerCollections({
     required String userId,
@@ -58,6 +59,34 @@ class FirestoreRepository {
           .doc(userId)
           .get();
       return BuyerData.fromJson(userSnapshot.data() as Map<String, dynamic>);
+    } catch (_) {
+      print(_);
+      throw Exception('Something went wrong. Please try again.');
+    }
+  }
+
+  Future<String> uploadImagetoFirebase(String childName, Uint8List file) async {
+    Reference ref = _storage.ref().child(childName);
+    UploadTask uploadTask = ref.putData(file);
+
+    TaskSnapshot taskSnapshot = await uploadTask;
+    String downloadURL = await taskSnapshot.ref.getDownloadURL();
+    return downloadURL;
+  }
+
+  Future<void> saveProfileImage({
+    required Uint8List file,
+  }) async {
+    var user = FirebaseAuth.instance.currentUser!;
+    try {
+      var photoURL =
+          await uploadImagetoFirebase('${user.uid}/profileImage', file);
+      await _firestore.collection('buyer').doc(user.uid).update({
+        'photoURL': photoURL,
+      });
+      await _firestore.collection('seller').doc(user.uid).update({
+        'photoURL': photoURL,
+      });
     } catch (_) {
       print(_);
       throw Exception('Something went wrong. Please try again.');

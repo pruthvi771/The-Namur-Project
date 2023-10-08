@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:active_ecommerce_flutter/custom/box_decorations.dart';
 import 'package:active_ecommerce_flutter/custom/btn.dart';
@@ -11,6 +12,7 @@ import 'package:active_ecommerce_flutter/features/profile/enum.dart';
 import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/edit_profile.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/more_details.dart';
+import 'package:active_ecommerce_flutter/features/profile/utils.dart';
 import 'package:active_ecommerce_flutter/helpers/auth_helper.dart';
 import 'package:active_ecommerce_flutter/presenter/home_presenter.dart';
 import 'package:active_ecommerce_flutter/screens/auction_products.dart';
@@ -46,6 +48,7 @@ import 'package:active_ecommerce_flutter/screens/refund_request.dart';
 import 'package:active_ecommerce_flutter/repositories/profile_repository.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:toast/toast.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -116,20 +119,32 @@ class _ProfileState extends State<Profile> {
   // fetchCounters() async {
   //   var profileCountersResponse =
   //       await ProfileRepository().getProfileCountersResponse();
-
   //   _cartCounter = profileCountersResponse.cart_item_count;
   //   _wishlistCounter = profileCountersResponse.wishlist_item_count;
   //   _orderCounter = profileCountersResponse.order_count;
-
   //   _cartCounterString =
   //       counterText(_cartCounter.toString(), default_length: 2);
   //   _wishlistCounterString =
   //       counterText(_wishlistCounter.toString(), default_length: 2);
   //   _orderCounterString =
   //       counterText(_orderCounter.toString(), default_length: 2);
-
   //   setState(() {});
   // }
+
+  Uint8List? _image;
+
+  selectImage() async {
+    Uint8List img = await pickImage(ImageSource.gallery);
+    print('image uploaded');
+    _image = img;
+  }
+
+  saveProfileImage() async {
+    await selectImage();
+    await FirestoreRepository().saveProfileImage(file: _image!);
+    print('stored on firebase');
+    _buyerUserDataFuture = _getUserData();
+  }
 
   // deleteAccountReq() async {
   //   loading();
@@ -281,9 +296,12 @@ class _ProfileState extends State<Profile> {
                               // ),
                               child: (buyerUserData.photoURL == null ||
                                       buyerUserData.photoURL == '')
-                                  ? Image.asset(
-                                      "assets/default_profile2.png",
-                                      fit: BoxFit.cover,
+                                  ? InkWell(
+                                      onLongPress: saveProfileImage,
+                                      child: Image.asset(
+                                        "assets/default_profile2.png",
+                                        fit: BoxFit.cover,
+                                      ),
                                     )
                                   : Image.network(
                                       buyerUserData.photoURL!,
