@@ -893,101 +893,128 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
                     HeadingTextWidget('Crops Grown and Planned'),
 
-                    DropdownButtonWidget(
-                        'Land',
-                        List.generate(
-                          state.profileData.land.length + 1,
-                          (index) {
-                            var item = [
-                              Land()
-                                ..village = ''
-                                ..area = 0
-                                ..syno = '',
-                              ...state.profileData.land
-                            ][index];
-                            return DropdownMenuItem(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                    (state.profileData.land.length == 0)
+                        ? Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                'Add Land First',
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  letterSpacing: .5,
+                                  fontFamily: 'Poppins',
+                                ),
+                              ),
+                            ),
+                          )
+                        : Column(
+                            children: [
+                              DropdownButtonWidget(
+                                  'Land',
+                                  List.generate(
+                                    state.profileData.land.length + 1,
+                                    (index) {
+                                      var item = [
+                                        Land()
+                                          ..village = ''
+                                          ..area = 0
+                                          ..syno = '',
+                                        ...state.profileData.land
+                                      ][index];
+                                      return DropdownMenuItem(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(child: Text(item.village)),
+                                            Expanded(child: Text(item.syno)),
+                                            Expanded(
+                                                child:
+                                                    Text(item.area.toString())),
+                                            // Expanded(child: Text(item.village)),
+                                          ],
+                                        ),
+                                        value: item.syno,
+                                      );
+                                    },
+                                  ),
+                                  landDropdownValue, (value) {
+                                setState(() {
+                                  landDropdownValue = value;
+                                  setState(() {});
+                                });
+                              }),
+                              if (landDropdownValue.isNotEmpty)
+                                Wrap(
+                                  children: List.generate(
+                                    getCropsForSyno(state.profileData,
+                                            landDropdownValue)
+                                        .length,
+                                    (index) {
+                                      var item = getCropsForSyno(
+                                          state.profileData,
+                                          landDropdownValue)[index];
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 2),
+                                        child: Chip(
+                                          backgroundColor:
+                                              MyTheme.green_lighter,
+                                          labelPadding: EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 0),
+                                          label: Text(
+                                              '${item.name} (${item.yieldOfCrop.toInt()})'),
+                                          // deleteIcon: Icon(Icons.delete),
+                                          onDeleted: () {
+                                            _deleteCropFromHive(
+                                                landDropdownValue, index);
+                                            setState(() {});
+                                          },
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              DropdownButtonWidget(
+                                  'Crop',
+                                  cropsList.map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                  cropDropdownValue, (value) {
+                                setState(() {
+                                  cropDropdownValue = value;
+                                });
+                              }),
+                              TexiFieldWidgetForDouble(
+                                  'Yield',
+                                  _yieldController,
+                                  'Enter Crop Yield (in Acres)'),
+                              Row(
                                 children: [
-                                  Expanded(child: Text(item.village)),
-                                  Expanded(child: Text(item.syno)),
-                                  Expanded(child: Text(item.area.toString())),
-                                  // Expanded(child: Text(item.village)),
+                                  Expanded(child: SizedBox()),
+                                  TextButton(
+                                    child: Text('Add Record'),
+                                    onPressed: () {
+                                      _addCropToHive(
+                                        landDropdownValue,
+                                        cropDropdownValue,
+                                        _yieldController.text,
+                                      );
+                                      setState(() {});
+                                    },
+                                  ),
                                 ],
                               ),
-                              value: item.syno,
-                            );
-                          },
-                        ),
-                        landDropdownValue, (value) {
-                      setState(() {
-                        landDropdownValue = value;
-                        // setState(() {});
-                      });
-                    }),
+                            ],
+                          ),
 
-                    if (landDropdownValue.isNotEmpty)
-                      Wrap(
-                        children: List.generate(
-                          getCropsForSyno(state.profileData, landDropdownValue)
-                              .length,
-                          (index) {
-                            var item = getCropsForSyno(
-                                state.profileData, landDropdownValue)[index];
-                            return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 2),
-                              child: Chip(
-                                backgroundColor: MyTheme.green_lighter,
-                                labelPadding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 0),
-                                label: Text(
-                                    '${item.name} (${item.yieldOfCrop.toInt()})'),
-                                // deleteIcon: Icon(Icons.delete),
-                                onDeleted: () {
-                                  _deleteCropFromHive(landDropdownValue, index);
-                                  setState(() {});
-                                },
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-
-                    DropdownButtonWidget(
-                        'Crop',
-                        cropsList.map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        cropDropdownValue, (value) {
-                      setState(() {
-                        cropDropdownValue = value;
-                      });
-                    }),
-
-                    TexiFieldWidgetForDouble('Yield', _yieldController,
-                        'Enter Crop Yield (in Acres)'),
-
-                    Row(
-                      children: [
-                        Expanded(child: SizedBox()),
-                        TextButton(
-                          child: Text('Add Record'),
-                          onPressed: () {
-                            _addCropToHive(
-                              landDropdownValue,
-                              cropDropdownValue,
-                              _yieldController.text,
-                            );
-                            setState(() {});
-                          },
-                        ),
-                      ],
-                    ),
                     SizedBox(
                       height: 8,
                     ),
@@ -1001,99 +1028,121 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
                     HeadingTextWidget('Machines and Equipments'),
 
-                    DropdownButtonWidget(
-                        'Land',
-                        List.generate(
-                          state.profileData.land.length + 1,
-                          (index) {
-                            var item = [
-                              Land()
-                                ..village = ''
-                                ..area = 0
-                                ..syno = '',
-                              ...state.profileData.land
-                            ][index];
-                            return DropdownMenuItem(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                    (state.profileData.land.length == 0)
+                        ? Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                'Add Land First',
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  letterSpacing: .5,
+                                  fontFamily: 'Poppins',
+                                ),
+                              ),
+                            ),
+                          )
+                        : Column(
+                            children: [
+                              DropdownButtonWidget(
+                                  'Land',
+                                  List.generate(
+                                    state.profileData.land.length + 1,
+                                    (index) {
+                                      var item = [
+                                        Land()
+                                          ..village = ''
+                                          ..area = 0
+                                          ..syno = '',
+                                        ...state.profileData.land
+                                      ][index];
+                                      return DropdownMenuItem(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(child: Text(item.village)),
+                                            Expanded(child: Text(item.syno)),
+                                            Expanded(
+                                                child:
+                                                    Text(item.area.toString())),
+                                            // Expanded(child: Text(item.village)),
+                                          ],
+                                        ),
+                                        value: item.syno,
+                                      );
+                                    },
+                                  ),
+                                  landDropdownValue, (value) {
+                                setState(() {
+                                  landDropdownValue = value;
+                                  setState(() {});
+                                });
+                              }),
+                              if (landDropdownValue.isNotEmpty)
+                                Wrap(
+                                  children: List.generate(
+                                    getMachinesForSyno(state.profileData,
+                                            landDropdownValue)
+                                        .length,
+                                    (index) {
+                                      var item = getMachinesForSyno(
+                                          state.profileData,
+                                          landDropdownValue)[index];
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 2),
+                                        child: Chip(
+                                          backgroundColor:
+                                              MyTheme.green_lighter,
+                                          labelPadding: EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 0),
+                                          label: Text(item),
+                                          // deleteIcon: Icon(Icons.delete),
+                                          onDeleted: () {
+                                            _deleteEquipmentFromHive(
+                                                landDropdownValue, index);
+                                            setState(() {});
+                                          },
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              DropdownButtonWidget(
+                                  'Machines',
+                                  equipmentsList.map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                  equipmentDropdownValue, (value) {
+                                setState(() {
+                                  equipmentDropdownValue = value;
+                                });
+                              }),
+                              Row(
                                 children: [
-                                  Expanded(child: Text(item.village)),
-                                  Expanded(child: Text(item.syno)),
-                                  Expanded(child: Text(item.area.toString())),
-                                  // Expanded(child: Text(item.village)),
+                                  Expanded(child: SizedBox()),
+                                  TextButton(
+                                    child: Text('Add Record'),
+                                    onPressed: () {
+                                      _addEquipmentToHive(
+                                        landDropdownValue,
+                                        equipmentDropdownValue,
+                                      );
+                                      setState(() {});
+                                    },
+                                  ),
                                 ],
                               ),
-                              value: item.syno,
-                            );
-                          },
-                        ),
-                        landDropdownValue, (value) {
-                      setState(() {
-                        landDropdownValue = value;
-                        // setState(() {});
-                      });
-                    }),
-
-                    if (landDropdownValue.isNotEmpty)
-                      Wrap(
-                        children: List.generate(
-                          getMachinesForSyno(
-                                  state.profileData, landDropdownValue)
-                              .length,
-                          (index) {
-                            var item = getMachinesForSyno(
-                                state.profileData, landDropdownValue)[index];
-                            return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 2),
-                              child: Chip(
-                                backgroundColor: MyTheme.green_lighter,
-                                labelPadding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 0),
-                                label: Text(item),
-                                // deleteIcon: Icon(Icons.delete),
-                                onDeleted: () {
-                                  _deleteEquipmentFromHive(
-                                      landDropdownValue, index);
-                                  setState(() {});
-                                },
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-
-                    DropdownButtonWidget(
-                        'Machines',
-                        equipmentsList
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        equipmentDropdownValue, (value) {
-                      setState(() {
-                        equipmentDropdownValue = value;
-                      });
-                    }),
-
-                    Row(
-                      children: [
-                        Expanded(child: SizedBox()),
-                        TextButton(
-                          child: Text('Add Record'),
-                          onPressed: () {
-                            _addEquipmentToHive(
-                              landDropdownValue,
-                              equipmentDropdownValue,
-                            );
-                            setState(() {});
-                          },
-                        ),
-                      ],
-                    ),
+                            ],
+                          ),
                   ],
                 );
               return Container(

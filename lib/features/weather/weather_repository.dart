@@ -8,7 +8,7 @@ import 'package:active_ecommerce_flutter/features/weather/constants.dart';
 class WeatherRepository {
   Future<ForecastWeatherResponse> fetchForecast() async {
     final response = await http.get(Uri.parse(
-        '$BASE_URL/forecast.json?key=$API_KEY&q=London&days=3&aqi=no&alerts=no'));
+        '$BASE_URL/forecast.json?key=$API_KEY&q=48.8567,2.3508&days=3&aqi=no&alerts=no'));
 
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
