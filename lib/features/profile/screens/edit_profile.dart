@@ -195,20 +195,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  void _saveKycToHive(KycSection kycSection, value) async {
-    if (kycSection == KycSection.aadhar && value.length != 12) {
+  void _saveKycToHive(aadhar, pan, gst) async {
+    if (aadhar.length != 12) {
       ToastComponent.showDialog('Enter a valid Aadhar Number',
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
 
-    if (kycSection == KycSection.pan && value.length != 12) {
+    if (pan.length != 12) {
       ToastComponent.showDialog('Enter a valid PAN Card Number',
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
 
-    if (kycSection == KycSection.gst && value.length != 15) {
+    if (gst.length != 15) {
       ToastComponent.showDialog('Enter a valid GST Number',
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
@@ -220,10 +220,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     if (savedData != null) {
       var kyc = KYC()
-        ..aadhar =
-            kycSection == KycSection.aadhar ? value : savedData.kyc.aadhar
-        ..pan = kycSection == KycSection.pan ? value : savedData.kyc.pan
-        ..gst = kycSection == KycSection.gst ? value : savedData.kyc.gst;
+        ..aadhar = aadhar
+        ..pan = pan
+        ..gst = gst;
 
       var newData = ProfileData()
         ..id = savedData.id
@@ -240,16 +239,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  void _deleteKycFromHive(KycSection kycSection) async {
+  void _deleteKycFromHive() async {
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
 
     var savedData = dataBox.get('profile');
 
     if (savedData != null) {
       var kyc = KYC()
-        ..aadhar = kycSection == KycSection.aadhar ? '' : savedData.kyc.aadhar
-        ..pan = kycSection == KycSection.pan ? '' : savedData.kyc.pan
-        ..gst = kycSection == KycSection.gst ? '' : savedData.kyc.gst;
+        ..aadhar = ''
+        ..pan = ''
+        ..gst = '';
 
       var newData = ProfileData()
         ..id = savedData.id
@@ -274,6 +273,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (dataCollectionType == DataCollectionType.address) {
       savedData!.address.removeAt(index);
     } else if (dataCollectionType == DataCollectionType.land) {
+      landDropdownValue = '';
       savedData!.land.removeAt(index);
     }
 
@@ -369,7 +369,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  void _deleteCropFromHive(landSyno, index) async {
+  void _deleteCropFromHive(landSyno, indexToDelete) async {
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
 
     var savedData = dataBox.get('profile');
@@ -378,7 +378,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     int index = savedData!.land.indexWhere((land) => land.syno == landSyno);
 
     if (index != -1) {
-      savedData.land[index].crops.removeAt(index);
+      savedData.land[index].crops.removeAt(indexToDelete);
 
       dataBox.put(savedData.id, savedData);
 
@@ -441,7 +441,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  void _deleteEquipmentFromHive(landSyno, index) async {
+  void _deleteEquipmentFromHive(landSyno, indexToDelete) async {
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
 
     var savedData = dataBox.get('profile');
@@ -450,7 +450,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     int index = savedData!.land.indexWhere((land) => land.syno == landSyno);
 
     if (index != -1) {
-      savedData.land[index].equipments.removeAt(index);
+      savedData.land[index].equipments.removeAt(indexToDelete);
 
       dataBox.put(savedData.id, savedData);
 
@@ -504,6 +504,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       height: 10,
                     ),
                     HeadingTextWidget('KYC'),
+
                     if (state.profileData.kyc.aadhar.isNotEmpty)
                       Padding(
                         padding: const EdgeInsets.symmetric(
@@ -518,85 +519,30 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Expanded(
-                                  child: Text(
-                                      'Aadhar: ${state.profileData.kyc.aadhar}')),
-                              // Expanded(child: Text('PAN')),
-                              InkWell(
-                                onTap: () {
-                                  _deleteKycFromHive(KycSection.aadhar);
-                                },
-                                child: CircleAvatar(
-                                  radius: 12,
-                                  backgroundColor: MyTheme.green,
-                                  child: Icon(
-                                    Icons.delete,
-                                    size: 15.0,
-                                    color: Colors.white,
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                        'Aadhar: ${state.profileData.kyc.aadhar}'),
                                   ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    if (state.profileData.kyc.pan.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8.0, vertical: 3),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: MyTheme.green_lighter,
-                          ),
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                  child: Text(
-                                      'PAN: ${state.profileData.kyc.pan}')),
-                              // Expanded(child: Text('PAN')),
-                              InkWell(
-                                onTap: () {
-                                  _deleteKycFromHive(KycSection.pan);
-                                },
-                                child: CircleAvatar(
-                                  radius: 12,
-                                  backgroundColor: MyTheme.green,
-                                  child: Icon(
-                                    Icons.delete,
-                                    size: 15.0,
-                                    color: Colors.white,
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                        'PAN: ${state.profileData.kyc.pan}'),
                                   ),
-                                ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                        'GST: ${state.profileData.kyc.gst}'),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    if (state.profileData.kyc.gst.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8.0, vertical: 3),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: MyTheme.green_lighter,
-                          ),
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                  child: Text(
-                                      'GST: ${state.profileData.kyc.gst}')),
                               // Expanded(child: Text('PAN')),
                               InkWell(
                                 onTap: () {
-                                  _deleteKycFromHive(KycSection.gst);
+                                  _deleteKycFromHive();
                                 },
                                 child: CircleAvatar(
                                   radius: 12,
@@ -620,42 +566,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         children: [
                           TextFieldWidget('Aadhar Card', _aadharController,
                               'Enter Aadhar Card Number'),
-                          Row(
-                            children: [
-                              Expanded(child: SizedBox()),
-                              TextButton(
-                                child: Text('Save'),
-                                onPressed: () {
-                                  _saveKycToHive(KycSection.aadhar,
-                                      _aadharController.text);
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    if (state.profileData.kyc.pan.isEmpty)
-                      Column(
-                        children: [
                           TextFieldWidget('PAN Card', _panController,
                               'Enter PAN Card Number'),
-                          Row(
-                            children: [
-                              Expanded(child: SizedBox()),
-                              TextButton(
-                                child: Text('Save'),
-                                onPressed: () {
-                                  _saveKycToHive(
-                                      KycSection.pan, _panController.text);
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    if (state.profileData.kyc.gst.isEmpty)
-                      Column(
-                        children: [
                           TextFieldWidget(
                               'GST', _gstController, 'Enter GST Number'),
                           Row(
@@ -664,8 +576,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               TextButton(
                                 child: Text('Save'),
                                 onPressed: () {
-                                  _saveKycToHive(
-                                      KycSection.gst, _gstController.text);
+                                  _saveKycToHive(_aadharController.text,
+                                      _panController.text, _gstController.text);
                                 },
                               ),
                             ],
@@ -948,34 +860,37 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 });
                               }),
                               if (landDropdownValue.isNotEmpty)
-                                Wrap(
-                                  children: List.generate(
-                                    getCropsForSyno(state.profileData,
-                                            landDropdownValue)
-                                        .length,
-                                    (index) {
-                                      var item = getCropsForSyno(
-                                          state.profileData,
-                                          landDropdownValue)[index];
-                                      return Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 2),
-                                        child: Chip(
-                                          backgroundColor:
-                                              MyTheme.green_lighter,
-                                          labelPadding: EdgeInsets.symmetric(
-                                              horizontal: 10, vertical: 0),
-                                          label: Text(
-                                              '${item.name} (${item.yieldOfCrop.toInt()})'),
-                                          // deleteIcon: Icon(Icons.delete),
-                                          onDeleted: () {
-                                            _deleteCropFromHive(
-                                                landDropdownValue, index);
-                                            setState(() {});
-                                          },
-                                        ),
-                                      );
-                                    },
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Wrap(
+                                    children: List.generate(
+                                      getCropsForSyno(state.profileData,
+                                              landDropdownValue)
+                                          .length,
+                                      (index) {
+                                        var item = getCropsForSyno(
+                                            state.profileData,
+                                            landDropdownValue)[index];
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 2),
+                                          child: Chip(
+                                            backgroundColor:
+                                                MyTheme.green_lighter,
+                                            labelPadding: EdgeInsets.symmetric(
+                                                horizontal: 10, vertical: 0),
+                                            label: Text(
+                                                '${item.name} (${item.yieldOfCrop.toInt()})'),
+                                            // deleteIcon: Icon(Icons.delete),
+                                            onDeleted: () {
+                                              _deleteCropFromHive(
+                                                  landDropdownValue, index);
+                                              setState(() {});
+                                            },
+                                          ),
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ),
                               DropdownButtonWidget(
@@ -1083,33 +998,36 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 });
                               }),
                               if (landDropdownValue.isNotEmpty)
-                                Wrap(
-                                  children: List.generate(
-                                    getMachinesForSyno(state.profileData,
-                                            landDropdownValue)
-                                        .length,
-                                    (index) {
-                                      var item = getMachinesForSyno(
-                                          state.profileData,
-                                          landDropdownValue)[index];
-                                      return Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 2),
-                                        child: Chip(
-                                          backgroundColor:
-                                              MyTheme.green_lighter,
-                                          labelPadding: EdgeInsets.symmetric(
-                                              horizontal: 10, vertical: 0),
-                                          label: Text(item),
-                                          // deleteIcon: Icon(Icons.delete),
-                                          onDeleted: () {
-                                            _deleteEquipmentFromHive(
-                                                landDropdownValue, index);
-                                            setState(() {});
-                                          },
-                                        ),
-                                      );
-                                    },
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Wrap(
+                                    children: List.generate(
+                                      getMachinesForSyno(state.profileData,
+                                              landDropdownValue)
+                                          .length,
+                                      (index) {
+                                        var item = getMachinesForSyno(
+                                            state.profileData,
+                                            landDropdownValue)[index];
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 2),
+                                          child: Chip(
+                                            backgroundColor:
+                                                MyTheme.green_lighter,
+                                            labelPadding: EdgeInsets.symmetric(
+                                                horizontal: 10, vertical: 0),
+                                            label: Text(item),
+                                            // deleteIcon: Icon(Icons.delete),
+                                            onDeleted: () {
+                                              _deleteEquipmentFromHive(
+                                                  landDropdownValue, index);
+                                              setState(() {});
+                                            },
+                                          ),
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ),
                               DropdownButtonWidget(

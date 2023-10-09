@@ -27,8 +27,8 @@ class ExpandedTileWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget trailingWidget = _imageIcon ??
         Image.asset(
-          'assets/add 2.png',
-          height: 27,
+          'assets/dropdown.png',
+          height: 25,
         );
 
     // final contentPaddingWidget = _contentPadding ??
@@ -55,7 +55,7 @@ class ExpandedTileWidget extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        trailing: trailingWidget,
+        // trailing: trailingWidget,
         content: _children,
       ),
     );

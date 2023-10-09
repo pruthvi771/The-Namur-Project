@@ -216,24 +216,34 @@ class _ProfileState extends State<Profile> {
       child: Stack(
         children: [
           Scaffold(
+            // appBar: AppBar(
+            //   title: Text('Profile'),
+            //   centerTitle: true,
+            //   // backgroundColor: Color(0xff107B28),
+            //   backgroundColor: Color(0xff4C7B10),
+            //   actions: [
+            //     IconButton(
+            //         icon: Icon(Icons.settings),
+            //         onPressed: () {
+            //           Navigator.push(context,
+            //               MaterialPageRoute(builder: (context) {
+            //             return MoreDetails();
+            //           }));
+            //         }),
+            //     SizedBox(
+            //       width: 5,
+            //     ),
+            //   ],
+            // ),
+            appBar: buildCustomAppBar(context),
             key: homeData.scaffoldKey,
             drawer: const MainDrawer(),
             backgroundColor: Colors.transparent,
             //   appBar: buildCustomAppBar(context),
-            body: buildBody(_profileSection),
+            body: buildBodyChildren(_profileSection),
           ),
         ],
       ),
-    );
-  }
-
-  RefreshIndicator buildBody(_profileSection) {
-    return RefreshIndicator(
-      color: MyTheme.white,
-      backgroundColor: MyTheme.primary_color,
-      onRefresh: _onPageRefresh,
-      displacement: 10,
-      child: buildBodyChildren(_profileSection),
     );
   }
 
@@ -349,37 +359,37 @@ class _ProfileState extends State<Profile> {
                           ),
                         ],
                       ),
-                      Positioned(
-                        top: 45,
-                        right: 30,
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return MoreDetails();
-                            }));
-                          },
-                          child: Icon(
-                            Icons.settings_outlined,
-                            size: 30,
-                            color: Colors.white,
-                            weight: 10,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 45,
-                        left: 30,
-                        child: IconButton(
-                            onPressed: () {
-                              homeData.scaffoldKey.currentState?.openDrawer();
-                            },
-                            icon: Icon(
-                              Icons.menu,
-                              color: Colors.white,
-                              size: 30,
-                            )),
-                      ),
+                      // Positioned(
+                      //   top: 45,
+                      //   right: 30,
+                      //   child: GestureDetector(
+                      //     onTap: () {
+                      //       Navigator.push(context,
+                      //           MaterialPageRoute(builder: (context) {
+                      //         return MoreDetails();
+                      //       }));
+                      //     },
+                      //     child: Icon(
+                      //       Icons.settings_outlined,
+                      //       size: 30,
+                      //       color: Colors.white,
+                      //       weight: 10,
+                      //     ),
+                      //   ),
+                      // ),
+                      // Positioned(
+                      //   top: 45,
+                      //   left: 30,
+                      //   child: IconButton(
+                      //       onPressed: () {
+                      //         homeData.scaffoldKey.currentState?.openDrawer();
+                      //       },
+                      //       icon: Icon(
+                      //         Icons.menu,
+                      //         color: Colors.white,
+                      //         size: 30,
+                      //       )),
+                      // ),
                       Positioned(
                         bottom: 0,
                         child: Container(
@@ -732,45 +742,6 @@ class _ProfileState extends State<Profile> {
           }),
         ),
       ],
-    );
-  }
-
-  PreferredSize buildCustomAppBar(context) {
-    return PreferredSize(
-      preferredSize: Size(DeviceInfo(context).width!, 80),
-      child: Container(
-        // color: Colors.green,
-        child: SafeArea(
-          child: Column(
-            children: [
-              Align(
-                alignment: Alignment.topRight,
-                child: Container(
-                  margin: EdgeInsets.only(right: 18),
-                  height: 30,
-                  child: InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Icon(
-                        Icons.close,
-                        color: MyTheme.white,
-                        size: 20,
-                      )),
-                ),
-              ),
-
-              // Container(
-              //   margin: EdgeInsets.symmetric(vertical: 8),
-              //   width: DeviceInfo(context).width,height: 1,color: MyTheme.medium_grey_50,),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 18.0),
-                child: buildAppbarSection(),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 
@@ -1877,6 +1848,77 @@ class _ProfileState extends State<Profile> {
                 color: MyTheme.white,
                 fontWeight: FontWeight.bold),
           );
+  }
+
+  PreferredSize buildCustomAppBar(context) {
+    return PreferredSize(
+      preferredSize: Size(DeviceInfo(context).width!, 80),
+      child: Container(
+        height: 92,
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xff107B28), Color(0xff4C7B10)])),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20.0, right: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  width: 30,
+                  height: double.infinity,
+                  child: InkWell(
+                      //padding: EdgeInsets.zero,
+                      onTap: () {
+                        // Navigator.pushReplacement(context,
+                        //     MaterialPageRoute(builder: (context) {
+                        //   return EditProfileScreen();
+                        // }));
+                      },
+                      child: Icon(
+                        Icons.menu,
+                        color: Colors.white,
+                        size: 25,
+                      )),
+                ),
+                Center(
+                  child: Text('Profile',
+                      style: TextStyle(
+                          color: MyTheme.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: .5,
+                          fontFamily: 'Poppins')),
+                ),
+                Container(
+                  margin: EdgeInsets.only(right: 0),
+                  height: 30,
+                  child: Container(
+                    child: InkWell(
+                      //padding: EdgeInsets.zero,
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return MoreDetails();
+                        }));
+                      },
+                      child: Icon(
+                        Icons.settings,
+                        size: 25,
+                        color: MyTheme.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
 /*
