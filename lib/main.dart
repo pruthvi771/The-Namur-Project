@@ -5,6 +5,7 @@ import 'package:active_ecommerce_flutter/features/auth/services/firestore_reposi
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart'
     as hiveModels;
+import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_bloc.dart';
 import 'package:active_ecommerce_flutter/features/weather/bloc/weather_bloc.dart';
 import 'package:active_ecommerce_flutter/helpers/addons_helper.dart';
@@ -172,7 +173,8 @@ class _MyAppState extends State<MyApp> {
           BlocProvider<FirestoreBloc>(
             create: (context) =>
                 FirestoreBloc(firestoreRepository: firestoreRepository),
-          )
+          ),
+          BlocProvider<ProfileBloc>(create: (context) => ProfileBloc()),
         ],
         child: MultiProvider(
             providers: [

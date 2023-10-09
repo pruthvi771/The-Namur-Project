@@ -168,20 +168,25 @@ class _MoreDetailsState extends State<MoreDetails> {
                                 Positioned(
                                   top: 0,
                                   left: 0,
-                                  child: ClipOval(
-                                    child: CircleAvatar(
-                                      child: (buyerUserData.photoURL == null ||
-                                              buyerUserData.photoURL == '')
-                                          ? Image.asset(
+                                  child: CircleAvatar(
+                                    radius: 40,
+                                    child: (buyerUserData.photoURL == null ||
+                                            buyerUserData.photoURL == '')
+                                        ? ClipOval(
+                                            child: Image.asset(
                                               "assets/default_profile2.png",
                                               fit: BoxFit.cover,
-                                            )
-                                          : Image.network(
-                                              buyerUserData.photoURL!,
-                                              fit: BoxFit.cover,
                                             ),
-                                      radius: 40,
-                                    ),
+                                          )
+                                        : ClipOval(
+                                            child: AspectRatio(
+                                              aspectRatio: 1 / 1,
+                                              child: Image.network(
+                                                buyerUserData.photoURL!,
+                                                fit: BoxFit.fill,
+                                              ),
+                                            ),
+                                          ),
                                   ),
                                 ),
                                 Positioned(

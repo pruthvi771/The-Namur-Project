@@ -546,8 +546,8 @@ class WeatherDayCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
         color: MyTheme.light_grey,
       ),
-      height: MediaQuery.of(context).size.height / 5,
-      width: MediaQuery.of(context).size.width / 4.5,
+      height: MediaQuery.of(context).size.height / 4.8,
+      width: MediaQuery.of(context).size.width / 4.3,
       child: Column(
         // mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -581,44 +581,16 @@ class WeatherDayCard extends StatelessWidget {
               ),
             ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: [
-              //     Center(
-              //       child: Text(
-              //         '$min° |',
-              //         style: TextStyle(
-              //           fontWeight: FontWeight.bold,
-              //           fontSize: 12,
-              //           color: Colors.grey[700],
-              //         ),
-              //       ),
-              //     ),
-              //     Text(
-              //       ' $max°',
-              //       style: TextStyle(
-              //         fontWeight: FontWeight.bold,
-              //         fontSize: 12,
-              //         color: Colors.grey[700],
-              //       ),
-              //     ),
-              //   ],
-              // ),
-              // SizedBox(
-              //   height: 2,
-              // ),
-              Text(
-                desc.toUpperCase(),
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
-                  color: Colors.grey[700],
-                ),
+          Padding(
+            padding: const EdgeInsets.all(5),
+            child: Text(
+              desc.toUpperCase(),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 10,
+                color: Colors.grey[700],
               ),
-            ],
+            ),
           )
         ],
       ),
