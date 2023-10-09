@@ -69,4 +69,7 @@ class ProfileData {
 class Crop {
   @HiveField(0)
   late String name;
+
+  @HiveField(1)
+  late double yieldOfCrop;
 }

@@ -37,12 +37,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController _panController = TextEditingController();
   TextEditingController _gstController = TextEditingController();
 
+  TextEditingController _yieldController = TextEditingController();
+
   final districts = addressList.districtTalukMap;
+
+  final cropsList = addressList.crops;
+  final equipmentsList = addressList.equipment;
 
   List<String> taluks = [];
 
   String districtDropdownValue = addressList.districtTalukMap[0][0] as String;
   String talukDropdownValue = addressList.districtTalukMap[1][0] as String;
+  String landDropdownValue = '';
+  String cropDropdownValue = '';
+  String equipmentDropdownValue = '';
 
   void _addAddressToHive(district, taluk, hobli, village) async {
     if (district.isEmpty) {
@@ -284,6 +292,179 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
+  void _addCropToHive(landSyno, crop, yieldOfCrop) async {
+    if (landSyno.isEmpty) {
+      ToastComponent.showDialog('Select Land',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    if (crop.isEmpty) {
+      ToastComponent.showDialog('Select Crop',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    if (yieldOfCrop.isEmpty) {
+      ToastComponent.showDialog('Enter Yield',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    double yieldOfCropDouble = 0.0;
+    try {
+      yieldOfCropDouble = double.parse(yieldOfCrop);
+    } catch (e) {
+      ToastComponent.showDialog('Please Enter Valid Yield',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    var dataBox = Hive.box<ProfileData>('profileDataBox3');
+
+    var savedData = dataBox.get('profile');
+
+    // Find the Land instance with the specified syno
+    int index = savedData!.land.indexWhere((land) => land.syno == landSyno);
+
+    if (index != -1) {
+      savedData.land[index].crops.add(Crop()
+        ..name = crop
+        ..yieldOfCrop = yieldOfCropDouble);
+
+      dataBox.put(savedData.id, savedData);
+
+      print('Crop added');
+    } else {
+      // Handle the case where the Land instance with the specified syno is not found
+      print('Land with syno $landSyno not found.');
+    }
+
+    // var land = Land()
+    //   ..area = areaDouble
+    //   ..syno = syno
+    //   ..village = village
+    //   ..crops = []
+    //   ..equipments = [];
+
+    // // if (savedData != null) {
+    //   print('object detected');
+    //   print(savedData!.id);
+
+    //   var newData = ProfileData()
+    //     ..id = savedData!.id
+    //     ..updated = savedData.updated
+    //     ..address = savedData.address
+    //     ..kyc = savedData.kyc
+    //     ..land = [...savedData.land, land];
+
+    //   await dataBox.put(newData.id, newData);
+    //   print('object updated');
+    // // }
+
+    _yieldController.clear();
+
+    BlocProvider.of<HiveBloc>(context).add(
+      HiveDataRequested(),
+    );
+  }
+
+  void _deleteCropFromHive(landSyno, index) async {
+    var dataBox = Hive.box<ProfileData>('profileDataBox3');
+
+    var savedData = dataBox.get('profile');
+
+    // Find the Land instance with the specified syno
+    int index = savedData!.land.indexWhere((land) => land.syno == landSyno);
+
+    if (index != -1) {
+      savedData.land[index].crops.removeAt(index);
+
+      dataBox.put(savedData.id, savedData);
+
+      print('Crop removed');
+    } else {
+      // Handle the case where the Land instance with the specified syno is not found
+      print('Land with syno $landSyno not found.');
+    }
+
+    BlocProvider.of<HiveBloc>(context).add(
+      HiveDataRequested(),
+    );
+  }
+
+  List<Crop> getCropsForSyno(ProfileData profileData, String landSyno) {
+    int index = profileData.land.indexWhere((land) => land.syno == landSyno);
+    // if (index != -1) {
+    return profileData.land[index].crops;
+  }
+
+  List<String> getMachinesForSyno(ProfileData profileData, String landSyno) {
+    int index = profileData.land.indexWhere((land) => land.syno == landSyno);
+    // if (index != -1) {
+    return profileData.land[index].equipments;
+  }
+
+  void _addEquipmentToHive(landSyno, equipment) async {
+    if (landSyno.isEmpty) {
+      ToastComponent.showDialog('Select Land',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    if (equipment.isEmpty) {
+      ToastComponent.showDialog('Select Crop',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    var dataBox = Hive.box<ProfileData>('profileDataBox3');
+
+    var savedData = dataBox.get('profile');
+
+    // Find the Land instance with the specified syno
+    int index = savedData!.land.indexWhere((land) => land.syno == landSyno);
+
+    if (index != -1) {
+      savedData.land[index].equipments.add(equipment);
+
+      dataBox.put(savedData.id, savedData);
+
+      print('equipment added');
+    } else {
+      // Handle the case where the Land instance with the specified syno is not found
+      print('Land with syno $landSyno not found.');
+    }
+
+    BlocProvider.of<HiveBloc>(context).add(
+      HiveDataRequested(),
+    );
+  }
+
+  void _deleteEquipmentFromHive(landSyno, index) async {
+    var dataBox = Hive.box<ProfileData>('profileDataBox3');
+
+    var savedData = dataBox.get('profile');
+
+    // Find the Land instance with the specified syno
+    int index = savedData!.land.indexWhere((land) => land.syno == landSyno);
+
+    if (index != -1) {
+      savedData.land[index].equipments.removeAt(index);
+
+      dataBox.put(savedData.id, savedData);
+
+      print('equipment removed');
+    } else {
+      // Handle the case where the Land instance with the specified syno is not found
+      print('Land with syno $landSyno not found.');
+    }
+
+    BlocProvider.of<HiveBloc>(context).add(
+      HiveDataRequested(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -304,6 +485,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             }
             if (state is HiveDataReceived) {
               print('STATE: Data Received');
+              print(state.profileData.land);
             }
           },
           child: BlocBuilder<HiveBloc, HiveState>(
@@ -650,6 +832,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         DataCollectionType.land,
                                         index,
                                       );
+                                      setState(() {});
                                     },
                                     child: CircleAvatar(
                                       radius: 12,
@@ -671,42 +854,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     SizedBox(
                       height: 10,
                     ),
+
                     TextFieldWidget(
                         'Village', _village2Controller, 'Enter Village'),
                     TextFieldWidget('Syno', _synoController, 'Enter Syno'),
 
                     //custom Area text field for accepting double values
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 4, bottom: 5),
-                          child: Text(
-                            'Area',
-                            style: TextStyle(
-                                // color: MyTheme.accent_color,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                letterSpacing: .5,
-                                fontFamily: 'Poppins'),
-                          ),
-                        ),
-                        Container(
-                          height: 40,
-                          child: TextField(
-                            controller: _areaController,
-                            keyboardType:
-                                TextInputType.numberWithOptions(decimal: true),
-                            autofocus: false,
-                            decoration: InputDecorations.buildInputDecoration_1(
-                                hint_text: 'Enter Area (in acres)'),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        )
-                      ],
-                    ),
+                    TexiFieldWidgetForDouble(
+                        'Area', _areaController, 'Enter Area (in Acres)'),
 
                     //Add Land to Hive
                     Row(
@@ -724,18 +879,221 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ),
                       ],
                     ),
-                    // SizedBox(
-                    //   height: 8,
-                    // ),
-                    // Divider(
-                    //   // color: MyTheme.grey_153,
-                    //   thickness: 2,
-                    // ),
-                    // SizedBox(
-                    //   height: 12,
-                    // ),
-                    // HeadingTextWidget('Crops Grown and Planned'),
-                    // TextFieldWidget('Crop', _textController, 'Enter Crop Name'),
+
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Divider(
+                      // color: MyTheme.grey_153,
+                      thickness: 2,
+                    ),
+                    SizedBox(
+                      height: 12,
+                    ),
+
+                    HeadingTextWidget('Crops Grown and Planned'),
+
+                    DropdownButtonWidget(
+                        'Land',
+                        List.generate(
+                          state.profileData.land.length + 1,
+                          (index) {
+                            var item = [
+                              Land()
+                                ..village = ''
+                                ..area = 0
+                                ..syno = '',
+                              ...state.profileData.land
+                            ][index];
+                            return DropdownMenuItem(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(child: Text(item.village)),
+                                  Expanded(child: Text(item.syno)),
+                                  Expanded(child: Text(item.area.toString())),
+                                  // Expanded(child: Text(item.village)),
+                                ],
+                              ),
+                              value: item.syno,
+                            );
+                          },
+                        ),
+                        landDropdownValue, (value) {
+                      setState(() {
+                        landDropdownValue = value;
+                        // setState(() {});
+                      });
+                    }),
+
+                    if (landDropdownValue.isNotEmpty)
+                      Wrap(
+                        children: List.generate(
+                          getCropsForSyno(state.profileData, landDropdownValue)
+                              .length,
+                          (index) {
+                            var item = getCropsForSyno(
+                                state.profileData, landDropdownValue)[index];
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 2),
+                              child: Chip(
+                                backgroundColor: MyTheme.green_lighter,
+                                labelPadding: EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 0),
+                                label: Text(
+                                    '${item.name} (${item.yieldOfCrop.toInt()})'),
+                                // deleteIcon: Icon(Icons.delete),
+                                onDeleted: () {
+                                  _deleteCropFromHive(landDropdownValue, index);
+                                  setState(() {});
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+
+                    DropdownButtonWidget(
+                        'Crop',
+                        cropsList.map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        cropDropdownValue, (value) {
+                      setState(() {
+                        cropDropdownValue = value;
+                      });
+                    }),
+
+                    TexiFieldWidgetForDouble('Yield', _yieldController,
+                        'Enter Crop Yield (in Acres)'),
+
+                    Row(
+                      children: [
+                        Expanded(child: SizedBox()),
+                        TextButton(
+                          child: Text('Add Record'),
+                          onPressed: () {
+                            _addCropToHive(
+                              landDropdownValue,
+                              cropDropdownValue,
+                              _yieldController.text,
+                            );
+                            setState(() {});
+                          },
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Divider(
+                      // color: MyTheme.grey_153,
+                      thickness: 2,
+                    ),
+                    SizedBox(
+                      height: 12,
+                    ),
+
+                    HeadingTextWidget('Machines and Equipments'),
+
+                    DropdownButtonWidget(
+                        'Land',
+                        List.generate(
+                          state.profileData.land.length + 1,
+                          (index) {
+                            var item = [
+                              Land()
+                                ..village = ''
+                                ..area = 0
+                                ..syno = '',
+                              ...state.profileData.land
+                            ][index];
+                            return DropdownMenuItem(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(child: Text(item.village)),
+                                  Expanded(child: Text(item.syno)),
+                                  Expanded(child: Text(item.area.toString())),
+                                  // Expanded(child: Text(item.village)),
+                                ],
+                              ),
+                              value: item.syno,
+                            );
+                          },
+                        ),
+                        landDropdownValue, (value) {
+                      setState(() {
+                        landDropdownValue = value;
+                        // setState(() {});
+                      });
+                    }),
+
+                    if (landDropdownValue.isNotEmpty)
+                      Wrap(
+                        children: List.generate(
+                          getMachinesForSyno(
+                                  state.profileData, landDropdownValue)
+                              .length,
+                          (index) {
+                            var item = getMachinesForSyno(
+                                state.profileData, landDropdownValue)[index];
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 2),
+                              child: Chip(
+                                backgroundColor: MyTheme.green_lighter,
+                                labelPadding: EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 0),
+                                label: Text(item),
+                                // deleteIcon: Icon(Icons.delete),
+                                onDeleted: () {
+                                  _deleteEquipmentFromHive(
+                                      landDropdownValue, index);
+                                  setState(() {});
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+
+                    DropdownButtonWidget(
+                        'Machines',
+                        equipmentsList
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        equipmentDropdownValue, (value) {
+                      setState(() {
+                        equipmentDropdownValue = value;
+                      });
+                    }),
+
+                    Row(
+                      children: [
+                        Expanded(child: SizedBox()),
+                        TextButton(
+                          child: Text('Add Record'),
+                          onPressed: () {
+                            _addEquipmentToHive(
+                              landDropdownValue,
+                              equipmentDropdownValue,
+                            );
+                            setState(() {});
+                          },
+                        ),
+                      ],
+                    ),
                   ],
                 );
               return Container(
@@ -746,6 +1104,65 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Container CropDisplayWidget() {
+    return Container(
+      color: MyTheme.green_lighter,
+      margin: EdgeInsets.all(5),
+      padding: EdgeInsets.all(5),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Text('Croperinsta',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 13,
+            )),
+        SizedBox(width: 8),
+        CircleAvatar(
+          radius: 12,
+          backgroundColor: MyTheme.green,
+          child: Icon(
+            Icons.delete,
+            size: 15.0,
+            color: Colors.white,
+          ),
+        ),
+      ]),
+    );
+  }
+
+  Column TexiFieldWidgetForDouble(
+      String title, TextEditingController _textController, String hintText) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 4, bottom: 5),
+          child: Text(
+            title,
+            style: TextStyle(
+                // color: MyTheme.accent_color,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                letterSpacing: .5,
+                fontFamily: 'Poppins'),
+          ),
+        ),
+        Container(
+          height: 40,
+          child: TextField(
+            controller: _textController,
+            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            autofocus: false,
+            decoration:
+                InputDecorations.buildInputDecoration_1(hint_text: hintText),
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        )
+      ],
     );
   }
 

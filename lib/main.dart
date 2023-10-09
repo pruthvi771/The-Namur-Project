@@ -111,6 +111,7 @@ main() async {
   Hive.registerAdapter(hiveModels.AddressAdapter());
   Hive.registerAdapter(hiveModels.KYCAdapter());
   Hive.registerAdapter(hiveModels.LandAdapter());
+  Hive.registerAdapter(hiveModels.CropAdapter());
   Hive.registerAdapter(hiveModels.ProfileDataAdapter());
   await Hive.openBox<hiveModels.ProfileData>('profileDataBox3');
 

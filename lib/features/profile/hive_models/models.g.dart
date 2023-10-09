@@ -187,15 +187,19 @@ class CropAdapter extends TypeAdapter<Crop> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Crop()..name = fields[0] as String;
+    return Crop()
+      ..name = fields[0] as String
+      ..yieldOfCrop = fields[1] as double;
   }
 
   @override
   void write(BinaryWriter writer, Crop obj) {
     writer
-      ..writeByte(1)
+      ..writeByte(2)
       ..writeByte(0)
-      ..write(obj.name);
+      ..write(obj.name)
+      ..writeByte(1)
+      ..write(obj.yieldOfCrop);
   }
 
   @override
