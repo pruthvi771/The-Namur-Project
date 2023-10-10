@@ -53,6 +53,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   String equipmentDropdownValue = '';
 
   void _addAddressToHive(district, taluk, hobli, village) async {
+    var dataBox = Hive.box<ProfileData>('profileDataBox3');
+
+    var savedData = dataBox.get('profile');
+    // if (savedData!.address.length == 2) {
     if (district.isEmpty) {
       ToastComponent.showDialog('Select District',
           gravity: Toast.center, duration: Toast.lengthLong);
@@ -73,10 +77,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
-
-    var dataBox = Hive.box<ProfileData>('profileDataBox3');
-
-    var savedData = dataBox.get('profile');
 
     var address = Address()
       ..district = district
@@ -105,6 +105,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       HiveDataRequested(),
       // HiveAppendAddress(context: context),
     );
+    // } else {
+    //   ToastComponent.showDialog('Only 2 Addresses are allowed',
+    //       gravity: Toast.center, duration: Toast.lengthLong);
+    //   return;
+    // }
   }
 
   void _addLandToHive(area, syno, village) async {
@@ -1104,18 +1109,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 4, bottom: 5),
-          child: Text(
-            title,
-            style: TextStyle(
-                // color: MyTheme.accent_color,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                letterSpacing: .5,
-                fontFamily: 'Poppins'),
-          ),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.only(left: 4, bottom: 5),
+        //   child: Text(
+        //     title,
+        //     style: TextStyle(
+        //         // color: MyTheme.accent_color,
+        //         fontSize: 12,
+        //         fontWeight: FontWeight.w500,
+        //         letterSpacing: .5,
+        //         fontFamily: 'Poppins'),
+        //   ),
+        // ),
         Container(
           height: 40,
           child: TextField(
@@ -1214,18 +1219,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 4, bottom: 5),
-          child: Text(
-            title,
-            style: TextStyle(
-                // color: MyTheme.accent_color,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                letterSpacing: .5,
-                fontFamily: 'Poppins'),
-          ),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.only(left: 4, bottom: 5),
+        //   child: Text(
+        //     title,
+        //     style: TextStyle(
+        //         // color: MyTheme.accent_color,
+        //         fontSize: 12,
+        //         fontWeight: FontWeight.w500,
+        //         letterSpacing: .5,
+        //         fontFamily: 'Poppins'),
+        //   ),
+        // ),
         Container(
           height: 40,
           child: TextField(

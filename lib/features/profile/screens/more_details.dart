@@ -183,7 +183,7 @@ class _MoreDetailsState extends State<MoreDetails> {
                                               aspectRatio: 1 / 1,
                                               child: Image.network(
                                                 buyerUserData.photoURL!,
-                                                fit: BoxFit.fill,
+                                                fit: BoxFit.cover,
                                               ),
                                             ),
                                           ),
@@ -467,74 +467,6 @@ class _MoreDetailsState extends State<MoreDetails> {
                       height: 15,
                     ),
 
-                    // ExpandedTileWidget(
-                    //   controller: _controller3,
-                    //   title: 'Village, Land Details',
-                    //   children: Padding(
-                    //     padding:
-                    //         const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-                    //     child: Column(
-                    //       children: [
-                    //         ExpandedTileWidget(
-                    //           controller: _controller35,
-                    //           title: 'Embedded',
-                    //           children: Column(
-                    //             children: [
-                    //               Text('Text inside embedded'),
-                    //             ],
-                    //           ),
-                    //         ),
-                    //         Row(
-                    //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //           children: [
-                    //             Expanded(child: Text('1. Adhaar Card')),
-                    //             Expanded(child: Text('7848749257')),
-                    //             CircleAvatar(
-                    //               radius: 12,
-                    //               backgroundColor: MyTheme.green,
-                    //               child: Icon(
-                    //                 Icons.check,
-                    //                 size: 15.0,
-                    //                 color: Colors.white,
-                    //               ),
-                    //             ),
-                    //           ],
-                    //         ),
-                    //         SizedBox(
-                    //           height: 3,
-                    //         ),
-                    //         Row(
-                    //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //           children: [
-                    //             Expanded(child: Text('2. Pan Card')),
-                    //             Expanded(child: Text('DLFJF8248D')),
-                    //             Icon(
-                    //               Icons.upload_file_outlined,
-                    //               size: 23.0,
-                    //               color: MyTheme.green,
-                    //             ),
-                    //           ],
-                    //         ),
-                    //         Row(
-                    //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //           children: [
-                    //             Expanded(child: Text('3. GST Details')),
-                    //             Expanded(child: Text('HTFJF8245544148D')),
-                    //             Icon(
-                    //               Icons.upload_file_outlined,
-                    //               size: 23.0,
-                    //               color: MyTheme.green,
-                    //             ),
-                    //           ],
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
-                    // SizedBox(
-                    //   height: 15,
-                    // ),
-
                     //Land Section
                     InkWell(
                       borderRadius: BorderRadius.circular(12.0),
@@ -651,22 +583,29 @@ class _MoreDetailsState extends State<MoreDetails> {
             padding: const EdgeInsets.only(left: 20.0, right: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
                   width: 30,
-                  child: Container(
-                    child: InkWell(
-                      //padding: EdgeInsets.zero,
-                      onTap: () {
-                        Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (context) {
-                          return EditProfileScreen();
-                        }));
-                      },
-                      child: Icon(
-                        Icons.edit_square,
-                        size: 20,
-                        color: MyTheme.white,
+                  height: double.infinity,
+                  child: InkWell(
+                    //padding: EdgeInsets.zero,
+                    onTap: () {
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) {
+                        return EditProfileScreen();
+                      }));
+                    },
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Edit',
+                        style: TextStyle(
+                            color: MyTheme.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: .5,
+                            fontFamily: 'Poppins'),
                       ),
                     ),
                   ),

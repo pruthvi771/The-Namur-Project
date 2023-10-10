@@ -48,7 +48,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
     DateTime parsedDate = DateTime.parse(inputDate);
     print('input: $inputDate');
 
-    // Define month names
+    // Define month weatherImages
     List<String> months = [
       '', // Empty string to make months list 1-indexed
       'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct',
@@ -138,12 +138,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
   }
 
   bodycontent() {
-    bool largeContainer = true;
+    var weatherImage = "assets/weather.png";
 
-    var data = '23 Oct';
-    var name = "assets/weather.png";
-    var data2 = '13';
-    var data3 = '3';
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
       child: Column(
@@ -250,7 +246,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                           WeatherDayCard(
                             context: context,
                             date: ' -- ',
-                            image: name,
+                            image: weatherImage,
                             // min: '--',
                             // max: '--',
                             desc: '--',
@@ -258,7 +254,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                           WeatherDayCard(
                             context: context,
                             date: ' -- ',
-                            image: name,
+                            image: weatherImage,
                             // min: '--',
                             // max: '--',
                             desc: '--',
@@ -266,7 +262,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                           WeatherDayCard(
                             context: context,
                             date: ' -- ',
-                            image: name,
+                            image: weatherImage,
                             // min: '--',
                             // max: '--',
                             desc: '--',
@@ -285,7 +281,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                               WeatherDayCard(
                                 context: context,
                                 date: formatDate(responseData['day0']['date']),
-                                image: name,
+                                image: weatherImage,
                                 // min: responseData['day0']['mintemp']
                                 //     .toString(),
                                 // max: responseData['day0']['maxtemp']
@@ -295,7 +291,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                               WeatherDayCard(
                                 context: context,
                                 date: formatDate(responseData['day1']['date']),
-                                image: name,
+                                image: weatherImage,
                                 // min: responseData['day1']['mintemp']
                                 //     .toString(),
                                 // max: responseData['day1']['maxtemp']
@@ -305,12 +301,13 @@ class _WeatherScreenState extends State<WeatherScreen> {
                               WeatherDayCard(
                                 context: context,
                                 date: formatDate(responseData['day2']['date']),
-                                image: name,
+                                image: weatherImage,
                                 // min: responseData['day2']['mintemp']
                                 //     .toString(),
                                 // max: responseData['day2']['maxtemp']
                                 //     .toString(),
-                                desc: responseData['day2']['desc'],
+                                // desc: responseData['day2']['desc'],
+                                desc: 'Patchy catchy weatehr',
                               ),
                             ]),
                       ],
@@ -325,7 +322,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                         WeatherDayCard(
                           context: context,
                           date: ' -- ',
-                          image: name,
+                          image: weatherImage,
                           // min: '--',
                           // max: '--',
                           desc: '--',
@@ -333,7 +330,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                         WeatherDayCard(
                           context: context,
                           date: ' -- ',
-                          image: name,
+                          image: weatherImage,
                           // min: '--',
                           // max: '--',
                           desc: '--',
@@ -341,7 +338,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                         WeatherDayCard(
                           context: context,
                           date: ' -- ',
-                          image: name,
+                          image: weatherImage,
                           // min: '--',
                           // max: '--',
                           desc: '--',
@@ -546,8 +543,8 @@ class WeatherDayCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
         color: MyTheme.light_grey,
       ),
-      height: MediaQuery.of(context).size.height / 4.8,
-      width: MediaQuery.of(context).size.width / 4.3,
+      height: MediaQuery.of(context).size.height / 4.6,
+      width: MediaQuery.of(context).size.width / 4,
       child: Column(
         // mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -587,7 +584,7 @@ class WeatherDayCard extends StatelessWidget {
               desc.toUpperCase(),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 10,
+                fontSize: 9.5,
                 color: Colors.grey[700],
               ),
             ),
