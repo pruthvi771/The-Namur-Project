@@ -8,6 +8,7 @@ import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_b
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_state.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_exceptions.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 // import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
@@ -62,7 +63,6 @@ class _LoginState extends State<Login> {
         overlays: [SystemUiOverlay.bottom]);
     super.initState();
     fetch_country();
-    
   }
 
   fetch_country() async {
@@ -81,7 +81,7 @@ class _LoginState extends State<Login> {
   // late User loggedInUser;
 
   onPressedLogin(BuildContext buildContext) async {
-    print('login clicked');
+    // print('login clicked');
     var email = _emailController.text.toString();
     var phone = _phoneNumberController.text.toString();
     var password = _passwordController.text.toString();
@@ -139,8 +139,11 @@ class _LoginState extends State<Login> {
     final _screen_height = MediaQuery.of(context).size.height;
     final _screen_width = MediaQuery.of(context).size.width;
     AuthRepository _authRepository = AuthRepository();
+    FirestoreRepository _firestoreRepository = FirestoreRepository();
     return BlocProvider(
-      create: (context) => AuthBloc(authRepository: _authRepository),
+      create: (context) => AuthBloc(
+          authRepository: _authRepository,
+          firestoreRepository: _firestoreRepository),
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is Authenticated) {
@@ -164,11 +167,10 @@ class _LoginState extends State<Login> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => Otp(
-                        verify_by: 'phone',
-                        verificationId: state.verificationId.toString()
-                        // resendToken: resendToken
-                        )));
+                    builder: (context) =>
+                        Otp(verificationId: state.verificationId.toString()
+                            // resendToken: resendToken
+                            )));
           }
         },
         child: BlocBuilder<AuthBloc, AuthState>(
@@ -179,12 +181,6 @@ class _LoginState extends State<Login> {
                   child: CircularProgressIndicator(),
                 ),
               );
-            // if (state is Authenticated)
-            //   return Scaffold(
-            //     body: Center(
-            //       child: Text('It fucking worked.'),
-            //     ),
-            //   );
             return Scaffold(
               body: AuthScreen.buildScreen(
                   context,
@@ -226,7 +222,9 @@ class _LoginState extends State<Login> {
                     fontSize: 15,
                     fontFamily: 'Poppins'),
               ),
+
               SizedBox(height: 10),
+
               (_login_by == "phone") ? SizedBox(height: 30) : Container(),
 
               if (_login_by == "email")
@@ -368,6 +366,7 @@ class _LoginState extends State<Login> {
                 ),
               ),
 
+              // SizedBox(height: 10),
               //SIGNUP and LOGIN buttons row
               Padding(
                 padding: const EdgeInsets.only(top: 20.0, left: 20, right: 20),
@@ -451,7 +450,7 @@ class _LoginState extends State<Login> {
                 ),
               ),
 
-              //login with email/phone button
+              // login with email/phone button
               if (_login_by == "email")
                 Padding(
                   padding:
@@ -516,7 +515,15 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ),
-
+              // SizedBox(height: 20),
+              // Padding(
+              //   padding: const EdgeInsets.only(top: 15.0, left: 50, right: 50),
+              //   child: Divider(
+              //     color: MyTheme.textfield_grey,
+              //     thickness: 3,
+              //   ),
+              // ),
+              // SizedBox(height: 5),
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
                 child: Row(
@@ -535,55 +542,6 @@ class _LoginState extends State<Login> {
                   ],
                 ),
               ),
-
-              // if (Platform.isIOS)
-              //   Padding(
-              //     padding: const EdgeInsets.only(top: 20.0),
-              //     child: SignInWithAppleButton(
-              //       onPressed: () async {
-              //         // signInWithApple();
-              //         print('apple');
-              //       },
-              //     ),
-              //   ),
-              // Container(
-              //   child: Center(
-              //     child: Container(
-              //       child: Row(
-              //         mainAxisAlignment: MainAxisAlignment.center,
-              //         children: [
-              //           Visibility(
-              //             visible: allow_google_login.$,
-              //             child: InkWell(
-              //               onTap: () {
-              //                 onPressedGoogleLogin(context);
-              //                 // print('google');
-              //               },
-              //               child: Container(
-              //                 width: 28,
-              //                 child: Image.asset("assets/google_logo.png"),
-              //               ),
-              //             ),
-              //           ),
-              //           if (allow_twitter_login.$)
-              //             Padding(
-              //               padding: const EdgeInsets.only(left: 15.0),
-              //               child: InkWell(
-              //                 onTap: () {
-              //                   // onPressedTwitterLogin();
-              //                   print('Twitter');
-              //                 },
-              //                 child: Container(
-              //                   width: 28,
-              //                   child: Image.asset("assets/twitter_logo.png"),
-              //                 ),
-              //               ),
-              //             ),
-              //         ],
-              //       ),
-              //     ),
-              //   ),
-              // ),
             ],
           ),
         )

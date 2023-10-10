@@ -166,6 +166,7 @@ class _MyAppState extends State<MyApp> {
           BlocProvider<AuthBloc>(
             create: (context) => AuthBloc(
               authRepository: authRepository,
+              firestoreRepository: firestoreRepository,
             ),
           ),
           BlocProvider<HiveBloc>(

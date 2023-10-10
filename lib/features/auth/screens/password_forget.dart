@@ -2,6 +2,7 @@ import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_bloc.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_state.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_exceptions.dart';
 // import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
@@ -73,9 +74,12 @@ class _PasswordForgetState extends State<PasswordForget> {
     final _screen_width = MediaQuery.of(context).size.width;
 
     AuthRepository _authRepository = AuthRepository();
+    FirestoreRepository _firestoreRepository = FirestoreRepository();
 
     return BlocProvider(
-      create: (context) => AuthBloc(authRepository: _authRepository),
+      create: (context) => AuthBloc(
+          authRepository: _authRepository,
+          firestoreRepository: _firestoreRepository),
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthError) {

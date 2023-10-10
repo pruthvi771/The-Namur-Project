@@ -41,6 +41,23 @@ class SignInWithPhoneNumberRequested extends AuthEvent {
   SignInWithPhoneNumberRequested(this.verificationId, this.otp);
 }
 
+class SignUpPhoneVerificationRequested extends AuthEvent {
+  final String phoneNumber;
+
+  SignUpPhoneVerificationRequested(this.phoneNumber);
+}
+
+class SignUpWithPhoneNumberRequested extends AuthEvent {
+  final String verificationId;
+  final String otp;
+  final String name;
+  final String email;
+  final String phoneNumber;
+
+  SignUpWithPhoneNumberRequested(
+      this.verificationId, this.otp, this.name, this.email, this.phoneNumber);
+}
+
 class resetPasswordForEmailRequested extends AuthEvent {
   final String email;
 

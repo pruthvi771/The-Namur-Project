@@ -40,6 +40,17 @@ class PhoneVerificationCompleted extends AuthState {
   List<Object?> get props => [verificationId];
 }
 
+class SignUpPhoneVerificationCompleted extends AuthState {
+  final String? verificationId;
+
+  SignUpPhoneVerificationCompleted({
+    this.verificationId,
+  });
+  // }) : super(verificationId: verificationId);
+  @override
+  List<Object?> get props => [verificationId];
+}
+
 class resetPasswordForEmailSent extends AuthState {
   @override
   List<Object?> get props => [];

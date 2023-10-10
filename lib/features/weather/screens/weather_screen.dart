@@ -306,8 +306,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                 //     .toString(),
                                 // max: responseData['day2']['maxtemp']
                                 //     .toString(),
-                                // desc: responseData['day2']['desc'],
-                                desc: 'Patchy catchy weatehr',
+                                desc: responseData['day2']['desc'],
+                                // desc: 'Patchy catchy weatehr',
                               ),
                             ]),
                       ],

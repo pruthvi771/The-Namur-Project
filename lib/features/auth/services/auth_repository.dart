@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_exceptions.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:firebase_auth/firebase_auth.dart'
     show
@@ -120,7 +121,20 @@ class AuthRepository {
         idToken: gAuth.idToken,
       );
 
-      await _firebaseAuth.signInWithCredential(credential);
+      var userCredential = await _firebaseAuth.signInWithCredential(credential);
+
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('buyer')
+          .doc(userCredential.user!.uid)
+          .get();
+
+      if (!userSnapshot.exists) {
+        firestoreRepository.addUserToBuyerSellerCollections(
+            userId: userCredential.user!.uid,
+            name: userCredential.user!.displayName!,
+            email: userCredential.user!.email!,
+            photoURL: userCredential.user!.photoURL!);
+      }
 
       // final user = currentUser;
       // return user != null ? user : throw UserNotFoundAuthException();
@@ -132,6 +146,8 @@ class AuthRepository {
         throw Exception('Something went wrong. Please contact support.');
       } else if (e.code == 'user-disabled') {
         throw Exception('User is disabled. Please contact support.');
+      } else if (e.code == 'play-services-not-available') {
+        throw Exception('Please install Google Play Store first.');
       } else {
         throw Exception('Something went wrong. Please try again.');
       }
@@ -192,6 +208,58 @@ class AuthRepository {
 
       if (user == null) {
         throw Exception('Something went wrong. Please try again.');
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'invalid-verification-code') {
+        throw Exception('Invalid OTP. Please try again.');
+      } else if (e.code == 'too-many-requests') {
+        throw Exception(
+            'Maximum requests limit reached. Please try again later');
+      } else if (e.code == 'session-expired') {
+        throw Exception('OTP expired. Please try again.');
+      } else {
+        // print(e);
+        throw Exception('Something went wrong. Please try again.');
+      }
+    } catch (_) {
+      // print(_);
+      throw Exception('Something went wrong. Please try again.');
+    }
+  }
+
+  Future<void> signupWithPhone(
+      {required String verificationId,
+      required String phoneNumber,
+      required String otp,
+      required String username,
+      required String email}) async {
+    final credentials = PhoneAuthProvider.credential(
+      verificationId: verificationId,
+      smsCode: otp,
+    );
+
+    try {
+      var userCredential =
+          await _firebaseAuth.signInWithCredential(credentials);
+      final user = currentUser;
+      // return user != null ? user : throw UserNotFoundAuthException();
+
+      if (user == null) {
+        throw Exception('Something went wrong. Please try again.');
+      }
+
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('buyer')
+          .doc(userCredential.user!.uid)
+          .get();
+
+      if (!userSnapshot.exists) {
+        firestoreRepository.addUserToBuyerSellerCollections(
+          userId: userCredential.user!.uid,
+          name: username,
+          email: email,
+          phoneNumber: phoneNumber,
+        );
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-verification-code') {

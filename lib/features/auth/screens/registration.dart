@@ -23,7 +23,7 @@ import 'package:active_ecommerce_flutter/features/auth/screens/otp.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_exceptions.dart';
 // import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
 import 'package:active_ecommerce_flutter/ui_elements/auth_ui.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -94,7 +94,7 @@ class _RegistrationState extends State<Registration> {
       ToastComponent.showDialog(AppLocalizations.of(context)!.enter_your_name,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
-    } else if (_register_by == 'email' && (email == "" || !isEmail(email))) {
+    } else if (email == "" || !isEmail(email)) {
       ToastComponent.showDialog('Enter a valid email address',
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
@@ -131,6 +131,11 @@ class _RegistrationState extends State<Registration> {
 
     if (_register_by == "phone") {
       print('phone login attempted');
+
+      String newNumber = '+91 $phone_confirm';
+      BlocProvider.of<AuthBloc>(buildContext).add(
+        SignUpPhoneVerificationRequested(newNumber),
+      );
     } else {
       BlocProvider.of<AuthBloc>(buildContext)
           .add(SignUpWithEmailRequested(email, password, name));
@@ -142,8 +147,11 @@ class _RegistrationState extends State<Registration> {
     final _screen_height = MediaQuery.of(context).size.height;
     final _screen_width = MediaQuery.of(context).size.width;
     AuthRepository _authRepository = AuthRepository();
+    FirestoreRepository _firestoreRepository = FirestoreRepository();
     return BlocProvider(
-      create: (context) => AuthBloc(authRepository: _authRepository),
+      create: (context) => AuthBloc(
+          authRepository: _authRepository,
+          firestoreRepository: _firestoreRepository),
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is Success) {
@@ -156,6 +164,24 @@ class _RegistrationState extends State<Registration> {
                 state.error.toString().replaceAll('Exception:', '');
             ToastComponent.showDialog(errorMessage.trim(),
                 gravity: Toast.center, duration: Toast.lengthLong);
+          }
+          if (state is SignUpPhoneVerificationCompleted) {
+            print('State: $state SIGNUPPHONEVERIFICATIONCOMPLETED');
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Otp(
+                          verificationId: state.verificationId.toString(),
+                          name: _nameController.text.toString(),
+                          email: _emailController.text.toString(),
+                          signUp: true,
+                          // phoneNumber: _phoneNumberController.text.toString(),
+                          phoneNumber:
+                              '+91 ${_phoneNumberController.text.toString()}',
+
+                          // user_id: ,
+                          // resendToken: resendToken
+                        )));
           }
         },
         child: BlocBuilder<AuthBloc, AuthState>(
@@ -189,6 +215,10 @@ class _RegistrationState extends State<Registration> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              if (_register_by == "phone")
+                SizedBox(
+                  height: 20,
+                ),
               Padding(
                 padding:
                     const EdgeInsets.only(bottom: 8.0, right: 20, left: 20),
@@ -220,6 +250,9 @@ class _RegistrationState extends State<Registration> {
                           decoration: InputDecorations.buildInputDecoration_1(
                               hint_text: "Email Id"),
                         ),
+                      ),
+                      SizedBox(
+                        height: 5,
                       ),
                       // otp_addon_installed.$
                       //     ?
@@ -486,7 +519,7 @@ class _RegistrationState extends State<Registration> {
                   ),
                 ),
               Padding(
-                padding: const EdgeInsets.only(top: 10.0, left: 20),
+                padding: const EdgeInsets.only(top: 10.0, left: 20, bottom: 15),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -503,7 +536,11 @@ class _RegistrationState extends State<Registration> {
                           }),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
+                      padding: const EdgeInsets.only(
+                        left: 8.0,
+                        // top: 15,
+                        // bottom: 15,
+                      ),
                       child: Container(
                         width: DeviceInfo(context).width! - 130,
                         child: RichText(

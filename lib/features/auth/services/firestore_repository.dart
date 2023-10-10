@@ -15,13 +15,14 @@ class FirestoreRepository {
     required String name,
     required String email,
     String? photoURL,
+    String? phoneNumber,
   }) async {
     try {
       _firestore.collection('buyer').doc(userId).set({
         'name': name,
         'email': email,
         'address': '',
-        'phone number': '',
+        'phone number': phoneNumber ?? '',
         'location_id': '',
         'photoURL': photoURL ?? '',
         // add other fields as needed
@@ -90,6 +91,24 @@ class FirestoreRepository {
     } catch (_) {
       print(_);
       throw Exception('Something went wrong. Please try again.');
+    }
+  }
+
+  Future<List<String>> getAllRegisteredPhoneNumbers() async {
+    try {
+      QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection('buyer').get();
+
+      List<String> phoneNumbers = querySnapshot.docs
+          .map((doc) => doc.get('phone number') as String)
+          .toList();
+
+      return phoneNumbers;
+    } catch (e) {
+      // Handle errors here
+      throw Exception(
+          'Something went wrong. Please try again later or contact support.');
+      // return [];
     }
   }
 }

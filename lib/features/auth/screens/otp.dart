@@ -3,6 +3,7 @@ import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_b
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_event.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_state.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_exceptions.dart';
 // import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
@@ -26,13 +27,19 @@ import 'package:active_ecommerce_flutter/screens/main.dart';
 class Otp extends StatefulWidget {
   Otp(
       {Key? key,
-      this.verify_by = "email",
-      this.user_id,
+      this.signUp = false,
+      // this.user_id,
+      this.name,
+      this.email,
+      this.phoneNumber,
       required this.verificationId})
       : super(key: key);
-  final String verify_by;
-  final int? user_id;
+  final bool signUp;
+  // final String? user_id;
   final String verificationId;
+  final String? name;
+  final String? email;
+  final String? phoneNumber;
 
   @override
   _OtpState createState() => _OtpState();
@@ -61,7 +68,6 @@ class _OtpState extends State<Otp> {
   // onTapResend() async {
   //   var resendCodeResponse = await AuthRepository()
   //       .getResendCodeResponse(widget.user_id, widget.verify_by);
-
   //   if (resendCodeResponse.result == false) {
   //     ToastComponent.showDialog(resendCodeResponse.message!,
   //         gravity: Toast.center, duration: Toast.lengthLong);
@@ -93,22 +99,42 @@ class _OtpState extends State<Otp> {
       return;
     }
 
-    BlocProvider.of<AuthBloc>(buildContext)
-        .add(SignInWithPhoneNumberRequested(widget.verificationId, code));
+    if (widget.signUp) {
+      BlocProvider.of<AuthBloc>(buildContext)
+          .add(SignUpWithPhoneNumberRequested(
+        widget.verificationId,
+        code,
+        widget.name!,
+        widget.email!,
+        widget.phoneNumber!,
+      ));
+    } else {
+      BlocProvider.of<AuthBloc>(buildContext)
+          .add(SignInWithPhoneNumberRequested(widget.verificationId, code));
+    }
   }
 
   List<String> otp = List.filled(6, ''); // Change the size to 6
 
   @override
   Widget build(BuildContext context) {
-    String _verify_by = widget.verify_by; //phone or email
+    // String _verify_by = widget.verify_by; //phone or email
     final _screen_height = MediaQuery.of(context).size.height;
     final _screen_width = MediaQuery.of(context).size.width;
 
     AuthRepository _authRepository = AuthRepository();
+    FirestoreRepository _firestoreRepository = FirestoreRepository();
+
+    if (widget.signUp) {
+      print('yes yes, Signup is true bro');
+    } else {
+      print('Signup is NOT true');
+    }
 
     return BlocProvider(
-      create: (context) => AuthBloc(authRepository: _authRepository),
+      create: (context) => AuthBloc(
+          authRepository: _authRepository,
+          firestoreRepository: _firestoreRepository),
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthError) {
