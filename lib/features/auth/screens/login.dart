@@ -6,7 +6,6 @@ import 'package:active_ecommerce_flutter/features/auth/screens/password_forget.d
 import 'package:active_ecommerce_flutter/features/auth/screens/registration.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_bloc.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_state.dart';
-import 'package:active_ecommerce_flutter/features/auth/services/auth_exceptions.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 // import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';

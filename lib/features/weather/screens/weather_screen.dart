@@ -144,66 +144,151 @@ class _WeatherScreenState extends State<WeatherScreen> {
       physics: BouncingScrollPhysics(),
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Container(
-                height: 44,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  border: Border.all(color: MyTheme.textfield_grey),
-                  color: MyTheme.light_grey,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20),
-                      child: Text(
-                        "577511",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 15),
-                      ),
-                    )
-                  ],
-                )),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.all(20.0),
+          //   child: Container(
+          //       height: 44,
+          //       width: MediaQuery.of(context).size.width,
+          //       decoration: BoxDecoration(
+          //         border: Border.all(color: MyTheme.textfield_grey),
+          //         color: MyTheme.light_grey,
+          //         borderRadius: BorderRadius.circular(5),
+          //       ),
+          //       child: Row(
+          //         children: [
+          //           Padding(
+          //             padding: const EdgeInsets.only(left: 20),
+          //             child: Text(
+          //               "577511",
+          //               style: TextStyle(
+          //                   fontWeight: FontWeight.bold, fontSize: 15),
+          //             ),
+          //           )
+          //         ],
+          //       )),
+          // ),
           BlocBuilder<WeatherSectionBloc, WeatherSectionState>(
             builder: (context, state) {
               if (state is LoadingSection)
-                return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  child: CurrentWeatherWidget(
-                    currentTemperature: '--',
-                    currentDesc: '--',
-                    currentHumidity: '--',
-                    currentWind: '--',
-                  ),
+                return Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Container(
+                          height: 44,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: MyTheme.textfield_grey),
+                            color: MyTheme.light_grey,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 20),
+                                child: Text(
+                                  "------",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15),
+                                ),
+                              )
+                            ],
+                          )),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 10),
+                      child: CurrentWeatherWidget(
+                        currentTemperature: '--',
+                        currentDesc: '--',
+                        currentHumidity: '--',
+                        currentWind: '--',
+                      ),
+                    ),
+                  ],
                 );
               if (state is WeatherSectionDataReceived)
-                return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  child: CurrentWeatherWidget(
-                    currentTemperature:
-                        state.responseData.currentData.tempC.toInt().toString(),
-                    currentDesc: state.responseData.currentData.condition.text,
-                    // currentDesc: 'Sunny patchy weather',
-                    currentHumidity:
-                        state.responseData.currentData.humidity.toString(),
-                    currentWind:
-                        state.responseData.currentData.windKph.toString(),
-                  ),
+                return Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Container(
+                          height: 44,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: MyTheme.textfield_grey),
+                            color: MyTheme.light_grey,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 20),
+                                child: Text(
+                                  state.responseData.locationName,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15),
+                                ),
+                              )
+                            ],
+                          )),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 10),
+                      child: CurrentWeatherWidget(
+                        currentTemperature: state.responseData.currentData.tempC
+                            .toInt()
+                            .toString(),
+                        currentDesc:
+                            state.responseData.currentData.condition.text,
+                        // currentDesc: 'Sunny patchy weather',
+                        currentHumidity:
+                            state.responseData.currentData.humidity.toString(),
+                        currentWind:
+                            state.responseData.currentData.windKph.toString(),
+                      ),
+                    ),
+                  ],
                 );
-              return Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                child: CurrentWeatherWidget(
-                  currentTemperature: '--',
-                  currentDesc: '--',
-                  currentHumidity: '--',
-                  currentWind: '--',
-                ),
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Container(
+                        height: 44,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: MyTheme.textfield_grey),
+                          color: MyTheme.light_grey,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 20),
+                              child: Text(
+                                "------",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 15),
+                              ),
+                            )
+                          ],
+                        )),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 10),
+                    child: CurrentWeatherWidget(
+                      currentTemperature: '--',
+                      currentDesc: '--',
+                      currentHumidity: '--',
+                      currentWind: '--',
+                    ),
+                  ),
+                ],
               );
             },
           ),
@@ -348,6 +433,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
               },
             ),
           ),
+
+          //Satellite View
           Padding(
             padding: const EdgeInsets.only(left: 25, top: 10, bottom: 10),
             child: Align(
@@ -568,7 +655,7 @@ class WeatherDayCard extends StatelessWidget {
             ),
           ),
           Container(
-            padding: const EdgeInsets.symmetric(vertical: 11),
+            padding: const EdgeInsets.symmetric(vertical: 10),
             width: double.infinity,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),

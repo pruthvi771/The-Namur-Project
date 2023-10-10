@@ -5,7 +5,6 @@ import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_s
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
-import 'package:active_ecommerce_flutter/features/auth/services/auth_exceptions.dart';
 // import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

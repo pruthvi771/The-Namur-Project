@@ -8,10 +8,15 @@ class WeatherSectionBloc
   WeatherSectionBloc() : super(WeatherSectionDataNotReceived()) {
     on<WeatherSectionDataRequested>((event, emit) async {
       emit(LoadingSection());
-      final currentData = await WeatherRepository().fetchCurrent();
-      // await Future.delayed(Duration(seconds: 3));
-      emit(WeatherSectionDataReceived(responseData: currentData));
-      // });
+      try {
+        final currentData = await WeatherRepository().fetchCurrent();
+        // await Future.delayed(Duration(seconds: 3));
+        emit(WeatherSectionDataReceived(responseData: currentData));
+        // });
+      } catch (e) {
+        print(e);
+        emit(Error(e.toString()));
+      }
     });
   }
 }

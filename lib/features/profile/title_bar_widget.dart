@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
@@ -11,6 +12,7 @@ import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/w
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:toast/toast.dart';
 
 import '../../my_theme.dart';
 import '../weather/screens/weather_screen.dart';
@@ -186,6 +188,11 @@ class _TitleBarState extends State<TitleBar> {
                         } else if (state is WeatherSectionDataNotReceived) {
                           // print('state is WeatherSectionDataNotReceived');
                         }
+                        if (state is Error) {
+                          ToastComponent.showDialog(state.error,
+                              gravity: Toast.center,
+                              duration: Toast.lengthLong);
+                        }
                         // else {
                         //   BlocProvider.of<WeatherBloc>(context).add(
                         //     WeatherSectionInfoRequested(),
@@ -208,7 +215,7 @@ class _TitleBarState extends State<TitleBar> {
                                   '${state.responseData.currentData.tempC.toInt().toString()} °C',
                               description:
                                   state.responseData.currentData.condition.text,
-                              location: '@Pitlali',
+                              location: '@${state.responseData.locationName}',
                             );
                           }
                           if (state is WeatherSectionDataNotReceived) {

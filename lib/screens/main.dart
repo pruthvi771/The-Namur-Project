@@ -1,4 +1,6 @@
 import 'package:active_ecommerce_flutter/custom/common_functions.dart';
+import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart'
+    as hiveModels;
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/presenter/bottom_appbar_index.dart';
@@ -13,8 +15,12 @@ import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hive/hive.dart';
+import 'package:permission_handler/permission_handler.dart'
+    as permissionHandler;
 import 'package:provider/provider.dart';
 // import 'package:route_transitions/route_transitions.dart';
+import 'package:location/location.dart';
 
 import 'my_account/my_account.dart';
 
@@ -86,7 +92,52 @@ class _MainState extends State<Main> {
     //re appear statusbar in case it was not there in the previous page
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);
+    checkLocationPermission();
     super.initState();
+  }
+
+  Location location = Location();
+  late bool _serviceEnabled;
+  late permissionHandler.PermissionStatus _permissionGranted;
+  late LocationData _locationData;
+
+  Future<void> checkLocationPermission() async {
+    var dataBox = Hive.box<hiveModels.PrimaryLocation>('primaryLocationBox');
+
+    var savedData = dataBox.get('locationData');
+
+    if (savedData != null) {
+      print("saved Latitude: ${savedData.latitude}");
+      print("saved Longitude: ${savedData.longitude}");
+      return;
+    }
+
+    print('no saved location data found');
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await permissionHandler.Permission.location.request();
+    if (_permissionGranted != permissionHandler.PermissionStatus.granted) {
+      return;
+    }
+
+    _locationData = await location.getLocation();
+    print("new Latitude: ${_locationData.latitude}");
+    print("new Longitude: ${_locationData.longitude}");
+
+    var primaryLocation = hiveModels.PrimaryLocation()
+      ..id = "locationData"
+      ..latitude = _locationData.latitude as double
+      ..longitude = _locationData.longitude as double
+      ..address = "";
+
+    await dataBox.put(primaryLocation.id, primaryLocation);
   }
 
   @override

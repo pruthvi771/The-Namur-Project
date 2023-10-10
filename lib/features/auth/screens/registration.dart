@@ -11,8 +11,6 @@ import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_b
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_event.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_state.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
-import 'package:active_ecommerce_flutter/features/auth/services/firestore_bloc/firestore_bloc.dart';
-import 'package:active_ecommerce_flutter/features/auth/services/firestore_bloc/firestore_event.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
@@ -20,7 +18,6 @@ import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/screens/common_webview_screen.dart';
 import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
 import 'package:active_ecommerce_flutter/features/auth/screens/otp.dart';
-import 'package:active_ecommerce_flutter/features/auth/services/auth_exceptions.dart';
 // import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
 import 'package:active_ecommerce_flutter/ui_elements/auth_ui.dart';
 // import 'package:firebase_auth/firebase_auth.dart';

@@ -15,10 +15,15 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
 
     on<WeatherSreenDataRequested>((event, emit) async {
       emit(Loading());
-      final responseData = await WeatherRepository().fetchForecast();
-      // await Future.delayed(Duration(seconds: 3));
-      emit(WeatherSreenDataReceived(responseData: responseData));
-      // });
+      try {
+        final responseData = await WeatherRepository().fetchForecast();
+        // await Future.delayed(Duration(seconds: 3));
+        emit(WeatherSreenDataReceived(responseData: responseData));
+        // });
+      } catch (e) {
+        print(e);
+        emit(Error(e.toString()));
+      }
     });
   }
 }

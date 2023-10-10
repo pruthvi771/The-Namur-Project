@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
-import 'package:active_ecommerce_flutter/features/auth/services/auth_exceptions.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -101,14 +100,14 @@ class AuthRepository {
     }
   }
 
-  Future<void> sendEmailVerification() async {
-    final user = _firebaseAuth.currentUser;
-    if (user != null) {
-      await user.sendEmailVerification();
-    } else {
-      throw UserNotLoggedInAuthException();
-    }
-  }
+  // Future<void> sendEmailVerification() async {
+  //   final user = _firebaseAuth.currentUser;
+  //   if (user != null) {
+  //     await user.sendEmailVerification();
+  //   } else {
+  //     throw UserNotLoggedInAuthException();
+  //   }
+  // }
 
   Future<void> loginWithGoogle() async {
     try {

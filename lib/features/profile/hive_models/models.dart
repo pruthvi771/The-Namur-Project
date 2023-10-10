@@ -73,3 +73,18 @@ class Crop {
   @HiveField(1)
   late double yieldOfCrop;
 }
+
+@HiveType(typeId: 5)
+class PrimaryLocation {
+  @HiveField(0)
+  late String id;
+
+  @HiveField(1)
+  late double latitude;
+
+  @HiveField(2)
+  late double longitude;
+
+  @HiveField(3)
+  late String? address;
+}

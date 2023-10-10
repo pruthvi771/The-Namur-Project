@@ -1,6 +1,5 @@
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_bloc.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
-import 'package:active_ecommerce_flutter/features/auth/services/firestore_bloc/firestore_bloc.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart'
@@ -8,13 +7,8 @@ import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dar
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_bloc.dart';
 import 'package:active_ecommerce_flutter/features/weather/bloc/weather_bloc.dart';
-import 'package:active_ecommerce_flutter/helpers/addons_helper.dart';
-import 'package:active_ecommerce_flutter/helpers/auth_helper.dart';
-import 'package:active_ecommerce_flutter/helpers/business_setting_helper.dart';
-import 'package:active_ecommerce_flutter/other_config.dart';
 import 'package:active_ecommerce_flutter/presenter/cart_counter.dart';
 import 'package:active_ecommerce_flutter/presenter/currency_presenter.dart';
-import 'package:active_ecommerce_flutter/presenter/home_presenter.dart';
 import 'package:active_ecommerce_flutter/providers/locale_provider.dart';
 import 'package:active_ecommerce_flutter/screens/address.dart';
 import 'package:active_ecommerce_flutter/screens/cart.dart';
@@ -37,17 +31,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
-import 'package:active_ecommerce_flutter/screens/splash.dart';
+// import 'package:active_ecommerce_flutter/screens/splash.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_value/shared_value.dart';
-import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
-import 'dart:async';
+// import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
+// import 'dart:async';
 import 'app_config.dart';
-import 'package:active_ecommerce_flutter/services/push_notification_service.dart';
+// import 'package:active_ecommerce_flutter/services/push_notification_service.dart';
 import 'package:one_context/one_context.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -113,7 +106,9 @@ main() async {
   Hive.registerAdapter(hiveModels.LandAdapter());
   Hive.registerAdapter(hiveModels.CropAdapter());
   Hive.registerAdapter(hiveModels.ProfileDataAdapter());
+  Hive.registerAdapter(hiveModels.PrimaryLocationAdapter());
   await Hive.openBox<hiveModels.ProfileData>('profileDataBox3');
+  await Hive.openBox<hiveModels.PrimaryLocation>('primaryLocationBox');
 
   runApp(
     SharedValue.wrapApp(
@@ -171,10 +166,6 @@ class _MyAppState extends State<MyApp> {
           ),
           BlocProvider<HiveBloc>(
             create: (context) => HiveBloc(),
-          ),
-          BlocProvider<FirestoreBloc>(
-            create: (context) =>
-                FirestoreBloc(firestoreRepository: firestoreRepository),
           ),
           BlocProvider<ProfileBloc>(create: (context) => ProfileBloc()),
         ],

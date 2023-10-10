@@ -24,6 +24,11 @@ final class WeatherSectionDataNotReceived extends WeatherSectionState {
   List<Object?> get props => [];
 }
 
+final class LocationDataNotFoundinHive extends WeatherSectionState {
+  @override
+  List<Object?> get props => [];
+}
+
 final class LoadingSection extends WeatherSectionState {
   @override
   List<Object?> get props => [];
