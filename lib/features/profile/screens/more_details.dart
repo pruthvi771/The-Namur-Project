@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
@@ -8,19 +6,14 @@ import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dar
 import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/edit_profile.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/land_screen.dart';
-import 'package:active_ecommerce_flutter/features/profile/screens/profile.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:hive/hive.dart';
 import '../../../custom/device_info.dart';
 
 import 'package:flutter_expanded_tile/flutter_expanded_tile.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-
-// import '../seller_platform/seller_platform.dart';
 
 class MoreDetails extends StatefulWidget {
   const MoreDetails({Key? key}) : super(key: key);
@@ -32,7 +25,7 @@ class MoreDetails extends StatefulWidget {
 class _MoreDetailsState extends State<MoreDetails> {
   final _kycController = ExpandedTileController(isExpanded: true);
   final _addressController = new ExpandedTileController(isExpanded: true);
-  final _landDetailsController = new ExpandedTileController();
+  // final _landDetailsController = new ExpandedTileController();
   final _cropsController = new ExpandedTileController(isExpanded: true);
   final _machinesController = new ExpandedTileController(isExpanded: true);
 
@@ -48,12 +41,12 @@ class _MoreDetailsState extends State<MoreDetails> {
     if (!profileData.kyc.aadhar.isEmpty) {
       tempProgress += 0.2;
     }
-    if (!profileData.kyc.pan.isEmpty) {
-      tempProgress += 0.2;
-    }
-    if (!profileData.kyc.gst.isEmpty) {
-      tempProgress += 0.2;
-    }
+    // if (!profileData.kyc.pan.isEmpty) {
+    //   tempProgress += 0.2;
+    // }
+    // if (!profileData.kyc.gst.isEmpty) {
+    //   tempProgress += 0.2;
+    // }
     if (!(profileData.land.length == 0)) {
       tempProgress += 0.2;
     }
@@ -85,8 +78,7 @@ class _MoreDetailsState extends State<MoreDetails> {
     //   calculatingProgress(profileData);
     // });
     profileData = dataBox.get('profile');
-    // print('json: ${json.encode(profileData)}');
-    // print(profileData!.toJson());
+
     calculatingProgress(profileData);
   }
 
@@ -96,34 +88,6 @@ class _MoreDetailsState extends State<MoreDetails> {
     AuthUser user = AuthRepository().currentUser!;
     return FirestoreRepository().getBuyerData(userId: user.userId);
   }
-
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-
-  //   if (ModalRoute.of(context)!.isCurrent) {
-  //     var dataBox = Hive.box<ProfileData>('profileDataBox3');
-  //     profileData = dataBox.get('profile');
-
-  //     if (profileData == null) {
-  //       var kyc = KYC()
-  //         ..aadhar = ''
-  //         ..pan = ''
-  //         ..gst = '';
-  //       var emptyProfileData = ProfileData()
-  //         ..id = 'profile'
-  //         ..updated = true
-  //         ..address = []
-  //         ..kyc = kyc
-  //         ..land = [];
-  //       dataBox.put(emptyProfileData.id, emptyProfileData);
-  //       setState(() {
-  //         profileData = emptyProfileData;
-  //         calculatingProgress(profileData);
-  //       });
-  //     }
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -558,16 +522,6 @@ class _MoreDetailsState extends State<MoreDetails> {
     );
   }
 
-  // RefreshIndicator buildBody() {
-  //   return RefreshIndicator(
-  //     color: MyTheme.white,
-  //     backgroundColor: MyTheme.primary_color,
-  // onRefresh: _onPageRefresh,
-  //     displacement: 10,
-  //     child: bodycontent(),
-  //   );
-  // }
-
   PreferredSize buildCustomAppBar(context) {
     return PreferredSize(
       preferredSize: Size(DeviceInfo(context).width!, 80),
@@ -585,6 +539,31 @@ class _MoreDetailsState extends State<MoreDetails> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Container(
+                  margin: EdgeInsets.only(right: 0),
+                  height: 30,
+                  child: Container(
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Icon(
+                        Icons.keyboard_arrow_left,
+                        size: 35,
+                        color: MyTheme.white,
+                      ),
+                    ),
+                  ),
+                ),
+                Center(
+                  child: Text(AppLocalizations.of(context)!.more_detail_ucf,
+                      style: TextStyle(
+                          color: MyTheme.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: .5,
+                          fontFamily: 'Poppins')),
+                ),
                 Container(
                   width: 30,
                   height: double.infinity,
@@ -606,40 +585,6 @@ class _MoreDetailsState extends State<MoreDetails> {
                             fontWeight: FontWeight.w600,
                             letterSpacing: .5,
                             fontFamily: 'Poppins'),
-                      ),
-                    ),
-                  ),
-                ),
-                Center(
-                  child: Text(AppLocalizations.of(context)!.more_detail_ucf,
-                      style: TextStyle(
-                          color: MyTheme.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: .5,
-                          fontFamily: 'Poppins')),
-                ),
-                Container(
-                  margin: EdgeInsets.only(right: 0),
-                  height: 30,
-                  child: Container(
-                    child: InkWell(
-                      //padding: EdgeInsets.zero,
-                      onTap: () {
-                        Navigator.pop(context);
-                        // // Navigator.push(context,
-                        // //     MaterialPageRoute(builder: (context) {
-                        // //   return Profile();
-                        // // }));
-                        // Navigator.popUntil(context, (route) {
-                        //   // Check if the route is the Profile screen
-                        //   return route.settings.name == '/profile';
-                        // });
-                      },
-                      child: Icon(
-                        Icons.keyboard_arrow_left,
-                        size: 35,
-                        color: MyTheme.white,
                       ),
                     ),
                   ),

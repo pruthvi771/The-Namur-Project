@@ -48,7 +48,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   String districtDropdownValue = addressList.districtTalukMap[0][0] as String;
   String talukDropdownValue = addressList.districtTalukMap[1][0] as String;
-  String landDropdownValue = '';
+
+  String landDropdownValueForCrop = '';
+  String landDropdownValueForMachine = '';
+
   String cropDropdownValue = '';
   String equipmentDropdownValue = '';
 
@@ -207,17 +210,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       return;
     }
 
-    if (pan.length != 12) {
-      ToastComponent.showDialog('Enter a valid PAN Card Number',
-          gravity: Toast.center, duration: Toast.lengthLong);
-      return;
-    }
+    // if (pan.length != 12) {
+    //   ToastComponent.showDialog('Enter a valid PAN Card Number',
+    //       gravity: Toast.center, duration: Toast.lengthLong);
+    //   return;
+    // }
 
-    if (gst.length != 15) {
-      ToastComponent.showDialog('Enter a valid GST Number',
-          gravity: Toast.center, duration: Toast.lengthLong);
-      return;
-    }
+    // if (gst.length != 15) {
+    //   ToastComponent.showDialog('Enter a valid GST Number',
+    //       gravity: Toast.center, duration: Toast.lengthLong);
+    //   return;
+    // }
 
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
 
@@ -278,7 +281,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (dataCollectionType == DataCollectionType.address) {
       savedData!.address.removeAt(index);
     } else if (dataCollectionType == DataCollectionType.land) {
-      landDropdownValue = '';
+      landDropdownValueForCrop = '';
+      landDropdownValueForMachine = '';
       savedData!.land.removeAt(index);
     }
 
@@ -535,12 +539,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Text(
-                                        'PAN: ${state.profileData.kyc.pan}'),
+                                        "PAN: ${state.profileData.kyc.pan == '' ? 'N/A' : state.profileData.kyc.pan}"),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Text(
-                                        'GST: ${state.profileData.kyc.gst}'),
+                                        "GST: ${state.profileData.kyc.gst == '' ? 'N/A' : state.profileData.kyc.gst}"),
                                   ),
                                 ],
                               ),
@@ -571,6 +575,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         children: [
                           TextFieldWidget('Aadhar Card', _aadharController,
                               'Enter Aadhar Card Number'),
+                          Row(
+                            children: [
+                              Expanded(child: SizedBox.shrink()),
+                              Text(
+                                '${_aadharController.text.length}/12',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: _aadharController.text.length > 12
+                                      ? Colors.red
+                                      : _aadharController.text.length == 12
+                                          ? Colors.green
+                                          : Colors.grey,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 5,
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
                           TextFieldWidget('PAN Card', _panController,
                               'Enter PAN Card Number'),
                           TextFieldWidget(
@@ -858,24 +884,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       );
                                     },
                                   ),
-                                  landDropdownValue, (value) {
+                                  landDropdownValueForCrop, (value) {
                                 setState(() {
-                                  landDropdownValue = value;
+                                  landDropdownValueForCrop = value;
                                   setState(() {});
                                 });
                               }),
-                              if (landDropdownValue.isNotEmpty)
+                              if (landDropdownValueForCrop.isNotEmpty)
                                 Align(
                                   alignment: Alignment.topLeft,
                                   child: Wrap(
                                     children: List.generate(
                                       getCropsForSyno(state.profileData,
-                                              landDropdownValue)
+                                              landDropdownValueForCrop)
                                           .length,
                                       (index) {
                                         var item = getCropsForSyno(
                                             state.profileData,
-                                            landDropdownValue)[index];
+                                            landDropdownValueForCrop)[index];
                                         return Padding(
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 2),
@@ -889,7 +915,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             // deleteIcon: Icon(Icons.delete),
                                             onDeleted: () {
                                               _deleteCropFromHive(
-                                                  landDropdownValue, index);
+                                                  landDropdownValueForCrop,
+                                                  index);
                                               setState(() {});
                                             },
                                           ),
@@ -923,7 +950,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     child: Text('Add Record'),
                                     onPressed: () {
                                       _addCropToHive(
-                                        landDropdownValue,
+                                        landDropdownValueForCrop,
                                         cropDropdownValue,
                                         _yieldController.text,
                                       );
@@ -996,24 +1023,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       );
                                     },
                                   ),
-                                  landDropdownValue, (value) {
+                                  landDropdownValueForMachine, (value) {
                                 setState(() {
-                                  landDropdownValue = value;
+                                  landDropdownValueForMachine = value;
                                   setState(() {});
                                 });
                               }),
-                              if (landDropdownValue.isNotEmpty)
+                              if (landDropdownValueForMachine.isNotEmpty)
                                 Align(
                                   alignment: Alignment.topLeft,
                                   child: Wrap(
                                     children: List.generate(
                                       getMachinesForSyno(state.profileData,
-                                              landDropdownValue)
+                                              landDropdownValueForMachine)
                                           .length,
                                       (index) {
                                         var item = getMachinesForSyno(
                                             state.profileData,
-                                            landDropdownValue)[index];
+                                            landDropdownValueForMachine)[index];
                                         return Padding(
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 2),
@@ -1026,7 +1053,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             // deleteIcon: Icon(Icons.delete),
                                             onDeleted: () {
                                               _deleteEquipmentFromHive(
-                                                  landDropdownValue, index);
+                                                  landDropdownValueForMachine,
+                                                  index);
                                               setState(() {});
                                             },
                                           ),
@@ -1056,7 +1084,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     child: Text('Add Record'),
                                     onPressed: () {
                                       _addEquipmentToHive(
-                                        landDropdownValue,
+                                        landDropdownValueForMachine,
                                         equipmentDropdownValue,
                                       );
                                       setState(() {});
@@ -1234,6 +1262,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         Container(
           height: 40,
           child: TextField(
+            onChanged: (value) {
+              setState(() {});
+            },
             controller: _textController,
             autofocus: false,
             decoration:

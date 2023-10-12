@@ -294,52 +294,77 @@ class _CategoryListState extends State<CategoryList> {
   }
 
   //Build function with future builder
+  // buildCategoryList() {
+  //   var data = widget.is_top_category
+  //       ? CategoryRepository().getTopCategories()
+  //       : CategoryRepository()
+  //           .getCategories(parent_id: widget.parent_category_id);
+  //   return FutureBuilder(
+  //       future: data,
+  //       builder: (context, AsyncSnapshot<CategoryResponse> snapshot) {
+  //         if (snapshot.connectionState == ConnectionState.waiting) {
+  //           return SingleChildScrollView(child: buildShimmer());
+  //         }
+  //         if (snapshot.hasError) {
+  //           //snapshot.hasError
+  //           print("category list error");
+  //           print(snapshot.error.toString());
+  //           return Container(
+  //             height: 10,
+  //           );
+  //         } else if (snapshot.hasData) {
+  //           return GridView.builder(
+  //             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+  //               mainAxisSpacing: 10,
+  //               crossAxisSpacing: 20,
+  //               childAspectRatio: 1.15,
+  //               crossAxisCount: 2,
+  //             ),
+  //             itemCount: snapshot.data!.categories!.length,
+  //             padding: EdgeInsets.only(
+  //                 left: 18,
+  //                 right: 18,
+  //                 bottom: widget.is_base_category ? 30 : 0),
+  //             scrollDirection: Axis.vertical,
+  //             physics: NeverScrollableScrollPhysics(),
+  //             shrinkWrap: true,
+  //             itemBuilder: (context, index) {
+  //               return buildCategoryItemCard(snapshot.data, index, isvalue);
+  //             },
+  //           );
+  //         } else {
+  //           return SingleChildScrollView(child: buildShimmer());
+  //         }
+  //       });
+  // }
+
   buildCategoryList() {
-    var data = widget.is_top_category
-        ? CategoryRepository().getTopCategories()
-        : CategoryRepository()
-            .getCategories(parent_id: widget.parent_category_id);
-    return FutureBuilder(
-        future: data,
-        builder: (context, AsyncSnapshot<CategoryResponse> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return SingleChildScrollView(child: buildShimmer());
-          }
-          if (snapshot.hasError) {
-            //snapshot.hasError
-            print("category list error");
-            print(snapshot.error.toString());
-            return Container(
-              height: 10,
-            );
-          } else if (snapshot.hasData) {
-            return GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 20,
-                childAspectRatio: 1.15,
-                crossAxisCount: 2,
-              ),
-              itemCount: snapshot.data!.categories!.length,
-              padding: EdgeInsets.only(
-                  left: 18,
-                  right: 18,
-                  bottom: widget.is_base_category ? 30 : 0),
-              scrollDirection: Axis.vertical,
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                return buildCategoryItemCard(snapshot.data, index, isvalue);
-              },
-            );
-          } else {
-            return SingleChildScrollView(child: buildShimmer());
-          }
-        });
+    // var data = widget.is_top_category
+    //     ? CategoryRepository().getTopCategories()
+    //     : CategoryRepository()
+    //         .getCategories(parent_id: widget.parent_category_id);
+    return GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        mainAxisSpacing: 10,
+        crossAxisSpacing: 20,
+        childAspectRatio: 1.15,
+        crossAxisCount: 2,
+      ),
+      itemCount: 4,
+      padding: EdgeInsets.only(
+          left: 18, right: 18, bottom: widget.is_base_category ? 30 : 0),
+      scrollDirection: Axis.vertical,
+      physics: NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        return buildCategoryItemCard(index, isvalue);
+      },
+    );
   }
 
   //widget for each category
-  Widget buildCategoryItemCard(categoryResponse, index, isvalue) {
+  // Widget buildCategoryItemCard(categoryResponse, index, isvalue) {
+  Widget buildCategoryItemCard(index, isvalue) {
     var itemWidth = ((DeviceInfo(context).width! - 31) / 2);
     print(itemWidth);
 
@@ -347,19 +372,20 @@ class _CategoryListState extends State<CategoryList> {
       // decoration: BoxDecorations.buildBoxDecoration_1(),
       child: InkWell(
         onTap: () {
-          subCategoryCon.GetSubCategory(categoryResponse.categories[index].id);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                return SubCategory(
-                  category_id: categoryResponse.categories[index].id,
-                  category_name: categoryResponse.categories[index].name,
-                  isvalue: isvalue,
-                );
-              },
-            ),
-          );
+          print('Tapped index $index');
+          // subCategoryCon.GetSubCategory(categoryResponse.categories[index].id);
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) {
+          //       return SubCategory(
+          //         category_id: categoryResponse.categories[index].id,
+          //         category_name: categoryResponse.categories[index].name,
+          //         isvalue: isvalue,
+          //       );
+          //     },
+          //   ),
+          // );
         },
         child: Container(
           //padding: EdgeInsets.all(8),
@@ -432,7 +458,16 @@ class _CategoryListState extends State<CategoryList> {
                 ],
               ),
               Text(
-                "${categoryResponse.categories[index].name}",
+                // "${categoryResponse.categories[index].name}",
+                index == 0
+                    ? "Animal"
+                    : index == 1
+                        ? "Machine"
+                        : index == 2
+                            ? "Village"
+                            : index == 3
+                                ? "Land"
+                                : "Calendar",
                 style: TextStyle(
                     fontWeight: FontWeight.w600, fontFamily: 'Poppins'),
               )
