@@ -5,7 +5,6 @@ import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/custom/google_recaptcha.dart';
 import 'package:active_ecommerce_flutter/custom/input_decorations.dart';
-import 'package:active_ecommerce_flutter/custom/intl_phone_input.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_bloc.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_event.dart';
@@ -27,7 +26,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:intl_phone_field/phone_number.dart';
 import 'package:toast/toast.dart';
 import 'package:validators/validators.dart';
 
@@ -46,6 +46,11 @@ class _RegistrationState extends State<Registration> {
   var countries_code = <String?>[];
 
   String? _phone = "";
+  String? newPhone2 = "";
+  bool? isNewNumberValid = false;
+
+  bool isPhoneNumberEmpty = true;
+
   bool? _isAgree = false;
   bool _isCaptchaShowing = false;
   String googleRecaptchaKey = "";
@@ -64,12 +69,6 @@ class _RegistrationState extends State<Registration> {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.bottom]);
     super.initState();
-    fetch_country();
-  }
-
-  fetch_country() async {
-    var data = await AddressRepository().getCountryList();
-    data.countries.forEach((c) => countries_code.add(c.code));
   }
 
   @override
@@ -85,7 +84,7 @@ class _RegistrationState extends State<Registration> {
     var email = _emailController.text.toString();
     var password = _passwordController.text.toString();
     var password_confirm = _passwordConfirmController.text.toString();
-    var phone_confirm = _phoneNumberController.text.toString();
+    var phone = newPhone2;
 
     if (name == "") {
       ToastComponent.showDialog(AppLocalizations.of(context)!.enter_your_name,
@@ -95,7 +94,7 @@ class _RegistrationState extends State<Registration> {
       ToastComponent.showDialog('Enter a valid email address',
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
-    } else if (_register_by == 'phone' && _phone == "") {
+    } else if (_register_by == 'phone' && isPhoneNumberEmpty) {
       ToastComponent.showDialog(
           AppLocalizations.of(context)!.enter_phone_number,
           gravity: Toast.center,
@@ -126,12 +125,18 @@ class _RegistrationState extends State<Registration> {
       return;
     }
 
-    if (_register_by == "phone") {
-      print('phone login attempted');
+    // if (isNewNumberValid == false) {
+    //   ToastComponent.showDialog('Enter a valid phone number',
+    //       gravity: Toast.center, duration: Toast.lengthLong);
+    //   return;
+    // }
 
-      String newNumber = '+91 $phone_confirm';
+    if (_register_by == "phone") {
+      // print('phone login attempted');
+      // print('phone number is $phone');
+      // String newNumber = '+91 $phone_confirm';
       BlocProvider.of<AuthBloc>(buildContext).add(
-        SignUpPhoneVerificationRequested(newNumber),
+        SignUpPhoneVerificationRequested(phone!),
       );
     } else {
       BlocProvider.of<AuthBloc>(buildContext)
@@ -282,53 +287,89 @@ class _RegistrationState extends State<Registration> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
+                      // Container(
+                      //   height: 40,
+                      //   child: CustomInternationalPhoneNumberInput(
+                      //     maxLength: 10,
+                      //     countries: countries_code,
+                      //     initialValue: PhoneNumber(isoCode: 'IN'),
+                      //     onInputChanged: (PhoneNumber number) {
+                      //       String? phoneNumber = number.phoneNumber;
+                      //       if (phoneNumber?.length == 10) {
+                      //         print(phoneNumber);
+                      //         setState(() {
+                      //           _phone = phoneNumber;
+                      //         });
+                      //       } else {
+                      //         print("Invalid phone number");
+                      //       }
+                      //     },
+                      //     onInputValidated: (bool value) {
+                      //       print(value);
+                      //     },
+                      //     selectorConfig: SelectorConfig(
+                      //         selectorType: PhoneInputSelectorType.DIALOG,
+                      //         showFlags: false,
+                      //         trailingSpace: false),
+                      //     ignoreBlank: false,
+                      //     autoValidateMode: AutovalidateMode.disabled,
+                      //     selectorTextStyle:
+                      //         TextStyle(color: MyTheme.font_grey),
+                      //     textFieldController: _phoneNumberController,
+                      //     formatInput: false, // Disable default formatting
+                      //     keyboardType: TextInputType.number,
+                      //     inputDecoration:
+                      //         InputDecorations.buildInputDecoration_phone(
+                      //             hint_text: "Phone Number"),
+                      //     onSaved: (PhoneNumber number) {
+                      //       //print('On Saved: $number');
+                      //     }, // Limit input to 10 digits
+                      //   ),
+                      // ),
                       Container(
-                        height: 40,
-                        child: CustomInternationalPhoneNumberInput(
-                          maxLength: 10,
-                          countries: countries_code,
-                          initialValue: PhoneNumber(isoCode: 'IN'),
-                          onInputChanged: (PhoneNumber number) {
-                            String? phoneNumber = number.phoneNumber;
-                            if (phoneNumber?.length == 10) {
-                              print(phoneNumber);
-                              setState(() {
-                                _phone = phoneNumber;
-                              });
-                            } else {
-                              print("Invalid phone number");
-                            }
+                        height: 60,
+                        // padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: IntlPhoneField(
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(8),
+                            labelText: 'Mobile Number',
+                            labelStyle: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 13,
+                            ),
+                            hintStyle: TextStyle(
+                              color: Colors.grey,
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                  color: Colors
+                                      .green), // Set your desired border color when focused
+                            ),
+                            // suffixIcon: SizedBox.shrink(),
+                          ),
+                          cursorColor: MyTheme.green_light,
+                          dropdownTextStyle:
+                              TextStyle(color: MyTheme.font_grey, fontSize: 13),
+                          style: TextStyle(color: MyTheme.font_grey),
+                          flagsButtonPadding:
+                              EdgeInsets.symmetric(horizontal: 15),
+                          showCountryFlag: false,
+                          showDropdownIcon: false,
+                          initialCountryCode: 'IN',
+                          onChanged: (phone) {
+                            setState(() {
+                              newPhone2 =
+                                  '${phone.countryCode} ${phone.number}';
+                              // isNewNumberValid = phone.isValidNumber();
+                              isPhoneNumberEmpty = phone.number.isEmpty;
+                            });
+                            print(newPhone2);
                           },
-                          // Rest of the code...
-                          /* onInputChanged: (PhoneNumber number) {
-                                print(number.phoneNumber);
-                                setState(() {
-                                  _phone = number.phoneNumber;
-                                });
-                              },*/
-                          onInputValidated: (bool value) {
-                            print(value);
-                          },
-                          selectorConfig: SelectorConfig(
-                              selectorType: PhoneInputSelectorType.DIALOG,
-                              showFlags: false,
-                              trailingSpace: false),
-
-                          ignoreBlank: false,
-                          autoValidateMode: AutovalidateMode.disabled,
-                          selectorTextStyle:
-                              TextStyle(color: MyTheme.font_grey),
-
-                          textFieldController: _phoneNumberController,
-                          formatInput: false, // Disable default formatting
-                          keyboardType: TextInputType.number,
-
-                          inputDecoration:
-                              InputDecorations.buildInputDecoration_phone(
-                                  hint_text: "Phone Number"),
-                          onSaved: (PhoneNumber number) {
-                            //print('On Saved: $number');
-                          }, // Limit input to 10 digits
                         ),
                       ),
                       Padding(

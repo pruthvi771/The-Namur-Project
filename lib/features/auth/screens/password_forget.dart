@@ -9,18 +9,12 @@ import 'package:active_ecommerce_flutter/ui_elements/auth_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:active_ecommerce_flutter/custom/input_decorations.dart';
-import 'package:active_ecommerce_flutter/custom/intl_phone_input.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:active_ecommerce_flutter/screens/password_otp.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:toast/toast.dart';
-// import 'package:active_ecommerce_flutter/repositories/auth_repository.dart';
-import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../services/auth_bloc/auth_event.dart';
-import 'login.dart';
 
 class PasswordForget extends StatefulWidget {
   @override
@@ -30,8 +24,8 @@ class PasswordForget extends StatefulWidget {
 class _PasswordForgetState extends State<PasswordForget> {
   // String _send_code_by = "email"; //phone or email
   String initialCountry = 'US';
-  PhoneNumber phoneCode = PhoneNumber(isoCode: 'US');
-  String? _phone = "";
+  // PhoneNumber phoneCode = PhoneNumber(isoCode: 'US');
+  // String? _phone = "";
 
   //controllers
   TextEditingController _emailController = TextEditingController();

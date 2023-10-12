@@ -18,8 +18,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 // import 'package:google_sign_in/google_sign_in.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart'
     as permissionHandler;
@@ -48,7 +48,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  String _login_by = "email"; //phone or email
+  String _login_by = "phone"; //phone or email
   String initialCountry = 'US';
 
   // final _auth = FirebaseAuth.instance;
@@ -56,8 +56,10 @@ class _LoginState extends State<Login> {
   // PhoneNumber phoneCode = PhoneNumber(isoCode: 'US', dialCode: "+1");
   var countries_code = <String?>[];
 
-  String? _phone = "";
-
+  String? _phone = '';
+  // String? _isoCode = 'IN';
+  // String? _newPhone = '';
+  String? newPhone = '';
   TextEditingController _phoneNumberController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
@@ -89,7 +91,7 @@ class _LoginState extends State<Login> {
   onPressedLogin(BuildContext buildContext) async {
     // print('login clicked');
     var email = _emailController.text.toString();
-    var phone = _phoneNumberController.text.toString();
+    var phone = newPhone;
     var password = _passwordController.text.toString();
 
     if (_login_by == 'email' && email == "") {
@@ -98,7 +100,7 @@ class _LoginState extends State<Login> {
       return Main(
         go_back: false,
       );
-    } else if (_login_by == 'phone' && _phone == "") {
+    } else if (_login_by == 'phone' && phone == "") {
       ToastComponent.showDialog(
           AppLocalizations.of(context)!.enter_phone_number,
           gravity: Toast.center,
@@ -111,9 +113,9 @@ class _LoginState extends State<Login> {
     }
 
     if (_login_by == "phone") {
-      String newNumber = '+91 $phone';
+      // String newNumber = '+91 $phone';
       BlocProvider.of<AuthBloc>(buildContext).add(
-        PhoneVerificationRequested(newNumber),
+        PhoneVerificationRequested(phone!),
       );
     } else {
       // print('calling begins');
@@ -261,6 +263,7 @@ class _LoginState extends State<Login> {
           width: _screen_width,
           height: MediaQuery.of(context).size.height / 2.01,
           child: Column(
+            // mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
@@ -281,16 +284,13 @@ class _LoginState extends State<Login> {
                     fontFamily: 'Poppins'),
               ),
 
-              SizedBox(height: 10),
+              // SizedBox(height: 10),
 
               (_login_by == "phone") ? SizedBox(height: 30) : Container(),
 
               if (_login_by == "email")
                 Padding(
-                  padding: const EdgeInsets.only(
-                    left: 20,
-                    right: 20,
-                  ),
+                  padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
@@ -330,48 +330,96 @@ class _LoginState extends State<Login> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
+                      // Container(
+                      //   height: 40,
+                      //   child: CustomInternationalPhoneNumberInput(
+                      //     // isEnabled: false,
+                      //     maxLength: 12,
+                      //     countries: countries_code,
+                      //     initialValue: PhoneNumber(isoCode: 'IN'),
+                      //     // Set the initial value to India (ISO code: 'IN')
+                      //     onInputChanged: (PhoneNumber number) {
+                      //       // print(number.phoneNumber);
+                      //       setState(() {
+                      //         _phone = number.phoneNumber;
+                      //         _isoCode = number.isoCode;
+                      //         _newPhone =
+                      //             '${number.dialCode} ${_phoneNumberController.text}';
+                      //         // _phoneNumberController.text =
+                      //         //     '+${number.dialCode}';
+                      //         // print(number.isoCode);
+                      //         // print('phone: $_phone');
+                      //       });
+                      //     },
+                      //     onInputValidated: (bool value) {
+                      //       print(value);
+                      //     },
+                      //     selectorConfig: SelectorConfig(
+                      //       selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+                      //       leadingPadding: 0.0,
+                      //       showFlags: false,
+                      //       trailingSpace: false,
+                      //       setSelectorButtonAsPrefixIcon: false,
+                      //     ),
+                      //     ignoreBlank: false,
+                      //     autoValidateMode: AutovalidateMode.disabled,
+                      //     selectorTextStyle:
+                      //         TextStyle(color: MyTheme.font_grey),
+                      //     textStyle: TextStyle(color: MyTheme.font_grey),
+                      //     // initialValue: PhoneNumber(
+                      //     //     isoCode: countries_code[0].toString()),
+                      //     textFieldController: _phoneNumberController,
+                      //     formatInput: false,
+                      //     // Set this to false to remove the space after the 4th character
+                      //     keyboardType: TextInputType.numberWithOptions(
+                      //         signed: true, decimal: true),
+                      //     inputDecoration:
+                      //         InputDecorations.buildInputDecoration_phone(
+                      //             hint_text: "Mobile Number"),
+                      //     onSaved: (PhoneNumber number) {
+                      //       print('On Saved: $number');
+                      //     },
+                      //   ),
+                      // ),
+                      // SizedBox(height: 20),
+                      // Text('Selected Phone Number: $_phone'),
+                      // Text('Selected Country ISO Code: $_isoCode'),
+                      // Text('Phone Number Complete: $newPhone'),
+                      // SizedBox(height: 20),
                       Container(
-                        height: 40,
-                        child: CustomInternationalPhoneNumberInput(
-                          // isEnabled: false,
-                          maxLength: 12,
-                          countries: countries_code,
-                          initialValue: PhoneNumber(isoCode: 'IN'),
-                          // Set the initial value to India (ISO code: 'IN')
-                          onInputChanged: (PhoneNumber number) {
-                            print(number.phoneNumber);
-                            setState(() {
-                              _phone = number.phoneNumber;
-                              print('phone: $_phone');
-                            });
-                          },
-                          onInputValidated: (bool value) {
-                            print(value);
-                          },
-                          selectorConfig: SelectorConfig(
-                            selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
-                            leadingPadding: 0.0,
-                            showFlags: false,
-                            trailingSpace: false,
-                            setSelectorButtonAsPrefixIcon: false,
+                        height: 65,
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: IntlPhoneField(
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(8),
+                            labelText: 'Mobile Number',
+                            hintStyle: TextStyle(color: Colors.grey),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                  color: Colors
+                                      .green), // Set your desired border color when focused
+                            ),
+                            // suffixIcon: SizedBox.shrink(),
                           ),
-                          ignoreBlank: false,
-                          autoValidateMode: AutovalidateMode.disabled,
-                          selectorTextStyle:
-                              TextStyle(color: MyTheme.font_grey),
-                          textStyle: TextStyle(color: MyTheme.font_grey),
-                          // initialValue: PhoneNumber(
-                          //     isoCode: countries_code[0].toString()),
-                          textFieldController: _phoneNumberController,
-                          formatInput: false,
-                          // Set this to false to remove the space after the 4th character
-                          keyboardType: TextInputType.numberWithOptions(
-                              signed: true, decimal: true),
-                          inputDecoration:
-                              InputDecorations.buildInputDecoration_phone(
-                                  hint_text: "Mobile Number"),
-                          onSaved: (PhoneNumber number) {
-                            print('On Saved: $number');
+                          cursorColor: MyTheme.green_light,
+                          dropdownTextStyle:
+                              TextStyle(color: MyTheme.font_grey, fontSize: 13),
+                          style: TextStyle(color: MyTheme.font_grey),
+                          flagsButtonPadding:
+                              EdgeInsets.symmetric(horizontal: 15),
+                          showCountryFlag: false,
+                          showDropdownIcon: false,
+                          initialCountryCode: 'IN',
+                          onChanged: (phone) {
+                            setState(() {
+                              newPhone = '${phone.countryCode} ${phone.number}';
+                            });
+                            print(newPhone);
                           },
                         ),
                       ),
@@ -379,6 +427,7 @@ class _LoginState extends State<Login> {
                   ),
                 ),
 
+              // SizedBox(height: 10),
               //Password textbox
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
@@ -401,35 +450,38 @@ class _LoginState extends State<Login> {
                           )
                         : Container(),
 
-                    SizedBox(height: 10),
+                    // SizedBox(height: 10),
 
                     //"Forgot Password" Text button
                     if (_login_by == "email")
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return PasswordForget();
-                          }));
-                        },
-                        child: Text(
-                          AppLocalizations.of(context)!
-                              .login_screen_forgot_password,
-                          style: TextStyle(
-                              color: MyTheme.primary_color,
-                              fontFamily: 'Poppins',
-                              fontStyle: FontStyle.italic,
-                              decoration: TextDecoration.underline),
+                      Padding(
+                        padding: EdgeInsets.only(top: 10),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return PasswordForget();
+                            }));
+                          },
+                          child: Text(
+                            AppLocalizations.of(context)!
+                                .login_screen_forgot_password,
+                            style: TextStyle(
+                                color: MyTheme.primary_color,
+                                fontFamily: 'Poppins',
+                                fontStyle: FontStyle.italic,
+                                decoration: TextDecoration.underline),
+                          ),
                         ),
                       )
                   ],
                 ),
               ),
 
-              // SizedBox(height: 10),
+              SizedBox(height: 20),
               //SIGNUP and LOGIN buttons row
               Padding(
-                padding: const EdgeInsets.only(top: 20.0, left: 20, right: 20),
+                padding: const EdgeInsets.only(left: 20, right: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -545,7 +597,7 @@ class _LoginState extends State<Login> {
               else
                 Padding(
                   padding:
-                      const EdgeInsets.only(left: 20.0, right: 20, top: 25),
+                      const EdgeInsets.only(left: 20.0, right: 20, top: 15),
                   child: GestureDetector(
                     onTap: () {
                       setState(() {
