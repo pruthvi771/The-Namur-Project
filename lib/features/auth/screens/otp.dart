@@ -4,6 +4,9 @@ import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_e
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_state.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
+import 'package:active_ecommerce_flutter/features/profile/enum.dart';
+import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart'
+    as hiveModels;
 import 'package:active_ecommerce_flutter/my_theme.dart';
 // import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
 // import 'package:firebase_auth/firebase_auth.dart';
@@ -14,7 +17,11 @@ import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
 // import 'package:active_ecommerce_flutter/repositories/auth_repository.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
+import 'package:location/location.dart';
 import 'package:otp_text_field/style.dart';
+import 'package:permission_handler/permission_handler.dart'
+    as permissionHandler;
 import 'package:toast/toast.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -113,6 +120,51 @@ class _OtpState extends State<Otp> {
     }
   }
 
+  Location location = Location();
+  late bool _serviceEnabled;
+  late permissionHandler.PermissionStatus _permissionGranted;
+  late LocationData _locationData;
+
+  Future<void> checkLocationPermission() async {
+    var dataBox = Hive.box<hiveModels.PrimaryLocation>('primaryLocationBox');
+
+    var savedData = dataBox.get('locationData');
+
+    if (savedData != null) {
+      print("saved Latitude: ${savedData.latitude}");
+      print("saved Longitude: ${savedData.longitude}");
+      return;
+    }
+
+    print('no saved location data found');
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await permissionHandler.Permission.location.request();
+    if (_permissionGranted != permissionHandler.PermissionStatus.granted) {
+      return;
+    }
+
+    _locationData = await location.getLocation();
+    print("new Latitude: ${_locationData.latitude}");
+    print("new Longitude: ${_locationData.longitude}");
+
+    var primaryLocation = hiveModels.PrimaryLocation()
+      ..id = "locationData"
+      ..isAddress = false
+      ..latitude = _locationData.latitude as double
+      ..longitude = _locationData.longitude as double
+      ..address = "";
+
+    await dataBox.put(primaryLocation.id, primaryLocation);
+  }
+
   List<String> otp = List.filled(6, ''); // Change the size to 6
 
   @override
@@ -135,7 +187,7 @@ class _OtpState extends State<Otp> {
           authRepository: _authRepository,
           firestoreRepository: _firestoreRepository),
       child: BlocListener<AuthBloc, AuthState>(
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state is AuthError) {
             final errorMessage =
                 state.error.toString().replaceAll('Exception:', '');
@@ -148,6 +200,7 @@ class _OtpState extends State<Otp> {
               gravity: Toast.center,
               duration: Toast.lengthLong,
             );
+            await checkLocationPermission();
             Navigator.pushAndRemoveUntil(context,
                 MaterialPageRoute(builder: (context) {
               return Main();
@@ -157,6 +210,12 @@ class _OtpState extends State<Otp> {
         child: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
             if (state is Loading)
+              return Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            if (state is Authenticated)
               return Scaffold(
                 body: Center(
                   child: CircularProgressIndicator(),

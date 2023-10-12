@@ -8,14 +8,21 @@ import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_b
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_state.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
+import 'package:active_ecommerce_flutter/features/profile/enum.dart';
+import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart'
+    as hiveModels;
 // import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 // import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:location/location.dart';
+import 'package:permission_handler/permission_handler.dart'
+    as permissionHandler;
 // import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:toast/toast.dart';
 
@@ -133,6 +140,51 @@ class _LoginState extends State<Login> {
     //     }), (newRoute) => false);
   }
 
+  Location location = Location();
+  late bool _serviceEnabled;
+  late permissionHandler.PermissionStatus _permissionGranted;
+  late LocationData _locationData;
+
+  Future<void> checkLocationPermission() async {
+    var dataBox = Hive.box<hiveModels.PrimaryLocation>('primaryLocationBox');
+
+    var savedData = dataBox.get('locationData');
+
+    if (savedData != null) {
+      print("saved Latitude: ${savedData.latitude}");
+      print("saved Longitude: ${savedData.longitude}");
+      return;
+    }
+
+    print('no saved location data found');
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await permissionHandler.Permission.location.request();
+    if (_permissionGranted != permissionHandler.PermissionStatus.granted) {
+      return;
+    }
+
+    _locationData = await location.getLocation();
+    print("new Latitude: ${_locationData.latitude}");
+    print("new Longitude: ${_locationData.longitude}");
+
+    var primaryLocation = hiveModels.PrimaryLocation()
+      ..id = "locationData"
+      ..isAddress = false
+      ..latitude = _locationData.latitude as double
+      ..longitude = _locationData.longitude as double
+      ..address = "";
+
+    await dataBox.put(primaryLocation.id, primaryLocation);
+  }
+
   @override
   Widget build(BuildContext context) {
     final _screen_height = MediaQuery.of(context).size.height;
@@ -144,10 +196,11 @@ class _LoginState extends State<Login> {
           authRepository: _authRepository,
           firestoreRepository: _firestoreRepository),
       child: BlocListener<AuthBloc, AuthState>(
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state is Authenticated) {
             ToastComponent.showDialog('Login Successful',
                 gravity: Toast.center, duration: Toast.lengthLong);
+            await checkLocationPermission();
             Navigator.pushAndRemoveUntil(context,
                 MaterialPageRoute(builder: (context) {
               return Main();
@@ -175,6 +228,12 @@ class _LoginState extends State<Login> {
         child: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
             if (state is Loading)
+              return Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            if (state is Authenticated)
               return Scaffold(
                 body: Center(
                   child: CircularProgressIndicator(),
@@ -274,6 +333,7 @@ class _LoginState extends State<Login> {
                       Container(
                         height: 40,
                         child: CustomInternationalPhoneNumberInput(
+                          // isEnabled: false,
                           maxLength: 12,
                           countries: countries_code,
                           initialValue: PhoneNumber(isoCode: 'IN'),
@@ -282,6 +342,7 @@ class _LoginState extends State<Login> {
                             print(number.phoneNumber);
                             setState(() {
                               _phone = number.phoneNumber;
+                              print('phone: $_phone');
                             });
                           },
                           onInputValidated: (bool value) {

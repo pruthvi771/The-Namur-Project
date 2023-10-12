@@ -10,11 +10,17 @@ class WeatherSectionBloc
       emit(LoadingSection());
       try {
         final currentData = await WeatherRepository().fetchCurrent();
+        if (currentData == null) {
+          emit(LocationDataNotFoundinHive());
+          return;
+        }
         // await Future.delayed(Duration(seconds: 3));
-        emit(WeatherSectionDataReceived(responseData: currentData));
+        emit(WeatherSectionDataReceived(responseData: currentData as dynamic));
         // });
       } catch (e) {
-        print(e);
+        // print(e);
+        final errorMessage = e.toString().replaceAll('Exception:', '');
+        print('error message: $errorMessage');
         emit(Error(e.toString()));
       }
     });

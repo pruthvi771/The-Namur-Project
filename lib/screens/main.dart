@@ -1,4 +1,5 @@
 import 'package:active_ecommerce_flutter/custom/common_functions.dart';
+import 'package:active_ecommerce_flutter/features/profile/enum.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart'
     as hiveModels;
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
@@ -92,7 +93,7 @@ class _MainState extends State<Main> {
     //re appear statusbar in case it was not there in the previous page
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);
-    checkLocationPermission();
+    // checkLocationPermission();
     super.initState();
   }
 
@@ -133,6 +134,7 @@ class _MainState extends State<Main> {
 
     var primaryLocation = hiveModels.PrimaryLocation()
       ..id = "locationData"
+      ..isAddress = false
       ..latitude = _locationData.latitude as double
       ..longitude = _locationData.longitude as double
       ..address = "";

@@ -46,6 +46,11 @@ final class WeatherScreenDataNotReceived extends WeatherState {
   List<Object?> get props => [];
 }
 
+final class ScreenNoLocationDataFound extends WeatherState {
+  @override
+  List<Object?> get props => [];
+}
+
 final class Error extends WeatherState {
   final String error;
 

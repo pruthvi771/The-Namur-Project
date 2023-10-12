@@ -1873,10 +1873,7 @@ class _ProfileState extends State<Profile> {
                   child: InkWell(
                       //padding: EdgeInsets.zero,
                       onTap: () {
-                        // Navigator.pushReplacement(context,
-                        //     MaterialPageRoute(builder: (context) {
-                        //   return EditProfileScreen();
-                        // }));
+                        homeData.scaffoldKey.currentState?.openDrawer();
                       },
                       child: Icon(
                         Icons.menu,

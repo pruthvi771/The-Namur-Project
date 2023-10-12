@@ -47,9 +47,9 @@ class _TitleBarState extends State<TitleBar> {
     //   WeatherSectionInfoRequested(),
     // );
 
-    var temperature = '38°';
-    var description = 'Rainy';
-    var location = "@ Namur Pitlali";
+    // var temperature = '38°';
+    // var description = 'Rainy';
+    // var location = "@ Namur Pitlali";
     return Material(
       color: Colors.white,
       elevation: 3,
@@ -207,6 +207,93 @@ class _TitleBarState extends State<TitleBar> {
                               temperature: '-',
                               description: '-',
                               location: '---',
+                            );
+                          }
+                          if (state is LocationDataNotFoundinHive) {
+                            return Expanded(
+                              flex: 4,
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              WeatherScreen()));
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 8, right: 8, bottom: 8),
+                                  child: Container(
+                                    // height: 85,
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: MyTheme.green_light as Color,
+                                        ),
+                                        borderRadius: BorderRadius.circular(8)),
+                                    padding: const EdgeInsets.all(8),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      // crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 5.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              // Image.asset('assets/weather.png'),
+                                              Icon(Icons.warning,
+                                                  color: Colors.red),
+                                              Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
+                                                children: [
+                                                  Text(
+                                                    '--',
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 15,
+                                                      fontFamily: 'Poppins',
+                                                      color:
+                                                          MyTheme.primary_color,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    '--',
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 11,
+                                                      fontFamily: 'Poppins',
+                                                      color:
+                                                          MyTheme.primary_color,
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Text(
+                                          '--',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w800,
+                                            fontSize: 15,
+                                            fontFamily: 'Poppins',
+                                            color: MyTheme.primary_color,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
                             );
                           }
                           if (state is WeatherSectionDataReceived) {

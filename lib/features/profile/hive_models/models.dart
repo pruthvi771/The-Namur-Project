@@ -1,3 +1,4 @@
+import 'package:active_ecommerce_flutter/features/profile/enum.dart';
 import 'package:hive/hive.dart';
 
 part 'models.g.dart'; // Hive Part File
@@ -80,11 +81,14 @@ class PrimaryLocation {
   late String id;
 
   @HiveField(1)
-  late double latitude;
+  late bool isAddress;
 
   @HiveField(2)
-  late double longitude;
+  late double latitude;
 
   @HiveField(3)
+  late double longitude;
+
+  @HiveField(4)
   late String? address;
 }

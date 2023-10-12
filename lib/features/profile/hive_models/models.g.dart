@@ -224,20 +224,26 @@ class PrimaryLocationAdapter extends TypeAdapter<PrimaryLocation> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return PrimaryLocation()
-      ..latitude = fields[0] as double
-      ..longitude = fields[1] as double
-      ..address = fields[2] as String?;
+      ..id = fields[0] as String
+      ..isAddress = fields[1] as bool
+      ..latitude = fields[2] as double
+      ..longitude = fields[3] as double
+      ..address = fields[4] as String?;
   }
 
   @override
   void write(BinaryWriter writer, PrimaryLocation obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(5)
       ..writeByte(0)
-      ..write(obj.latitude)
+      ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.longitude)
+      ..write(obj.isAddress)
       ..writeByte(2)
+      ..write(obj.latitude)
+      ..writeByte(3)
+      ..write(obj.longitude)
+      ..writeByte(4)
       ..write(obj.address);
   }
 

@@ -543,6 +543,37 @@ var districtList = [
   'Vijayanagara',
 ];
 
+var districtListForWeather = [
+  '',
+  // 'Bagalkote',
+  'Ballari',
+  'Belagavi',
+  'Bengaluru',
+  'Bidar',
+  // 'Chamarajanagara',
+  // 'Chikkaballapura',
+  // 'Chikkmagaluru',
+  'Chitradurga',
+  // 'Dakshina Kannada',
+  // 'Davanagere',
+  'Dharwad',
+  'Gadag',
+  'Hassan',
+  'Haveri',
+  // 'Kalaburagi',
+  // 'Kodagu',
+  'Kolar',
+  // 'Koppala',
+  'Mandya',
+  'Mysuru',
+  // 'Raichuru',
+  'Ramanagara',
+  'Shivamogga',
+  'Tumakuru',
+  'Udupi',
+  'Bijapur',
+];
+
 var imageForCrop = {
   'Banana': 'assets/ikons/fruitsAndVeg/banana.png',
   'Beetroot': 'assets/ikons/fruitsAndVeg/beetroot.png',

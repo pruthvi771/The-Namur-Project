@@ -1,13 +1,16 @@
+import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_event.dart';
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_state.dart';
 import 'package:active_ecommerce_flutter/features/weather/bloc/weather_bloc.dart';
 import 'package:active_ecommerce_flutter/features/weather/bloc/weather_event.dart';
 import 'package:active_ecommerce_flutter/features/weather/bloc/weather_state.dart';
+import 'package:active_ecommerce_flutter/features/weather/screens/add_location.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:toast/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../custom/device_info.dart';
 import '../../../my_theme.dart';
@@ -319,6 +322,10 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 //   WeatherSectionInfoRequested(),
                 // );
               }
+              // if (state is ScreenNoLocationDataFound) {
+              //   ToastComponent.showDialog('No Location Data Found',
+              //       gravity: Toast.center, duration: Toast.lengthLong);
+              // }
             },
             child: BlocBuilder<WeatherBloc, WeatherState>(
               builder: (context, state) {
@@ -353,6 +360,60 @@ class _WeatherScreenState extends State<WeatherScreen> {
                             desc: '--',
                           ),
                         ]),
+                  );
+                if (state is ScreenNoLocationDataFound)
+                  return Container(
+                    // height: double.infinity,
+                    // width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          'No Location Data Found',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: .5,
+                            fontFamily: 'Poppins',
+                          ),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: MyTheme.accent_color,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Text(
+                            'Add Location',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: .5,
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
+                          onPressed: () {
+                            // print('tapped');
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        AddWeatherLocation()));
+                          },
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                      ],
+                    ),
                   );
                 if (state is WeatherSreenDataReceived) {
                   var responseData = state.responseData;

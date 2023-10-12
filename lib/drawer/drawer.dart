@@ -1,3 +1,5 @@
+import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart'
+    as hiveModels;
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/screens/about_us/about_us.dart';
 import 'package:active_ecommerce_flutter/screens/change_language.dart';
@@ -22,6 +24,7 @@ import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:active_ecommerce_flutter/app_config.dart';
 import 'package:active_ecommerce_flutter/helpers/auth_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hive/hive.dart';
 import 'package:toast/toast.dart';
 
 import '../custom/toast_component.dart';
@@ -354,6 +357,18 @@ class _MainDrawerState extends State<MainDrawer> {
                                 // await AuthService.firebase().logOut();
                                 // final user = AuthService.firebase().currentUser;
                                 await FirebaseAuth.instance.signOut();
+
+                                var dataBox1 =
+                                    Hive.box<hiveModels.PrimaryLocation>(
+                                        'primaryLocationBox');
+
+                                await dataBox1.clear();
+
+                                var dataBox2 = Hive.box<hiveModels.ProfileData>(
+                                    'profileDataBox3');
+
+                                await dataBox2.clear();
+
                                 // final user = null;
                                 // if (user == null) {
                                 ToastComponent.showDialog('Logout Successful',
