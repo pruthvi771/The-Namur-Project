@@ -71,7 +71,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
   String formatDate(String inputDate) {
     // Parse inputDate into a DateTime object
     DateTime parsedDate = DateTime.parse(inputDate);
-    print('input: $inputDate');
+    // print('input: $inputDate');
 
     // Define month weatherImages
     List<String> months = [
@@ -101,7 +101,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
     savedSecondaryData = SecondaryLocationDataBox.get('locationData');
 
-    print('fetched hive data');
+    // print('fetched hive data');
 
     return [savedPrimaryData, savedSecondaryData];
   }
@@ -116,14 +116,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
           // drawer: const MainDrawer(),
           backgroundColor: Colors.transparent,
           appBar: buildCustomAppBar(context),
-          body: FutureBuilder(
-            future: fetchDataFromHive(),
-            builder: (context, snapshot) {
-              var primaryData = snapshot.data[0];
-              var secondaryData = snapshot.data[1];
-              return bodycontent(primaryData, secondaryData);
-            },
-          ),
+          body: bodycontent(),
           floatingActionButton: (showFloatingActionButton)
               ? FloatingActionButton(
                   child: Icon(Icons.add),
@@ -192,7 +185,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
     );
   }
 
-  bodycontent(var primaryData, var secondaryData) {
+  bodycontent() {
     var weatherImage = "assets/weather.png";
 
     return SingleChildScrollView(
@@ -267,7 +260,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 for (var data in state.responseData) {
                   if (data != null) {
                     dropdownSet.add(data.locationName);
-                    print('object added : ${data.locationName}');
+                    // print('object added : ${data.locationName}');
                   }
                 }
                 List<String> dropdownList = dropdownSet.toList();
@@ -403,14 +396,14 @@ class _WeatherScreenState extends State<WeatherScreen> {
           BlocListener<WeatherBloc, WeatherState>(
             listener: (context, state) {
               if (state is WeatherSreenDataReceived) {
-                print('state is WeatherSreenDataReceived');
+                // print('state is WeatherSreenDataReceived');
                 setState(() {
                   showFloatingActionButton = true;
                 });
               } else if (state is Loading) {
-                print('state is LOADING');
+                // print('state is LOADING');
               } else {
-                print('state: $state');
+                // print('state: $state');
                 // BlocProvider.of<WeatherBloc>(context).add(
                 //   WeatherSectionInfoRequested(),
                 // );

@@ -145,7 +145,7 @@ class WeatherRepository {
       if (response.statusCode == 200) {
         // print('I am here');
         var jsonResponse = json.decode(response.body);
-        print(jsonResponse);
+        // print(jsonResponse);
         return [
           CurrentWeatherResponse.fromJson(jsonResponse),
           ...secondaryCurrentResponseList
