@@ -1,4 +1,5 @@
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
+import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart'
     as hiveModels;
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_bloc.dart';
@@ -12,9 +13,15 @@ import 'package:active_ecommerce_flutter/features/profile/address_list.dart'
     as addressList;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
+import 'package:toast/toast.dart';
 
 class AddWeatherLocation extends StatefulWidget {
-  const AddWeatherLocation({super.key});
+  AddWeatherLocation({
+    Key? key,
+    this.isPrimaryLocation = false,
+  }) : super(key: key);
+
+  final bool isPrimaryLocation;
 
   @override
   State<AddWeatherLocation> createState() => _AddWeatherLocationState();
@@ -28,7 +35,7 @@ class _AddWeatherLocationState extends State<AddWeatherLocation> {
 
   List<String> taluks = [];
 
-  Future<void> addLocationToHive() async {
+  Future<void> addPrimaryLocationToHive() async {
     var dataBox = Hive.box<hiveModels.PrimaryLocation>('primaryLocationBox');
 
     var savedData = dataBox.get('locationData');
@@ -42,6 +49,48 @@ class _AddWeatherLocationState extends State<AddWeatherLocation> {
 
     await dataBox.put(primaryLocation.id, primaryLocation);
     print('WeatherLocationAdded');
+    BlocProvider.of<WeatherBloc>(context).add(
+      WeatherSreenDataRequested(),
+    );
+    BlocProvider.of<WeatherSectionBloc>(context).add(
+      WeatherSectionDataRequested(),
+    );
+  }
+
+  Future<void> addLocationToHive() async {
+    var SecondaryDataBox =
+        Hive.box<hiveModels.SecondaryLocations>('secondaryLocationsBox');
+
+    var savedData = SecondaryDataBox.get('secondaryLocations');
+
+    if (savedData != null) {
+      if (savedData.address.length == 2) {
+        ToastComponent.showDialog('You can only add 2 Locations at once',
+            gravity: Toast.center, duration: Toast.lengthLong);
+        return;
+      }
+    }
+
+    var secondaryLocations;
+
+    if (savedData == null) {
+      secondaryLocations = hiveModels.SecondaryLocations()
+        ..id = "secondaryLocations"
+        ..address = [districtDropdownValue];
+    } else {
+      if (savedData.address.contains(districtDropdownValue)) {
+        ToastComponent.showDialog('This location is already added',
+            gravity: Toast.center, duration: Toast.lengthLong);
+        return;
+      }
+      secondaryLocations = hiveModels.SecondaryLocations()
+        ..id = "secondaryLocations"
+        ..address = [...savedData.address, districtDropdownValue];
+    }
+
+    await SecondaryDataBox.put(secondaryLocations.id, secondaryLocations);
+
+    print('Secondary WeatherLocationAdded');
     BlocProvider.of<WeatherBloc>(context).add(
       WeatherSreenDataRequested(),
     );
@@ -101,22 +150,6 @@ class _AddWeatherLocationState extends State<AddWeatherLocation> {
             SizedBox(
               height: 30,
             ),
-            // DropdownButtonWidget(
-            //     'Taluk',
-            //     taluks.map<DropdownMenuItem<String>>((String value) {
-            //       return DropdownMenuItem<String>(
-            //         value: value,
-            //         child: Text(value),
-            //       );
-            //     }).toList(),
-            //     talukDropdownValue, (value) {
-            //   setState(() {
-            //     talukDropdownValue = value;
-            //   });
-            // }),
-            // SizedBox(
-            //   height: 20,
-            // ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
@@ -140,7 +173,11 @@ class _AddWeatherLocationState extends State<AddWeatherLocation> {
                     ),
                     onPressed: () async {
                       // print('tapped');
-                      await addLocationToHive();
+                      if (widget.isPrimaryLocation) {
+                        await addPrimaryLocationToHive();
+                      } else {
+                        await addLocationToHive();
+                      }
 
                       Navigator.pop(context);
                     },
@@ -148,6 +185,30 @@ class _AddWeatherLocationState extends State<AddWeatherLocation> {
                 ],
               ),
             ),
+            TextButton(
+                child: Text('show'),
+                onPressed: () {
+                  var dataBox = Hive.box<hiveModels.SecondaryLocations>(
+                      'secondaryLocationsBox');
+
+                  var savedData = dataBox.get('secondaryLocations');
+
+                  if (savedData == null) {
+                    print('no data found');
+                  } else {
+                    print(savedData.address.length);
+                    for (var secondaryDataBox in savedData.address) {
+                      print(secondaryDataBox);
+                    }
+                  }
+                }),
+            TextButton(
+                child: Text('clear'),
+                onPressed: () {
+                  var dataBox = Hive.box<hiveModels.SecondaryLocations>(
+                      'secondaryLocationsBox');
+                  dataBox.clear();
+                }),
           ]),
         ),
       ),

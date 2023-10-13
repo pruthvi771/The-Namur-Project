@@ -10,7 +10,7 @@ class WeatherSectionBloc
       emit(LoadingSection());
       try {
         final currentData = await WeatherRepository().fetchCurrent();
-        if (currentData == null) {
+        if (currentData[0] == null) {
           emit(LocationDataNotFoundinHive());
           return;
         }

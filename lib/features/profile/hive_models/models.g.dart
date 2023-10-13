@@ -257,3 +257,39 @@ class PrimaryLocationAdapter extends TypeAdapter<PrimaryLocation> {
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
+
+class SecondaryLocationsAdapter extends TypeAdapter<SecondaryLocations> {
+  @override
+  final int typeId = 6;
+
+  @override
+  SecondaryLocations read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return SecondaryLocations()
+      ..id = fields[0] as String
+      ..address = (fields[1] as List).cast<String>();
+  }
+
+  @override
+  void write(BinaryWriter writer, SecondaryLocations obj) {
+    writer
+      ..writeByte(2)
+      ..writeByte(0)
+      ..write(obj.id)
+      ..writeByte(1)
+      ..write(obj.address);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SecondaryLocationsAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}

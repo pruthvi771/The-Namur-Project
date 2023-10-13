@@ -92,3 +92,12 @@ class PrimaryLocation {
   @HiveField(4)
   late String? address;
 }
+
+@HiveType(typeId: 6)
+class SecondaryLocations {
+  @HiveField(0)
+  late String id;
+
+  @HiveField(1)
+  late List<String> address;
+}

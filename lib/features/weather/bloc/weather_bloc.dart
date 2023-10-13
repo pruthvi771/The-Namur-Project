@@ -18,7 +18,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
       try {
         final responseData = await WeatherRepository().fetchForecast();
 
-        if (responseData == null) {
+        if (responseData[0] == null) {
           emit(ScreenNoLocationDataFound());
           return;
         }
@@ -26,9 +26,6 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
         emit(WeatherSreenDataReceived(responseData: responseData as dynamic));
         // });
       } catch (e) {
-        // print(e);
-        // print(e);
-        // print(e.toString());
         final errorMessage = e.toString().replaceAll('Exception:', '');
         print('error message: $errorMessage');
         emit(Error(e.toString()));

@@ -1,4 +1,5 @@
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
+import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_event.dart';
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_state.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:hive/hive.dart';
 import 'package:toast/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../custom/device_info.dart';
@@ -23,9 +25,25 @@ class WeatherScreen extends StatefulWidget {
 }
 
 class _WeatherScreenState extends State<WeatherScreen> {
+  late var savedPrimaryData;
+  late var savedSecondaryData;
+
+  Future<void> getPrimaryData() async {
+    var PrimaryLocationDataBox =
+        Hive.box<PrimaryLocation>('primaryLocationBox');
+
+    savedPrimaryData = PrimaryLocationDataBox.get('locationData');
+  }
+
+  Future<void> getSecondaryData() async {
+    var SecondaryLocationDataBox =
+        Hive.box<SecondaryLocations>('secondaryLocationsBox');
+
+    savedSecondaryData = SecondaryLocationDataBox.get('locationData');
+  }
+
   void initState() {
     super.initState();
-    // fetchAll();
     BlocProvider.of<WeatherBloc>(context).add(
       WeatherSreenDataRequested(),
     );
@@ -34,7 +52,11 @@ class _WeatherScreenState extends State<WeatherScreen> {
     );
   }
 
-  bool _switchValue = false;
+  bool showFloatingActionButton = false;
+  int index = 0;
+  late String dropdownValue;
+  // List<String> dropdownList = [];
+  Set<String> dropdownSet = {};
 
   _launchURL(url) async {
     // print('clicked');
@@ -68,22 +90,52 @@ class _WeatherScreenState extends State<WeatherScreen> {
     return formattedDate;
   }
 
+  Future fetchDataFromHive() async {
+    var PrimaryLocationDataBox =
+        Hive.box<PrimaryLocation>('primaryLocationBox');
+
+    savedPrimaryData = PrimaryLocationDataBox.get('locationData');
+
+    var SecondaryLocationDataBox =
+        Hive.box<SecondaryLocations>('secondaryLocationsBox');
+
+    savedSecondaryData = SecondaryLocationDataBox.get('locationData');
+
+    print('fetched hive data');
+
+    return [savedPrimaryData, savedSecondaryData];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
       height: DeviceInfo(context).height,
-      child: Stack(
-        children: [
-          Scaffold(
-            // key: homeData.scaffoldKey,
-            // drawer: const MainDrawer(),
-            backgroundColor: Colors.transparent,
-            appBar: buildCustomAppBar(context),
-            body: bodycontent(),
+      child: Scaffold(
+          // key: homeData.scaffoldKey,
+          // drawer: const MainDrawer(),
+          backgroundColor: Colors.transparent,
+          appBar: buildCustomAppBar(context),
+          body: FutureBuilder(
+            future: fetchDataFromHive(),
+            builder: (context, snapshot) {
+              var primaryData = snapshot.data[0];
+              var secondaryData = snapshot.data[1];
+              return bodycontent(primaryData, secondaryData);
+            },
           ),
-        ],
-      ),
+          floatingActionButton: (showFloatingActionButton)
+              ? FloatingActionButton(
+                  child: Icon(Icons.add),
+                  backgroundColor: MyTheme.accent_color,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AddWeatherLocation()),
+                    );
+                  })
+              : SizedBox.shrink()),
     );
   }
 
@@ -140,7 +192,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
     );
   }
 
-  bodycontent() {
+  bodycontent(var primaryData, var secondaryData) {
     var weatherImage = "assets/weather.png";
 
     return SingleChildScrollView(
@@ -211,51 +263,89 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     ),
                   ],
                 );
-              if (state is WeatherSectionDataReceived)
+              if (state is WeatherSectionDataReceived) {
+                for (var data in state.responseData) {
+                  if (data != null) {
+                    dropdownSet.add(data.locationName);
+                    print('object added : ${data.locationName}');
+                  }
+                }
+                List<String> dropdownList = dropdownSet.toList();
+                dropdownValue = dropdownList[index];
+                // print('dropdown value: $dropdownValue');
+                // print(
+                //     'object : ${state.responseData[0]!.locationName == dropdownValue}');
                 return Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Container(
-                          height: 44,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: MyTheme.textfield_grey),
-                            color: MyTheme.light_grey,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20),
-                                child: Text(
-                                  state.responseData.locationName,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15),
-                                ),
-                              )
-                            ],
-                          )),
+                    // Padding(
+                    //   padding: const EdgeInsets.all(20.0),
+                    //   child: Container(
+                    //       height: 44,
+                    //       width: MediaQuery.of(context).size.width,
+                    //       decoration: BoxDecoration(
+                    //         border: Border.all(color: MyTheme.textfield_grey),
+                    //         color: MyTheme.light_grey,
+                    //         borderRadius: BorderRadius.circular(5),
+                    //       ),
+                    //       child: Row(
+                    //         children: [
+                    //           Padding(
+                    //             padding: const EdgeInsets.only(left: 20),
+                    //             child: Text(
+                    //               state.responseData[0]!.locationName,
+                    //               style: TextStyle(
+                    //                   fontWeight: FontWeight.bold,
+                    //                   fontSize: 15),
+                    //             ),
+                    //           )
+                    //         ],
+                    //       )),
+                    // ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      child: DropdownButtonWidget(
+                          // 'Select Location',
+                          dropdownList
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          dropdownValue, (value) {
+                        setState(() {
+                          dropdownValue = value;
+                          var valueofIndex = dropdownList.indexOf(value);
+                          index = valueofIndex;
+                        });
+                      }),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 15, vertical: 10),
                       child: CurrentWeatherWidget(
-                        currentTemperature: state.responseData.currentData.tempC
+                        currentTemperature: state
+                            .responseData[index]!.currentData.tempC
                             .toInt()
                             .toString(),
-                        currentDesc:
-                            state.responseData.currentData.condition.text,
+                        currentDesc: state
+                            .responseData[index]!.currentData.condition.text,
                         // currentDesc: 'Sunny patchy weather',
-                        currentHumidity:
-                            state.responseData.currentData.humidity.toString(),
-                        currentWind:
-                            state.responseData.currentData.windKph.toString(),
+                        currentHumidity: state
+                            .responseData[index]!.currentData.humidity
+                            .toString(),
+                        currentWind: state
+                            .responseData[index]!.currentData.windKph
+                            .toString(),
                       ),
                     ),
                   ],
                 );
+              }
               return Column(
                 children: [
                   Padding(
@@ -314,6 +404,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
             listener: (context, state) {
               if (state is WeatherSreenDataReceived) {
                 print('state is WeatherSreenDataReceived');
+                setState(() {
+                  showFloatingActionButton = true;
+                });
               } else if (state is Loading) {
                 print('state is LOADING');
               } else {
@@ -405,8 +498,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        AddWeatherLocation()));
+                                    builder: (context) => AddWeatherLocation(
+                                          isPrimaryLocation: true,
+                                        )));
                           },
                         ),
                         SizedBox(
@@ -416,7 +510,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     ),
                   );
                 if (state is WeatherSreenDataReceived) {
-                  var responseData = state.responseData;
+                  var responseData = state.responseData[index]!;
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
@@ -428,32 +522,19 @@ class _WeatherScreenState extends State<WeatherScreen> {
                                 context: context,
                                 date: formatDate(responseData['day0']['date']),
                                 image: weatherImage,
-                                // min: responseData['day0']['mintemp']
-                                //     .toString(),
-                                // max: responseData['day0']['maxtemp']
-                                //     .toString(),
                                 desc: responseData['day0']['desc'],
                               ),
                               WeatherDayCard(
                                 context: context,
                                 date: formatDate(responseData['day1']['date']),
                                 image: weatherImage,
-                                // min: responseData['day1']['mintemp']
-                                //     .toString(),
-                                // max: responseData['day1']['maxtemp']
-                                //     .toString(),
                                 desc: responseData['day1']['desc'],
                               ),
                               WeatherDayCard(
                                 context: context,
                                 date: formatDate(responseData['day2']['date']),
                                 image: weatherImage,
-                                // min: responseData['day2']['mintemp']
-                                //     .toString(),
-                                // max: responseData['day2']['maxtemp']
-                                //     .toString(),
                                 desc: responseData['day2']['desc'],
-                                // desc: 'Patchy catchy weatehr',
                               ),
                             ]),
                       ],
@@ -523,6 +604,62 @@ class _WeatherScreenState extends State<WeatherScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Column DropdownButtonWidget(
+      // String title,
+      List<DropdownMenuItem<String>>? itemList,
+      String dropdownValue,
+      Function(String) onChanged) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Padding(
+        //   padding: const EdgeInsets.only(left: 4, bottom: 5),
+        //   child: Text(
+        //     title,
+        //     style: TextStyle(
+        //         // color: MyTheme.accent_color,
+        //         fontSize: 12,
+        //         fontWeight: FontWeight.w500,
+        //         letterSpacing: .5,
+        //         fontFamily: 'Poppins'),
+        //   ),
+        // ),
+        InputDecorator(
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5.0),
+              // borderSide: BorderSide(
+              //   color: MyTheme.textfield_grey,
+              // ),
+            ),
+            filled: true,
+            fillColor: MyTheme.light_grey,
+            contentPadding: EdgeInsets.only(left: 20, right: 10),
+          ),
+          child: DropdownButton<String>(
+            isExpanded: true,
+            value: dropdownValue,
+            icon: Icon(Icons.arrow_drop_down),
+            iconSize: 24,
+            elevation: 16,
+            underline: SizedBox(),
+            style: TextStyle(
+              fontSize: 15,
+              color: Colors.black,
+            ),
+            onChanged: (String? value) {
+              onChanged(value!);
+            },
+            items: itemList,
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        )
+      ],
     );
   }
 

@@ -107,8 +107,10 @@ main() async {
   Hive.registerAdapter(hiveModels.CropAdapter());
   Hive.registerAdapter(hiveModels.ProfileDataAdapter());
   Hive.registerAdapter(hiveModels.PrimaryLocationAdapter());
+  Hive.registerAdapter(hiveModels.SecondaryLocationsAdapter());
   await Hive.openBox<hiveModels.ProfileData>('profileDataBox3');
   await Hive.openBox<hiveModels.PrimaryLocation>('primaryLocationBox');
+  await Hive.openBox<hiveModels.SecondaryLocations>('secondaryLocationsBox');
 
   runApp(
     SharedValue.wrapApp(

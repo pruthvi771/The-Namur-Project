@@ -299,10 +299,11 @@ class _TitleBarState extends State<TitleBar> {
                           if (state is WeatherSectionDataReceived) {
                             return WeatherSection(
                               temperature:
-                                  '${state.responseData.currentData.tempC.toInt().toString()} °C',
-                              description:
-                                  state.responseData.currentData.condition.text,
-                              location: '@${state.responseData.locationName}',
+                                  '${state.responseData[0]!.currentData.tempC.toInt().toString()} °C',
+                              description: state
+                                  .responseData[0]!.currentData.condition.text,
+                              location:
+                                  '@${state.responseData[0]!.locationName}',
                             );
                           }
                           if (state is WeatherSectionDataNotReceived) {

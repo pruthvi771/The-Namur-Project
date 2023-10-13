@@ -31,7 +31,7 @@ final class Loading extends WeatherState {
 }
 
 final class WeatherSreenDataReceived extends WeatherState {
-  final ForecastWeatherResponse responseData;
+  final List<ForecastWeatherResponse?> responseData;
 
   WeatherSreenDataReceived({
     required this.responseData,

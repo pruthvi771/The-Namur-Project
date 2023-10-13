@@ -9,7 +9,7 @@ import 'package:equatable/equatable.dart';
 abstract class WeatherSectionState extends Equatable {}
 
 final class WeatherSectionDataReceived extends WeatherSectionState {
-  final CurrentWeatherResponse responseData;
+  final List<CurrentWeatherResponse?> responseData;
 
   WeatherSectionDataReceived({
     required this.responseData,
