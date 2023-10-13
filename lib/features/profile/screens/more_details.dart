@@ -32,6 +32,9 @@ class _MoreDetailsState extends State<MoreDetails> {
   late double progress;
   late ProfileData? profileData;
 
+  List CropsList = [];
+  List MachinesList = [];
+
   void calculatingProgress(profileData) {
     var tempProgress = 0.0;
 
@@ -78,6 +81,15 @@ class _MoreDetailsState extends State<MoreDetails> {
     //   calculatingProgress(profileData);
     // });
     profileData = dataBox.get('profile');
+
+    for (Land land in profileData!.land) {
+      for (Crop crop in land.crops) {
+        CropsList.add(crop.name);
+      }
+      for (String machine in land.equipments) {
+        MachinesList.add(machine);
+      }
+    }
 
     calculatingProgress(profileData);
   }
@@ -460,31 +472,56 @@ class _MoreDetailsState extends State<MoreDetails> {
                     ExpandedTileWidget(
                       controller: _cropsController,
                       title: 'Crops Grown and Planned',
-                      children: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 8),
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Column(
-                                children: [
-                                  Text('No Crops Added',
-                                      style: TextStyle(
-                                          fontSize: 13, color: Colors.red)),
-                                  SizedBox(
-                                    height: 5,
+                      children: (CropsList.length == 0)
+                          ? Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Column(
+                                    children: [
+                                      Text('No Crops Added',
+                                          style: TextStyle(
+                                              fontSize: 13, color: Colors.red)),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                          'Add them by going to Edit Profile Screen',
+                                          style: TextStyle(
+                                              fontSize: 13,
+                                              color: Colors.grey[600])),
+                                    ],
                                   ),
-                                  Text('Add them by going to Land Details',
-                                      style: TextStyle(
-                                          fontSize: 13,
-                                          color: Colors.grey[600])),
-                                ],
+                                ),
+                              ],
+                            )
+                          : Column(children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Wrap(
+                                    children: List.generate(
+                                      CropsList.length,
+                                      (index) {
+                                        var item = CropsList[index];
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 2),
+                                          child: Chip(
+                                            backgroundColor:
+                                                MyTheme.green_lighter,
+                                            labelPadding: EdgeInsets.symmetric(
+                                                horizontal: 10, vertical: 0),
+                                            label: Text(item),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
+                            ]),
                     ),
                     SizedBox(
                       height: 15,
@@ -496,19 +533,59 @@ class _MoreDetailsState extends State<MoreDetails> {
                       title: 'Tractor, JCB, Tiller, Rotovotator',
                       children: Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          children: [
-                            Text('No Machines Added',
-                                style:
-                                    TextStyle(fontSize: 13, color: Colors.red)),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text('Add them by going to Land Details',
-                                style: TextStyle(
-                                    fontSize: 13, color: Colors.grey[600])),
-                          ],
-                        ),
+                        child: (MachinesList.length == 0)
+                            ? Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Column(
+                                      children: [
+                                        Text('No Machines Added',
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                color: Colors.red)),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                            'Add them by going to Edit Profile Screen',
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                color: Colors.grey[600])),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : Column(children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Wrap(
+                                      children: List.generate(
+                                        MachinesList.length,
+                                        (index) {
+                                          var item = MachinesList[index];
+                                          return Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 2),
+                                            child: Chip(
+                                              backgroundColor:
+                                                  MyTheme.green_lighter,
+                                              labelPadding:
+                                                  EdgeInsets.symmetric(
+                                                      horizontal: 10,
+                                                      vertical: 0),
+                                              label: Text(item),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ]),
                       ),
                     ),
                   ],
