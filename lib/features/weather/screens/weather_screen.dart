@@ -54,7 +54,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
   bool showFloatingActionButton = false;
   int index = 0;
-  late String dropdownValue;
+  // late String dropdownValue;
   // List<String> dropdownList = [];
   Set<String> dropdownSet = {};
 
@@ -71,7 +71,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
   String formatDate(String inputDate) {
     // Parse inputDate into a DateTime object
     DateTime parsedDate = DateTime.parse(inputDate);
-    print('input: $inputDate');
+    // print('input: $inputDate');
 
     // Define month weatherImages
     List<String> months = [
@@ -129,6 +129,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
                   child: Icon(Icons.add),
                   backgroundColor: MyTheme.accent_color,
                   onPressed: () {
+                    setState(() {
+                      index = 0;
+                    });
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -264,13 +267,18 @@ class _WeatherScreenState extends State<WeatherScreen> {
                   ],
                 );
               if (state is WeatherSectionDataReceived) {
+                dropdownSet.clear();
+                List<String> dropdownList = [];
+                late String dropdownValue;
                 for (var data in state.responseData) {
-                  if (data != null) {
+                  if (data != null &&
+                      dropdownSet.length < 3 &&
+                      !dropdownSet.contains(data.locationName)) {
                     dropdownSet.add(data.locationName);
                     print('object added : ${data.locationName}');
                   }
                 }
-                List<String> dropdownList = dropdownSet.toList();
+                dropdownList = dropdownSet.toList();
                 dropdownValue = dropdownList[index];
                 // print('dropdown value: $dropdownValue');
                 // print(
@@ -495,6 +503,10 @@ class _WeatherScreenState extends State<WeatherScreen> {
                           ),
                           onPressed: () {
                             // print('tapped');
+                            // index = 0;
+                            // setState(() {
+                            //   index = 0;
+                            // });
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(

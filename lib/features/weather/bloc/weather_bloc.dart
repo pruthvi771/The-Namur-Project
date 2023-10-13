@@ -16,7 +16,8 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     on<WeatherSreenDataRequested>((event, emit) async {
       emit(Loading());
       try {
-        final responseData = await WeatherRepository().fetchForecast();
+        var responseData = [];
+        responseData = await WeatherRepository().fetchForecast();
 
         if (responseData[0] == null) {
           emit(ScreenNoLocationDataFound());

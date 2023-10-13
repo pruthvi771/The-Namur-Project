@@ -14,6 +14,10 @@ class HiveDataRequested extends HiveEvent {
   HiveDataRequested();
 }
 
+class HiveLocationDataRequested extends HiveEvent {
+  HiveLocationDataRequested();
+}
+
 class HiveAppendAddress extends HiveEvent {
   final BuildContext context;
   HiveAppendAddress({
