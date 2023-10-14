@@ -230,33 +230,30 @@ class _WeatherScreenState extends State<WeatherScreen> {
               if (state is LoadingSection)
                 return Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Container(
-                          height: 44,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: MyTheme.textfield_grey),
-                            color: MyTheme.light_grey,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20),
-                                child: Text(
-                                  "------",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15),
-                                ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(
+                          left: 20, right: 20, top: 5, bottom: 5),
+                      child: IgnorePointer(
+                        ignoring: true,
+                        child: DropdownButtonWidget(
+                            // 'Select Location',
+                            [
+                              DropdownMenuItem<String>(
+                                value: '-----',
+                                child: Text('-----'),
                               )
                             ],
-                          )),
+                            '-----', (value) {
+                          setState(() {});
+                        }),
+                      ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 10),
+                      padding: const EdgeInsets.only(
+                          left: 15, right: 15, top: 0, bottom: 7),
                       child: CurrentWeatherWidget(
                         currentTemperature: '--',
                         currentDesc: '--',
@@ -275,7 +272,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                       dropdownSet.length < 3 &&
                       !dropdownSet.contains(data.locationName)) {
                     dropdownSet.add(data.locationName);
-                    print('object added : ${data.locationName}');
+                    // print('object added : ${data.locationName}');
                   }
                 }
                 dropdownList = dropdownSet.toList();
@@ -313,8 +310,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                       height: 10,
                     ),
                     Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      padding: EdgeInsets.only(
+                          left: 20, right: 20, top: 5, bottom: 5),
                       child: DropdownButtonWidget(
                           // 'Select Location',
                           dropdownList
@@ -333,8 +330,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
                       }),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 10),
+                      padding: const EdgeInsets.only(
+                          left: 15, right: 15, top: 0, bottom: 7),
                       child: CurrentWeatherWidget(
                         currentTemperature: state
                             .responseData[index]!.currentData.tempC
@@ -394,14 +391,14 @@ class _WeatherScreenState extends State<WeatherScreen> {
             },
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 25, top: 10, bottom: 10),
+            padding: const EdgeInsets.only(left: 25, top: 5, bottom: 5),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
                 'Forecast',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 17,
+                  fontSize: 15,
                   color: MyTheme.dark_font_grey,
                   decoration: TextDecoration.underline,
                 ),
@@ -440,24 +437,18 @@ class _WeatherScreenState extends State<WeatherScreen> {
                             context: context,
                             date: ' -- ',
                             image: weatherImage,
-                            // min: '--',
-                            // max: '--',
                             desc: '--',
                           ),
                           WeatherDayCard(
                             context: context,
                             date: ' -- ',
                             image: weatherImage,
-                            // min: '--',
-                            // max: '--',
                             desc: '--',
                           ),
                           WeatherDayCard(
                             context: context,
                             date: ' -- ',
                             image: weatherImage,
-                            // min: '--',
-                            // max: '--',
                             desc: '--',
                           ),
                         ]),
@@ -590,14 +581,14 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
           //Satellite View
           Padding(
-            padding: const EdgeInsets.only(left: 25, top: 10, bottom: 10),
+            padding: const EdgeInsets.only(left: 25, top: 5, bottom: 5),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
                 'Satellite View',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 17,
+                  fontSize: 15,
                   color: MyTheme.dark_font_grey,
                   decoration: TextDecoration.underline,
                 ),
@@ -606,7 +597,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
           ),
           Padding(
             padding: const EdgeInsets.only(
-                left: 20.0, right: 20.0, top: 10, bottom: 20),
+                left: 20.0, right: 20.0, top: 5, bottom: 20),
             child: InkWell(
               onTap: () async {
                 _launchURL('https://zoom.earth/');
@@ -714,14 +705,14 @@ class CurrentWeatherWidget extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
       child: Container(
         width: double.infinity,
-        height: 150,
+        height: 130,
         decoration: BoxDecoration(
           color: Color(0xff4C7B10),
         ),
         child: Column(
           children: [
             Expanded(
-              flex: 10,
+              flex: 9,
               child: Container(
                 padding: EdgeInsets.only(left: 15),
                 child: Align(
@@ -730,7 +721,7 @@ class CurrentWeatherWidget extends StatelessWidget {
                     'Current Weather',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 17,
+                      fontSize: 15,
                       color: MyTheme.white,
                     ),
                   ),
@@ -740,19 +731,19 @@ class CurrentWeatherWidget extends StatelessWidget {
             Expanded(
               flex: 25,
               child: Container(
-                padding: EdgeInsets.only(bottom: 5),
+                // padding: EdgeInsets.only(bottom: 5),
                 color: MyTheme.light_grey,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 10),
+                      padding: const EdgeInsets.only(left: 20, right: 5),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.baseline,
                         textBaseline: TextBaseline.alphabetic,
                         children: [
                           Text(
-                            '${currentTemperature}°',
+                            '$currentTemperature°',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 60,
@@ -772,17 +763,18 @@ class CurrentWeatherWidget extends StatelessWidget {
                     ),
                     Padding(
                         padding: const EdgeInsets.only(
-                            right: 20, top: 15, bottom: 20, left: 15),
+                            right: 20, top: 15, bottom: 20, left: 5),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               currentDesc,
+                              // 'Sunny patchy weather', // 'Sunny patchy weather
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 16,
+                                fontSize: 15,
                                 color: Colors.grey[800],
                               ),
                             ),
@@ -840,8 +832,8 @@ class WeatherDayCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
         color: MyTheme.light_grey,
       ),
-      height: MediaQuery.of(context).size.height / 4.6,
-      width: MediaQuery.of(context).size.width / 4,
+      height: MediaQuery.of(context).size.height / 5.5,
+      width: MediaQuery.of(context).size.width / 4.15,
       child: Column(
         // mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -850,9 +842,9 @@ class WeatherDayCard extends StatelessWidget {
             decoration: BoxDecoration(
               color: Color(0xff4C7B10),
               borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+                  topLeft: Radius.circular(12), topRight: Radius.circular(12)),
             ),
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(6),
             child: Center(
               child: Text(
                 date,
@@ -865,23 +857,21 @@ class WeatherDayCard extends StatelessWidget {
             ),
           ),
           Container(
-            padding: const EdgeInsets.symmetric(vertical: 10),
+            padding:
+                const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
             width: double.infinity,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Image.asset(
-                image,
-                fit: BoxFit.fitWidth,
-              ),
+            child: Image.asset(
+              image,
+              fit: BoxFit.fitWidth,
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(5),
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Text(
               desc.toUpperCase(),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 9.5,
+                fontSize: 10,
                 color: Colors.grey[700],
               ),
             ),

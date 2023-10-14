@@ -641,30 +641,17 @@ class _MoreDetailsState extends State<MoreDetails> {
                           letterSpacing: .5,
                           fontFamily: 'Poppins')),
                 ),
-                Container(
-                  width: 30,
-                  height: double.infinity,
-                  child: InkWell(
-                    //padding: EdgeInsets.zero,
-                    onTap: () {
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) {
-                        return EditProfileScreen();
-                      }));
-                    },
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Edit',
-                        style: TextStyle(
-                            color: MyTheme.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: .5,
-                            fontFamily: 'Poppins'),
-                      ),
-                    ),
+                IconButton(
+                  icon: Icon(
+                    Icons.edit,
+                    color: Colors.white,
                   ),
+                  onPressed: () {
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) {
+                      return EditProfileScreen();
+                    }));
+                  },
                 ),
               ],
             ),
