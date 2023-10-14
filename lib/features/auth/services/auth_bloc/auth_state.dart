@@ -1,3 +1,4 @@
+import 'package:active_ecommerce_flutter/features/auth/models/postoffice_response_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
@@ -49,6 +50,27 @@ class SignUpPhoneVerificationCompleted extends AuthState {
   // }) : super(verificationId: verificationId);
   @override
   List<Object?> get props => [verificationId];
+}
+
+class LocationsForPincodeReceived extends AuthState {
+  final PostOfficeResponse postOfficeResponse;
+
+  LocationsForPincodeReceived({
+    required this.postOfficeResponse,
+  });
+  // }) : super(verificationId: verificationId);
+  @override
+  List<Object?> get props => [postOfficeResponse];
+}
+
+class LocationsForPincodeLoading extends AuthState {
+  @override
+  List<Object?> get props => throw UnimplementedError();
+}
+
+class LocationsForPincodeNotReceived extends AuthState {
+  @override
+  List<Object?> get props => throw UnimplementedError();
 }
 
 class resetPasswordForEmailSent extends AuthState {

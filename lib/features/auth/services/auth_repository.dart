@@ -1,8 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
+import 'package:active_ecommerce_flutter/features/auth/models/postoffice_response_model.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:http/http.dart' as http;
 
 import 'package:firebase_auth/firebase_auth.dart'
     show
@@ -295,6 +299,31 @@ class AuthRepository {
     } catch (_) {
       throw Exception('Something went wrong. Please try again.');
       // throw GenericAuthException();
+    }
+  }
+
+  Future<PostOfficeResponse?> getLocationsForPincode(
+      {required String pinCode}) async {
+    try {
+      print('starting');
+      var postOfficeResponse = await http
+          .get(Uri.parse('https://api.postalpincode.in/pincode/$pinCode'));
+
+      // if (postOfficeResponse.statusCode == 200) {
+      var jsonResponse = json.decode(postOfficeResponse.body);
+
+      print(jsonResponse);
+      if (jsonResponse[0]['Status'] == 'Success') {
+        print('success');
+        // return PostOfficeResponse.fromJson(jsonResponse);
+        return PostOfficeResponse.fromJson(jsonResponse[0]);
+      } else {
+        print('error happened in forecast');
+        throw Exception('Failed to fetch locations. Please try again.');
+      }
+    } catch (e) {
+      print(e);
+      throw Exception('Failed to fetch locations. Please try again.');
     }
   }
 }

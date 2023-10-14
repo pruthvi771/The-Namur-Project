@@ -90,7 +90,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SignUpPhoneVerificationRequested>((event, emit) async {
       emit(Loading());
       try {
-        print('THIS IS A DRILL SIGN UP VERIFICATION REQUESTED.');
+        // print('THIS IS A DRILL SIGN UP VERIFICATION REQUESTED.');
 
         var registeredPhoneNumbers =
             await firestoreRepository.getAllRegisteredPhoneNumbers();
@@ -157,6 +157,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       } catch (e) {
         emit(AuthError(e.toString()));
         emit(UnAuthenticated());
+      }
+    });
+
+    on<LocationsForPincodeRequested>((event, emit) async {
+      emit(LocationsForPincodeLoading());
+      try {
+        var postOfficeResponse =
+            await authRepository.getLocationsForPincode(pinCode: event.pinCode);
+        emit(LocationsForPincodeReceived(
+            postOfficeResponse: postOfficeResponse!));
+      } catch (e) {
+        emit(AuthError(e.toString()));
+        emit(LocationsForPincodeNotReceived());
       }
     });
   }

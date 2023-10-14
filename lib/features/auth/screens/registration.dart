@@ -6,6 +6,7 @@ import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/custom/google_recaptcha.dart';
 import 'package:active_ecommerce_flutter/custom/input_decorations.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
+import 'package:active_ecommerce_flutter/features/auth/models/postoffice_response_model.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_bloc.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_event.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_state.dart';
@@ -56,8 +57,23 @@ class _RegistrationState extends State<Registration> {
   TextEditingController _nameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _phoneNumberController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  TextEditingController _passwordConfirmController = TextEditingController();
+  TextEditingController _pinCodeController = TextEditingController();
+
+  bool isDropdownEnabled = false;
+  List<String> locationsList = [];
+  String? locationDropdownValue;
+
+  void fetchLocations(BuildContext buildContext) {
+    if (_pinCodeController.text.toString().isEmpty ||
+        _pinCodeController.text.toString().length != 6) {
+      ToastComponent.showDialog('Enter a valid Pincode',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+    BlocProvider.of<AuthBloc>(buildContext).add(
+      LocationsForPincodeRequested(_pinCodeController.text.toString()),
+    );
+  }
 
   @override
   void initState() {
@@ -78,8 +94,6 @@ class _RegistrationState extends State<Registration> {
   onPressSignUp(BuildContext buildContext) async {
     var name = _nameController.text.toString();
     var email = _emailController.text.toString();
-    var password = _passwordController.text.toString();
-    var password_confirm = _passwordConfirmController.text.toString();
     var phone = newPhone2;
 
     if (name == "") {
@@ -132,23 +146,41 @@ class _RegistrationState extends State<Registration> {
             ToastComponent.showDialog(errorMessage.trim(),
                 gravity: Toast.center, duration: Toast.lengthLong);
           }
+          if (state is LocationsForPincodeReceived) {
+            ToastComponent.showDialog('Locations fetched successfully.',
+                gravity: Toast.center, duration: Toast.lengthLong);
+          }
           if (state is SignUpPhoneVerificationCompleted) {
             print('State: $state SIGNUPPHONEVERIFICATIONCOMPLETED');
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => Otp(
-                          verificationId: state.verificationId.toString(),
-                          name: _nameController.text.toString(),
-                          email: _emailController.text.toString(),
-                          signUp: true,
-                          // phoneNumber: _phoneNumberController.text.toString(),
-                          phoneNumber:
-                              '+91 ${_phoneNumberController.text.toString()}',
-
-                          // user_id: ,
-                          // resendToken: resendToken
-                        )));
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Otp(
+                        verificationId: state.verificationId.toString(),
+                        name: _nameController.text.toString(),
+                        email: _emailController.text.toString(),
+                        signUp: true,
+                        // phoneNumber: _phoneNumberController.text.toString(),
+                        phoneNumber:
+                            '+91 ${_phoneNumberController.text.toString()}',
+                      )),
+            );
+          }
+          if (state is LocationsForPincodeReceived) {
+            ToastComponent.showDialog('Locations fetched.',
+                gravity: Toast.center, duration: Toast.lengthLong);
+            for (var postOffice in state.postOfficeResponse.postOffices) {
+              locationsList.add(postOffice.name);
+            }
+            isDropdownEnabled = true;
+            // print(state.postOfficeResponse.postOffices[0].name);
+            // print(state.postOfficeResponse.message);
+          }
+          if (state is LocationsForPincodeLoading) {
+            locationDropdownValue = null;
+            locationsList.clear();
+            ToastComponent.showDialog('Fetching Locations...',
+                gravity: Toast.center, duration: Toast.lengthLong);
           }
         },
         child: BlocBuilder<AuthBloc, AuthState>(
@@ -261,6 +293,114 @@ class _RegistrationState extends State<Registration> {
             ),
           ),
 
+          Padding(
+            padding: const EdgeInsets.only(right: 20, left: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Container(
+                  height: 40,
+                  child: TextField(
+                    controller: _pinCodeController,
+                    autofocus: false,
+                    decoration: InputDecorations.buildInputDecoration_1(
+                        hint_text: "Pin Code"),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: GestureDetector(
+                    onTap: () {
+                      fetchLocations(context);
+                    },
+                    child: Text(
+                      'Get Locations',
+                      style: TextStyle(
+                          color: MyTheme.accent_color,
+                          fontStyle: FontStyle.italic,
+                          decoration: TextDecoration.underline),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(right: 20, left: 20),
+            child: Container(
+              height: 40,
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: Colors.grey, // You can customize the border color here
+                ),
+              ),
+              child: DropdownButton<String>(
+                isExpanded: true,
+                hint: Text(
+                  'Select Location',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 13,
+                  ),
+                ),
+                disabledHint: Text(
+                  'Fetch Locations first',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 13,
+                  ),
+                ),
+                value: locationDropdownValue,
+                icon: Icon(Icons.arrow_drop_down),
+                iconSize: 24,
+                elevation: 16,
+                underline: SizedBox(), // Remove the underline
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black, // You can customize the text color here
+                ),
+                onChanged: isDropdownEnabled
+                    ? (String? newValue) {
+                        setState(() {
+                          locationDropdownValue = newValue!;
+                        });
+                      }
+                    : null,
+                items:
+                    locationsList.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                // items: [
+                //   DropdownMenuItem(
+                //     child: Text("Item 1"),
+                //     value: "value 1",
+                //   ),
+                //   DropdownMenuItem(
+                //     child: Text("Item 2"),
+                //     value: "value 2",
+                //   ),
+                //   DropdownMenuItem(
+                //     child: Text("Item 3"),
+                //     value: "value 3",
+                //   ),
+                //   DropdownMenuItem(
+                //     child: Text("Item 4"),
+                //     value: "value 4",
+                //   ),
+                // ],
+              ),
+            ),
+          ),
+
+          SizedBox(
+            height: 10,
+          ),
           // privacy policy button
           Padding(
             padding: const EdgeInsets.only(top: 10.0, left: 20, bottom: 15),
