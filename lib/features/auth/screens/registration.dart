@@ -1,6 +1,7 @@
 //modified
 
 import 'package:active_ecommerce_flutter/app_config.dart';
+import 'package:active_ecommerce_flutter/custom/box_decorations.dart';
 import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/custom/google_recaptcha.dart';
@@ -191,11 +192,45 @@ class _RegistrationState extends State<Registration> {
                   child: CircularProgressIndicator(),
                 ),
               );
-            return AuthScreen.buildScreen(
-                context,
-                "${AppLocalizations.of(context)!.join_ucf} " +
-                    AppConfig.app_name,
-                buildBody(context, _screen_width));
+            // return AuthScreen.buildScreen(
+            //     context,
+            //     "${AppLocalizations.of(context)!.join_ucf} " +
+            //         AppConfig.app_name,
+            //     buildBody(context, _screen_width));
+            return Directionality(
+              textDirection:
+                  app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
+              child: Scaffold(
+                backgroundColor: Colors.white,
+                bottomSheet: buildBody(context, _screen_width),
+                // bottomSheet: Container(
+                //   decoration: BoxDecoration(
+                //     color: Colors.red,
+                //   ),
+                //   child: SingleChildScrollView(
+                //     child: Column(
+                //       children: [
+                //         Container(child: Text('bruce')),
+                //         Text('bruce'),
+                //         Text('bruce'),
+                //         Text('bruce'),
+                //         Text('bruce'),
+                //       ],
+                //     ),
+                //   ),
+                // ),
+                body: SafeArea(
+                  child: Container(
+                    height: MediaQuery.of(context).size.height / 1.7,
+                    width: DeviceInfo(context).width,
+                    child: Image.asset(
+                      "assets/Group 211.png",
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+            );
           },
         ),
       ),
@@ -204,345 +239,359 @@ class _RegistrationState extends State<Registration> {
 
   Container buildBody(BuildContext context, double _screen_width) {
     return Container(
+      // decoration: BoxDecoration(
+      //     borderRadius: BorderRadius.only(
+      //       topLeft: Radius.circular(30),
+      //       topRight: Radius.circular(30),
+      //     ),
+      //     // color: MyTheme.noColor.withOpacity(0)),
+      //     color: Colors.red),
       width: MediaQuery.of(context).size.width,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox(
-            height: 20,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8.0, right: 20, left: 20),
-            child: Container(
-              height: 40,
-              child: TextField(
-                controller: _nameController,
-                autofocus: false,
-                decoration: InputDecorations.buildInputDecoration_1(
-                    hint_text: "Enter your name"),
-              ),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            SizedBox(
+              height: 30,
             ),
-          ),
-
-          SizedBox(
-            height: 5,
-          ),
-
-          // phone number textbox
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8.0, right: 20, left: 20),
-            child: Container(
-              height: 60,
-              // padding: EdgeInsets.symmetric(horizontal: 10),
-              child: IntlPhoneField(
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.all(8),
-                  labelText: 'Mobile Number',
-                  labelStyle: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 13,
-                  ),
-                  hintStyle: TextStyle(
-                    color: Colors.grey,
-                  ),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(
-                        color: Colors
-                            .green), // Set your desired border color when focused
-                  ),
-                  // suffixIcon: SizedBox.shrink(),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0, right: 20, left: 20),
+              child: Container(
+                height: 40,
+                child: TextField(
+                  controller: _nameController,
+                  autofocus: false,
+                  decoration: InputDecorations.buildInputDecoration_1(
+                      hint_text: "Enter your name"),
                 ),
-                cursorColor: MyTheme.green_light,
-                dropdownTextStyle:
-                    TextStyle(color: MyTheme.font_grey, fontSize: 13),
-                style: TextStyle(color: MyTheme.font_grey),
-                flagsButtonPadding: EdgeInsets.symmetric(horizontal: 15),
-                showCountryFlag: false,
-                showDropdownIcon: false,
-                initialCountryCode: 'IN',
-                onChanged: (phone) {
-                  setState(() {
-                    newPhone2 = '${phone.countryCode} ${phone.number}';
-                    // isNewNumberValid = phone.isValidNumber();
-                    isPhoneNumberEmpty = phone.number.isEmpty;
-                  });
-                  print(newPhone2);
-                },
               ),
             ),
-          ),
 
-          // email textbox
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: Container(
-              // padding: EdgeInsets.symmetric(horizontal: 20),
-              height: 40,
-              child: TextField(
-                controller: _emailController,
-                autofocus: false,
-                decoration: InputDecorations.buildInputDecoration_1(
-                    hint_text: "Email Id"),
-              ),
+            SizedBox(
+              height: 5,
             ),
-          ),
 
-          Padding(
-            padding: const EdgeInsets.only(right: 20, left: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Container(
-                  height: 40,
-                  child: TextField(
-                    controller: _pinCodeController,
-                    autofocus: false,
-                    decoration: InputDecorations.buildInputDecoration_1(
-                        hint_text: "Pin Code"),
+            // phone number textbox
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0, right: 20, left: 20),
+              child: Container(
+                height: 60,
+                // padding: EdgeInsets.symmetric(horizontal: 10),
+                child: IntlPhoneField(
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.all(8),
+                    labelText: 'Mobile Number',
+                    labelStyle: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 13,
+                    ),
+                    hintStyle: TextStyle(
+                      color: Colors.grey,
+                    ),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(
+                          color: Colors
+                              .green), // Set your desired border color when focused
+                    ),
+                    // suffixIcon: SizedBox.shrink(),
                   ),
+                  cursorColor: MyTheme.green_light,
+                  dropdownTextStyle:
+                      TextStyle(color: MyTheme.font_grey, fontSize: 13),
+                  style: TextStyle(color: MyTheme.font_grey),
+                  flagsButtonPadding: EdgeInsets.symmetric(horizontal: 15),
+                  showCountryFlag: false,
+                  showDropdownIcon: false,
+                  initialCountryCode: 'IN',
+                  onChanged: (phone) {
+                    setState(() {
+                      newPhone2 = '${phone.countryCode} ${phone.number}';
+                      // isNewNumberValid = phone.isValidNumber();
+                      isPhoneNumberEmpty = phone.number.isEmpty;
+                    });
+                    print(newPhone2);
+                  },
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: GestureDetector(
-                    onTap: () {
-                      fetchLocations(context);
-                    },
-                    child: Text(
-                      'Get Locations',
-                      style: TextStyle(
-                          color: MyTheme.accent_color,
-                          fontStyle: FontStyle.italic,
-                          decoration: TextDecoration.underline),
+              ),
+            ),
+
+            // email textbox
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Container(
+                // padding: EdgeInsets.symmetric(horizontal: 20),
+                height: 40,
+                child: TextField(
+                  controller: _emailController,
+                  autofocus: false,
+                  decoration: InputDecorations.buildInputDecoration_1(
+                      hint_text: "Email Id"),
+                ),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(right: 20, left: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Container(
+                    height: 40,
+                    child: TextField(
+                      controller: _pinCodeController,
+                      autofocus: false,
+                      decoration: InputDecorations.buildInputDecoration_1(
+                          hint_text: "Pin Code"),
                     ),
                   ),
-                )
-              ],
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.only(right: 20, left: 20),
-            child: Container(
-              height: 40,
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: Colors.grey, // You can customize the border color here
-                ),
-              ),
-              child: DropdownButton<String>(
-                isExpanded: true,
-                hint: Text(
-                  'Select Location',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 13,
-                  ),
-                ),
-                disabledHint: Text(
-                  'Fetch Locations first',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 13,
-                  ),
-                ),
-                value: locationDropdownValue,
-                icon: Icon(Icons.arrow_drop_down),
-                iconSize: 24,
-                elevation: 16,
-                underline: SizedBox(), // Remove the underline
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black, // You can customize the text color here
-                ),
-                onChanged: isDropdownEnabled
-                    ? (String? newValue) {
-                        setState(() {
-                          locationDropdownValue = newValue!;
-                        });
-                      }
-                    : null,
-                items:
-                    locationsList.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                // items: [
-                //   DropdownMenuItem(
-                //     child: Text("Item 1"),
-                //     value: "value 1",
-                //   ),
-                //   DropdownMenuItem(
-                //     child: Text("Item 2"),
-                //     value: "value 2",
-                //   ),
-                //   DropdownMenuItem(
-                //     child: Text("Item 3"),
-                //     value: "value 3",
-                //   ),
-                //   DropdownMenuItem(
-                //     child: Text("Item 4"),
-                //     value: "value 4",
-                //   ),
-                // ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: GestureDetector(
+                      onTap: () {
+                        fetchLocations(context);
+                      },
+                      child: Text(
+                        'Get Locations',
+                        style: TextStyle(
+                            color: MyTheme.accent_color,
+                            fontStyle: FontStyle.italic,
+                            decoration: TextDecoration.underline),
+                      ),
+                    ),
+                  )
+                ],
               ),
             ),
-          ),
 
-          SizedBox(
-            height: 10,
-          ),
-          // privacy policy button
-          Padding(
-            padding: const EdgeInsets.only(top: 10.0, left: 20, bottom: 15),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 15,
-                  width: 15,
-                  child: Checkbox(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6)),
-                      value: _isAgree,
-                      onChanged: (newValue) {
-                        _isAgree = newValue;
-                        setState(() {});
-                      }),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 8.0,
-                    // top: 15,
-                    // bottom: 15,
+            Padding(
+              padding: const EdgeInsets.only(right: 20, left: 20),
+              child: Container(
+                height: 40,
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color:
+                        Colors.grey, // You can customize the border color here
                   ),
-                  child: Container(
-                    width: DeviceInfo(context).width! - 130,
-                    child: RichText(
-                        maxLines: 2,
-                        text: TextSpan(
-                            style: TextStyle(
-                                color: MyTheme.font_grey, fontSize: 12),
-                            children: [
-                              TextSpan(
-                                text: "I agree to the",
-                              ),
-                              TextSpan(
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                CommonWebviewScreen(
-                                                  page_name: "Terms Conditions",
-                                                  url:
-                                                      "${AppConfig.RAW_BASE_URL}/mobile-page/terms",
-                                                )));
-                                  },
-                                style: TextStyle(color: MyTheme.primary_color),
-                                text: " Terms Conditions",
-                              ),
-                              TextSpan(
-                                text: " &",
-                              ),
-                              TextSpan(
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                CommonWebviewScreen(
-                                                  page_name: "Privacy Policy",
-                                                  url:
-                                                      "${AppConfig.RAW_BASE_URL}/mobile-page/privacy-policy",
-                                                )));
-                                  },
-                                text: " Privacy Policy",
-                                style: TextStyle(color: MyTheme.primary_color),
-                              )
-                            ])),
-                  ),
-                )
-              ],
-            ),
-          ),
-
-          //sign with phone button
-          Padding(
-            padding: const EdgeInsets.only(top: 5.0, left: 20, right: 20),
-            child: Container(
-              height: 44,
-              child: Btn.minWidthFixHeight(
-                minWidth: MediaQuery.of(context).size.width,
-                height: 50,
-                color: MyTheme.primary_color,
-                shape: RoundedRectangleBorder(
-                    borderRadius:
-                        const BorderRadius.all(Radius.circular(10.0))),
-                child: Text(
-                  'Sign Up with Phone',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600),
                 ),
-                onPressed: _isAgree!
-                    ? () {
-                        onPressSignUp(context);
-                      }
-                    : null,
-              ),
-            ),
-          ),
-
-          // login instead button
-          Padding(
-            padding: const EdgeInsets.only(top: 10.0, left: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                    child: Text(
-                  AppLocalizations.of(context)!.already_have_an_account,
-                  style: TextStyle(color: MyTheme.font_grey, fontSize: 12),
-                )),
-                SizedBox(
-                  width: 10,
-                ),
-                InkWell(
-                  child: Text(
-                    AppLocalizations.of(context)!.log_in,
+                child: DropdownButton<String>(
+                  isExpanded: true,
+                  hint: Text(
+                    'Select Location',
                     style: TextStyle(
-                        color: MyTheme.primary_color,
+                      color: Colors.grey,
+                      fontSize: 13,
+                    ),
+                  ),
+                  disabledHint: Text(
+                    'Fetch Locations first',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 13,
+                    ),
+                  ),
+                  value: locationDropdownValue,
+                  icon: Icon(Icons.arrow_drop_down),
+                  iconSize: 24,
+                  elevation: 16,
+                  underline: SizedBox(), // Remove the underline
+                  style: TextStyle(
+                    fontSize: 16,
+                    color:
+                        Colors.black, // You can customize the text color here
+                  ),
+                  onChanged: isDropdownEnabled
+                      ? (String? newValue) {
+                          setState(() {
+                            locationDropdownValue = newValue!;
+                          });
+                        }
+                      : null,
+                  items: locationsList
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  // items: [
+                  //   DropdownMenuItem(
+                  //     child: Text("Item 1"),
+                  //     value: "value 1",
+                  //   ),
+                  //   DropdownMenuItem(
+                  //     child: Text("Item 2"),
+                  //     value: "value 2",
+                  //   ),
+                  //   DropdownMenuItem(
+                  //     child: Text("Item 3"),
+                  //     value: "value 3",
+                  //   ),
+                  //   DropdownMenuItem(
+                  //     child: Text("Item 4"),
+                  //     value: "value 4",
+                  //   ),
+                  // ],
+                ),
+              ),
+            ),
+
+            SizedBox(
+              height: 10,
+            ),
+            // privacy policy button
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0, left: 20, bottom: 15),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 15,
+                    width: 15,
+                    child: Checkbox(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6)),
+                        value: _isAgree,
+                        onChanged: (newValue) {
+                          _isAgree = newValue;
+                          setState(() {});
+                        }),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 8.0,
+                      // top: 15,
+                      // bottom: 15,
+                    ),
+                    child: Container(
+                      width: DeviceInfo(context).width! - 130,
+                      child: RichText(
+                          maxLines: 2,
+                          text: TextSpan(
+                              style: TextStyle(
+                                  color: MyTheme.font_grey, fontSize: 12),
+                              children: [
+                                TextSpan(
+                                  text: "I agree to the",
+                                ),
+                                TextSpan(
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CommonWebviewScreen(
+                                                    page_name:
+                                                        "Terms Conditions",
+                                                    url:
+                                                        "${AppConfig.RAW_BASE_URL}/mobile-page/terms",
+                                                  )));
+                                    },
+                                  style:
+                                      TextStyle(color: MyTheme.primary_color),
+                                  text: " Terms Conditions",
+                                ),
+                                TextSpan(
+                                  text: " &",
+                                ),
+                                TextSpan(
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CommonWebviewScreen(
+                                                    page_name: "Privacy Policy",
+                                                    url:
+                                                        "${AppConfig.RAW_BASE_URL}/mobile-page/privacy-policy",
+                                                  )));
+                                    },
+                                  text: " Privacy Policy",
+                                  style:
+                                      TextStyle(color: MyTheme.primary_color),
+                                )
+                              ])),
+                    ),
+                  )
+                ],
+              ),
+            ),
+
+            //sign with phone button
+            Padding(
+              padding: const EdgeInsets.only(top: 5.0, left: 20, right: 20),
+              child: Container(
+                height: 44,
+                child: Btn.minWidthFixHeight(
+                  minWidth: MediaQuery.of(context).size.width,
+                  height: 50,
+                  color: MyTheme.primary_color,
+                  shape: RoundedRectangleBorder(
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(10.0))),
+                  child: Text(
+                    'Sign Up with Phone',
+                    style: TextStyle(
+                        color: Colors.white,
                         fontSize: 14,
                         fontWeight: FontWeight.w600),
                   ),
-                  onTap: () {
-                    Navigator.pushAndRemoveUntil(context,
-                        MaterialPageRoute(builder: (context) {
-                      return Login();
-                    }), (route) => false);
-                  },
+                  onPressed: _isAgree!
+                      ? () {
+                          onPressSignUp(context);
+                        }
+                      : null,
                 ),
-              ],
+              ),
             ),
-          ),
 
-          SizedBox(
-            height: 10,
-          )
-        ],
+            // login instead button
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0, left: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                      child: Text(
+                    AppLocalizations.of(context)!.already_have_an_account,
+                    style: TextStyle(color: MyTheme.font_grey, fontSize: 12),
+                  )),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  InkWell(
+                    child: Text(
+                      AppLocalizations.of(context)!.log_in,
+                      style: TextStyle(
+                          color: MyTheme.primary_color,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    onTap: () {
+                      Navigator.pushAndRemoveUntil(context,
+                          MaterialPageRoute(builder: (context) {
+                        return Login();
+                      }), (route) => false);
+                    },
+                  ),
+                ],
+              ),
+            ),
+
+            SizedBox(
+              height: 10,
+            )
+          ],
+        ),
       ),
     );
   }
