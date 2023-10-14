@@ -347,7 +347,7 @@ class _ProfileState extends State<Profile> {
                             },
                             child: CircleAvatar(
                               radius: 25,
-                              backgroundColor: Colors.white.withOpacity(0.4),
+                              backgroundColor: Colors.black.withOpacity(0.4),
                               // backgroundColor: MyTheme.green.withOpacity(0.5),
                               child: IconButton(
                                 onPressed: saveProfileImage,
@@ -355,7 +355,7 @@ class _ProfileState extends State<Profile> {
                                   Icons.image,
                                   // size: 30,
                                   // color: MyTheme.green,
-                                  color: Colors.black,
+                                  color: Colors.white,
                                   // weight: 10,
                                 ),
                               ),
