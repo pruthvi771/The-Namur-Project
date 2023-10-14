@@ -25,23 +25,6 @@ class WeatherScreen extends StatefulWidget {
 }
 
 class _WeatherScreenState extends State<WeatherScreen> {
-  late var savedPrimaryData;
-  late var savedSecondaryData;
-
-  Future<void> getPrimaryData() async {
-    var PrimaryLocationDataBox =
-        Hive.box<PrimaryLocation>('primaryLocationBox');
-
-    savedPrimaryData = PrimaryLocationDataBox.get('locationData');
-  }
-
-  Future<void> getSecondaryData() async {
-    var SecondaryLocationDataBox =
-        Hive.box<SecondaryLocations>('secondaryLocationsBox');
-
-    savedSecondaryData = SecondaryLocationDataBox.get('locationData');
-  }
-
   void initState() {
     super.initState();
     BlocProvider.of<WeatherBloc>(context).add(
@@ -90,22 +73,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
     return formattedDate;
   }
 
-  Future fetchDataFromHive() async {
-    var PrimaryLocationDataBox =
-        Hive.box<PrimaryLocation>('primaryLocationBox');
-
-    savedPrimaryData = PrimaryLocationDataBox.get('locationData');
-
-    var SecondaryLocationDataBox =
-        Hive.box<SecondaryLocations>('secondaryLocationsBox');
-
-    savedSecondaryData = SecondaryLocationDataBox.get('locationData');
-
-    print('fetched hive data');
-
-    return [savedPrimaryData, savedSecondaryData];
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -116,14 +83,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
           // drawer: const MainDrawer(),
           backgroundColor: Colors.transparent,
           appBar: buildCustomAppBar(context),
-          body: FutureBuilder(
-            future: fetchDataFromHive(),
-            builder: (context, snapshot) {
-              var primaryData = snapshot.data[0];
-              var secondaryData = snapshot.data[1];
-              return bodycontent(primaryData, secondaryData);
-            },
-          ),
+          body: bodycontent(),
           floatingActionButton: (showFloatingActionButton)
               ? FloatingActionButton(
                   child: Icon(Icons.add),
@@ -195,7 +155,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
     );
   }
 
-  bodycontent(var primaryData, var secondaryData) {
+  bodycontent() {
     var weatherImage = "assets/weather.png";
 
     return SingleChildScrollView(
