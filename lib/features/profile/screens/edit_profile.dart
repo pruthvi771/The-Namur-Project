@@ -49,8 +49,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   String districtDropdownValue = addressList.districtTalukMap[0][0] as String;
   String talukDropdownValue = addressList.districtTalukMap[1][0] as String;
 
-  String landDropdownValueForCrop = '';
-  String landDropdownValueForMachine = '';
+  String landDropdownValue = '';
 
   String cropDropdownValue = '';
   String equipmentDropdownValue = '';
@@ -281,8 +280,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (dataCollectionType == DataCollectionType.address) {
       savedData!.address.removeAt(index);
     } else if (dataCollectionType == DataCollectionType.land) {
-      landDropdownValueForCrop = '';
-      landDropdownValueForMachine = '';
+      landDropdownValue = '';
       savedData!.land.removeAt(index);
     }
 
@@ -834,7 +832,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       height: 12,
                     ),
 
-                    HeadingTextWidget('Crops Grown and Planned'),
+                    HeadingTextWidget('Farm Details'),
+                    SizedBox(
+                      height: 10,
+                    ),
 
                     (state.profileData.land.length == 0)
                         ? Padding(
@@ -856,7 +857,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         : Column(
                             children: [
                               DropdownButtonWidget(
-                                  'Land',
+                                  'Select Land',
                                   List.generate(
                                     state.profileData.land.length + 1,
                                     (index) {
@@ -884,24 +885,40 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       );
                                     },
                                   ),
-                                  landDropdownValueForCrop, (value) {
+                                  landDropdownValue, (value) {
                                 setState(() {
-                                  landDropdownValueForCrop = value;
+                                  landDropdownValue = value;
                                   setState(() {});
                                 });
                               }),
-                              if (landDropdownValueForCrop.isNotEmpty)
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 8, top: 10),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    'Add Crop',
+                                    style: TextStyle(
+                                        // color: MyTheme.accent_color,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                        letterSpacing: .5,
+                                        fontFamily: 'Poppins'),
+                                  ),
+                                ),
+                              ),
+                              if (landDropdownValue.isNotEmpty)
                                 Align(
                                   alignment: Alignment.topLeft,
                                   child: Wrap(
                                     children: List.generate(
                                       getCropsForSyno(state.profileData,
-                                              landDropdownValueForCrop)
+                                              landDropdownValue)
                                           .length,
                                       (index) {
                                         var item = getCropsForSyno(
                                             state.profileData,
-                                            landDropdownValueForCrop)[index];
+                                            landDropdownValue)[index];
                                         return Padding(
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 2),
@@ -915,8 +932,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             // deleteIcon: Icon(Icons.delete),
                                             onDeleted: () {
                                               _deleteCropFromHive(
-                                                  landDropdownValueForCrop,
-                                                  index);
+                                                  landDropdownValue, index);
                                               setState(() {});
                                             },
                                           ),
@@ -925,122 +941,78 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     ),
                                   ),
                                 ),
-                              DropdownButtonWidget(
-                                  'Crop',
-                                  cropsList.map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
-                                  cropDropdownValue, (value) {
-                                setState(() {
-                                  cropDropdownValue = value;
-                                });
-                              }),
-                              TexiFieldWidgetForDouble(
-                                  'Yield',
-                                  _yieldController,
-                                  'Enter Crop Yield (in Acres)'),
-                              Row(
-                                children: [
-                                  Expanded(child: SizedBox()),
-                                  TextButton(
-                                    child: Text('Add Record'),
-                                    onPressed: () {
-                                      _addCropToHive(
-                                        landDropdownValueForCrop,
-                                        cropDropdownValue,
-                                        _yieldController.text,
-                                      );
-                                      setState(() {});
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-
-                    SizedBox(
-                      height: 8,
-                    ),
-                    Divider(
-                      // color: MyTheme.grey_153,
-                      thickness: 2,
-                    ),
-                    SizedBox(
-                      height: 12,
-                    ),
-
-                    HeadingTextWidget('Machines and Equipments'),
-
-                    (state.profileData.land.length == 0)
-                        ? Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: Text(
-                                'Add Land First',
-                                style: TextStyle(
-                                  color: Colors.red,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                  letterSpacing: .5,
-                                  fontFamily: 'Poppins',
+                              // for crop
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 5),
+                                child: Column(
+                                  children: [
+                                    DropdownButtonWidget(
+                                        '',
+                                        cropsList.map<DropdownMenuItem<String>>(
+                                            (String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value),
+                                          );
+                                        }).toList(),
+                                        cropDropdownValue, (value) {
+                                      setState(() {
+                                        cropDropdownValue = value;
+                                      });
+                                    }),
+                                    TexiFieldWidgetForDouble(
+                                        'Yield',
+                                        _yieldController,
+                                        'Enter Crop Yield (in Acres)'),
+                                    Row(
+                                      children: [
+                                        Expanded(child: SizedBox()),
+                                        TextButton(
+                                          child: Text('Add Record'),
+                                          onPressed: () {
+                                            _addCropToHive(
+                                              landDropdownValue,
+                                              cropDropdownValue,
+                                              _yieldController.text,
+                                            );
+                                            setState(() {});
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ),
-                          )
-                        : Column(
-                            children: [
-                              DropdownButtonWidget(
-                                  'Land',
-                                  List.generate(
-                                    state.profileData.land.length + 1,
-                                    (index) {
-                                      var item = [
-                                        Land()
-                                          ..village = ''
-                                          ..area = 0
-                                          ..syno = '',
-                                        ...state.profileData.land
-                                      ][index];
-                                      return DropdownMenuItem(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Expanded(child: Text(item.village)),
-                                            Expanded(child: Text(item.syno)),
-                                            Expanded(
-                                                child:
-                                                    Text(item.area.toString())),
-                                            // Expanded(child: Text(item.village)),
-                                          ],
-                                        ),
-                                        value: item.syno,
-                                      );
-                                    },
+
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 8, top: 10),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    'Add Machines',
+                                    style: TextStyle(
+                                        // color: MyTheme.accent_color,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                        letterSpacing: .5,
+                                        fontFamily: 'Poppins'),
                                   ),
-                                  landDropdownValueForMachine, (value) {
-                                setState(() {
-                                  landDropdownValueForMachine = value;
-                                  setState(() {});
-                                });
-                              }),
-                              if (landDropdownValueForMachine.isNotEmpty)
+                                ),
+                              ),
+                              if (landDropdownValue.isNotEmpty)
                                 Align(
                                   alignment: Alignment.topLeft,
                                   child: Wrap(
                                     children: List.generate(
                                       getMachinesForSyno(state.profileData,
-                                              landDropdownValueForMachine)
+                                              landDropdownValue)
                                           .length,
                                       (index) {
                                         var item = getMachinesForSyno(
                                             state.profileData,
-                                            landDropdownValueForMachine)[index];
+                                            landDropdownValue)[index];
                                         return Padding(
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 2),
@@ -1053,8 +1025,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             // deleteIcon: Icon(Icons.delete),
                                             onDeleted: () {
                                               _deleteEquipmentFromHive(
-                                                  landDropdownValueForMachine,
-                                                  index);
+                                                  landDropdownValue, index);
                                               setState(() {});
                                             },
                                           ),
@@ -1063,37 +1034,177 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     ),
                                   ),
                                 ),
-                              DropdownButtonWidget(
-                                  'Machines',
-                                  equipmentsList.map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
-                                  equipmentDropdownValue, (value) {
-                                setState(() {
-                                  equipmentDropdownValue = value;
-                                });
-                              }),
-                              Row(
-                                children: [
-                                  Expanded(child: SizedBox()),
-                                  TextButton(
-                                    child: Text('Add Record'),
-                                    onPressed: () {
-                                      _addEquipmentToHive(
-                                        landDropdownValueForMachine,
-                                        equipmentDropdownValue,
-                                      );
-                                      setState(() {});
-                                    },
-                                  ),
-                                ],
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 5),
+                                child: Column(
+                                  children: [
+                                    DropdownButtonWidget(
+                                        '',
+                                        equipmentsList
+                                            .map<DropdownMenuItem<String>>(
+                                                (String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value),
+                                          );
+                                        }).toList(),
+                                        equipmentDropdownValue, (value) {
+                                      setState(() {
+                                        equipmentDropdownValue = value;
+                                      });
+                                    }),
+                                    Row(
+                                      children: [
+                                        Expanded(child: SizedBox()),
+                                        TextButton(
+                                          child: Text('Add Record'),
+                                          onPressed: () {
+                                            _addEquipmentToHive(
+                                              landDropdownValue,
+                                              equipmentDropdownValue,
+                                            );
+                                            setState(() {});
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
+
+                    // SizedBox(
+                    //   height: 8,
+                    // ),
+                    // Divider(
+                    //   // color: MyTheme.grey_153,
+                    //   thickness: 2,
+                    // ),
+                    // SizedBox(
+                    //   height: 12,
+                    // ),
+                    // HeadingTextWidget('Machines and Equipments'),
+
+                    // (state.profileData.land.length == 0)
+                    //     ? Padding(
+                    //         padding: const EdgeInsets.all(20),
+                    //         child: Align(
+                    //           alignment: Alignment.center,
+                    //           child: Text(
+                    //             'Add Land First',
+                    //             style: TextStyle(
+                    //               color: Colors.red,
+                    //               fontSize: 18,
+                    //               fontWeight: FontWeight.w500,
+                    //               letterSpacing: .5,
+                    //               fontFamily: 'Poppins',
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       )
+                    //     : Column(
+                    //         children: [
+                    //           // DropdownButtonWidget(
+                    //           //     'Select Land',
+                    //           //     List.generate(
+                    //           //       state.profileData.land.length + 1,
+                    //           //       (index) {
+                    //           //         var item = [
+                    //           //           Land()
+                    //           //             ..village = ''
+                    //           //             ..area = 0
+                    //           //             ..syno = '',
+                    //           //           ...state.profileData.land
+                    //           //         ][index];
+                    //           //         return DropdownMenuItem(
+                    //           //           child: Row(
+                    //           //             mainAxisAlignment:
+                    //           //                 MainAxisAlignment.spaceBetween,
+                    //           //             children: [
+                    //           //               Expanded(child: Text(item.village)),
+                    //           //               Expanded(child: Text(item.syno)),
+                    //           //               Expanded(
+                    //           //                   child:
+                    //           //                       Text(item.area.toString())),
+                    //           //               // Expanded(child: Text(item.village)),
+                    //           //             ],
+                    //           //           ),
+                    //           //           value: item.syno,
+                    //           //         );
+                    //           //       },
+                    //           //     ),
+                    //           //     landDropdownValue, (value) {
+                    //           //   setState(() {
+                    //           //     landDropdownValue = value;
+                    //           //     setState(() {});
+                    //           //   });
+                    //           // }),
+                    //           if (landDropdownValue.isNotEmpty)
+                    //             Align(
+                    //               alignment: Alignment.topLeft,
+                    //               child: Wrap(
+                    //                 children: List.generate(
+                    //                   getMachinesForSyno(state.profileData,
+                    //                           landDropdownValue)
+                    //                       .length,
+                    //                   (index) {
+                    //                     var item = getMachinesForSyno(
+                    //                         state.profileData,
+                    //                         landDropdownValue)[index];
+                    //                     return Padding(
+                    //                       padding: const EdgeInsets.symmetric(
+                    //                           horizontal: 2),
+                    //                       child: Chip(
+                    //                         backgroundColor:
+                    //                             MyTheme.green_lighter,
+                    //                         labelPadding: EdgeInsets.symmetric(
+                    //                             horizontal: 10, vertical: 0),
+                    //                         label: Text(item),
+                    //                         // deleteIcon: Icon(Icons.delete),
+                    //                         onDeleted: () {
+                    //                           _deleteEquipmentFromHive(
+                    //                               landDropdownValue, index);
+                    //                           setState(() {});
+                    //                         },
+                    //                       ),
+                    //                     );
+                    //                   },
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //           DropdownButtonWidget(
+                    //               'Select Machine',
+                    //               equipmentsList.map<DropdownMenuItem<String>>(
+                    //                   (String value) {
+                    //                 return DropdownMenuItem<String>(
+                    //                   value: value,
+                    //                   child: Text(value),
+                    //                 );
+                    //               }).toList(),
+                    //               equipmentDropdownValue, (value) {
+                    //             setState(() {
+                    //               equipmentDropdownValue = value;
+                    //             });
+                    //           }),
+                    //           Row(
+                    //             children: [
+                    //               Expanded(child: SizedBox()),
+                    //               TextButton(
+                    //                 child: Text('Add Record'),
+                    //                 onPressed: () {
+                    //                   _addEquipmentToHive(
+                    //                     landDropdownValue,
+                    //                     equipmentDropdownValue,
+                    //                   );
+                    //                   setState(() {});
+                    //                 },
+                    //               ),
+                    //             ],
+                    //           ),
+                    //         ],
+                    //       ),
                   ],
                 );
               return Container(

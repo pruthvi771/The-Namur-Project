@@ -1,5 +1,8 @@
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
+import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_bloc.dart';
+import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_event.dart';
+import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_state.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart'
     as hiveModels;
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_bloc.dart';
@@ -29,11 +32,16 @@ class AddWeatherLocation extends StatefulWidget {
 
 class _AddWeatherLocationState extends State<AddWeatherLocation> {
   final districts = addressList.districtListForWeather;
-  String districtDropdownValue =
-      addressList.districtListForWeather[0] as String;
+  String districtDropdownValue = addressList.districtListForWeather[0];
   // String talukDropdownValue = addressList.districtTalukMap[1][0] as String;
 
-  List<String> taluks = [];
+  void initState() {
+    super.initState();
+    BlocProvider.of<HiveBloc>(context).add(
+      HiveLocationDataRequested(),
+    );
+    print('bloc called');
+  }
 
   Future<void> addPrimaryLocationToHive() async {
     var dataBox = Hive.box<hiveModels.PrimaryLocation>('primaryLocationBox');
@@ -49,6 +57,35 @@ class _AddWeatherLocationState extends State<AddWeatherLocation> {
 
     await dataBox.put(primaryLocation.id, primaryLocation);
     print('WeatherLocationAdded');
+    // BlocProvider.of<HiveBloc>(context).add(
+    //   HiveLocationDataRequested(),
+    // );
+    BlocProvider.of<WeatherBloc>(context).add(
+      WeatherSreenDataRequested(),
+    );
+    BlocProvider.of<WeatherSectionBloc>(context).add(
+      WeatherSectionDataRequested(),
+    );
+  }
+
+  Future<void> deleteSecondaryLocationFromHive(index) async {
+    var SecondaryDataBox =
+        Hive.box<hiveModels.SecondaryLocations>('secondaryLocationsBox');
+
+    var savedData = SecondaryDataBox.get('secondaryLocations');
+
+    savedData!.address.removeAt(index);
+
+    var newData = hiveModels.SecondaryLocations()
+      ..id = "secondaryLocations"
+      ..address = [...savedData.address];
+
+    await SecondaryDataBox.put(newData.id, newData);
+
+    BlocProvider.of<HiveBloc>(context).add(
+      HiveLocationDataRequested(),
+      // HiveAppendAddress(context: context),
+    );
     BlocProvider.of<WeatherBloc>(context).add(
       WeatherSreenDataRequested(),
     );
@@ -58,6 +95,12 @@ class _AddWeatherLocationState extends State<AddWeatherLocation> {
   }
 
   Future<void> addLocationToHive() async {
+    if (districtDropdownValue == '') {
+      ToastComponent.showDialog('Please select a location',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
     var SecondaryDataBox =
         Hive.box<hiveModels.SecondaryLocations>('secondaryLocationsBox');
 
@@ -91,6 +134,11 @@ class _AddWeatherLocationState extends State<AddWeatherLocation> {
     await SecondaryDataBox.put(secondaryLocations.id, secondaryLocations);
 
     print('Secondary WeatherLocationAdded');
+
+    BlocProvider.of<HiveBloc>(context).add(
+      HiveLocationDataRequested(),
+      // HiveAppendAddress(context: context),
+    );
     BlocProvider.of<WeatherBloc>(context).add(
       WeatherSreenDataRequested(),
     );
@@ -128,7 +176,71 @@ class _AddWeatherLocationState extends State<AddWeatherLocation> {
               ),
             ),
             SizedBox(
-              height: 20,
+              height: 10,
+            ),
+            BlocListener<HiveBloc, HiveState>(
+              listener: (context, state) {
+                if (state is Error) {
+                  print('STATE: Error: ${state.error}');
+                }
+                if (state is HiveLocationDataReceived) {
+                  print('STATE: HiveLocationDataReceived');
+                }
+              },
+              child:
+                  BlocBuilder<HiveBloc, HiveState>(builder: (context, state) {
+                if (state is Loading)
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                if (state is HiveLocationDataReceived)
+                  return Column(
+                    children: List.generate(
+                      state.locationData.length,
+                      (index) {
+                        var item = state.locationData[index];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 5),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: MyTheme.green_lighter,
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(child: Text(item)),
+                                InkWell(
+                                  onTap: () async {
+                                    await deleteSecondaryLocationFromHive(
+                                      index,
+                                    );
+                                  },
+                                  child: CircleAvatar(
+                                    radius: 12,
+                                    backgroundColor: MyTheme.green,
+                                    child: Icon(
+                                      Icons.delete,
+                                      size: 15.0,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                return Text('error');
+              }),
+            ),
+            SizedBox(
+              height: 15,
             ),
             DropdownButtonWidget(
                 'Select',
@@ -141,14 +253,11 @@ class _AddWeatherLocationState extends State<AddWeatherLocation> {
                 districtDropdownValue, (value) {
               setState(() {
                 districtDropdownValue = value;
-                taluks = addressList.districtTalukMap.firstWhere(
-                        (element) => element[0] == districtDropdownValue)[1]
-                    as List<String>;
-                // talukDropdownValue = taluks[0];
+                setState(() {});
               });
             }),
             SizedBox(
-              height: 30,
+              height: 10,
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -179,36 +288,34 @@ class _AddWeatherLocationState extends State<AddWeatherLocation> {
                         await addLocationToHive();
                       }
 
-                      Navigator.pop(context);
+                      // Navigator.pop(context);
                     },
                   ),
                 ],
               ),
             ),
-            TextButton(
-                child: Text('show'),
-                onPressed: () {
-                  var dataBox = Hive.box<hiveModels.SecondaryLocations>(
-                      'secondaryLocationsBox');
-
-                  var savedData = dataBox.get('secondaryLocations');
-
-                  if (savedData == null) {
-                    print('no data found');
-                  } else {
-                    print(savedData.address.length);
-                    for (var secondaryDataBox in savedData.address) {
-                      print(secondaryDataBox);
-                    }
-                  }
-                }),
-            TextButton(
-                child: Text('clear'),
-                onPressed: () {
-                  var dataBox = Hive.box<hiveModels.SecondaryLocations>(
-                      'secondaryLocationsBox');
-                  dataBox.clear();
-                }),
+            // TextButton(
+            //     child: Text('show'),
+            //     onPressed: () {
+            //       var dataBox = Hive.box<hiveModels.SecondaryLocations>(
+            //           'secondaryLocationsBox');
+            //       var savedData = dataBox.get('secondaryLocations');
+            //       if (savedData == null) {
+            //         print('no data found');
+            //       } else {
+            //         print(savedData.address.length);
+            //         for (var secondaryDataBox in savedData.address) {
+            //           print(secondaryDataBox);
+            //         }
+            //       }
+            //     }),
+            // TextButton(
+            //     child: Text('clear'),
+            //     onPressed: () {
+            //       var dataBox = Hive.box<hiveModels.SecondaryLocations>(
+            //           'secondaryLocationsBox');
+            //       dataBox.clear();
+            //     }),
           ]),
         ),
       ),

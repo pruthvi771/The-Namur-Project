@@ -26,5 +26,23 @@ class HiveBloc extends Bloc<HiveEvent, HiveState> {
         HiveDataRequested(),
       );
     });
+
+    on<HiveLocationDataRequested>((event, emit) async {
+      emit(Loading());
+
+      var dataBox = Hive.box<SecondaryLocations>('secondaryLocationsBox');
+
+      var savedData = dataBox.get('secondaryLocations');
+      // savedData.address
+
+      if (savedData != null) {
+        emit(HiveLocationDataReceived(locationData: savedData.address));
+      } else if (savedData == null) {
+        emit(HiveLocationDataReceived(locationData: []));
+      } else {
+        emit(Error('No Data Found'));
+        emit(HiveDataNotReceived());
+      }
+    });
   }
 }

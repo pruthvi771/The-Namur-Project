@@ -317,94 +317,58 @@ class _ProfileState extends State<Profile> {
               return SliverList(
                 delegate: SliverChildListDelegate([
                   Stack(
+                    alignment: AlignmentDirectional.bottomEnd,
                     children: [
-                      Column(
-                        children: [
-                          BlocBuilder<ProfileBloc, ProfileState>(
-                            builder: (context, state) {
-                              if (state is Loading)
-                                return Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height / 2,
-                                  child: Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                );
-                              return Container(
-                                width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.height / 2,
-                                // child: Image.asset(
-                                //   "assets/girl1.png",
-                                //   fit: BoxFit.cover,
-                                // ),
-                                child: (buyerUserData.photoURL == null ||
-                                        buyerUserData.photoURL == '')
-                                    ? InkWell(
-                                        onLongPress: saveProfileImage,
-                                        child: Image.asset(
-                                          "assets/default_profile2.png",
-                                          fit: BoxFit.cover,
-                                        ),
-                                      )
-                                    : InkWell(
-                                        onLongPress: saveProfileImage,
-                                        child: Image.network(
-                                          buyerUserData.photoURL!,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                              );
-                            },
-                          ),
-                        ],
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height / 2,
+                        child: (buyerUserData.photoURL == null ||
+                                buyerUserData.photoURL == '')
+                            ? Image.asset(
+                                "assets/default_profile2.png",
+                                fit: BoxFit.cover,
+                              )
+                            : Image.network(
+                                buyerUserData.photoURL!,
+                                fit: BoxFit.cover,
+                              ),
                       ),
-                      // Positioned(
-                      //   top: 45,
-                      //   right: 30,
-                      //   child: GestureDetector(
-                      //     onTap: () {
-                      //       Navigator.push(context,
-                      //           MaterialPageRoute(builder: (context) {
-                      //         return MoreDetails();
-                      //       }));
-                      //     },
-                      //     child: Icon(
-                      //       Icons.settings_outlined,
-                      //       size: 30,
-                      //       color: Colors.white,
-                      //       weight: 10,
-                      //     ),
-                      //   ),
-                      // ),
-                      // Positioned(
-                      //   top: 45,
-                      //   left: 30,
-                      //   child: IconButton(
-                      //       onPressed: () {
-                      //         homeData.scaffoldKey.currentState?.openDrawer();
-                      //       },
-                      //       icon: Icon(
-                      //         Icons.menu,
-                      //         color: Colors.white,
-                      //         size: 30,
-                      //       )),
-                      // ),
                       Positioned(
-                        bottom: 0,
-                        child: Container(
-                          height: 15,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                              color: MyTheme.white,
-                              borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(20),
-                                  topLeft: Radius.circular(20))),
+                        bottom: 10,
+                        right: 4,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 5, right: 10),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return MoreDetails();
+                              }));
+                            },
+                            child: CircleAvatar(
+                              radius: 25,
+                              backgroundColor: Colors.black.withOpacity(0.4),
+                              // backgroundColor: MyTheme.green.withOpacity(0.5),
+                              child: IconButton(
+                                onPressed: saveProfileImage,
+                                icon: Icon(
+                                  Icons.image,
+                                  // size: 30,
+                                  // color: MyTheme.green,
+                                  color: Colors.white,
+                                  // weight: 10,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                      )
+                      ),
                     ],
                   ),
 
+                  SizedBox(
+                    height: 15,
+                  ),
                   //Profile Name
                   Padding(
                     padding: const EdgeInsets.symmetric(

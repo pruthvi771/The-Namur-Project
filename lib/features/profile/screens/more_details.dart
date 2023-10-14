@@ -366,61 +366,140 @@ class _MoreDetailsState extends State<MoreDetails> {
                       controller: _addressController,
                       title: 'District, Taluk, Hobli, Village',
                       children: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: (profileData!.address.length > 0)
                             ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: List.generate(
                                   profileData!.address.length,
                                   (index) {
                                     var item = profileData!.address[index];
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0, vertical: 6),
-                                      child: Row(
+                                          horizontal: 8.0, vertical: 14),
+                                      child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          Expanded(
-                                            child: Text(
-                                              '${index + 1}. ${item.district}',
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                fontSize: 13,
-                                              ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 5, left: 7, right: 7),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Expanded(
+                                                    child: Text(
+                                                  'District',
+                                                  style: TextStyle(
+                                                      fontSize: 13.5,
+                                                      fontWeight:
+                                                          FontWeight.w800),
+                                                )),
+                                                Expanded(
+                                                    flex: 2,
+                                                    child: Text(
+                                                      item.district,
+                                                      style: TextStyle(
+                                                        fontSize: 13.5,
+                                                      ),
+                                                    )),
+                                              ],
                                             ),
                                           ),
                                           SizedBox(
                                             width: 5,
                                           ),
-                                          Expanded(
-                                            child: Text(item.taluk,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  fontSize: 13,
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 5, left: 7, right: 7),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Expanded(
+                                                    child: Text(
+                                                  'Taluk',
+                                                  style: TextStyle(
+                                                      fontSize: 13.5,
+                                                      fontWeight:
+                                                          FontWeight.w800),
                                                 )),
+                                                Expanded(
+                                                    flex: 2,
+                                                    child: Text(
+                                                      item.taluk,
+                                                      style: TextStyle(
+                                                        fontSize: 13.5,
+                                                      ),
+                                                    )),
+                                              ],
+                                            ),
                                           ),
                                           SizedBox(
                                             width: 5,
                                           ),
-                                          Expanded(
-                                            child: Text(item.hobli,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  fontSize: 13,
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 5, left: 7, right: 7),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Expanded(
+                                                    child: Text(
+                                                  'Hobli',
+                                                  style: TextStyle(
+                                                      fontSize: 13.5,
+                                                      fontWeight:
+                                                          FontWeight.w800),
                                                 )),
+                                                Expanded(
+                                                    flex: 2,
+                                                    child: Text(
+                                                      item.hobli,
+                                                      style: TextStyle(
+                                                        fontSize: 13.5,
+                                                      ),
+                                                    )),
+                                              ],
+                                            ),
                                           ),
                                           SizedBox(
                                             width: 5,
                                           ),
-                                          Expanded(
-                                            child: Text(item.village,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  fontSize: 13,
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 5, left: 7, right: 7),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Expanded(
+                                                    child: Text(
+                                                  'Village',
+                                                  style: TextStyle(
+                                                      fontSize: 13.5,
+                                                      fontWeight:
+                                                          FontWeight.w800),
                                                 )),
+                                                Expanded(
+                                                    flex: 2,
+                                                    child: Text(
+                                                      item.village,
+                                                      style: TextStyle(
+                                                        fontSize: 13.5,
+                                                      ),
+                                                    )),
+                                              ],
+                                            ),
                                           ),
-                                          // Expanded(child: Text(item.village)),
                                         ],
                                       ),
                                     );
@@ -641,30 +720,17 @@ class _MoreDetailsState extends State<MoreDetails> {
                           letterSpacing: .5,
                           fontFamily: 'Poppins')),
                 ),
-                Container(
-                  width: 30,
-                  height: double.infinity,
-                  child: InkWell(
-                    //padding: EdgeInsets.zero,
-                    onTap: () {
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) {
-                        return EditProfileScreen();
-                      }));
-                    },
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Edit',
-                        style: TextStyle(
-                            color: MyTheme.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: .5,
-                            fontFamily: 'Poppins'),
-                      ),
-                    ),
+                IconButton(
+                  icon: Icon(
+                    Icons.edit,
+                    color: Colors.white,
                   ),
+                  onPressed: () {
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) {
+                      return EditProfileScreen();
+                    }));
+                  },
                 ),
               ],
             ),

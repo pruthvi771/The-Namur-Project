@@ -2,7 +2,6 @@ import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/custom/lang_text.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
-import 'package:active_ecommerce_flutter/features/auth/screens/password_forget.dart';
 import 'package:active_ecommerce_flutter/ui_elements/auth_ui.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flip_card/flip_card_controller.dart';
@@ -33,7 +32,7 @@ class _PasswordOtpState extends State<PasswordOtp> {
   TextEditingController _passwordConfirmController = TextEditingController();
   bool _resetPasswordSuccess = false;
 
-  String headeText ="";
+  String headeText = "";
 
   FlipCardController cardController = FlipCardController();
 
@@ -41,43 +40,38 @@ class _PasswordOtpState extends State<PasswordOtp> {
   void initState() {
     Future.delayed(Duration.zero).then((value) {
       headeText = AppLocalizations.of(context)!.enter_the_code_sent;
-      setState((){});
+      setState(() {});
     });
     //on Splash Screen hide statusbar
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: [SystemUiOverlay.bottom]);
     super.initState();
   }
 
   @override
   void dispose() {
     //before going to other screen show statusbar
-    SystemChrome.setEnabledSystemUIMode(
-        SystemUiMode.manual, overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);
     super.dispose();
   }
 
   onPressConfirm() async {
-
     var code = _codeController.text.toString();
     var password = _passwordController.text.toString();
     var password_confirm = _passwordConfirmController.text.toString();
 
     if (code == "") {
-      ToastComponent.showDialog(
-          AppLocalizations.of(context)!.enter_the_code,
-          gravity: Toast.center,
-          duration: Toast.lengthLong);
+      ToastComponent.showDialog(AppLocalizations.of(context)!.enter_the_code,
+          gravity: Toast.center, duration: Toast.lengthLong);
       return;
     } else if (password == "") {
-      ToastComponent.showDialog(
-          AppLocalizations.of(context)!.enter_password,
-          gravity: Toast.center,
-          duration: Toast.lengthLong);
+      ToastComponent.showDialog(AppLocalizations.of(context)!.enter_password,
+          gravity: Toast.center, duration: Toast.lengthLong);
       return;
     } else if (password_confirm == "") {
       ToastComponent.showDialog(
-          AppLocalizations.of(context)!
-              .confirm_your_password,
+          AppLocalizations.of(context)!.confirm_your_password,
           gravity: Toast.center,
           duration: Toast.lengthLong);
       return;
@@ -90,8 +84,7 @@ class _PasswordOtpState extends State<PasswordOtp> {
       return;
     } else if (password != password_confirm) {
       ToastComponent.showDialog(
-          AppLocalizations.of(context)!
-              .passwords_do_not_match,
+          AppLocalizations.of(context)!.passwords_do_not_match,
           gravity: Toast.center,
           duration: Toast.lengthLong);
       return;
@@ -107,9 +100,9 @@ class _PasswordOtpState extends State<PasswordOtp> {
       ToastComponent.showDialog(passwordConfirmResponse.message!,
           gravity: Toast.center, duration: Toast.lengthLong);
 
-      headeText=AppLocalizations.of(context)!.password_changed_ucf;
+      headeText = AppLocalizations.of(context)!.password_changed_ucf;
       cardController.toggleCard();
-      setState((){});
+      setState(() {});
     }
   }
 
@@ -126,8 +119,9 @@ class _PasswordOtpState extends State<PasswordOtp> {
     }
   }
 
-  gotoLoginScreen(){
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Login()));
+  gotoLoginScreen() {
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => Login()));
   }
 
   @override
@@ -139,10 +133,10 @@ class _PasswordOtpState extends State<PasswordOtp> {
         context,
         headeText,
         WillPopScope(
-          onWillPop: (){
-            gotoLoginScreen();
-           return Future.delayed(Duration.zero);
-          },
+            onWillPop: () {
+              gotoLoginScreen();
+              return Future.delayed(Duration.zero);
+            },
             child: buildBody(context, _screen_width, _verify_by)));
   }
 
@@ -155,9 +149,9 @@ class _PasswordOtpState extends State<PasswordOtp> {
       direction: FlipDirection.HORIZONTAL,
       // default
       front: Container(
-        width: _screen_width ,
+        width: _screen_width,
         child: Column(
-        //  crossAxisAlignment: CrossAxisAlignment.center,
+          //  crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
               padding: const EdgeInsets.only(bottom: 16.0),
@@ -185,8 +179,7 @@ class _PasswordOtpState extends State<PasswordOtp> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 4.0),
                     child: Text(
-                      AppLocalizations.of(context)!
-                          .enter_the_code,
+                      AppLocalizations.of(context)!.enter_the_code,
                       style: TextStyle(
                           color: MyTheme.primary_color,
                           fontWeight: FontWeight.w600),
@@ -248,8 +241,7 @@ class _PasswordOtpState extends State<PasswordOtp> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 4.0),
                     child: Text(
-                      AppLocalizations.of(context)!
-                          .retype_password_ucf,
+                      AppLocalizations.of(context)!.retype_password_ucf,
                       style: TextStyle(
                           color: MyTheme.primary_color,
                           fontWeight: FontWeight.w600),
@@ -281,7 +273,6 @@ class _PasswordOtpState extends State<PasswordOtp> {
                               const BorderRadius.all(Radius.circular(12.0))),
                       child: Btn.basic(
                         minWidth: MediaQuery.of(context).size.width,
-
                         color: MyTheme.primary_color,
                         shape: RoundedRectangleBorder(
                             borderRadius:
@@ -328,11 +319,8 @@ class _PasswordOtpState extends State<PasswordOtp> {
             Padding(
               padding: const EdgeInsets.only(bottom: 16.0),
               child: Container(
-                  width: _screen_width ,
-                  child: Text(
-                      LangText(context)
-                          .local!
-                          .congratulations_ucf,
+                  width: _screen_width,
+                  child: Text(LangText(context).local!.congratulations_ucf,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: MyTheme.primary_color,
@@ -368,14 +356,12 @@ class _PasswordOtpState extends State<PasswordOtp> {
                 height: 44,
                 child: Btn.basic(
                   minWidth: MediaQuery.of(context).size.width,
-
                   color: MyTheme.primary_color,
                   shape: RoundedRectangleBorder(
                       borderRadius:
                           const BorderRadius.all(Radius.circular(6.0))),
                   child: Text(
-                    AppLocalizations.of(context)!
-                        .back_to_Login_ucf,
+                    AppLocalizations.of(context)!.back_to_Login_ucf,
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 13,

@@ -9,7 +9,8 @@ class WeatherSectionBloc
     on<WeatherSectionDataRequested>((event, emit) async {
       emit(LoadingSection());
       try {
-        final currentData = await WeatherRepository().fetchCurrent();
+        var currentData = [];
+        currentData = await WeatherRepository().fetchCurrent();
         if (currentData[0] == null) {
           emit(LocationDataNotFoundinHive());
           return;

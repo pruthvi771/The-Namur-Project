@@ -58,6 +58,12 @@ class SignUpWithPhoneNumberRequested extends AuthEvent {
       this.verificationId, this.otp, this.name, this.email, this.phoneNumber);
 }
 
+class LocationsForPincodeRequested extends AuthEvent {
+  final String pinCode;
+
+  LocationsForPincodeRequested(this.pinCode);
+}
+
 class resetPasswordForEmailRequested extends AuthEvent {
   final String email;
 
