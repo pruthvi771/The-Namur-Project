@@ -14,6 +14,11 @@ class FirestoreRepository {
     required String userId,
     required String name,
     required String email,
+    String? pincode,
+    String? addressName,
+    String? districtName,
+    String? addressCircle,
+    String? addressRegion,
     String? photoURL,
     String? phoneNumber,
   }) async {
@@ -21,7 +26,13 @@ class FirestoreRepository {
       _firestore.collection('buyer').doc(userId).set({
         'name': name,
         'email': email,
-        'address': '',
+        'address': {
+          'pincode': pincode ?? '',
+          'name': addressName ?? '',
+          'district': districtName ?? '',
+          'circle': addressCircle ?? '',
+          'region': addressRegion ?? '',
+        },
         'phone number': phoneNumber ?? '',
         'location_id': '',
         'photoURL': photoURL ?? '',
@@ -31,8 +42,14 @@ class FirestoreRepository {
       _firestore.collection('seller').doc(userId).set({
         'name': name,
         'email': email,
-        'address': '',
-        'phone number': '',
+        'address': {
+          'pincode': pincode ?? '',
+          'name': addressName ?? '',
+          'district': districtName ?? '',
+          'circle': addressCircle ?? '',
+          'region': addressRegion ?? '',
+        },
+        'phone number': phoneNumber ?? '',
         'location_id': '',
         'Products_Buy': '',
         'adhaar_id': '',

@@ -66,7 +66,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<PhoneVerificationRequested>((event, emit) async {
       emit(Loading());
       try {
-        var registeredPhoneNumbers =
+        var registeredPhoneNumbers;
+        registeredPhoneNumbers =
             await firestoreRepository.getAllRegisteredPhoneNumbers();
         // print('YOUR NUMBER: ${event.phoneNumber}');
 
@@ -88,15 +89,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
 
     on<SignUpPhoneVerificationRequested>((event, emit) async {
-      emit(Loading());
+      emit(SignUpLoading());
       try {
         // print('THIS IS A DRILL SIGN UP VERIFICATION REQUESTED.');
-
-        var registeredPhoneNumbers =
+        var registeredPhoneNumbers;
+        registeredPhoneNumbers =
             await firestoreRepository.getAllRegisteredPhoneNumbers();
         print('YOUR NUMBER: ${event.phoneNumber}');
         for (var number in registeredPhoneNumbers) {
-          print(number.capitalize);
+          print(number);
         }
 
         if (registeredPhoneNumbers.contains(event.phoneNumber)) {
@@ -133,7 +134,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
 
     on<SignUpWithPhoneNumberRequested>((event, emit) async {
-      emit(Loading());
+      emit(OtpLoading());
       try {
         await authRepository.signupWithPhone(
           verificationId: event.verificationId,
@@ -141,6 +142,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           username: event.name,
           email: event.email,
           phoneNumber: event.phoneNumber,
+          pincode: event.pincode,
+          addressName: event.addressName,
+          districtName: event.districtName,
+          addressCircle: event.addressCircle,
+          addressRegion: event.addressRegion,
         );
         emit(Authenticated());
       } catch (e) {

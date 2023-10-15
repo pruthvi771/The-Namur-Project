@@ -15,6 +15,16 @@ class Loading extends AuthState {
   List<Object?> get props => throw UnimplementedError();
 }
 
+class SignUpLoading extends AuthState {
+  @override
+  List<Object?> get props => throw UnimplementedError();
+}
+
+class OtpLoading extends AuthState {
+  @override
+  List<Object?> get props => throw UnimplementedError();
+}
+
 class Authenticated extends AuthState {
   @override
   List<Object?> get props => [];

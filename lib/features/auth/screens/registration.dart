@@ -64,6 +64,14 @@ class _RegistrationState extends State<Registration> {
   List<String> locationsList = [];
   String? locationDropdownValue;
 
+  PostOfficeResponse? postOfficeResponse;
+
+  // String? pincode;
+  String? addressName;
+  String? districtName;
+  String? addressCircle;
+  String? addressRegion;
+
   void fetchLocations(BuildContext buildContext) {
     if (_pinCodeController.text.toString().isEmpty ||
         _pinCodeController.text.toString().length != 6) {
@@ -95,6 +103,7 @@ class _RegistrationState extends State<Registration> {
   onPressSignUp(BuildContext buildContext) async {
     var name = _nameController.text.toString();
     var email = _emailController.text.toString();
+    var pincode = _pinCodeController.text.toString();
     var phone = newPhone2;
 
     if (name == "") {
@@ -111,6 +120,14 @@ class _RegistrationState extends State<Registration> {
       ToastComponent.showDialog('Enter a valid email address',
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
+    } else if (pincode.isEmpty) {
+      ToastComponent.showDialog('Enter a Pin Code and Select A Location',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    } else if (locationDropdownValue == null) {
+      ToastComponent.showDialog('Select A Location',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
     }
 
     // print('phone login attempted');
@@ -120,6 +137,24 @@ class _RegistrationState extends State<Registration> {
     BlocProvider.of<AuthBloc>(buildContext).add(
       SignUpPhoneVerificationRequested(phone!),
     );
+  }
+
+  getAddressValues() {
+    postOfficeResponse!.postOffices.forEach((postOffice) {
+      if (postOffice.name == locationDropdownValue) {
+        addressName = postOffice.name;
+        districtName = postOffice.district;
+        addressCircle = postOffice.circle;
+        addressRegion = postOffice.region;
+      }
+    });
+  }
+
+  clearAddressValues() {
+    addressName = null;
+    districtName = null;
+    addressCircle = null;
+    addressRegion = null;
   }
 
   @override
@@ -162,14 +197,19 @@ class _RegistrationState extends State<Registration> {
                         email: _emailController.text.toString(),
                         signUp: true,
                         // phoneNumber: _phoneNumberController.text.toString(),
-                        phoneNumber:
-                            '+91 ${_phoneNumberController.text.toString()}',
+                        phoneNumber: newPhone2,
+                        pincode: _pinCodeController.text.toString(),
+                        addressName: addressName,
+                        districtName: districtName,
+                        addressCircle: addressCircle,
+                        addressRegion: addressRegion,
                       )),
             );
           }
           if (state is LocationsForPincodeReceived) {
             ToastComponent.showDialog('Locations fetched.',
                 gravity: Toast.center, duration: Toast.lengthLong);
+            postOfficeResponse = state.postOfficeResponse;
             for (var postOffice in state.postOfficeResponse.postOffices) {
               locationsList.add(postOffice.name);
             }
@@ -179,6 +219,7 @@ class _RegistrationState extends State<Registration> {
           }
           if (state is LocationsForPincodeLoading) {
             locationDropdownValue = null;
+            clearAddressValues();
             locationsList.clear();
             ToastComponent.showDialog('Fetching Locations...',
                 gravity: Toast.center, duration: Toast.lengthLong);
@@ -186,17 +227,12 @@ class _RegistrationState extends State<Registration> {
         },
         child: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
-            if (state is Loading)
+            if (state is SignUpLoading)
               return Scaffold(
                 body: Center(
                   child: CircularProgressIndicator(),
                 ),
               );
-            // return AuthScreen.buildScreen(
-            //     context,
-            //     "${AppLocalizations.of(context)!.join_ucf} " +
-            //         AppConfig.app_name,
-            //     buildBody(context, _screen_width));
             return Directionality(
               textDirection:
                   app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
@@ -239,6 +275,7 @@ class _RegistrationState extends State<Registration> {
 
   Container buildBody(BuildContext context, double _screen_width) {
     return Container(
+      color: Colors.white,
       // decoration: BoxDecoration(
       //     borderRadius: BorderRadius.only(
       //       topLeft: Radius.circular(30),
@@ -255,6 +292,8 @@ class _RegistrationState extends State<Registration> {
             SizedBox(
               height: 30,
             ),
+
+            // name textbox
             Padding(
               padding: const EdgeInsets.only(bottom: 8.0, right: 20, left: 20),
               child: Container(
@@ -336,6 +375,7 @@ class _RegistrationState extends State<Registration> {
               ),
             ),
 
+            // pincode textbox
             Padding(
               padding: const EdgeInsets.only(right: 20, left: 20),
               child: Column(
@@ -369,6 +409,7 @@ class _RegistrationState extends State<Registration> {
               ),
             ),
 
+            // location dropdown
             Padding(
               padding: const EdgeInsets.only(right: 20, left: 20),
               child: Container(
@@ -411,6 +452,7 @@ class _RegistrationState extends State<Registration> {
                       ? (String? newValue) {
                           setState(() {
                             locationDropdownValue = newValue!;
+                            getAddressValues();
                           });
                         }
                       : null,
@@ -446,6 +488,16 @@ class _RegistrationState extends State<Registration> {
             SizedBox(
               height: 10,
             ),
+
+            Row(
+              children: [
+                Text(addressName ?? 'no data'),
+                Text(addressCircle ?? 'no data'),
+                Text(addressRegion ?? 'no data'),
+                Text(districtName ?? 'no data'),
+              ],
+            ),
+
             // privacy policy button
             Padding(
               padding: const EdgeInsets.only(top: 10.0, left: 20, bottom: 15),

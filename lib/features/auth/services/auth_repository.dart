@@ -173,7 +173,8 @@ class AuthRepository {
         verificationFailed: (FirebaseAuthException e) {
           print(e.code);
           print(e.message);
-          verificationIdCompleter.completeError('Verification failed');
+          verificationIdCompleter.completeError(
+              'Verification failed. Please check your phone number and try again.');
         },
         codeSent: (String verificationId, int? resendToken) {
           print('OTP sent to your phone number');
@@ -230,12 +231,18 @@ class AuthRepository {
     }
   }
 
-  Future<void> signupWithPhone(
-      {required String verificationId,
-      required String phoneNumber,
-      required String otp,
-      required String username,
-      required String email}) async {
+  Future<void> signupWithPhone({
+    required String verificationId,
+    required String phoneNumber,
+    required String otp,
+    required String username,
+    required String email,
+    required String addressName,
+    required String districtName,
+    required String addressCircle,
+    required String addressRegion,
+    required String pincode,
+  }) async {
     final credentials = PhoneAuthProvider.credential(
       verificationId: verificationId,
       smsCode: otp,
@@ -262,6 +269,11 @@ class AuthRepository {
           name: username,
           email: email,
           phoneNumber: phoneNumber,
+          pincode: pincode,
+          addressName: addressName,
+          districtName: districtName,
+          addressCircle: addressCircle,
+          addressRegion: addressRegion,
         );
       }
     } on FirebaseAuthException catch (e) {

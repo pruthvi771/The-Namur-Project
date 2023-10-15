@@ -31,21 +31,32 @@ import 'package:active_ecommerce_flutter/screens/main.dart';
 // import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 
 class Otp extends StatefulWidget {
-  Otp(
-      {Key? key,
-      this.signUp = false,
-      // this.user_id,
-      this.name,
-      this.email,
-      this.phoneNumber,
-      required this.verificationId})
-      : super(key: key);
+  Otp({
+    Key? key,
+    this.signUp = false,
+    // this.user_id,
+    this.name,
+    this.email,
+    this.phoneNumber,
+    this.pincode,
+    this.addressName,
+    this.districtName,
+    this.addressCircle,
+    this.addressRegion,
+    required this.verificationId,
+  }) : super(key: key);
   final bool signUp;
   // final String? user_id;
   final String verificationId;
   final String? name;
   final String? email;
   final String? phoneNumber;
+
+  final String? pincode;
+  final String? addressName;
+  final String? districtName;
+  final String? addressCircle;
+  final String? addressRegion;
 
   @override
   _OtpState createState() => _OtpState();
@@ -113,6 +124,11 @@ class _OtpState extends State<Otp> {
         widget.name!,
         widget.email!,
         widget.phoneNumber!,
+        widget.pincode!,
+        widget.addressName!,
+        widget.districtName!,
+        widget.addressCircle!,
+        widget.addressRegion!,
       ));
     } else {
       BlocProvider.of<AuthBloc>(buildContext)

@@ -1,7 +1,7 @@
 class BuyerData {
   final String name;
   final String email;
-  final String? address;
+  // final String? address;
   final String? phoneNumber;
   final String? locationId;
   final String? photoURL;
@@ -9,7 +9,7 @@ class BuyerData {
   BuyerData({
     required this.name,
     required this.email,
-    this.address,
+    // this.address,
     this.phoneNumber,
     this.locationId,
     this.photoURL,
@@ -19,7 +19,7 @@ class BuyerData {
     return BuyerData(
       name: json['name'] ?? '',
       email: json['email'] ?? '',
-      address: json['address'] ?? '',
+      // address: json['address'] ?? '',
       phoneNumber: json['phone number'] ?? '',
       locationId: json['location_id'] ?? '',
       photoURL: json['photoURL'] ?? '',
@@ -30,7 +30,7 @@ class BuyerData {
     return {
       'name': name,
       'email': email,
-      'address': address,
+      // 'address': address,
       'phone number': phoneNumber,
       'location_id': locationId,
       'photoURL': photoURL,
@@ -41,7 +41,7 @@ class BuyerData {
 class User {
   final String name;
   final String email;
-  final String address;
+  // final String address;
   final String? phoneNumber;
   final String? locationId;
   final String? productsBuy;
@@ -57,7 +57,7 @@ class User {
   User({
     required this.name,
     required this.email,
-    required this.address,
+    // required this.address,
     this.phoneNumber,
     this.locationId,
     this.productsBuy,
@@ -75,7 +75,7 @@ class User {
     return User(
       name: json['name'] ?? '',
       email: json['email'] ?? '',
-      address: json['address'] ?? '',
+      // address: json['address'] ?? '',
       phoneNumber: json['phone number'] ?? '',
       locationId: json['location_id'] ?? '',
       productsBuy: json['Products_Buy'] ?? '',
@@ -94,7 +94,7 @@ class User {
     return {
       'name': name,
       'email': email,
-      'address': address,
+      // 'address': address,
       'phone number': phoneNumber,
       'location_id': locationId,
       'Products_Buy': productsBuy,
