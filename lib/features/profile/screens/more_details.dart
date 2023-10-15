@@ -70,6 +70,7 @@ class _MoreDetailsState extends State<MoreDetails> {
     _buyerUserDataFuture = _getUserData();
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
     var savedData = dataBox.get('profile');
+
     if (savedData == null) {
       var kyc = KYC()
         ..aadhar = ''

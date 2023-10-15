@@ -20,13 +20,14 @@ class AddressAdapter extends TypeAdapter<Address> {
       ..district = fields[0] as String
       ..taluk = fields[1] as String
       ..hobli = fields[2] as String
-      ..village = fields[3] as String;
+      ..village = fields[3] as String
+      ..pincode = fields[4] as String;
   }
 
   @override
   void write(BinaryWriter writer, Address obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.district)
       ..writeByte(1)
@@ -34,7 +35,9 @@ class AddressAdapter extends TypeAdapter<Address> {
       ..writeByte(2)
       ..write(obj.hobli)
       ..writeByte(3)
-      ..write(obj.village);
+      ..write(obj.village)
+      ..writeByte(4)
+      ..write(obj.pincode);
   }
 
   @override

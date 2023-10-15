@@ -135,11 +135,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
 
     var address = Address()
-      ..pincode = pincode
       ..district = districtName!
       ..taluk = addressRegion!
       ..hobli = addressCircle!
-      ..village = addressName!;
+      ..village = addressName!
+      ..pincode = pincode;
 
     if (savedData != null) {
       print('object detected');
@@ -942,6 +942,30 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ),
                       ],
                     ),
+
+                    SizedBox(
+                      height: 10,
+                    ),
+                    TextButton(
+                        onPressed: () async {
+                          try {
+                            var pincode = '560001';
+
+                            QuerySnapshot<Map<String, dynamic>> querySnapshot =
+                                await FirebaseFirestore.instance
+                                    .collection('buyer')
+                                    .where('profileData.address.pincode',
+                                        isEqualTo: pincode)
+                                    .get();
+
+                            print(querySnapshot.size);
+                          } catch (e) {
+                            print(e);
+                            print(
+                                'Error counting users with pincode: $e'); // Return 0 in case of an error
+                          }
+                        },
+                        child: Text('Get Number of People')),
 
                     SizedBox(
                       height: 8,

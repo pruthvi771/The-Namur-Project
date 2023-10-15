@@ -219,11 +219,11 @@ class FirestoreRepository {
     String? pincode,
   }) async {
     var address = Address()
-      ..pincode = isAddressAvailable ? pincode! : ''
       ..district = isAddressAvailable ? district! : ''
       ..taluk = isAddressAvailable ? taluk! : ''
       ..hobli = isAddressAvailable ? hobli! : ''
-      ..village = isAddressAvailable ? village! : '';
+      ..village = isAddressAvailable ? village! : ''
+      ..pincode = isAddressAvailable ? pincode! : '';
 
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
 
@@ -238,11 +238,27 @@ class FirestoreRepository {
       ..address = isAddressAvailable ? [address] : []
       ..kyc = kyc
       ..land = [];
+
     dataBox.put(emptyProfileData.id, emptyProfileData);
 
     // Initialize Hive and save data
     await dataBox.put(emptyProfileData.id, emptyProfileData);
 
     saveProfileDataToFirestore(profileData: emptyProfileData, userId: userId);
+  }
+
+  Future<int> countUsersWithPincode(String pincode) async {
+    try {
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await FirebaseFirestore.instance
+              .collection('buyer')
+              .where('profileData.address.pincode', isEqualTo: pincode)
+              .get();
+
+      return querySnapshot.size;
+    } catch (e) {
+      print('Error counting users with pincode: $e');
+      return 0; // Return 0 in case of an error
+    }
   }
 }
