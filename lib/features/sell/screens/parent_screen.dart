@@ -91,7 +91,7 @@ class _ParentScreenState extends State<ParentScreen> {
                 Container(
                   height: 30,
                   child: Center(
-                    child: Text(AppLocalizations.of(context)!.man_machines_ucf,
+                    child: Text('Parent Screens',
                         style: TextStyle(
                             color: MyTheme.white,
                             fontSize: 18,
