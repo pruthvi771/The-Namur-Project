@@ -471,14 +471,14 @@ class _RegistrationState extends State<Registration> {
               height: 10,
             ),
 
-            Row(
-              children: [
-                Text(addressName ?? 'no data'),
-                Text(addressCircle ?? 'no data'),
-                Text(addressRegion ?? 'no data'),
-                Text(districtName ?? 'no data'),
-              ],
-            ),
+            // Row(
+            //   children: [
+            //     Text(addressName ?? 'no data'),
+            //     Text(addressCircle ?? 'no data'),
+            //     Text(addressRegion ?? 'no data'),
+            //     Text(districtName ?? 'no data'),
+            //   ],
+            // ),
 
             // privacy policy button
             Padding(

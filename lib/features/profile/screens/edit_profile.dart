@@ -62,6 +62,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  get console => null;
+
   void _addAddressToHive(district, taluk, hobli, village) async {
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
 
@@ -181,21 +183,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
       try {
         var userId = FirebaseAuth.instance.currentUser!.uid;
-        _firestore.collection('buyer').doc(userId).update({
-          'landDetails': {
-            syno: {
-              'area': areaDouble,
-              'village': village,
-              'crops': [],
-              'equipments': [],
-            },
-          },
+
+        var firestore = FirebaseFirestore.instance;
+
+        await firestore.collection('buyer').doc(userId).update({
+          'landDetails.$syno': {
+            'name': village,
+            'area': areaDouble,
+            'crops': [],
+            'equipments': []
+          }
         });
       } catch (e) {
-        ToastComponent.showDialog(
-            'Could not sync your changes. Please check your internet connection.',
-            gravity: Toast.center,
-            duration: Toast.lengthLong);
+        // ToastComponent.showDialog(
+        //     'Could not sync your changes. Please check your internet connection.',
+        //     gravity: Toast.center,
+        //     duration: Toast.lengthLong);
       }
     }
 
@@ -371,27 +374,36 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ..name = crop
         ..yieldOfCrop = yieldOfCropDouble);
 
-      var cropDict = [];
+      // var cropDict = [];
 
-      for (crop in savedData.land[index].crops) {
-        cropDict.add({
-          'name': crop.name,
-          'yield': crop.yieldOfCrop,
-        });
-      }
+      // for (crop in savedData.land[index].crops) {
+      //   cropDict.add({
+      //     'name': crop.name,
+      //     'yield': crop.yieldOfCrop,
+      //   });
+      // }
 
       dataBox.put(savedData.id, savedData);
       try {
         var userId = FirebaseAuth.instance.currentUser!.uid;
 
-        _firestore.collection('buyer').doc(userId).update({
-          'crops': cropDict,
-        });
+        var document = await _firestore.collection('buyer').doc(userId).get();
+        var landDetails = document.data()!['landDetails'] ?? {};
+
+        // Add crops to syno1
+        (landDetails[landSyno]['crops'] as List)
+            .add({'name': crop, 'yieldOfCrop': yieldOfCrop});
+
+        await _firestore
+            .collection('buyer')
+            .doc(userId)
+            .update({'landDetails': landDetails});
       } catch (e) {
-        ToastComponent.showDialog(
-            'Could not sync your changes. Please check your internet connection.',
-            gravity: Toast.center,
-            duration: Toast.lengthLong);
+        print(e);
+        // ToastComponent.showDialog(
+        //     'Could not sync your changes. Please check your internet connection.',
+        //     gravity: Toast.center,
+        //     duration: Toast.lengthLong);
       }
 
       print('Crop added');
@@ -443,6 +455,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       dataBox.put(savedData.id, savedData);
 
       print('Crop removed');
+      try {
+        var userId = FirebaseAuth.instance.currentUser!.uid;
+
+        var document = await _firestore.collection('buyer').doc(userId).get();
+        var landDetails = document.data()!['landDetails'] ?? {};
+
+        // Remove crop from syno1
+        (landDetails[landSyno]['crops'] as List).removeAt(indexToDelete);
+
+        await _firestore
+            .collection('buyer')
+            .doc(userId)
+            .update({'landDetails': landDetails});
+
+        print('Crop removed from syno1!');
+      } catch (e) {}
     } else {
       // Handle the case where the Land instance with the specified syno is not found
       print('Land with syno $landSyno not found.');
@@ -506,14 +534,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       try {
         var userId = FirebaseAuth.instance.currentUser!.uid;
 
-        _firestore.collection('buyer').doc(userId).update({
-          'machines': equipmentDict,
-        });
+        var document = await _firestore.collection('buyer').doc(userId).get();
+        var landDetails = document.data()!['landDetails'] ?? {};
+
+        // Add equipment to syno1
+        (landDetails[landSyno]['equipments'] as List).add(equipment);
+
+        await _firestore
+            .collection('buyer')
+            .doc(userId)
+            .update({'landDetails': landDetails});
       } catch (e) {
-        ToastComponent.showDialog(
-            'Could not sync your changes. Please check your internet connection.',
-            gravity: Toast.center,
-            duration: Toast.lengthLong);
+        // ToastComponent.showDialog(
+        //     'Could not sync your changes. Please check your internet connection.',
+        //     gravity: Toast.center,
+        //     duration: Toast.lengthLong);
       }
 
       print('equipment added');
@@ -541,6 +576,26 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       dataBox.put(savedData.id, savedData);
 
       print('equipment removed');
+      try {
+        var userId = FirebaseAuth.instance.currentUser!.uid;
+        var document = await _firestore.collection('buyer').doc(userId).get();
+        var landDetails = document.data()!['landDetails'] ?? {};
+
+        // Remove equipment from syno1
+        (landDetails[landSyno]['equipments'] as List).removeAt(indexToDelete);
+
+        await _firestore
+            .collection('buyer')
+            .doc(userId)
+            .update({'landDetails': landDetails});
+
+        print('Equipment removed from syno1!');
+      } catch (e) {
+        // ToastComponent.showDialog(
+        //     'Could not sync your changes. Please check your internet connection.',
+        //     gravity: Toast.center,
+        //     duration: Toast.lengthLong);
+      }
     } else {
       // Handle the case where the Land instance with the specified syno is not found
       print('Land with syno $landSyno not found.');
