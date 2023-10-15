@@ -7,6 +7,7 @@ import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/edit_profile.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/land_screen.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive/hive.dart';
@@ -103,8 +104,9 @@ class _MoreDetailsState extends State<MoreDetails> {
   late Future<BuyerData> _buyerUserDataFuture;
 
   Future<BuyerData> _getUserData() async {
-    AuthUser user = AuthRepository().currentUser!;
-    return FirestoreRepository().getBuyerData(userId: user.userId);
+    // AuthUser user = await AuthRepository().currentUser!;
+    var userId = FirebaseAuth.instance.currentUser!.uid;
+    return FirestoreRepository().getBuyerData(userId: userId);
   }
 
   @override

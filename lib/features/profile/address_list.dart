@@ -638,7 +638,7 @@ var imageForCrop = {
   'Sweet Potato': 'assets/ikons/fruitsAndVeg/sweet-potato.png',
   'Tamarind': 'assets/ikons/fruitsAndVeg/tamarind.png',
   'Tomato': 'assets/ikons/fruitsAndVeg/tomato.png',
-  'Wheat Sack': 'assets/ikons/fruitsAndVeg/wheat-sack.png',
+  'Wheat': 'assets/ikons/fruitsAndVeg/wheat-sack.png',
 };
 
 var imageForEquipment = {
