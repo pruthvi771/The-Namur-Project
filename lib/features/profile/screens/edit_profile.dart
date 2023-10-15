@@ -58,7 +58,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
 
     var savedData = dataBox.get('profile');
-    // if (savedData!.address.length == 2) {
+
+    if (savedData!.address.length != 0) {
+      ToastComponent.showDialog('You have already added an address',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
     if (district.isEmpty) {
       ToastComponent.showDialog('Select District',
           gravity: Toast.center, duration: Toast.lengthLong);

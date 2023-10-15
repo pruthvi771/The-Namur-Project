@@ -4,7 +4,9 @@ import 'dart:convert';
 import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
 import 'package:active_ecommerce_flutter/features/auth/models/postoffice_response_model.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
+import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hive/hive.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -276,6 +278,29 @@ class AuthRepository {
           addressRegion: addressRegion,
         );
       }
+
+      var dataBox = Hive.box<ProfileData>('profileDataBox3');
+
+      var address = Address()
+        ..district = districtName
+        ..taluk = addressRegion
+        ..hobli = addressCircle
+        ..village = addressName;
+
+      var kyc = KYC()
+        ..aadhar = ''
+        ..pan = ''
+        ..gst = '';
+
+      var newData = ProfileData()
+        ..id = 'profile'
+        ..updated = false
+        ..address = [address]
+        ..kyc = kyc
+        ..land = [];
+
+      await dataBox.put(newData.id, newData);
+      print('object created');
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-verification-code') {
         throw Exception('Invalid OTP. Please try again.');
