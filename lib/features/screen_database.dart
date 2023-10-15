@@ -1,5 +1,5 @@
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
-import 'package:active_ecommerce_flutter/my_theme.dart';
+import 'package:active_ecommerce_flutter/features/sell/screens/parent_screen.dart';
 import 'package:active_ecommerce_flutter/screens/Payment_info/payment_info_screen.dart';
 import 'package:active_ecommerce_flutter/screens/auction_products.dart';
 import 'package:active_ecommerce_flutter/screens/auction_products_details.dart';
@@ -81,6 +81,7 @@ class _ScreenDatabaseState extends State<ScreenDatabase> {
   @override
   Widget build(BuildContext context) {
     List<List<Object>> screensList = [
+      ['Parent screen', ParentScreen()],
       ['Product Inventory', ProductInventory()],
       ['More Detail', MoreDetail()],
       ['Product Post', ProductPost()],
