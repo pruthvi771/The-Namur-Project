@@ -69,7 +69,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         .collection(
             'buyer') // Replace 'users' with your desired collection name
         .doc(userId) // Use the user's ID as the document ID
-        .set({
+        .update({
           'profileData': {
             'updated': profileData.updated,
             'address': profileData.address

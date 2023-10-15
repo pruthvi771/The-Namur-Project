@@ -375,9 +375,9 @@ class AuthRepository {
       Map<String, dynamic> data = documentSnapshot.data()!;
 
       // Separate data into different variables
-      var updated = data['updated'];
+      var updated = data['profileData']['updated'];
 
-      var addresses = (data['address'] as List)
+      var addresses = (data['profileData']['address'] as List)
           .map((item) => Address()
             ..district = item['district']
             ..taluk = item['taluk']
@@ -386,11 +386,11 @@ class AuthRepository {
           .toList();
 
       var kyc = KYC()
-        ..aadhar = data['kyc']['aadhar']
-        ..pan = data['kyc']['pan']
-        ..gst = data['kyc']['gst'];
+        ..aadhar = data['profileData']['kyc']['aadhar']
+        ..pan = data['profileData']['kyc']['pan']
+        ..gst = data['profileData']['kyc']['gst'];
 
-      var lands = (data['land'] as List)
+      var lands = (data['profileData']['land'] as List)
           .map((item) => Land()
             ..village = item['village']
             ..syno = item['syno']
@@ -412,8 +412,9 @@ class AuthRepository {
         ..land = lands;
 
       // Initialize Hive and save data
-      var hiveBox = await Hive.openBox('profileDataBox3');
-      await hiveBox.put(profileData.id, profileData);
+      // var hiveBox = await Hive.openBox<ProfileData>('profileDataBox3');
+      var dataBox = Hive.box<ProfileData>('profileDataBox3');
+      await dataBox.put(profileData.id, profileData);
     }
   }
 
@@ -422,7 +423,7 @@ class AuthRepository {
         .collection(
             'buyer') // Replace 'users' with your desired collection name
         .doc(userId) // Use the user's ID as the document ID
-        .set({
+        .update({
           'profileData': {
             'updated': profileData.updated,
             'address': profileData.address
