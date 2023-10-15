@@ -20,9 +20,11 @@ class HiveBloc extends Bloc<HiveEvent, HiveState> {
 
       if (savedData != null) {
         emit(HiveDataReceived(profileData: savedData));
+        print('-- emitted hive data--- ');
       } else {
         emit(Error('No Data Found'));
         emit(HiveDataNotReceived());
+        print('-- something wrong --- ');
       }
     });
 

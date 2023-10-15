@@ -7,6 +7,7 @@ import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/edit_profile.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/land_screen.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -108,6 +109,40 @@ class _MoreDetailsState extends State<MoreDetails> {
     AuthUser user = AuthRepository().currentUser!;
     // var userId = FirebaseAuth.instance.currentUser!.uid;
     return FirestoreRepository().getBuyerData(userId: user.userId);
+  }
+
+  Future<List<Object?>> getNumberOfFriends() async {
+    var dataBox = Hive.box<ProfileData>('profileDataBox3');
+
+    var savedData = dataBox.get('profile');
+
+    if (savedData!.address[0].pincode.isEmpty) {
+      throw Exception('Failed to load data');
+    }
+
+    int count = 0;
+    String villageName = savedData.address[0].village;
+    String pincode = savedData.address[0].pincode;
+
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
+        .instance
+        .collection('buyer')
+        .where(FieldPath.documentId, isNotEqualTo: null)
+        .where('profileData', isNotEqualTo: null)
+        .get();
+
+    List<DocumentSnapshot<Map<String, dynamic>>> documents = querySnapshot.docs;
+
+    for (var document in documents) {
+      Map<String, dynamic> data = document.data()!;
+      if (data['profileData']['address'][0]['pincode'] == pincode) {
+        count++;
+        print('count incremented');
+      }
+      print(data['profileData']['address'][0]['pincode']);
+    }
+
+    return [villageName, pincode, count];
   }
 
   @override
@@ -212,33 +247,53 @@ class _MoreDetailsState extends State<MoreDetails> {
                             ),
                           ),
                           Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('10 friends & neighbours',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 13.0,
-                                        color: Colors.black)),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Text('20 Groups',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 13.0,
-                                        color: Colors.black)),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Text('Society: Pitlali 577511',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 13.0,
-                                        color: Colors.black)),
-                              ],
-                            ),
+                            child: FutureBuilder(
+                                future: getNumberOfFriends(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    return Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            '${snapshot.data![2]} friends & neighbours',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 13.0,
+                                                color: Colors.black)),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text('0 Groups',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 13.0,
+                                                color: Colors.black)),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                            'Society: ${snapshot.data![0]} ${snapshot.data![1]}',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 13.0,
+                                                color: Colors.black)),
+                                      ],
+                                    );
+                                  }
+                                  if (snapshot.hasError) {
+                                    return Text('Add Address To See This',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 13.0,
+                                            color: Colors.red));
+                                  }
+                                  return Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                }),
                           )
                         ],
                       ),
@@ -449,36 +504,36 @@ class _MoreDetailsState extends State<MoreDetails> {
                                           SizedBox(
                                             width: 5,
                                           ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 5, left: 7, right: 7),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Expanded(
-                                                    child: Text(
-                                                  'Taluk',
-                                                  style: TextStyle(
-                                                      fontSize: 13.5,
-                                                      fontWeight:
-                                                          FontWeight.w800),
-                                                )),
-                                                Expanded(
-                                                    flex: 2,
-                                                    child: Text(
-                                                      item.taluk,
-                                                      style: TextStyle(
-                                                        fontSize: 13.5,
-                                                      ),
-                                                    )),
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
+                                          // Padding(
+                                          //   padding: const EdgeInsets.only(
+                                          //       top: 5, left: 7, right: 7),
+                                          //   child: Row(
+                                          //     mainAxisAlignment:
+                                          //         MainAxisAlignment
+                                          //             .spaceBetween,
+                                          //     children: [
+                                          //       Expanded(
+                                          //           child: Text(
+                                          //         'Taluk',
+                                          //         style: TextStyle(
+                                          //             fontSize: 13.5,
+                                          //             fontWeight:
+                                          //                 FontWeight.w800),
+                                          //       )),
+                                          //       Expanded(
+                                          //           flex: 2,
+                                          //           child: Text(
+                                          //             item.taluk,
+                                          //             style: TextStyle(
+                                          //               fontSize: 13.5,
+                                          //             ),
+                                          //           )),
+                                          //     ],
+                                          //   ),
+                                          // ),
+                                          // SizedBox(
+                                          //   width: 5,
+                                          // ),
                                           Padding(
                                             padding: const EdgeInsets.only(
                                                 top: 5, left: 7, right: 7),

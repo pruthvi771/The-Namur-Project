@@ -4,14 +4,25 @@ import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
+import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_bloc.dart';
+import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_event.dart';
+import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_state.dart'
+    as hiveState;
+import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/friends_screen.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/profile.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_bloc.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_event.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_state.dart'
+    as profileState;
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_event.dart';
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_state.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 import 'package:toast/toast.dart';
 
 import '../../my_theme.dart';
@@ -29,12 +40,59 @@ class _TitleBarState extends State<TitleBar> {
   void initState() {
     super.initState();
     _buyerUserDataFuture = _getUserData();
+    _countOfFriends = getNumberOfFriends();
     BlocProvider.of<WeatherSectionBloc>(context).add(
       WeatherSectionDataRequested(),
+    );
+    // BlocProvider.of<HiveBloc>(context).add(
+    //   HiveDataRequested(),
+    // );
+    BlocProvider.of<HiveBloc>(context).add(
+      HiveDataRequested(),
+      // HiveAppendAddress(context: context),
     );
   }
 
   late Future<BuyerData> _buyerUserDataFuture;
+  late Future<List<Object>> _countOfFriends;
+
+  Future<List<Object>> getNumberOfFriends() async {
+    var dataBox = Hive.box<ProfileData>('profileDataBox3');
+
+    var savedData = dataBox.get('profile');
+
+    if (savedData!.address[0].pincode.isEmpty) {
+      throw Exception('Failed to load data');
+    }
+
+    int count = 0;
+    int cropCount = 0;
+
+    for (Land land in savedData.land) {
+      cropCount += land.crops.length;
+    }
+
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
+        .instance
+        .collection('buyer')
+        .where(FieldPath.documentId, isNotEqualTo: null)
+        .where('profileData', isNotEqualTo: null)
+        .get();
+
+    List<DocumentSnapshot<Map<String, dynamic>>> documents = querySnapshot.docs;
+
+    for (var document in documents) {
+      Map<String, dynamic> data = document.data()!;
+      if (data['profileData']['address'][0]['pincode'] ==
+          savedData!.address[0].pincode) {
+        count++;
+        print('count incremented');
+      }
+      print(data['profileData']['address'][0]['pincode']);
+    }
+
+    return [cropCount, count];
+  }
 
   Future<BuyerData> _getUserData() async {
     AuthUser user = AuthRepository().currentUser!;
@@ -43,13 +101,6 @@ class _TitleBarState extends State<TitleBar> {
 
   @override
   Widget build(BuildContext context) {
-    // BlocProvider.of<WeatherSectionBloc>(context).add(
-    //   WeatherSectionInfoRequested(),
-    // );
-
-    // var temperature = '38°';
-    // var description = 'Rainy';
-    // var location = "@ Namur Pitlali";
     return Material(
       color: Colors.white,
       elevation: 3,
@@ -110,6 +161,93 @@ class _TitleBarState extends State<TitleBar> {
                               ),
 
                               //Friends and Groups text
+                              // Expanded(
+                              //   child: GestureDetector(
+                              //     onTap: () {
+                              //       Navigator.push(
+                              //           context,
+                              //           MaterialPageRoute(
+                              //               builder: (context) => Friends()));
+                              //     },
+                              //     child: BlocListener<HiveBloc,
+                              //         hiveState.HiveState>(
+                              //       listener: (context, state) {
+                              //         if (state is hiveState.HiveDataReceived) {
+                              //           print('hive data received');
+                              //           BlocProvider.of<ProfileBloc>(context)
+                              //               .add(
+                              //             TotalPincodeFriendsCountRequested(
+                              //                 pincode: state.profileData
+                              //                     .address[0].pincode),
+                              //           );
+                              //         }
+                              //       },
+                              //       child: BlocBuilder<ProfileBloc,
+                              //           profileState.ProfileState>(
+                              //         builder: (context, state) {
+                              //           if (state is profileState
+                              //               .TotalPincodeFriendsCountReceived)
+                              //             return Center(
+                              //               child: Padding(
+                              //                 padding:
+                              //                     const EdgeInsets.symmetric(
+                              //                         vertical: 8.0),
+                              //                 child: Column(
+                              //                   mainAxisAlignment:
+                              //                       MainAxisAlignment
+                              //                           .spaceEvenly,
+                              //                   crossAxisAlignment:
+                              //                       CrossAxisAlignment.start,
+                              //                   children: [
+                              //                     Text(
+                              //                       "${state.count} Friends",
+                              //                       style: TextStyle(
+                              //                           fontWeight:
+                              //                               FontWeight.w800,
+                              //                           fontSize: 13,
+                              //                           fontFamily: 'Poppins',
+                              //                           color: MyTheme
+                              //                               .primary_color,
+                              //                           letterSpacing: .5),
+                              //                     ),
+                              //                     // SizedBox(height: 1),
+                              //                     Text(
+                              //                       "5 Groups",
+                              //                       style: TextStyle(
+                              //                           fontWeight:
+                              //                               FontWeight.w700,
+                              //                           fontSize: 13,
+                              //                           fontFamily: 'Poppins',
+                              //                           color: MyTheme
+                              //                               .primary_color,
+                              //                           letterSpacing: .5,
+                              //                           height: 1.5),
+                              //                     ),
+
+                              //                     Text(
+                              //                       "3 Crops",
+                              //                       style: TextStyle(
+                              //                           fontWeight:
+                              //                               FontWeight.w700,
+                              //                           fontSize: 13,
+                              //                           fontFamily: 'Poppins',
+                              //                           color: MyTheme
+                              //                               .primary_color,
+                              //                           letterSpacing: .5,
+                              //                           height: 1.5),
+                              //                     )
+                              //                   ],
+                              //                 ),
+                              //               ),
+                              //             );
+                              //           return Center(
+                              //             child: CircularProgressIndicator(),
+                              //           );
+                              //         },
+                              //       ),
+                              //     ),
+                              //   ),
+                              // )
                               Expanded(
                                 child: GestureDetector(
                                   onTap: () {
@@ -118,66 +256,89 @@ class _TitleBarState extends State<TitleBar> {
                                         MaterialPageRoute(
                                             builder: (context) => Friends()));
                                   },
-                                  child: Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 8.0),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "125 Friends",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w800,
-                                                fontSize: 13,
-                                                fontFamily: 'Poppins',
-                                                color: MyTheme.primary_color,
-                                                letterSpacing: .5),
-                                          ),
-                                          // SizedBox(height: 1),
-                                          Text(
-                                            "5 Groups",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 13,
-                                                fontFamily: 'Poppins',
-                                                color: MyTheme.primary_color,
-                                                letterSpacing: .5,
-                                                height: 1.5),
-                                          ),
-
-                                          Text(
-                                            "3 Crops",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 13,
-                                                fontFamily: 'Poppins',
-                                                color: MyTheme.primary_color,
-                                                letterSpacing: .5,
-                                                height: 1.5),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
+                                  child: FutureBuilder(
+                                      future: _countOfFriends,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData) {
+                                          return Center(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 8.0),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "${snapshot.data![1]} Friends",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                        fontSize: 13,
+                                                        fontFamily: 'Poppins',
+                                                        color: MyTheme
+                                                            .primary_color,
+                                                        letterSpacing: .5),
+                                                  ),
+                                                  // SizedBox(height: 1),
+                                                  Text(
+                                                    "0 Groups",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        fontSize: 13,
+                                                        fontFamily: 'Poppins',
+                                                        color: MyTheme
+                                                            .primary_color,
+                                                        letterSpacing: .5,
+                                                        height: 1.5),
+                                                  ),
+                                                  Text(
+                                                    "${snapshot.data![0]} Crops",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        fontSize: 13,
+                                                        fontFamily: 'Poppins',
+                                                        color: MyTheme
+                                                            .primary_color,
+                                                        letterSpacing: .5,
+                                                        height: 1.5),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                        if (snapshot.hasError) {
+                                          return Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Center(
+                                                child: Text(
+                                              "Add Address To See This",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w800,
+                                                  fontSize: 13,
+                                                  fontFamily: 'Poppins',
+                                                  color: MyTheme.primary_color,
+                                                  letterSpacing: .5),
+                                            )),
+                                          );
+                                        }
+                                        return Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }),
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),
                       ),
                     ),
-
-                    // ElevatedButton(
-                    //     onPressed: () {
-                    //       BlocProvider.of<WeatherBloc>(context).add(
-                    //         WeatherSectionInfoRequested(),
-                    //       );
-                    //     },
-                    //     child: Text('Click')),
                     //Weather and Location
                     BlocListener<WeatherSectionBloc, WeatherSectionState>(
                       listener: (context, state) {

@@ -946,26 +946,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     SizedBox(
                       height: 10,
                     ),
-                    TextButton(
-                        onPressed: () async {
-                          try {
-                            var pincode = '560001';
 
-                            QuerySnapshot<Map<String, dynamic>> querySnapshot =
-                                await FirebaseFirestore.instance
-                                    .collection('buyer')
-                                    .where('profileData.address.pincode',
-                                        isEqualTo: pincode)
-                                    .get();
-
-                            print(querySnapshot.size);
-                          } catch (e) {
-                            print(e);
-                            print(
-                                'Error counting users with pincode: $e'); // Return 0 in case of an error
-                          }
-                        },
-                        child: Text('Get Number of People')),
+                    // TextButton(
+                    //     onPressed: () async {
+                    //       try {
+                    //         var pincode = '577511';
+                    //         print('start');
+                    //         // QuerySnapshot<Map<String, dynamic>> querySnapshot =
+                    //         //     await FirebaseFirestore.instance
+                    //         //         .collection('buyer')
+                    //         //         .where(FieldPath.documentId,
+                    //         //             isNotEqualTo: null)
+                    //         //         .where('profileData', isNotEqualTo: null)
+                    //         //         .where('profileData.address',
+                    //         //             isNotEqualTo: null)
+                    //         //         .get();
+                    //     },
+                    //     child: Text('Get Number of People')),
 
                     SizedBox(
                       height: 8,

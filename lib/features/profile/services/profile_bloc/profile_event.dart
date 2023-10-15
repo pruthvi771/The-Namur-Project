@@ -21,3 +21,11 @@ class ProfileImageUpdateRequested extends ProfileEvent {
     required this.file,
   });
 }
+
+class TotalPincodeFriendsCountRequested extends ProfileEvent {
+  String pincode;
+
+  TotalPincodeFriendsCountRequested({
+    required this.pincode,
+  });
+}
