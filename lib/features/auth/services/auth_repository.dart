@@ -6,7 +6,7 @@ import 'package:active_ecommerce_flutter/features/auth/models/postoffice_respons
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:hive/hive.dart';
+// import 'package:hive/hive.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -139,28 +139,12 @@ class AuthRepository {
             name: userCredential.user!.displayName!,
             email: userCredential.user!.email!,
             photoURL: userCredential.user!.photoURL!);
-        // await createEmptyHiveDataInstance(userCredential.user!.uid);
-        var dataBox = Hive.box<ProfileData>('profileDataBox3');
 
-        var kyc = KYC()
-          ..aadhar = ''
-          ..pan = ''
-          ..gst = '';
-
-        var emptyProfileData = ProfileData()
-          ..id = 'profile'
-          ..updated = true
-          ..address = []
-          ..kyc = kyc
-          ..land = [];
-        dataBox.put(emptyProfileData.id, emptyProfileData);
-
-        saveProfileDataToFirestore(emptyProfileData, userCredential.user!.uid);
-
-        // Initialize Hive and save data
-        await dataBox.put(emptyProfileData.id, emptyProfileData);
+        firestoreRepository.createEmptyHiveDataInstance(
+            userId: userCredential.user!.uid);
       } else {
-        await syncFirestoreDataWithHive(userCredential.user!.uid);
+        await firestoreRepository.syncFirestoreDataWithHive(
+            userId: userCredential.user!.uid);
       }
 
       // final user = currentUser;
@@ -237,6 +221,8 @@ class AuthRepository {
       if (user == null) {
         throw Exception('Something went wrong. Please try again.');
       }
+
+      firestoreRepository.syncFirestoreDataWithHive(userId: user.userId);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-verification-code') {
         throw Exception('Invalid OTP. Please try again.');
@@ -293,36 +279,18 @@ class AuthRepository {
           name: username,
           email: email,
           phoneNumber: phoneNumber,
+        );
+
+        firestoreRepository.createEmptyHiveDataInstance(
+          userId: userCredential.user!.uid,
+          isAddressAvailable: true,
+          village: addressName,
+          district: districtName,
+          taluk: addressRegion,
+          hobli: addressCircle,
           pincode: pincode,
-          addressName: addressName,
-          districtName: districtName,
-          addressCircle: addressCircle,
-          addressRegion: addressRegion,
         );
       }
-
-      var dataBox = Hive.box<ProfileData>('profileDataBox3');
-
-      var address = Address()
-        ..district = districtName
-        ..taluk = addressRegion
-        ..hobli = addressCircle
-        ..village = addressName;
-
-      var kyc = KYC()
-        ..aadhar = ''
-        ..pan = ''
-        ..gst = '';
-
-      var newData = ProfileData()
-        ..id = 'profile'
-        ..updated = false
-        ..address = [address]
-        ..kyc = kyc
-        ..land = [];
-
-      await dataBox.put(newData.id, newData);
-      print('object created');
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-verification-code') {
         throw Exception('Invalid OTP. Please try again.');
@@ -383,136 +351,6 @@ class AuthRepository {
     } catch (e) {
       print(e);
       throw Exception('Failed to fetch locations. Please try again.');
-    }
-  }
-
-  Future<void> syncFirestoreDataWithHive(String userId) async {
-    DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-        await FirebaseFirestore.instance.collection('buyer').doc(userId).get();
-
-    if (documentSnapshot.exists) {
-      Map<String, dynamic> data = documentSnapshot.data()!;
-
-      // Separate data into different variables
-      var updated = data['profileData']['updated'];
-
-      var addresses = (data['profileData']['address'] as List)
-          .map((item) => Address()
-            ..district = item['district']
-            ..taluk = item['taluk']
-            ..hobli = item['hobli']
-            ..village = item['village'])
-          .toList();
-
-      var kyc = KYC()
-        ..aadhar = data['profileData']['kyc']['aadhar']
-        ..pan = data['profileData']['kyc']['pan']
-        ..gst = data['profileData']['kyc']['gst'];
-
-      var lands = (data['profileData']['land'] as List)
-          .map((item) => Land()
-            ..village = item['village']
-            ..syno = item['syno']
-            ..area = item['area']
-            ..crops = (item['crops'] as List)
-                .map((cropItem) => Crop()
-                  ..name = cropItem['name']
-                  ..yieldOfCrop = cropItem['yieldOfCrop'])
-                .toList()
-            ..equipments = List<String>.from(item['equipments']))
-          .toList();
-
-      // Create ProfileData object by combining separated variables
-      var profileData = ProfileData()
-        ..id = 'profile'
-        ..updated = updated
-        ..address = addresses
-        ..kyc = kyc
-        ..land = lands;
-
-      // Initialize Hive and save data
-      // var hiveBox = await Hive.openBox<ProfileData>('profileDataBox3');
-      var dataBox = Hive.box<ProfileData>('profileDataBox3');
-      await dataBox.put(profileData.id, profileData);
-    }
-  }
-
-  void saveProfileDataToFirestore(ProfileData profileData, userId) {
-    FirebaseFirestore.instance
-        .collection(
-            'buyer') // Replace 'users' with your desired collection name
-        .doc(userId) // Use the user's ID as the document ID
-        .update({
-          'profileData': {
-            'updated': profileData.updated,
-            'address': profileData.address
-                .map((address) => {
-                      'district': address.district,
-                      'taluk': address.taluk,
-                      'hobli': address.hobli,
-                      'village': address.village,
-                    })
-                .toList(),
-            'kyc': {
-              'aadhar': profileData.kyc.aadhar,
-              'pan': profileData.kyc.pan,
-              'gst': profileData.kyc.gst,
-            },
-            'land': profileData.land
-                .map((land) => {
-                      'village': land.village,
-                      'syno': land.syno,
-                      'area': land.area,
-                      'crops': land.crops
-                          .map((crop) => {
-                                'name': crop.name,
-                                'yieldOfCrop': crop.yieldOfCrop,
-                              })
-                          .toList(),
-                      'equipments': land.equipments,
-                    })
-                .toList(),
-          }
-        })
-        .then((value) => print("ProfileData added to Firestore"))
-        .catchError((error) => print("Failed to add ProfileData: $error"));
-  }
-
-  Future<void> createEmptyHiveDataInstance(String userId) async {
-    DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-        await FirebaseFirestore.instance.collection('buyer').doc(userId).get();
-
-    if (documentSnapshot.exists) {
-      Map<String, dynamic> data = documentSnapshot.data()!;
-
-      // Separate data into different variables
-      var addressObject = data['address'];
-
-      var address = Address()
-        ..district = addressObject['district']
-        ..taluk = addressObject['region']
-        ..hobli = addressObject['circle']
-        ..village = addressObject['name'];
-
-      var dataBox = Hive.box<ProfileData>('profileDataBox3');
-
-      var kyc = KYC()
-        ..aadhar = ''
-        ..pan = ''
-        ..gst = '';
-
-      var emptyProfileData = ProfileData()
-        ..id = 'profile'
-        ..updated = true
-        ..address = [address]
-        ..kyc = kyc
-        ..land = [];
-      dataBox.put(emptyProfileData.id, emptyProfileData);
-
-      // Initialize Hive and save data
-      await dataBox.put(emptyProfileData.id, emptyProfileData);
-
-      saveProfileDataToFirestore(emptyProfileData, userId);
     }
   }
 }

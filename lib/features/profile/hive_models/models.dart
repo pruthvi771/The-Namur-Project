@@ -16,6 +16,9 @@ class Address {
 
   @HiveField(3)
   late String village;
+
+  @HiveField(4)
+  late String pincode;
 }
 
 @HiveType(typeId: 1)

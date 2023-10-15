@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:typed_data';
+import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:hive/hive.dart';
 
 class FirestoreRepository {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -14,11 +16,6 @@ class FirestoreRepository {
     required String userId,
     required String name,
     required String email,
-    String? pincode,
-    String? addressName,
-    String? districtName,
-    String? addressCircle,
-    String? addressRegion,
     String? photoURL,
     String? phoneNumber,
   }) async {
@@ -26,13 +23,6 @@ class FirestoreRepository {
       _firestore.collection('buyer').doc(userId).set({
         'name': name,
         'email': email,
-        'address': {
-          'pincode': pincode ?? '',
-          'name': addressName ?? '',
-          'district': districtName ?? '',
-          'circle': addressCircle ?? '',
-          'region': addressRegion ?? '',
-        },
         'phone number': phoneNumber ?? '',
         'location_id': '',
         'photoURL': photoURL ?? '',
@@ -42,13 +32,6 @@ class FirestoreRepository {
       _firestore.collection('seller').doc(userId).set({
         'name': name,
         'email': email,
-        'address': {
-          'pincode': pincode ?? '',
-          'name': addressName ?? '',
-          'district': districtName ?? '',
-          'circle': addressCircle ?? '',
-          'region': addressRegion ?? '',
-        },
         'phone number': phoneNumber ?? '',
         'location_id': '',
         'Products_Buy': '',
@@ -127,5 +110,141 @@ class FirestoreRepository {
           'Something went wrong. Please try again later or contact support.');
       // return [];
     }
+  }
+
+  Future<void> syncFirestoreDataWithHive({
+    required String userId,
+  }) async {
+    DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
+        await _firestore.collection('buyer').doc(userId).get();
+
+    if (documentSnapshot.exists) {
+      Map<String, dynamic> data = documentSnapshot.data()!;
+
+      // Separate data into different variables
+      var updated = data['profileData']['updated'];
+
+      var addresses = (data['profileData']['address'] as List)
+          .map(
+            (item) => Address()
+              ..district = item['district']
+              ..taluk = item['taluk']
+              ..hobli = item['hobli']
+              ..village = item['village']
+              ..pincode = item['pincode'],
+          )
+          .toList();
+
+      var kyc = KYC()
+        ..aadhar = data['profileData']['kyc']['aadhar']
+        ..pan = data['profileData']['kyc']['pan']
+        ..gst = data['profileData']['kyc']['gst'];
+
+      var lands = (data['profileData']['land'] as List)
+          .map((item) => Land()
+            ..village = item['village']
+            ..syno = item['syno']
+            ..area = item['area']
+            ..crops = (item['crops'] as List)
+                .map((cropItem) => Crop()
+                  ..name = cropItem['name']
+                  ..yieldOfCrop = cropItem['yieldOfCrop'])
+                .toList()
+            ..equipments = List<String>.from(item['equipments']))
+          .toList();
+
+      // Create ProfileData object by combining separated variables
+      var profileData = ProfileData()
+        ..id = 'profile'
+        ..updated = updated
+        ..address = addresses
+        ..kyc = kyc
+        ..land = lands;
+
+      var dataBox = Hive.box<ProfileData>('profileDataBox3');
+      await dataBox.put(profileData.id, profileData);
+    }
+  }
+
+  Future<void> saveProfileDataToFirestore({
+    required ProfileData profileData,
+    userId,
+  }) async {
+    _firestore
+        .collection(
+            'buyer') // Replace 'users' with your desired collection name
+        .doc(userId) // Use the user's ID as the document ID
+        .update({
+          'profileData': {
+            'updated': profileData.updated,
+            'address': profileData.address
+                .map((address) => {
+                      'district': address.district,
+                      'taluk': address.taluk,
+                      'hobli': address.hobli,
+                      'village': address.village,
+                      'pincode': address.pincode
+                    })
+                .toList(),
+            'kyc': {
+              'aadhar': profileData.kyc.aadhar,
+              'pan': profileData.kyc.pan,
+              'gst': profileData.kyc.gst,
+            },
+            'land': profileData.land
+                .map((land) => {
+                      'village': land.village,
+                      'syno': land.syno,
+                      'area': land.area,
+                      'crops': land.crops
+                          .map((crop) => {
+                                'name': crop.name,
+                                'yieldOfCrop': crop.yieldOfCrop,
+                              })
+                          .toList(),
+                      'equipments': land.equipments,
+                    })
+                .toList(),
+          }
+        })
+        .then((value) => print("ProfileData added to Firestore"))
+        .catchError((error) => print("Failed to add ProfileData: $error"));
+  }
+
+  Future<void> createEmptyHiveDataInstance({
+    required String userId,
+    bool isAddressAvailable = false,
+    String? district,
+    String? taluk,
+    String? hobli,
+    String? village,
+    String? pincode,
+  }) async {
+    var address = Address()
+      ..pincode = isAddressAvailable ? pincode! : ''
+      ..district = isAddressAvailable ? district! : ''
+      ..taluk = isAddressAvailable ? taluk! : ''
+      ..hobli = isAddressAvailable ? hobli! : ''
+      ..village = isAddressAvailable ? village! : '';
+
+    var dataBox = Hive.box<ProfileData>('profileDataBox3');
+
+    var kyc = KYC()
+      ..aadhar = ''
+      ..pan = ''
+      ..gst = '';
+
+    var emptyProfileData = ProfileData()
+      ..id = 'profile'
+      ..updated = true
+      ..address = isAddressAvailable ? [address] : []
+      ..kyc = kyc
+      ..land = [];
+    dataBox.put(emptyProfileData.id, emptyProfileData);
+
+    // Initialize Hive and save data
+    await dataBox.put(emptyProfileData.id, emptyProfileData);
+
+    saveProfileDataToFirestore(profileData: emptyProfileData, userId: userId);
   }
 }
