@@ -104,26 +104,64 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         .catchError((error) => print("Failed to add ProfileData: $error"));
   }
 
+  // Future<void> createEmptyHiveDataInstance(String userId) async {
+  //   var dataBox = Hive.box<ProfileData>('profileDataBox3');
+
+  //   var kyc = KYC()
+  //     ..aadhar = ''
+  //     ..pan = ''
+  //     ..gst = '';
+
+  //   var emptyProfileData = ProfileData()
+  //     ..id = 'profile'
+  //     ..updated = true
+  //     ..address = []
+  //     ..kyc = kyc
+  //     ..land = [];
+  //   dataBox.put(emptyProfileData.id, emptyProfileData);
+
+  //   // Initialize Hive and save data
+  //   await dataBox.put(emptyProfileData.id, emptyProfileData);
+
+  //   saveProfileDataToFirestore(emptyProfileData, userId);
+  // }
+
   Future<void> createEmptyHiveDataInstance(String userId) async {
-    var dataBox = Hive.box<ProfileData>('profileDataBox3');
+    DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
+        await FirebaseFirestore.instance.collection('buyer').doc(userId).get();
 
-    var kyc = KYC()
-      ..aadhar = ''
-      ..pan = ''
-      ..gst = '';
+    if (documentSnapshot.exists) {
+      Map<String, dynamic> data = documentSnapshot.data()!;
 
-    var emptyProfileData = ProfileData()
-      ..id = 'profile'
-      ..updated = true
-      ..address = []
-      ..kyc = kyc
-      ..land = [];
-    dataBox.put(emptyProfileData.id, emptyProfileData);
+      // Separate data into different variables
+      var addressObject = data['address'];
 
-    // Initialize Hive and save data
-    await dataBox.put(emptyProfileData.id, emptyProfileData);
+      var address = Address()
+        ..district = addressObject['district']
+        ..taluk = addressObject['region']
+        ..hobli = addressObject['circle']
+        ..village = addressObject['name'];
 
-    saveProfileDataToFirestore(emptyProfileData, userId);
+      var dataBox = Hive.box<ProfileData>('profileDataBox3');
+
+      var kyc = KYC()
+        ..aadhar = ''
+        ..pan = ''
+        ..gst = '';
+
+      var emptyProfileData = ProfileData()
+        ..id = 'profile'
+        ..updated = true
+        ..address = [address]
+        ..kyc = kyc
+        ..land = [];
+      dataBox.put(emptyProfileData.id, emptyProfileData);
+
+      // Initialize Hive and save data
+      await dataBox.put(emptyProfileData.id, emptyProfileData);
+
+      saveProfileDataToFirestore(emptyProfileData, userId);
+    }
   }
 
   final AuthRepository authRepository;
