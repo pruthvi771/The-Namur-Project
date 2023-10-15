@@ -15,6 +15,9 @@ import '../../../custom/device_info.dart';
 import 'package:flutter_expanded_tile/flutter_expanded_tile.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
+import 'package:active_ecommerce_flutter/features/profile/address_list.dart'
+    as addressList;
+
 class MoreDetails extends StatefulWidget {
   const MoreDetails({Key? key}) : super(key: key);
 
@@ -34,6 +37,9 @@ class _MoreDetailsState extends State<MoreDetails> {
 
   List CropsList = [];
   List MachinesList = [];
+
+  final imageForCrop = addressList.imageForCrop;
+  final imageForEquipment = addressList.imageForEquipment;
 
   void calculatingProgress(profileData) {
     var tempProgress = 0.0;
@@ -549,59 +555,51 @@ class _MoreDetailsState extends State<MoreDetails> {
 
                     //Crops Section
                     ExpandedTileWidget(
-                      controller: _cropsController,
-                      title: 'Crops Grown and Planned',
-                      children: (CropsList.length == 0)
-                          ? Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Column(
-                                    children: [
-                                      Text('No Crops Added',
-                                          style: TextStyle(
-                                              fontSize: 13, color: Colors.red)),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                          'Add them by going to Edit Profile Screen',
-                                          style: TextStyle(
-                                              fontSize: 13,
-                                              color: Colors.grey[600])),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            )
-                          : Column(children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Wrap(
-                                    children: List.generate(
-                                      CropsList.length,
-                                      (index) {
-                                        var item = CropsList[index];
-                                        return Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 2),
-                                          child: Chip(
-                                            backgroundColor:
-                                                MyTheme.green_lighter,
-                                            labelPadding: EdgeInsets.symmetric(
-                                                horizontal: 10, vertical: 0),
-                                            label: Text(item),
-                                          ),
-                                        );
-                                      },
+                        controller: _cropsController,
+                        title: 'Crops Grown and Planned',
+                        children: (CropsList.length == 0)
+                            ? Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Column(
+                                      children: [
+                                        Text('No Crops Added',
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                color: Colors.red)),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                            'Add them by going to Edit Profile Screen',
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                color: Colors.grey[600])),
+                                      ],
                                     ),
                                   ),
+                                ],
+                              )
+                            : Container(
+                                // padding: const EdgeInsets.symmetric(
+                                //     horizontal: 12),
+                                height: 140,
+                                child: ListView(
+                                  physics: BouncingScrollPhysics(),
+                                  scrollDirection: Axis.horizontal,
+                                  children: List.generate(
+                                    CropsList.length,
+                                    (index) {
+                                      var crop = CropsList[index];
+                                      return EquipmentWidget(
+                                        title: crop,
+                                        image: imageForCrop[crop]!,
+                                      );
+                                    },
+                                  ),
                                 ),
-                              ),
-                            ]),
-                    ),
+                              )),
                     SizedBox(
                       height: 15,
                     ),
@@ -636,35 +634,25 @@ class _MoreDetailsState extends State<MoreDetails> {
                                   ),
                                 ],
                               )
-                            : Column(children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Wrap(
-                                      children: List.generate(
-                                        MachinesList.length,
-                                        (index) {
-                                          var item = MachinesList[index];
-                                          return Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 2),
-                                            child: Chip(
-                                              backgroundColor:
-                                                  MyTheme.green_lighter,
-                                              labelPadding:
-                                                  EdgeInsets.symmetric(
-                                                      horizontal: 10,
-                                                      vertical: 0),
-                                              label: Text(item),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ),
+                            : Container(
+                                // padding: const EdgeInsets.symmetric(
+                                //     horizontal: 12),
+                                height: 140,
+                                child: ListView(
+                                  physics: BouncingScrollPhysics(),
+                                  scrollDirection: Axis.horizontal,
+                                  children: List.generate(
+                                    MachinesList.length,
+                                    (index) {
+                                      var machine = MachinesList[index];
+                                      return EquipmentWidget(
+                                        title: machine,
+                                        image: imageForEquipment[machine]!,
+                                      );
+                                    },
                                   ),
                                 ),
-                              ]),
+                              ),
                       ),
                     ),
                   ],
@@ -736,6 +724,56 @@ class _MoreDetailsState extends State<MoreDetails> {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class GridViewListWidget extends StatelessWidget {
+  const GridViewListWidget({
+    super.key,
+    required this.image,
+    required this.title,
+  });
+
+  final String image;
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 120,
+      width: 90,
+      margin: EdgeInsets.only(left: 5, right: 5, top: 10, bottom: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Colors.black12,
+          width: 3,
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Image.asset(
+              image,
+              fit: BoxFit.fitWidth,
+            ),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Text(title,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                letterSpacing: .5,
+                fontFamily: 'Poppins',
+              )),
+        ],
       ),
     );
   }

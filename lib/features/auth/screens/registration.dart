@@ -463,24 +463,6 @@ class _RegistrationState extends State<Registration> {
                       child: Text(value),
                     );
                   }).toList(),
-                  // items: [
-                  //   DropdownMenuItem(
-                  //     child: Text("Item 1"),
-                  //     value: "value 1",
-                  //   ),
-                  //   DropdownMenuItem(
-                  //     child: Text("Item 2"),
-                  //     value: "value 2",
-                  //   ),
-                  //   DropdownMenuItem(
-                  //     child: Text("Item 3"),
-                  //     value: "value 3",
-                  //   ),
-                  //   DropdownMenuItem(
-                  //     child: Text("Item 4"),
-                  //     value: "value 4",
-                  //   ),
-                  // ],
                 ),
               ),
             ),
