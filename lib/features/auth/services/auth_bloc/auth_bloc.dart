@@ -2,12 +2,129 @@ import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_e
 // import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
+import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 
 import 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
+  Future<void> syncFirestoreDataWithHive(String userId) async {
+    DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
+        await FirebaseFirestore.instance.collection('buyer').doc(userId).get();
+
+    if (documentSnapshot.exists) {
+      Map<String, dynamic> data = documentSnapshot.data()!;
+
+      // Separate data into different variables
+      var updated = data['updated'];
+
+      var addresses = (data['address'] as List)
+          .map((item) => Address()
+            ..district = item['district']
+            ..taluk = item['taluk']
+            ..hobli = item['hobli']
+            ..village = item['village'])
+          .toList();
+
+      var kyc = KYC()
+        ..aadhar = data['kyc']['aadhar']
+        ..pan = data['kyc']['pan']
+        ..gst = data['kyc']['gst'];
+
+      var lands = (data['land'] as List)
+          .map((item) => Land()
+            ..village = item['village']
+            ..syno = item['syno']
+            ..area = item['area']
+            ..crops = (item['crops'] as List)
+                .map((cropItem) => Crop()
+                  ..name = cropItem['name']
+                  ..yieldOfCrop = cropItem['yieldOfCrop'])
+                .toList()
+            ..equipments = List<String>.from(item['equipments']))
+          .toList();
+
+      // Create ProfileData object by combining separated variables
+      var profileData = ProfileData()
+        ..id = 'profile'
+        ..updated = updated
+        ..address = addresses
+        ..kyc = kyc
+        ..land = lands;
+
+      // Initialize Hive and save data
+      var hiveBox = await Hive.openBox('profileDataBox3');
+      await hiveBox.put(profileData.id, profileData);
+    }
+  }
+
+  void saveProfileDataToFirestore(ProfileData profileData, userId) {
+    FirebaseFirestore.instance
+        .collection(
+            'buyer') // Replace 'users' with your desired collection name
+        .doc(userId) // Use the user's ID as the document ID
+        .set({
+          'profileData': {
+            'updated': profileData.updated,
+            'address': profileData.address
+                .map((address) => {
+                      'district': address.district,
+                      'taluk': address.taluk,
+                      'hobli': address.hobli,
+                      'village': address.village,
+                    })
+                .toList(),
+            'kyc': {
+              'aadhar': profileData.kyc.aadhar,
+              'pan': profileData.kyc.pan,
+              'gst': profileData.kyc.gst,
+            },
+            'land': profileData.land
+                .map((land) => {
+                      'village': land.village,
+                      'syno': land.syno,
+                      'area': land.area,
+                      'crops': land.crops
+                          .map((crop) => {
+                                'name': crop.name,
+                                'yieldOfCrop': crop.yieldOfCrop,
+                              })
+                          .toList(),
+                      'equipments': land.equipments,
+                    })
+                .toList(),
+          }
+        })
+        .then((value) => print("ProfileData added to Firestore"))
+        .catchError((error) => print("Failed to add ProfileData: $error"));
+  }
+
+  Future<void> createEmptyHiveDataInstance(String userId) async {
+    var dataBox = Hive.box<ProfileData>('profileDataBox3');
+
+    var kyc = KYC()
+      ..aadhar = ''
+      ..pan = ''
+      ..gst = '';
+
+    var emptyProfileData = ProfileData()
+      ..id = 'profile'
+      ..updated = true
+      ..address = []
+      ..kyc = kyc
+      ..land = [];
+    dataBox.put(emptyProfileData.id, emptyProfileData);
+
+    // Initialize Hive and save data
+    await dataBox.put(emptyProfileData.id, emptyProfileData);
+
+    saveProfileDataToFirestore(emptyProfileData, userId);
+  }
+
   final AuthRepository authRepository;
   final FirestoreRepository firestoreRepository;
   AuthBloc({required this.authRepository, required this.firestoreRepository})
@@ -56,6 +173,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(Loading());
       try {
         await authRepository.loginWithGoogle();
+        var userId = auth.FirebaseAuth.instance.currentUser!.uid;
+        await syncFirestoreDataWithHive(userId);
         emit(Authenticated());
       } catch (e) {
         emit(AuthError(e.toString()));
@@ -124,8 +243,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SignInWithPhoneNumberRequested>((event, emit) async {
       emit(Loading());
       try {
-        await authRepository.loginWithPhone(
+        var user = await authRepository.loginWithPhone(
             verificationId: event.verificationId, otp: event.otp);
+        var userId = auth.FirebaseAuth.instance.currentUser!.uid;
+        await syncFirestoreDataWithHive(userId);
         emit(Authenticated());
       } catch (e) {
         emit(AuthError(e.toString()));

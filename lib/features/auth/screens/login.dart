@@ -7,6 +7,9 @@ import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart'
     as hiveModels;
+import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 // import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
@@ -182,7 +185,9 @@ class _LoginState extends State<Login> {
           if (state is Authenticated) {
             ToastComponent.showDialog('Login Successful',
                 gravity: Toast.center, duration: Toast.lengthLong);
+
             await checkLocationPermission();
+
             Navigator.pushAndRemoveUntil(context,
                 MaterialPageRoute(builder: (context) {
               return Main();

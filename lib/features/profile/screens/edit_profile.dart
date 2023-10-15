@@ -64,6 +64,47 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   get console => null;
 
+  void saveProfileDataToFirestore(ProfileData profileData, userId) {
+    FirebaseFirestore.instance
+        .collection(
+            'buyer') // Replace 'users' with your desired collection name
+        .doc(userId) // Use the user's ID as the document ID
+        .set({
+          'profileData': {
+            'updated': profileData.updated,
+            'address': profileData.address
+                .map((address) => {
+                      'district': address.district,
+                      'taluk': address.taluk,
+                      'hobli': address.hobli,
+                      'village': address.village,
+                    })
+                .toList(),
+            'kyc': {
+              'aadhar': profileData.kyc.aadhar,
+              'pan': profileData.kyc.pan,
+              'gst': profileData.kyc.gst,
+            },
+            'land': profileData.land
+                .map((land) => {
+                      'village': land.village,
+                      'syno': land.syno,
+                      'area': land.area,
+                      'crops': land.crops
+                          .map((crop) => {
+                                'name': crop.name,
+                                'yieldOfCrop': crop.yieldOfCrop,
+                              })
+                          .toList(),
+                      'equipments': land.equipments,
+                    })
+                .toList(),
+          }
+        })
+        .then((value) => print("ProfileData added to Firestore"))
+        .catchError((error) => print("Failed to add ProfileData: $error"));
+  }
+
   void _addAddressToHive(district, taluk, hobli, village) async {
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
 
@@ -113,6 +154,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
       await dataBox.put(newData.id, newData);
       print('object updated');
+
+      try {
+        var userId = FirebaseAuth.instance.currentUser!.uid;
+
+        saveProfileDataToFirestore(newData, userId);
+      } catch (e) {
+        print(e);
+      }
     }
 
     _hobliController.clear();
@@ -184,21 +233,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       try {
         var userId = FirebaseAuth.instance.currentUser!.uid;
 
-        var firestore = FirebaseFirestore.instance;
-
-        await firestore.collection('buyer').doc(userId).update({
-          'landDetails.$syno': {
-            'name': village,
-            'area': areaDouble,
-            'crops': [],
-            'equipments': []
-          }
-        });
+        saveProfileDataToFirestore(newData, userId);
       } catch (e) {
-        // ToastComponent.showDialog(
-        //     'Could not sync your changes. Please check your internet connection.',
-        //     gravity: Toast.center,
-        //     duration: Toast.lengthLong);
+        print(e);
       }
     }
 
@@ -274,6 +311,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ..land = savedData.land;
 
       await dataBox.put(newData.id, newData);
+      try {
+        var userId = FirebaseAuth.instance.currentUser!.uid;
+
+        saveProfileDataToFirestore(newData, userId);
+      } catch (e) {
+        print(e);
+      }
     }
 
     BlocProvider.of<HiveBloc>(context).add(
@@ -300,6 +344,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ..land = savedData.land;
 
       await dataBox.put(newData.id, newData);
+      try {
+        var userId = FirebaseAuth.instance.currentUser!.uid;
+
+        saveProfileDataToFirestore(newData, userId);
+      } catch (e) {
+        print(e);
+      }
     }
 
     BlocProvider.of<HiveBloc>(context).add(
@@ -327,6 +378,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ..land = savedData.land;
 
     await dataBox.put(newData.id, newData);
+    try {
+      var userId = FirebaseAuth.instance.currentUser!.uid;
+
+      saveProfileDataToFirestore(newData, userId);
+    } catch (e) {
+      print(e);
+    }
 
     BlocProvider.of<HiveBloc>(context).add(
       HiveDataRequested(),
@@ -387,23 +445,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       try {
         var userId = FirebaseAuth.instance.currentUser!.uid;
 
-        var document = await _firestore.collection('buyer').doc(userId).get();
-        var landDetails = document.data()!['landDetails'] ?? {};
-
-        // Add crops to syno1
-        (landDetails[landSyno]['crops'] as List)
-            .add({'name': crop, 'yieldOfCrop': yieldOfCrop});
-
-        await _firestore
-            .collection('buyer')
-            .doc(userId)
-            .update({'landDetails': landDetails});
+        saveProfileDataToFirestore(savedData, userId);
       } catch (e) {
         print(e);
-        // ToastComponent.showDialog(
-        //     'Could not sync your changes. Please check your internet connection.',
-        //     gravity: Toast.center,
-        //     duration: Toast.lengthLong);
       }
 
       print('Crop added');
@@ -455,22 +499,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       dataBox.put(savedData.id, savedData);
 
       print('Crop removed');
+      dataBox.put(savedData.id, savedData);
       try {
         var userId = FirebaseAuth.instance.currentUser!.uid;
 
-        var document = await _firestore.collection('buyer').doc(userId).get();
-        var landDetails = document.data()!['landDetails'] ?? {};
-
-        // Remove crop from syno1
-        (landDetails[landSyno]['crops'] as List).removeAt(indexToDelete);
-
-        await _firestore
-            .collection('buyer')
-            .doc(userId)
-            .update({'landDetails': landDetails});
-
-        print('Crop removed from syno1!');
-      } catch (e) {}
+        saveProfileDataToFirestore(savedData, userId);
+      } catch (e) {
+        print(e);
+      }
     } else {
       // Handle the case where the Land instance with the specified syno is not found
       print('Land with syno $landSyno not found.');
@@ -531,24 +567,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       }
 
       dataBox.put(savedData.id, savedData);
+      dataBox.put(savedData.id, savedData);
       try {
         var userId = FirebaseAuth.instance.currentUser!.uid;
 
-        var document = await _firestore.collection('buyer').doc(userId).get();
-        var landDetails = document.data()!['landDetails'] ?? {};
-
-        // Add equipment to syno1
-        (landDetails[landSyno]['equipments'] as List).add(equipment);
-
-        await _firestore
-            .collection('buyer')
-            .doc(userId)
-            .update({'landDetails': landDetails});
+        saveProfileDataToFirestore(savedData, userId);
       } catch (e) {
-        // ToastComponent.showDialog(
-        //     'Could not sync your changes. Please check your internet connection.',
-        //     gravity: Toast.center,
-        //     duration: Toast.lengthLong);
+        print(e);
       }
 
       print('equipment added');
@@ -576,25 +601,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       dataBox.put(savedData.id, savedData);
 
       print('equipment removed');
+      dataBox.put(savedData.id, savedData);
       try {
         var userId = FirebaseAuth.instance.currentUser!.uid;
-        var document = await _firestore.collection('buyer').doc(userId).get();
-        var landDetails = document.data()!['landDetails'] ?? {};
 
-        // Remove equipment from syno1
-        (landDetails[landSyno]['equipments'] as List).removeAt(indexToDelete);
-
-        await _firestore
-            .collection('buyer')
-            .doc(userId)
-            .update({'landDetails': landDetails});
-
-        print('Equipment removed from syno1!');
+        saveProfileDataToFirestore(savedData, userId);
       } catch (e) {
-        // ToastComponent.showDialog(
-        //     'Could not sync your changes. Please check your internet connection.',
-        //     gravity: Toast.center,
-        //     duration: Toast.lengthLong);
+        print(e);
       }
     } else {
       // Handle the case where the Land instance with the specified syno is not found
