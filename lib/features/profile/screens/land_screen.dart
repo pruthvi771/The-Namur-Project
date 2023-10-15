@@ -2,6 +2,7 @@ import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dar
 import 'package:active_ecommerce_flutter/features/profile/screens/edit_profile.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_math_fork/ast.dart';
 import 'package:hive/hive.dart';
 import '../../../custom/device_info.dart';
 
@@ -127,6 +128,8 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
                               borderRadius: BorderRadius.circular(12.0),
                               color: Color(0xff4C7B10),
                             ),
+                            labelColor: Colors.white,
+                            unselectedLabelColor: Colors.black,
                             controller: tabController,
                             isScrollable: true,
                             labelPadding: EdgeInsets.symmetric(horizontal: 25),
@@ -141,7 +144,6 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
                                       fontSize: 15,
                                       fontWeight: FontWeight.w800,
                                       letterSpacing: .5,
-                                      color: Color.fromARGB(255, 212, 212, 212),
                                     ),
                                   ),
                                 );
@@ -175,16 +177,23 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
                                       controller2: _areaController,
                                       title: 'Land Area, Size',
                                       content: Container(
-                                        padding: EdgeInsets.only(top: 8),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 3, vertical: 8),
                                         height: 150,
                                         child: Row(
                                           children: [
                                             Expanded(
                                               flex: 3,
                                               child: Container(
-                                                child: Image.asset(
-                                                  'assets/girl.png',
-                                                  fit: BoxFit.cover,
+                                                height: double.infinity,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(12)),
+                                                  child: Image.asset(
+                                                    'assets/farmland_medium.jpeg',
+                                                    fit: BoxFit.cover,
+                                                  ),
                                                 ),
                                               ),
                                             ),
