@@ -125,14 +125,12 @@ class FirestoreRepository {
       var updated = data['profileData']['updated'];
 
       var addresses = (data['profileData']['address'] as List)
-          .map(
-            (item) => Address()
-              ..district = item['district']
-              ..taluk = item['taluk']
-              ..hobli = item['hobli']
-              ..village = item['village']
-              ..pincode = item['pincode'],
-          )
+          .map((item) => Address()
+            ..district = item['district']
+            ..taluk = item['taluk']
+            ..hobli = item['hobli']
+            ..village = item['village']
+            ..pincode = item['pincode'])
           .toList();
 
       var kyc = KYC()
@@ -168,7 +166,7 @@ class FirestoreRepository {
 
   Future<void> saveProfileDataToFirestore({
     required ProfileData profileData,
-    userId,
+    required userId,
   }) async {
     _firestore
         .collection(

@@ -160,9 +160,11 @@ class AuthRepository {
       } else if (e.code == 'play-services-not-available') {
         throw Exception('Please install Google Play Store first.');
       } else {
+        print(e);
         throw Exception('Something went wrong. Please try again.');
       }
     } catch (_) {
+      print(_);
       throw Exception('Something went wrong. Please try again.');
     }
   }

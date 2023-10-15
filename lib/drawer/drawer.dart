@@ -24,6 +24,7 @@ import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:active_ecommerce_flutter/app_config.dart';
 import 'package:active_ecommerce_flutter/helpers/auth_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive/hive.dart';
 import 'package:toast/toast.dart';
 
@@ -356,7 +357,11 @@ class _MainDrawerState extends State<MainDrawer> {
                               onTap: () async {
                                 // await AuthService.firebase().logOut();
                                 // final user = AuthService.firebase().currentUser;
+
                                 await FirebaseAuth.instance.signOut();
+                                final GoogleSignIn googleSignIn =
+                                    GoogleSignIn();
+                                await googleSignIn.signOut();
 
                                 var dataBox1 =
                                     Hive.box<hiveModels.PrimaryLocation>(
@@ -389,41 +394,6 @@ class _MainDrawerState extends State<MainDrawer> {
                                   (route) => false,
                                 );
                               }),
-                          /* ListTile(
-                              visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-                              leading: Image.asset("assets/home.png",
-                                  height: 16, color: Color.fromRGBO(153, 153, 153, 1)),
-                              title: Text( "Description",
-                                  style: TextStyle(
-                                      color: MyTheme.primary_color,
-                                      fontSize: 14)),
-                              onTap: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                      return Description();
-                                    }));
-                              }),*/
-                          // wallet_system_status.$
-                          /* ? ListTile(
-                                  visualDensity: VisualDensity(
-                                      horizontal: -4, vertical: -4),
-                                  leading: Image.asset("assets/wallet.png",
-                                      height: 16,
-                                    color: MyTheme.primary_color,),
-                                  title: Text(
-                                      AppLocalizations.of(context)!
-                                          .wallet_ucf,
-                                      style: TextStyle(
-                                          color:
-                                              Color.fromRGBO(153, 153, 153, 1),
-                                          fontSize: 14)),
-                                  onTap: () {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) {
-                                      return Main(); //Wallet();
-                                    }));
-                                  })
-                              : Container(),*/
                         ],
                       )
                     : Container(),
@@ -473,21 +443,6 @@ class _MainDrawerState extends State<MainDrawer> {
                           ),
                         ),
                       )
-
-                    /*ListTile(
-                        visualDensity:
-                            VisualDensity(horizontal: -4, vertical: -4),
-                        leading: Image.asset("assets/logout.png",
-                            height: 16,
-                            color: Color.fromRGBO(153, 153, 153, 1)),
-                        title: Text(
-                            AppLocalizations.of(context)!.logout_ucf,
-                            style: TextStyle(
-                                color: MyTheme.primary_color,
-                                fontSize: 14)),
-                        onTap: () {
-                          onTapLogout(context);
-                        })*/
                     : Container(),
                 SizedBox(
                   height: 150,

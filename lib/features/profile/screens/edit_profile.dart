@@ -3,6 +3,11 @@ import 'dart:math';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/custom/input_decorations.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
+import 'package:active_ecommerce_flutter/features/auth/models/postoffice_response_model.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_bloc.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_event.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_state.dart'
+    as authState;
 import 'package:active_ecommerce_flutter/features/profile/enum.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_event.dart';
@@ -14,6 +19,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:toast/toast.dart';
 
@@ -42,6 +48,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController _gstController = TextEditingController();
 
   TextEditingController _yieldController = TextEditingController();
+  TextEditingController _pinCodeController = TextEditingController();
 
   final districts = addressList.districtTalukMap;
 
@@ -58,54 +65,55 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   String? cropDropdownValue;
   String? equipmentDropdownValue;
 
-  bool talukDropdownEnabled = false;
+  String? locationDropdownValue;
 
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  bool talukDropdownEnabled = false;
+  bool isDropdownEnabled = false;
+
+  PostOfficeResponse? postOfficeResponse;
+
+  // String? pincode;
+  String? addressName;
+  String? districtName;
+  String? addressCircle;
+  String? addressRegion;
+
+  List<String> locationsList = [];
 
   get console => null;
 
-  void saveProfileDataToFirestore(ProfileData profileData, userId) {
-    FirebaseFirestore.instance
-        .collection(
-            'buyer') // Replace 'users' with your desired collection name
-        .doc(userId) // Use the user's ID as the document ID
-        .update({
-          'profileData': {
-            'updated': profileData.updated,
-            'address': profileData.address
-                .map((address) => {
-                      'district': address.district,
-                      'taluk': address.taluk,
-                      'hobli': address.hobli,
-                      'village': address.village,
-                    })
-                .toList(),
-            'kyc': {
-              'aadhar': profileData.kyc.aadhar,
-              'pan': profileData.kyc.pan,
-              'gst': profileData.kyc.gst,
-            },
-            'land': profileData.land
-                .map((land) => {
-                      'village': land.village,
-                      'syno': land.syno,
-                      'area': land.area,
-                      'crops': land.crops
-                          .map((crop) => {
-                                'name': crop.name,
-                                'yieldOfCrop': crop.yieldOfCrop,
-                              })
-                          .toList(),
-                      'equipments': land.equipments,
-                    })
-                .toList(),
-          }
-        })
-        .then((value) => print("ProfileData added to Firestore"))
-        .catchError((error) => print("Failed to add ProfileData: $error"));
+  getAddressValues() {
+    postOfficeResponse!.postOffices.forEach((postOffice) {
+      if (postOffice.name == locationDropdownValue) {
+        addressName = postOffice.name;
+        districtName = postOffice.district;
+        addressCircle = postOffice.circle;
+        addressRegion = postOffice.region;
+      }
+    });
   }
 
-  void _addAddressToHive(district, taluk, hobli, village) async {
+  clearAddressValues() {
+    addressName = null;
+    districtName = null;
+    addressCircle = null;
+    addressRegion = null;
+  }
+
+  void fetchLocations(BuildContext buildContext) {
+    if (_pinCodeController.text.toString().isEmpty ||
+        _pinCodeController.text.toString().length != 6) {
+      ToastComponent.showDialog('Enter a valid Pincode',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+    BlocProvider.of<AuthBloc>(buildContext).add(
+      LocationsForPincodeRequested(_pinCodeController.text.toString()),
+    );
+  }
+
+  void _addAddressToHive(
+      {required String pincode, String? locationDropdownValue}) async {
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
 
     var savedData = dataBox.get('profile');
@@ -115,32 +123,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
-    if (district.isEmpty) {
-      ToastComponent.showDialog('Select District',
+    if (pincode.isEmpty) {
+      ToastComponent.showDialog('Enter Pin Code',
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
-    if (taluk.isEmpty) {
-      ToastComponent.showDialog('Select Taluk',
-          gravity: Toast.center, duration: Toast.lengthLong);
-      return;
-    }
-    if (hobli.isEmpty) {
-      ToastComponent.showDialog('Please Enter Hobli',
-          gravity: Toast.center, duration: Toast.lengthLong);
-      return;
-    }
-    if (village.isEmpty) {
-      ToastComponent.showDialog('Please Enter Village',
+    if (locationDropdownValue == null) {
+      ToastComponent.showDialog('Select Location',
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
 
     var address = Address()
-      ..district = district
-      ..taluk = taluk
-      ..hobli = hobli
-      ..village = village;
+      ..pincode = pincode
+      ..district = districtName!
+      ..taluk = addressRegion!
+      ..hobli = addressCircle!
+      ..village = addressName!;
 
     if (savedData != null) {
       print('object detected');
@@ -155,13 +154,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       await dataBox.put(newData.id, newData);
       print('object updated');
 
-      try {
-        var userId = FirebaseAuth.instance.currentUser!.uid;
-
-        saveProfileDataToFirestore(newData, userId);
-      } catch (e) {
-        print(e);
-      }
+      BlocProvider.of<HiveBloc>(context).add(
+        SyncHiveToFirestoreRequested(profileData: newData),
+      );
     }
 
     _hobliController.clear();
@@ -169,13 +164,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     BlocProvider.of<HiveBloc>(context).add(
       HiveDataRequested(),
-      // HiveAppendAddress(context: context),
     );
-    // } else {
-    //   ToastComponent.showDialog('Only 2 Addresses are allowed',
-    //       gravity: Toast.center, duration: Toast.lengthLong);
-    //   return;
-    // }
   }
 
   void _addLandToHive(area, syno, village) async {
@@ -230,13 +219,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       await dataBox.put(newData.id, newData);
       print('object updated');
 
-      try {
-        var userId = FirebaseAuth.instance.currentUser!.uid;
-
-        saveProfileDataToFirestore(newData, userId);
-      } catch (e) {
-        print(e);
-      }
+      BlocProvider.of<HiveBloc>(context).add(
+        SyncHiveToFirestoreRequested(profileData: newData),
+      );
     }
 
     _areaController.clear();
@@ -286,7 +271,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     //       gravity: Toast.center, duration: Toast.lengthLong);
     //   return;
     // }
-
     // if (gst.length != 15) {
     //   ToastComponent.showDialog('Enter a valid GST Number',
     //       gravity: Toast.center, duration: Toast.lengthLong);
@@ -311,13 +295,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ..land = savedData.land;
 
       await dataBox.put(newData.id, newData);
-      try {
-        var userId = FirebaseAuth.instance.currentUser!.uid;
 
-        saveProfileDataToFirestore(newData, userId);
-      } catch (e) {
-        print(e);
-      }
+      BlocProvider.of<HiveBloc>(context).add(
+        SyncHiveToFirestoreRequested(profileData: newData),
+      );
     }
 
     BlocProvider.of<HiveBloc>(context).add(
@@ -344,13 +325,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ..land = savedData.land;
 
       await dataBox.put(newData.id, newData);
-      try {
-        var userId = FirebaseAuth.instance.currentUser!.uid;
 
-        saveProfileDataToFirestore(newData, userId);
-      } catch (e) {
-        print(e);
-      }
+      BlocProvider.of<HiveBloc>(context).add(
+        SyncHiveToFirestoreRequested(profileData: newData),
+      );
     }
 
     BlocProvider.of<HiveBloc>(context).add(
@@ -378,13 +356,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ..land = savedData.land;
 
     await dataBox.put(newData.id, newData);
-    try {
-      var userId = FirebaseAuth.instance.currentUser!.uid;
 
-      saveProfileDataToFirestore(newData, userId);
-    } catch (e) {
-      print(e);
-    }
+    BlocProvider.of<HiveBloc>(context).add(
+      SyncHiveToFirestoreRequested(profileData: savedData),
+    );
 
     BlocProvider.of<HiveBloc>(context).add(
       HiveDataRequested(),
@@ -432,51 +407,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ..name = crop
         ..yieldOfCrop = yieldOfCropDouble);
 
-      // var cropDict = [];
-
-      // for (crop in savedData.land[index].crops) {
-      //   cropDict.add({
-      //     'name': crop.name,
-      //     'yield': crop.yieldOfCrop,
-      //   });
-      // }
-
       dataBox.put(savedData.id, savedData);
-      try {
-        var userId = FirebaseAuth.instance.currentUser!.uid;
 
-        saveProfileDataToFirestore(savedData, userId);
-      } catch (e) {
-        print(e);
-      }
+      BlocProvider.of<HiveBloc>(context).add(
+        SyncHiveToFirestoreRequested(profileData: savedData),
+      );
 
       print('Crop added');
     } else {
       // Handle the case where the Land instance with the specified syno is not found
       print('Land with syno $landSyno not found.');
     }
-
-    // var land = Land()
-    //   ..area = areaDouble
-    //   ..syno = syno
-    //   ..village = village
-    //   ..crops = []
-    //   ..equipments = [];
-
-    // // if (savedData != null) {
-    //   print('object detected');
-    //   print(savedData!.id);
-
-    //   var newData = ProfileData()
-    //     ..id = savedData!.id
-    //     ..updated = savedData.updated
-    //     ..address = savedData.address
-    //     ..kyc = savedData.kyc
-    //     ..land = [...savedData.land, land];
-
-    //   await dataBox.put(newData.id, newData);
-    //   print('object updated');
-    // // }
 
     _yieldController.clear();
 
@@ -500,15 +441,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
       print('Crop removed');
       dataBox.put(savedData.id, savedData);
-      try {
-        var userId = FirebaseAuth.instance.currentUser!.uid;
 
-        saveProfileDataToFirestore(savedData, userId);
-      } catch (e) {
-        print(e);
-      }
+      BlocProvider.of<HiveBloc>(context).add(
+        SyncHiveToFirestoreRequested(profileData: savedData),
+      );
     } else {
-      // Handle the case where the Land instance with the specified syno is not found
       print('Land with syno $landSyno not found.');
     }
 
@@ -568,13 +505,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
       dataBox.put(savedData.id, savedData);
       dataBox.put(savedData.id, savedData);
-      try {
-        var userId = FirebaseAuth.instance.currentUser!.uid;
 
-        saveProfileDataToFirestore(savedData, userId);
-      } catch (e) {
-        print(e);
-      }
+      BlocProvider.of<HiveBloc>(context).add(
+        SyncHiveToFirestoreRequested(profileData: savedData),
+      );
 
       print('equipment added');
     } else {
@@ -602,13 +536,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
       print('equipment removed');
       dataBox.put(savedData.id, savedData);
-      try {
-        var userId = FirebaseAuth.instance.currentUser!.uid;
 
-        saveProfileDataToFirestore(savedData, userId);
-      } catch (e) {
-        print(e);
-      }
+      BlocProvider.of<HiveBloc>(context).add(
+        SyncHiveToFirestoreRequested(profileData: savedData),
+      );
     } else {
       // Handle the case where the Land instance with the specified syno is not found
       print('Land with syno $landSyno not found.');
@@ -825,45 +756,177 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
 
                     //Dropdown for district
-                    DropdownButtonWidget(
-                        'District',
-                        'Select District',
-                        districts.map((district) {
-                          return DropdownMenuItem<String>(
-                            value: district[0] as String,
-                            child: Text(district[0] as String),
-                          );
-                        }).toList(),
-                        districtDropdownValue, (value) {
-                      setState(() {
-                        districtDropdownValue = value;
-                        taluks = addressList.districtTalukMap.firstWhere(
-                                (element) =>
-                                    element[0] == districtDropdownValue)[1]
-                            as List<String>;
-                        talukDropdownValue = taluks[0];
-                      });
-                    }),
+                    // DropdownButtonWidget(
+                    //     'District',
+                    //     'Select District',
+                    //     districts.map((district) {
+                    //       return DropdownMenuItem<String>(
+                    //         value: district[0] as String,
+                    //         child: Text(district[0] as String),
+                    //       );
+                    //     }).toList(),
+                    //     districtDropdownValue, (value) {
+                    //   setState(() {
+                    //     districtDropdownValue = value;
+                    //     taluks = addressList.districtTalukMap.firstWhere(
+                    //             (element) =>
+                    //                 element[0] == districtDropdownValue)[1]
+                    //         as List<String>;
+                    //     talukDropdownValue = taluks[0];
+                    //   });
+                    // }),
 
-                    // Dropdown for Taluk
-                    DropdownButtonWidget(
-                        'Taluk',
-                        'Select Taluk',
-                        taluks.map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        talukDropdownValue, (value) {
-                      setState(() {
-                        talukDropdownValue = value;
-                      });
-                    }),
+                    // // Dropdown for Taluk
+                    // DropdownButtonWidget(
+                    //     'Taluk',
+                    //     'Select Taluk',
+                    //     taluks.map<DropdownMenuItem<String>>((String value) {
+                    //       return DropdownMenuItem<String>(
+                    //         value: value,
+                    //         child: Text(value),
+                    //       );
+                    //     }).toList(),
+                    //     talukDropdownValue, (value) {
+                    //   setState(() {
+                    //     talukDropdownValue = value;
+                    //   });
+                    // }),
 
-                    TextFieldWidget('Hobli', _hobliController, 'Enter Hobli'),
-                    TextFieldWidget(
-                        'Village', _villageController, 'Enter Village'),
+                    // TextFieldWidget('Hobli', _hobliController, 'Enter Hobli'),
+                    // TextFieldWidget(
+                    //     'Village', _villageController, 'Enter Village'),
+
+                    // pincode textbox
+                    BlocListener<AuthBloc, authState.AuthState>(
+                      listener: (context, state) {
+                        if (state is authState.LocationsForPincodeReceived) {
+                          ToastComponent.showDialog('Locations fetched.',
+                              gravity: Toast.center,
+                              duration: Toast.lengthLong);
+                          postOfficeResponse = state.postOfficeResponse;
+                          for (var postOffice
+                              in state.postOfficeResponse.postOffices) {
+                            locationsList.add(postOffice.name);
+                          }
+                          isDropdownEnabled = true;
+                          // print(state.postOfficeResponse.postOffices[0].name);
+                          // print(state.postOfficeResponse.message);
+                        }
+                        if (state is authState.LocationsForPincodeLoading) {
+                          locationDropdownValue = null;
+                          clearAddressValues();
+                          locationsList.clear();
+                          ToastComponent.showDialog('Fetching Locations...',
+                              gravity: Toast.center,
+                              duration: Toast.lengthLong);
+                        }
+                        // TODO: implement listener
+                      },
+                      child: BlocBuilder<AuthBloc, authState.AuthState>(
+                        builder: (context, state) {
+                          return Column(
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Container(
+                                    height: 40,
+                                    child: TextField(
+                                      controller: _pinCodeController,
+                                      autofocus: false,
+                                      decoration: InputDecorations
+                                          .buildInputDecoration_1(
+                                              hint_text: "Pin Code"),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 8),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        fetchLocations(context);
+                                      },
+                                      child: Text(
+                                        'Get Locations',
+                                        style: TextStyle(
+                                            color: MyTheme.accent_color,
+                                            fontStyle: FontStyle.italic,
+                                            decoration:
+                                                TextDecoration.underline),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              Container(
+                                height: 40,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: Colors
+                                        .grey, // You can customize the border color here
+                                  ),
+                                ),
+                                child: DropdownButton<String>(
+                                  isExpanded: true,
+                                  hint: Text(
+                                    'Select Location',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                  disabledHint: Text(
+                                    'Fetch Locations first',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                  value: locationDropdownValue,
+                                  icon: Icon(Icons.arrow_drop_down),
+                                  iconSize: 24,
+                                  elevation: 16,
+                                  underline: SizedBox(), // Remove the underline
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors
+                                        .black, // You can customize the text color here
+                                  ),
+                                  onChanged: isDropdownEnabled
+                                      ? (String? newValue) {
+                                          setState(() {
+                                            locationDropdownValue = newValue!;
+                                            getAddressValues();
+                                          });
+                                        }
+                                      : null,
+                                  items: locationsList
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+
+                    // Row(
+                    //   children: [
+                    //     Text(addressName ?? 'no'),
+                    //     Text(districtName ?? 'no'),
+                    //     Text(addressCircle ?? 'no'),
+                    //     Text(addressRegion ?? 'no'),
+                    //   ],
+                    // ),
 
                     Row(
                       children: [
@@ -872,10 +935,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           child: Text('Add Record'),
                           onPressed: () {
                             _addAddressToHive(
-                                districtDropdownValue,
-                                talukDropdownValue,
-                                _hobliController.text,
-                                _villageController.text);
+                              pincode: _pinCodeController.text,
+                              locationDropdownValue: locationDropdownValue,
+                            );
                           },
                         ),
                       ],

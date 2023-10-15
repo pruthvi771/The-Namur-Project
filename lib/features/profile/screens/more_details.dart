@@ -104,9 +104,9 @@ class _MoreDetailsState extends State<MoreDetails> {
   late Future<BuyerData> _buyerUserDataFuture;
 
   Future<BuyerData> _getUserData() async {
-    // AuthUser user = await AuthRepository().currentUser!;
-    var userId = FirebaseAuth.instance.currentUser!.uid;
-    return FirestoreRepository().getBuyerData(userId: userId);
+    AuthUser user = AuthRepository().currentUser!;
+    // var userId = FirebaseAuth.instance.currentUser!.uid;
+    return FirestoreRepository().getBuyerData(userId: user.userId);
   }
 
   @override
@@ -391,6 +391,33 @@ class _MoreDetailsState extends State<MoreDetails> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 5, left: 7, right: 7),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Expanded(
+                                                    child: Text(
+                                                  'Pincode',
+                                                  style: TextStyle(
+                                                      fontSize: 13.5,
+                                                      fontWeight:
+                                                          FontWeight.w800),
+                                                )),
+                                                Expanded(
+                                                    flex: 2,
+                                                    child: Text(
+                                                      item.pincode,
+                                                      style: TextStyle(
+                                                        fontSize: 13.5,
+                                                      ),
+                                                    )),
+                                              ],
+                                            ),
+                                          ),
                                           Padding(
                                             padding: const EdgeInsets.only(
                                                 top: 5, left: 7, right: 7),

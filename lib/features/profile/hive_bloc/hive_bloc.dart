@@ -1,3 +1,6 @@
+import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_event.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_state.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
@@ -5,6 +8,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 
 class HiveBloc extends Bloc<HiveEvent, HiveState> {
+  FirestoreRepository firestoreRepository = FirestoreRepository();
+
   HiveBloc() : super(Loading()) {
     on<HiveDataRequested>((event, emit) async {
       // emit(Loading());
@@ -43,6 +48,17 @@ class HiveBloc extends Bloc<HiveEvent, HiveState> {
         emit(Error('No Data Found'));
         emit(HiveDataNotReceived());
       }
+    });
+
+    on<SyncHiveToFirestoreRequested>((event, emit) async {
+      emit(Loading());
+
+      AuthUser user = AuthRepository().currentUser!;
+
+      await firestoreRepository.saveProfileDataToFirestore(
+        profileData: event.profileData,
+        userId: user.userId,
+      );
     });
   }
 }
