@@ -46,13 +46,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   List<String> taluks = [];
 
-  String districtDropdownValue = addressList.districtTalukMap[0][0] as String;
-  String talukDropdownValue = addressList.districtTalukMap[1][0] as String;
+  String? districtDropdownValue;
+  String? talukDropdownValue;
 
-  String landDropdownValue = '';
+  String? landDropdownValue;
 
-  String cropDropdownValue = '';
-  String equipmentDropdownValue = '';
+  String? cropDropdownValue;
+  String? equipmentDropdownValue;
+
+  bool talukDropdownEnabled = false;
 
   void _addAddressToHive(district, taluk, hobli, village) async {
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
@@ -405,13 +407,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  List<Crop> getCropsForSyno(ProfileData profileData, String landSyno) {
+  List<Crop> getCropsForSyno(ProfileData profileData, String? landSyno) {
+    if (landSyno == null) {
+      return [];
+    }
     int index = profileData.land.indexWhere((land) => land.syno == landSyno);
     // if (index != -1) {
     return profileData.land[index].crops;
   }
 
-  List<String> getMachinesForSyno(ProfileData profileData, String landSyno) {
+  List<String> getMachinesForSyno(ProfileData profileData, String? landSyno) {
+    if (landSyno == null) {
+      return [];
+    }
     int index = profileData.land.indexWhere((land) => land.syno == landSyno);
     // if (index != -1) {
     return profileData.land[index].equipments;
@@ -685,6 +693,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     //Dropdown for district
                     DropdownButtonWidget(
                         'District',
+                        'Select District',
                         districts.map((district) {
                           return DropdownMenuItem<String>(
                             value: district[0] as String,
@@ -705,6 +714,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     // Dropdown for Taluk
                     DropdownButtonWidget(
                         'Taluk',
+                        'Select Taluk',
                         taluks.map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
@@ -821,6 +831,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               _synoController.text,
                               _village2Controller.text,
                             );
+                            landDropdownValue = null;
                           },
                         ),
                       ],
@@ -862,17 +873,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         : Column(
                             children: [
                               DropdownButtonWidget(
+                                  'Land',
                                   'Select Land',
                                   List.generate(
-                                    state.profileData.land.length + 1,
+                                    state.profileData.land.length,
                                     (index) {
-                                      var item = [
-                                        Land()
-                                          ..village = ''
-                                          ..area = 0
-                                          ..syno = '',
-                                        ...state.profileData.land
-                                      ][index];
+                                      var item = state.profileData.land[index];
                                       return DropdownMenuItem(
                                         child: Row(
                                           mainAxisAlignment:
@@ -897,8 +903,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 });
                               }),
                               Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 8, top: 10),
+                                padding: const EdgeInsets.only(
+                                    left: 8, top: 10, bottom: 5),
                                 child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
@@ -912,7 +918,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   ),
                                 ),
                               ),
-                              if (landDropdownValue.isNotEmpty)
+                              if (landDropdownValue != null)
                                 Align(
                                   alignment: Alignment.topLeft,
                                   child: Wrap(
@@ -954,6 +960,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   children: [
                                     DropdownButtonWidget(
                                         '',
+                                        'Select Crop',
                                         cropsList.map<DropdownMenuItem<String>>(
                                             (String value) {
                                           return DropdownMenuItem<String>(
@@ -991,8 +998,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               ),
 
                               Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 8, top: 10),
+                                padding: const EdgeInsets.only(
+                                    left: 8, top: 10, bottom: 5),
                                 child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
@@ -1006,7 +1013,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   ),
                                 ),
                               ),
-                              if (landDropdownValue.isNotEmpty)
+                              if (landDropdownValue != null)
                                 Align(
                                   alignment: Alignment.topLeft,
                                   child: Wrap(
@@ -1046,6 +1053,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   children: [
                                     DropdownButtonWidget(
                                         '',
+                                        'Select Equipments',
                                         equipmentsList
                                             .map<DropdownMenuItem<String>>(
                                                 (String value) {
@@ -1284,24 +1292,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Column DropdownButtonWidget(
       String title,
+      String hintText,
       List<DropdownMenuItem<String>>? itemList,
-      String dropdownValue,
+      String? dropdownValue,
       Function(String) onChanged) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 4, bottom: 5),
-          child: Text(
-            title,
-            style: TextStyle(
-                // color: MyTheme.accent_color,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                letterSpacing: .5,
-                fontFamily: 'Poppins'),
-          ),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.only(left: 4, bottom: 5),
+        //   child: Text(
+        //     title,
+        //     style: TextStyle(
+        //         // color: MyTheme.accent_color,
+        //         fontSize: 12,
+        //         fontWeight: FontWeight.w500,
+        //         letterSpacing: .5,
+        //         fontFamily: 'Poppins'),
+        //   ),
+        // ),
         Container(
           height: 40,
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
@@ -1312,6 +1321,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
           ),
           child: DropdownButton<String>(
+            hint: Text(
+              hintText,
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 14,
+              ),
+            ),
             isExpanded: true,
             value: dropdownValue,
             icon: Icon(Icons.arrow_drop_down),

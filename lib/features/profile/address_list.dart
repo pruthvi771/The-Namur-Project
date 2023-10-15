@@ -1,8 +1,8 @@
 var districtTalukMap3 = [
-  [
-    '',
-    ['']
-  ],
+  // [
+  //   '',
+  //   ['']
+  // ],
   [
     'Bagalkote',
     [
@@ -32,10 +32,10 @@ var districtTalukMap3 = [
 ];
 
 List<List<Object>> districtTalukMap = [
-  [
-    '',
-    ['']
-  ],
+  // [
+  //   '',
+  //   ['']
+  // ],
   [
     'Bagalkote',
     [
@@ -428,7 +428,7 @@ List<List<Object>> districtTalukMap = [
 ];
 
 List<String> crops = [
-  '',
+  // '',
   'Banana',
   'Beetroot',
   'Betel Nut',
@@ -492,7 +492,7 @@ List<String> crops = [
 ];
 
 List<String> equipment = [
-  '',
+  // '',
   'Backhoe',
   'Billhook',
   'Car',
@@ -509,7 +509,7 @@ List<String> equipment = [
 ];
 
 var districtList = [
-  '',
+  // '',
   'Bagalkote',
   'Ballari',
   'Belagavi',
