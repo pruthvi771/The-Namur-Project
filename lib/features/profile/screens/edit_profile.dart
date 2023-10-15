@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/custom/input_decorations.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
@@ -7,6 +9,8 @@ import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_event.d
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_state.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/more_details.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -55,6 +59,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   String? equipmentDropdownValue;
 
   bool talukDropdownEnabled = false;
+
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   void _addAddressToHive(district, taluk, hobli, village) async {
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
@@ -172,6 +178,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
       await dataBox.put(newData.id, newData);
       print('object updated');
+
+      try {
+        var userId = FirebaseAuth.instance.currentUser!.uid;
+        _firestore.collection('buyer').doc(userId).update({
+          'landDetails': {
+            syno: {
+              'area': areaDouble,
+              'village': village,
+              'crops': [],
+              'equipments': [],
+            },
+          },
+        });
+      } catch (e) {
+        ToastComponent.showDialog(
+            'Could not sync your changes. Please check your internet connection.',
+            gravity: Toast.center,
+            duration: Toast.lengthLong);
+      }
     }
 
     _areaController.clear();
@@ -287,7 +312,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (dataCollectionType == DataCollectionType.address) {
       savedData!.address.removeAt(index);
     } else if (dataCollectionType == DataCollectionType.land) {
-      landDropdownValue = '';
+      landDropdownValue = null;
       savedData!.land.removeAt(index);
     }
 
@@ -346,7 +371,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ..name = crop
         ..yieldOfCrop = yieldOfCropDouble);
 
+      var cropDict = [];
+
+      for (crop in savedData.land[index].crops) {
+        cropDict.add({
+          'name': crop.name,
+          'yield': crop.yieldOfCrop,
+        });
+      }
+
       dataBox.put(savedData.id, savedData);
+      try {
+        var userId = FirebaseAuth.instance.currentUser!.uid;
+
+        _firestore.collection('buyer').doc(userId).update({
+          'crops': cropDict,
+        });
+      } catch (e) {
+        ToastComponent.showDialog(
+            'Could not sync your changes. Please check your internet connection.',
+            gravity: Toast.center,
+            duration: Toast.lengthLong);
+      }
 
       print('Crop added');
     } else {
@@ -449,6 +495,26 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       savedData.land[index].equipments.add(equipment);
 
       dataBox.put(savedData.id, savedData);
+
+      var equipmentDict = [];
+
+      for (equipment in savedData.land[index].equipments) {
+        equipmentDict.add(equipment);
+      }
+
+      dataBox.put(savedData.id, savedData);
+      try {
+        var userId = FirebaseAuth.instance.currentUser!.uid;
+
+        _firestore.collection('buyer').doc(userId).update({
+          'machines': equipmentDict,
+        });
+      } catch (e) {
+        ToastComponent.showDialog(
+            'Could not sync your changes. Please check your internet connection.',
+            gravity: Toast.center,
+            duration: Toast.lengthLong);
+      }
 
       print('equipment added');
     } else {
