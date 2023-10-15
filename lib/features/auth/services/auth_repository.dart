@@ -139,7 +139,26 @@ class AuthRepository {
             name: userCredential.user!.displayName!,
             email: userCredential.user!.email!,
             photoURL: userCredential.user!.photoURL!);
-        await createEmptyHiveDataInstance(userCredential.user!.uid);
+        // await createEmptyHiveDataInstance(userCredential.user!.uid);
+        var dataBox = Hive.box<ProfileData>('profileDataBox3');
+
+        var kyc = KYC()
+          ..aadhar = ''
+          ..pan = ''
+          ..gst = '';
+
+        var emptyProfileData = ProfileData()
+          ..id = 'profile'
+          ..updated = true
+          ..address = []
+          ..kyc = kyc
+          ..land = [];
+        dataBox.put(emptyProfileData.id, emptyProfileData);
+
+        saveProfileDataToFirestore(emptyProfileData, userCredential.user!.uid);
+
+        // Initialize Hive and save data
+        await dataBox.put(emptyProfileData.id, emptyProfileData);
       } else {
         await syncFirestoreDataWithHive(userCredential.user!.uid);
       }
