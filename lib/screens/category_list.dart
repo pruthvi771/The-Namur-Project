@@ -1,8 +1,7 @@
 import 'package:active_ecommerce_flutter/custom/box_decorations.dart';
 import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
-import 'package:active_ecommerce_flutter/custom/useful_elements.dart';
-import 'package:active_ecommerce_flutter/data_model/category_response.dart';
+import 'package:active_ecommerce_flutter/features/screen_database.dart';
 import 'package:active_ecommerce_flutter/helpers/shimmer_helper.dart';
 import 'package:active_ecommerce_flutter/presenter/bottom_appbar_index.dart';
 import 'package:active_ecommerce_flutter/screens/calender/calender.dart';
@@ -108,6 +107,13 @@ class _CategoryListState extends State<CategoryList> {
         SliverList(
             delegate: SliverChildListDelegate([
           TitleBar(),
+
+          TextButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ScreenDatabase()));
+              },
+              child: Text('Screen database')),
 
           SizedBox(height: 24),
 
