@@ -47,10 +47,40 @@ class _ProductPostState extends State<ProductPost> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // key: homeData.scaffoldKey,
-      // drawer: const MainDrawer(),
-      backgroundColor: Colors.transparent,
-      appBar: buildCustomAppBar(context),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(AppLocalizations.of(context)!.product_post_ucf,
+            style: TextStyle(
+                color: MyTheme.white,
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+                letterSpacing: .5,
+                fontFamily: 'Poppins')),
+        centerTitle: true,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xff107B28), Color(0xff4C7B10)]),
+          ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              Icons.keyboard_arrow_left,
+              size: 35,
+              color: MyTheme.white,
+            ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+        ],
+      ),
       body: bodycontent(),
     );
   }
@@ -391,59 +421,6 @@ class _ProductPostState extends State<ProductPost> {
           ),
         )
       ],
-    );
-  }
-
-  PreferredSize buildCustomAppBar(context) {
-    return PreferredSize(
-      preferredSize: Size(DeviceInfo(context).width!, 80),
-      child: Container(
-        height: 92,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xff107B28), Color(0xff4C7B10)])),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20.0, right: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  width: 30,
-                ),
-                Center(
-                  child: Text(AppLocalizations.of(context)!.product_post_ucf,
-                      style: TextStyle(
-                          color: MyTheme.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: .5,
-                          fontFamily: 'Poppins')),
-                ),
-                Container(
-                  margin: EdgeInsets.only(right: 0),
-                  height: 30,
-                  child: Container(
-                    child: InkWell(
-                      //padding: EdgeInsets.zero,
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Icon(
-                        Icons.keyboard_arrow_left,
-                        size: 35,
-                        color: MyTheme.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

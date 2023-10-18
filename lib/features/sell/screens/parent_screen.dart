@@ -44,7 +44,6 @@ class _ParentScreenState extends State<ParentScreen> {
       child: Scaffold(
         // key: homeData.scaffoldKey,
         drawer: const MainDrawer(),
-        backgroundColor: Colors.transparent,
         appBar: buildCustomAppBar(context),
         body: bodycontent(),
       ),
