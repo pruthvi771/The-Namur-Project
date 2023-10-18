@@ -80,7 +80,7 @@ class ScreenDatabase extends StatefulWidget {
 class _ScreenDatabaseState extends State<ScreenDatabase> {
   @override
   Widget build(BuildContext context) {
-    List<List<Object>> screensList = [
+    List screensList = [
       ['Parent screen', ParentScreen()],
       ['Product Inventory', ProductInventory()],
       ['More Detail', MoreDetail()],
@@ -182,7 +182,7 @@ class _ScreenDatabaseState extends State<ScreenDatabase> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        screensList[index][1] as Widget));
+                                        screensList[index][1]));
                           },
                           child: Text(
                             '${index + 1}. ${screensList[index][0] as String}',

@@ -1,11 +1,8 @@
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/drawer/drawer.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
-import 'package:active_ecommerce_flutter/screens/option/option.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ParentScreen extends StatefulWidget {
   const ParentScreen({Key? key}) : super(key: key);
@@ -49,18 +46,8 @@ class _ParentScreenState extends State<ParentScreen> {
         drawer: const MainDrawer(),
         backgroundColor: Colors.transparent,
         appBar: buildCustomAppBar(context),
-        body: buildBody(),
+        body: bodycontent(),
       ),
-    );
-  }
-
-  RefreshIndicator buildBody() {
-    return RefreshIndicator(
-      color: MyTheme.white,
-      backgroundColor: MyTheme.primary_color,
-      onRefresh: _onPageRefresh,
-      displacement: 10,
-      child: bodycontent(),
     );
   }
 
