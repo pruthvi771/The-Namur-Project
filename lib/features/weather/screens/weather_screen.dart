@@ -162,29 +162,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
       physics: BouncingScrollPhysics(),
       child: Column(
         children: [
-          // Padding(
-          //   padding: const EdgeInsets.all(20.0),
-          //   child: Container(
-          //       height: 44,
-          //       width: MediaQuery.of(context).size.width,
-          //       decoration: BoxDecoration(
-          //         border: Border.all(color: MyTheme.textfield_grey),
-          //         color: MyTheme.light_grey,
-          //         borderRadius: BorderRadius.circular(5),
-          //       ),
-          //       child: Row(
-          //         children: [
-          //           Padding(
-          //             padding: const EdgeInsets.only(left: 20),
-          //             child: Text(
-          //               "577511",
-          //               style: TextStyle(
-          //                   fontWeight: FontWeight.bold, fontSize: 15),
-          //             ),
-          //           )
-          //         ],
-          //       )),
-          // ),
           BlocBuilder<WeatherSectionBloc, WeatherSectionState>(
             builder: (context, state) {
               if (state is LoadingSection)
@@ -213,7 +190,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(
-                          left: 15, right: 15, top: 0, bottom: 7),
+                          left: 30, right: 30, top: 0, bottom: 7),
                       child: CurrentWeatherWidget(
                         currentTemperature: '--',
                         currentDesc: '--',
@@ -242,30 +219,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 //     'object : ${state.responseData[0]!.locationName == dropdownValue}');
                 return Column(
                   children: [
-                    // Padding(
-                    //   padding: const EdgeInsets.all(20.0),
-                    //   child: Container(
-                    //       height: 44,
-                    //       width: MediaQuery.of(context).size.width,
-                    //       decoration: BoxDecoration(
-                    //         border: Border.all(color: MyTheme.textfield_grey),
-                    //         color: MyTheme.light_grey,
-                    //         borderRadius: BorderRadius.circular(5),
-                    //       ),
-                    //       child: Row(
-                    //         children: [
-                    //           Padding(
-                    //             padding: const EdgeInsets.only(left: 20),
-                    //             child: Text(
-                    //               state.responseData[0]!.locationName,
-                    //               style: TextStyle(
-                    //                   fontWeight: FontWeight.bold,
-                    //                   fontSize: 15),
-                    //             ),
-                    //           )
-                    //         ],
-                    //       )),
-                    // ),
                     SizedBox(
                       height: 10,
                     ),
@@ -291,7 +244,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(
-                          left: 15, right: 15, top: 0, bottom: 7),
+                          left: 30, right: 30, top: 0, bottom: 7),
                       child: CurrentWeatherWidget(
                         currentTemperature: state
                             .responseData[index]!.currentData.tempC
@@ -706,7 +659,7 @@ class CurrentWeatherWidget extends StatelessWidget {
                             '$currentTemperature°',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 60,
+                              fontSize: 50,
                               color: MyTheme.dark_font_grey,
                             ),
                           ),
@@ -714,7 +667,7 @@ class CurrentWeatherWidget extends StatelessWidget {
                             'C',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 30,
+                              fontSize: 25,
                               color: MyTheme.dark_font_grey,
                             ),
                           ),
@@ -734,7 +687,7 @@ class CurrentWeatherWidget extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 15,
+                                fontSize: 14,
                                 color: Colors.grey[800],
                               ),
                             ),

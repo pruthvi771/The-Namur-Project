@@ -374,6 +374,11 @@ class _MainDrawerState extends State<MainDrawer> {
 
                                 await dataBox2.clear();
 
+                                var dataBox3 =
+                                    Hive.box<hiveModels.SecondaryLocations>(
+                                        'secondaryLocationsBox');
+                                await dataBox3.clear();
+
                                 // final user = null;
                                 // if (user == null) {
                                 ToastComponent.showDialog('Logout Successful',

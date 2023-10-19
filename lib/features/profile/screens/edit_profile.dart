@@ -627,13 +627,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               // Expanded(child: Text('PAN')),
                               InkWell(
                                 onTap: () {
+                                  _aadharController.text =
+                                      state.profileData.kyc.aadhar;
+                                  _panController.text =
+                                      state.profileData.kyc.pan.toString();
+                                  _gstController.text =
+                                      state.profileData.kyc.gst.toString();
                                   _deleteKycFromHive();
+                                  // _editKyc();
                                 },
                                 child: CircleAvatar(
                                   radius: 12,
                                   backgroundColor: MyTheme.green,
                                   child: Icon(
-                                    Icons.delete,
+                                    Icons.edit,
                                     size: 15.0,
                                     color: Colors.white,
                                   ),
@@ -754,47 +761,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     SizedBox(
                       height: 10,
                     ),
-
-                    //Dropdown for district
-                    // DropdownButtonWidget(
-                    //     'District',
-                    //     'Select District',
-                    //     districts.map((district) {
-                    //       return DropdownMenuItem<String>(
-                    //         value: district[0] as String,
-                    //         child: Text(district[0] as String),
-                    //       );
-                    //     }).toList(),
-                    //     districtDropdownValue, (value) {
-                    //   setState(() {
-                    //     districtDropdownValue = value;
-                    //     taluks = addressList.districtTalukMap.firstWhere(
-                    //             (element) =>
-                    //                 element[0] == districtDropdownValue)[1]
-                    //         as List<String>;
-                    //     talukDropdownValue = taluks[0];
-                    //   });
-                    // }),
-
-                    // // Dropdown for Taluk
-                    // DropdownButtonWidget(
-                    //     'Taluk',
-                    //     'Select Taluk',
-                    //     taluks.map<DropdownMenuItem<String>>((String value) {
-                    //       return DropdownMenuItem<String>(
-                    //         value: value,
-                    //         child: Text(value),
-                    //       );
-                    //     }).toList(),
-                    //     talukDropdownValue, (value) {
-                    //   setState(() {
-                    //     talukDropdownValue = value;
-                    //   });
-                    // }),
-
-                    // TextFieldWidget('Hobli', _hobliController, 'Enter Hobli'),
-                    // TextFieldWidget(
-                    //     'Village', _villageController, 'Enter Village'),
 
                     // pincode textbox
                     BlocListener<AuthBloc, authState.AuthState>(
@@ -946,23 +912,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     SizedBox(
                       height: 10,
                     ),
-
-                    // TextButton(
-                    //     onPressed: () async {
-                    //       try {
-                    //         var pincode = '577511';
-                    //         print('start');
-                    //         // QuerySnapshot<Map<String, dynamic>> querySnapshot =
-                    //         //     await FirebaseFirestore.instance
-                    //         //         .collection('buyer')
-                    //         //         .where(FieldPath.documentId,
-                    //         //             isNotEqualTo: null)
-                    //         //         .where('profileData', isNotEqualTo: null)
-                    //         //         .where('profileData.address',
-                    //         //             isNotEqualTo: null)
-                    //         //         .get();
-                    //     },
-                    //     child: Text('Get Number of People')),
 
                     SizedBox(
                       height: 8,

@@ -428,7 +428,7 @@ class _MoreDetailsState extends State<MoreDetails> {
                     //Address Section
                     ExpandedTileWidget(
                       controller: _addressController,
-                      title: 'District, Taluk, Hobli, Village',
+                      title: 'Pincode, District, Hobli, Village',
                       children: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: (profileData!.address.length > 0)
