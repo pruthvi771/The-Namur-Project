@@ -7,6 +7,7 @@ import 'package:active_ecommerce_flutter/features/auth/services/firestore_reposi
 import 'package:active_ecommerce_flutter/features/profile/enum.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart'
     as hiveModels;
+import 'package:active_ecommerce_flutter/features/weather/weather_repository.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 // import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
 // import 'package:firebase_auth/firebase_auth.dart';
@@ -66,6 +67,8 @@ class _OtpState extends State<Otp> {
   //controllers
   TextEditingController _verificationCodeController = TextEditingController();
   OtpFieldController _verificationController = OtpFieldController();
+  WeatherRepository _weatherRepository = WeatherRepository();
+
   @override
   void initState() {
     //on Splash Screen hide statusbar
@@ -96,7 +99,8 @@ class _OtpState extends State<Otp> {
 
   onPressConfirm(BuildContext buildContext) async {
     // var code = _verificationController.toString();
-    String code = otp.join('');
+    // String code = otp.join('');
+    String code = enteredOTP;
     print('OTP: $code');
 
     if (code == "") {
@@ -107,7 +111,7 @@ class _OtpState extends State<Otp> {
       );
       return;
     }
-    if (otp.length < 6) {
+    if (code.length < 6) {
       ToastComponent.showDialog(
         'Please enter full code',
         gravity: Toast.center,
@@ -171,17 +175,25 @@ class _OtpState extends State<Otp> {
     print("new Latitude: ${_locationData.latitude}");
     print("new Longitude: ${_locationData.longitude}");
 
+    String? address = await _weatherRepository.getNameFromLatLong(
+        _locationData.latitude!, _locationData.longitude!);
+
+    if (address == null) {
+      print('Error getting address from lat and long');
+    }
+
     var primaryLocation = hiveModels.PrimaryLocation()
       ..id = "locationData"
       ..isAddress = false
       ..latitude = _locationData.latitude as double
       ..longitude = _locationData.longitude as double
-      ..address = "";
+      ..address = address;
 
     await dataBox.put(primaryLocation.id, primaryLocation);
   }
 
-  List<String> otp = List.filled(6, ''); // Change the size to 6
+  // List<String> otp = List.filled(6, ''); // Change the size to 6
+  String enteredOTP = '';
 
   @override
   Widget build(BuildContext context) {
@@ -242,149 +254,17 @@ class _OtpState extends State<Otp> {
                     app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
                 child: Scaffold(
                   backgroundColor: Colors.white,
-                  body: Stack(
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          ClipRRect(
-                              child: Container(
-                                  height:
-                                      MediaQuery.of(context).size.height / 2,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Image.asset(
-                                    'assets/Group 211.png',
-                                    fit: BoxFit.cover,
-                                  ))),
-                          SizedBox()
-                        ],
+                  bottomSheet: buildBody(context, _screen_width),
+                  // body: buildBody(context, _screen_width),
+                  body: SafeArea(
+                    child: Container(
+                      height: MediaQuery.of(context).size.height / 1.7,
+                      width: _screen_width,
+                      child: Image.asset(
+                        "assets/Group 211.png",
+                        fit: BoxFit.cover,
                       ),
-                      Positioned(
-                        top: MediaQuery.of(context).size.height / 2 - 20,
-                        // left: 0,
-                        // right: 0,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(),
-                            Container(
-                              decoration: BoxDecoration(
-                                  color: MyTheme.white,
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(15),
-                                      topRight: Radius.circular(15))),
-                              width: _screen_width,
-                              height: MediaQuery.of(context).size.height / 2.01,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        bottom: 20.0, top: 20),
-                                    child: Text(
-                                      "Enter OTP Code",
-                                      /*  + (_verify_by == "email"
-                                      ? AppLocalizations.of(context)!.email_account_ucf
-                                      : AppLocalizations.of(context)!.phone_number_ucf),*/
-                                      style: TextStyle(
-                                          color: MyTheme.primary_color,
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                  ),
-                                  SizedBox(height: 20),
-                                  Container(
-                                    width: _screen_width * (3 / 4),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Center(
-                                          child: OTPTextField(
-                                            obscureText: true,
-                                            controller: _verificationController,
-                                            length:
-                                                6, // Change this to 6 for a 6-digit OTP
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            textFieldAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            otpFieldStyle: OtpFieldStyle(
-                                              backgroundColor:
-                                                  Color(0xffC3FF77),
-                                            ),
-                                            fieldWidth: 40,
-                                            fieldStyle: FieldStyle.box,
-                                            outlineBorderRadius: 10,
-                                            style: TextStyle(fontSize: 17),
-                                            onChanged: (pin) {
-                                              setState(() {
-                                                otp = pin.split('');
-                                              });
-                                              print("Changed: " + pin);
-                                            },
-                                            onCompleted: (pin) {
-                                              print("Completed: " + pin);
-                                            },
-                                          ),
-                                        ),
-                                        SizedBox(height: 80),
-                                        Center(
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 40.0),
-                                            child: Container(
-                                              height: 50,
-                                              width: 150,
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color: MyTheme
-                                                          .textfield_grey,
-                                                      width: 1),
-                                                  borderRadius:
-                                                      const BorderRadius.all(
-                                                          Radius.circular(
-                                                              12.0))),
-                                              child: Btn.basic(
-                                                minWidth: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                color: MyTheme.accent_color,
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        const BorderRadius.all(
-                                                            Radius.circular(
-                                                                12.0))),
-                                                child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .confirm_ucf,
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 18,
-                                                      letterSpacing: .5,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      fontFamily: 'Poppins'),
-                                                ),
-                                                onPressed: () {
-                                                  onPressConfirm(context);
-                                                },
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
+                    ),
                   ),
                 ));
           },
@@ -393,32 +273,280 @@ class _OtpState extends State<Otp> {
     );
   }
 
-  Widget otpBoxBuilder(_controller, index) {
+  Container buildBody(BuildContext context, double _screen_width) {
     return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Color(0xffC3FF77),
-      ),
-      width: 50, // Adjust the width to accommodate 6 digits
-      height: 50,
-      child: TextFormField(
-        controller: _controller,
-        textAlign: TextAlign.center,
-        keyboardType: TextInputType.number,
-        inputFormatters: [LengthLimitingTextInputFormatter(1)],
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          disabledBorder: InputBorder.none,
-          counterText: '',
-          hintStyle: TextStyle(color: Colors.black, fontSize: 20.0),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              height: 20,
+            ),
+            Container(
+              decoration: BoxDecoration(
+                  // color: MyTheme.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(15),
+                      topRight: Radius.circular(15))),
+              width: _screen_width,
+              height: MediaQuery.of(context).size.height / 2.01,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 20.0, top: 20),
+                    child: Text(
+                      "Enter OTP Code",
+                      /*  + (_verify_by == "email"
+                                  ? AppLocalizations.of(context)!.email_account_ucf
+                                  : AppLocalizations.of(context)!.phone_number_ucf),*/
+                      style: TextStyle(
+                          color: MyTheme.primary_color,
+                          fontSize: 25,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Container(
+                    width: _screen_width * (3 / 4),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Center(
+                        //   child: OTPTextField(
+                        //     obscureText: true,
+                        //     controller: _verificationController,
+                        //     length: 6, // Change this to 6 for a 6-digit OTP
+                        //     width: MediaQuery.of(context).size.width,
+                        //     textFieldAlignment: MainAxisAlignment.spaceAround,
+                        //     otpFieldStyle: OtpFieldStyle(
+                        //       backgroundColor: Color(0xffC3FF77),
+                        //     ),
+                        //     fieldWidth: 40,
+                        //     fieldStyle: FieldStyle.box,
+                        //     outlineBorderRadius: 10,
+                        //     style: TextStyle(fontSize: 17),
+                        //     onChanged: (pin) {
+                        //       setState(() {
+                        //         otp = pin.split('');
+                        //       });
+                        //       print("Changed: " + pin);
+                        //     },
+                        //     onCompleted: (pin) {
+                        //       print("Completed: " + pin);
+                        //     },
+                        //   ),
+                        // ),
+                        Center(
+                          child: OTPInputField(
+                            onCompleted: (value) {
+                              // setState(() {
+                              //   enteredOTP = value;
+                              // });
+                              print('Completed: $value');
+                            },
+                            onOTPChanged: (otpValue) {
+                              setState(() {
+                                enteredOTP = otpValue;
+                              });
+                              print('Changed: $otpValue');
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 80),
+                        Center(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 40.0),
+                            child: Container(
+                              height: 50,
+                              width: 150,
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: MyTheme.textfield_grey, width: 1),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(12.0))),
+                              child: Btn.basic(
+                                minWidth: MediaQuery.of(context).size.width,
+                                color: MyTheme.accent_color,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(12.0))),
+                                child: Text(
+                                  AppLocalizations.of(context)!.confirm_ucf,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      letterSpacing: .5,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Poppins'),
+                                ),
+                                onPressed: () {
+                                  onPressConfirm(context);
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-        onChanged: (value) {
-          if (value.length == 1) {
-            FocusScope.of(context).nextFocus();
-          }
-          otp[index] = value; // Update the corresponding index in the otp list
-        },
       ),
     );
+  }
+
+  // Widget otpBoxBuilder(_controller, index) {
+  //   return Container(
+  //     decoration: BoxDecoration(
+  //       borderRadius: BorderRadius.circular(10),
+  //       color: Color(0xffC3FF77),
+  //     ),
+  //     width: 50, // Adjust the width to accommodate 6 digits
+  //     height: 50,
+  //     child: TextFormField(
+  //       controller: _controller,
+  //       textAlign: TextAlign.center,
+  //       keyboardType: TextInputType.number,
+  //       inputFormatters: [LengthLimitingTextInputFormatter(1)],
+  //       decoration: InputDecoration(
+  //         border: InputBorder.none,
+  //         disabledBorder: InputBorder.none,
+  //         counterText: '',
+  //         hintStyle: TextStyle(color: Colors.black, fontSize: 20.0),
+  //       ),
+  //       onChanged: (value) {
+  //         if (value.length == 1) {
+  //           FocusScope.of(context).nextFocus();
+  //         }
+  //         otp[index] = value; // Update the corresponding index in the otp list
+  //       },
+  //     ),
+  //   );
+  // }
+}
+
+class OTPInputField extends StatefulWidget {
+  final ValueChanged<String> onCompleted;
+  final Function(String) onOTPChanged; // Renamed to onOTPChanged
+
+  // OTPInputField({required this.onOTPChanged}); // Updated constructor parameter
+
+  OTPInputField({required this.onCompleted, required this.onOTPChanged});
+
+  @override
+  _OTPInputFieldState createState() => _OTPInputFieldState();
+}
+
+class _OTPInputFieldState extends State<OTPInputField> {
+  late List<FocusNode> _focusNodes;
+  late List<TextEditingController> _controllers;
+  final int numberOfFields =
+      6; // Change this to the desired number of OTP digits
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNodes = List.generate(numberOfFields, (index) => FocusNode());
+    _controllers =
+        List.generate(numberOfFields, (index) => TextEditingController());
+  }
+
+  @override
+  void dispose() {
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
+    for (var node in _focusNodes) {
+      node.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RawKeyboardListener(
+      focusNode: FocusNode(),
+      onKey: (RawKeyEvent event) {
+        if (event.runtimeType == RawKeyDownEvent &&
+            event.logicalKey == LogicalKeyboardKey.backspace) {
+          // Handle backspace button press
+          _handleBackspace();
+        }
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: List.generate(
+          numberOfFields,
+          (index) => SizedBox(
+            width: 40,
+            child: TextField(
+              controller: _controllers[index],
+              focusNode: _focusNodes[index],
+              keyboardType: TextInputType.number,
+              textAlign: TextAlign.center,
+              maxLength: 1,
+              style: TextStyle(fontSize: 15),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Color(0xffC3FF77),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: MyTheme.green),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: Colors.black),
+                ),
+                counterText: '',
+              ),
+              onChanged: (value) {
+                _checkAndMoveFocus(index, value);
+
+                // All OTP fields are filled
+                String otp =
+                    _controllers.map((controller) => controller.text).join();
+                widget.onOTPChanged(otp);
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _checkAndMoveFocus(int index, String value) {
+    if (value.isNotEmpty) {
+      if (index < numberOfFields - 1) {
+        _focusNodes[index + 1].requestFocus();
+      } else {
+        // All OTP fields are filled
+        String otp = _controllers.map((controller) => controller.text).join();
+        widget.onCompleted(otp);
+      }
+    } else {
+      if (index > 0) {
+        _focusNodes[index - 1].requestFocus();
+      }
+    }
+  }
+
+  void _handleBackspace() {
+    for (int i = numberOfFields - 1; i >= 0; i--) {
+      if (_controllers[i].text.isNotEmpty) {
+        _controllers[i].clear();
+        _focusNodes[i].requestFocus();
+        _triggerOnOTPChanged();
+        return;
+      }
+    }
+  }
+
+  void _triggerOnOTPChanged() {
+    String otp = _controllers.map((controller) => controller.text).join();
+    widget.onOTPChanged(otp); // Call the onOTPChanged callback
   }
 }

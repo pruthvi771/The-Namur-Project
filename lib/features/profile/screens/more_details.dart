@@ -8,7 +8,6 @@ import 'package:active_ecommerce_flutter/features/profile/screens/edit_profile.d
 import 'package:active_ecommerce_flutter/features/profile/screens/land_screen.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive/hive.dart';

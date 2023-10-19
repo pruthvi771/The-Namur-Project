@@ -108,12 +108,12 @@ class _CategoryListState extends State<CategoryList> {
             delegate: SliverChildListDelegate([
           TitleBar(),
 
-          TextButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ScreenDatabase()));
-              },
-              child: Text('Screen database')),
+          // TextButton(
+          //     onPressed: () {
+          //       Navigator.push(context,
+          //           MaterialPageRoute(builder: (context) => ScreenDatabase()));
+          //     },
+          //     child: Text('Screen database')),
 
           SizedBox(height: 24),
 
