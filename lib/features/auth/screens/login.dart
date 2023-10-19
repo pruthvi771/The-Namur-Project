@@ -8,6 +8,7 @@ import 'package:active_ecommerce_flutter/features/auth/services/firestore_reposi
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart'
     as hiveModels;
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
+import 'package:active_ecommerce_flutter/features/weather/weather_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 // import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
@@ -56,6 +57,8 @@ class _LoginState extends State<Login> {
   String? newPhone = '';
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+
+  WeatherRepository _weatherRepository = WeatherRepository();
 
   @override
   void initState() {
@@ -160,12 +163,19 @@ class _LoginState extends State<Login> {
     print("new Latitude: ${_locationData.latitude}");
     print("new Longitude: ${_locationData.longitude}");
 
+    String? address = await _weatherRepository.getNameFromLatLong(
+        _locationData.latitude!, _locationData.longitude!);
+
+    if (address == null) {
+      print('Error getting address from lat and long');
+    }
+
     var primaryLocation = hiveModels.PrimaryLocation()
       ..id = "locationData"
       ..isAddress = false
       ..latitude = _locationData.latitude as double
       ..longitude = _locationData.longitude as double
-      ..address = "";
+      ..address = address;
 
     await dataBox.put(primaryLocation.id, primaryLocation);
   }

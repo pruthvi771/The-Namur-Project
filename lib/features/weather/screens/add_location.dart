@@ -66,6 +66,7 @@ class _AddWeatherLocationState extends State<AddWeatherLocation> {
     BlocProvider.of<WeatherSectionBloc>(context).add(
       WeatherSectionDataRequested(),
     );
+    Navigator.pop(context);
   }
 
   Future<void> deleteSecondaryLocationFromHive(index) async {
@@ -100,6 +101,20 @@ class _AddWeatherLocationState extends State<AddWeatherLocation> {
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
+
+    var primaryDataBox =
+        Hive.box<hiveModels.PrimaryLocation>('primaryLocationBox');
+
+    var savedPrimaryData = primaryDataBox.get('locationData');
+
+    if (savedPrimaryData != null) {
+      if (savedPrimaryData.address == districtDropdownValue) {
+        ToastComponent.showDialog('This location is already added',
+            gravity: Toast.center, duration: Toast.lengthLong);
+        return;
+      }
+    }
+    // savedPrimaryData.isAddress = true;
 
     var SecondaryDataBox =
         Hive.box<hiveModels.SecondaryLocations>('secondaryLocationsBox');

@@ -156,4 +156,22 @@ class WeatherRepository {
       }
     }
   }
+
+  Future<String?> getNameFromLatLong(double lat, double long) async {
+    var response;
+
+    response = await http.get(Uri.parse(
+        '$BASE_URL/current.json?key=$API_KEY&q=${lat.toString()},${long.toString()}&aqi=no'));
+
+    if (response.statusCode == 200) {
+      // print('I am here');
+      var jsonResponse = json.decode(response.body);
+      // print(jsonResponse);
+      return jsonResponse['location']['name'];
+    } else {
+      print('error happened in getNameFromLatLong');
+      return null;
+      // throw Exception('Failed to load album');
+    }
+  }
 }
