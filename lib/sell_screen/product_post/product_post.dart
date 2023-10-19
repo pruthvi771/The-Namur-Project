@@ -52,7 +52,6 @@ class _ProductPostState extends State<ProductPost> {
         title: Text(AppLocalizations.of(context)!.product_post_ucf,
             style: TextStyle(
                 color: MyTheme.white,
-                fontSize: 20,
                 fontWeight: FontWeight.w500,
                 letterSpacing: .5,
                 fontFamily: 'Poppins')),

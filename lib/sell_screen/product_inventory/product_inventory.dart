@@ -43,7 +43,6 @@ class _ProductInventoryState extends State<ProductInventory> {
         title: Text(AppLocalizations.of(context)!.product_inventory_ucf,
             style: TextStyle(
                 color: MyTheme.white,
-                fontSize: 18,
                 fontWeight: FontWeight.w500,
                 letterSpacing: .5,
                 fontFamily: 'Poppins')),
