@@ -249,200 +249,269 @@ class _LoginState extends State<Login> {
             width: _screen_width,
             height: MediaQuery.of(context).size.height / 2.01,
             child: Column(
-              // mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  "ನಮ್ಮೂರ್",
-                  style: TextStyle(
-                    color: MyTheme.primary_color,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 15,
-                    fontFamily: 'Poppins',
+                Padding(
+                  padding: EdgeInsets.only(top: 10),
+                  child: Column(
+                    children: [
+                      Text(
+                        "ನಮ್ಮೂರ್",
+                        style: TextStyle(
+                          color: MyTheme.primary_color,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20,
+                          fontFamily: 'Poppins',
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      Text(
+                        "Welcome to Namur",
+                        style: TextStyle(
+                            color: MyTheme.primary_color,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 22,
+                            fontFamily: 'Poppins'),
+                      ),
+                    ],
                   ),
-                ),
-                SizedBox(height: 5),
-                Text(
-                  "Welcome to namur",
-                  style: TextStyle(
-                      color: MyTheme.primary_color,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 15,
-                      fontFamily: 'Poppins'),
                 ),
 
                 // SizedBox(height: 10),
 
-                SizedBox(height: 30),
+                // SizedBox(height: 30),
 
                 // phone text field
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
+                Expanded(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Container(
-                        height: 65,
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: IntlPhoneField(
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(8),
-                            labelText: 'Mobile Number',
-                            labelStyle: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 13,
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(left: 20, right: 20, top: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Container(
+                              height: 65,
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: IntlPhoneField(
+                                disableLengthCheck: true,
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.all(8),
+                                  labelText: 'Mobile Number',
+                                  labelStyle: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 13,
+                                  ),
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide(),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                        color: Colors
+                                            .green), // Set your desired border color when focused
+                                  ),
+                                ),
+                                cursorColor: MyTheme.green_light,
+                                dropdownTextStyle: TextStyle(
+                                    color: MyTheme.font_grey, fontSize: 13),
+                                style: TextStyle(color: MyTheme.font_grey),
+                                flagsButtonPadding:
+                                    EdgeInsets.symmetric(horizontal: 15),
+                                showCountryFlag: false,
+                                showDropdownIcon: false,
+                                initialCountryCode: 'IN',
+                                onChanged: (phone) {
+                                  setState(() {
+                                    newPhone =
+                                        '${phone.countryCode} ${phone.number}';
+                                  });
+                                  print(newPhone);
+                                },
+                              ),
                             ),
-                            hintStyle: TextStyle(color: Colors.grey),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  color: Colors
-                                      .green), // Set your desired border color when focused
-                            ),
-                            // suffixIcon: SizedBox.shrink(),
-                          ),
-                          cursorColor: MyTheme.green_light,
-                          dropdownTextStyle:
-                              TextStyle(color: MyTheme.font_grey, fontSize: 13),
-                          style: TextStyle(color: MyTheme.font_grey),
-                          flagsButtonPadding:
-                              EdgeInsets.symmetric(horizontal: 15),
-                          showCountryFlag: false,
-                          showDropdownIcon: false,
-                          initialCountryCode: 'IN',
-                          onChanged: (phone) {
-                            setState(() {
-                              newPhone = '${phone.countryCode} ${phone.number}';
-                            });
-                            print(newPhone);
-                          },
+                          ],
                         ),
                       ),
+                      Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.only(right: 10),
+                                height: 44,
+                                child: Btn.minWidthFixHeight(
+                                  minWidth:
+                                      MediaQuery.of(context).size.width / 2.5,
+                                  height: 50,
+                                  color: MyTheme.primary_color,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(10.0))),
+                                  child: Text(
+                                    'Login',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  onPressed: () {
+                                    onPressedLogin(context);
+                                  },
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 20, right: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        onPressedGoogleLogin(context);
+                                        // print('google');
+                                      },
+                                      child: Container(
+                                        width: 40,
+                                        child: Image.asset(
+                                            "assets/google_logo.png"),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 10, right: 20),
+                                child: InkWell(
+                                  onTap: () {
+                                    // onPressedGoogleLogin(context);
+                                    print('facebook');
+                                  },
+                                  child: Container(
+                                    width: 40,
+                                    child:
+                                        Image.asset("assets/facebook_logo.png"),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 35, top: 10),
+                            child: Row(
+                              children: [
+                                Expanded(child: SizedBox()),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Registration()));
+                                    },
+                                    child: Text(
+                                      'Create Account?',
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w700,
+                                        color: MyTheme.grey_153,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(),
                     ],
                   ),
                 ),
-
-                SizedBox(height: 20),
 
                 //login button
-                Padding(
-                  padding: const EdgeInsets.only(left: 30, right: 30),
-                  child: Container(
-                    height: 44,
-                    child: Btn.minWidthFixHeight(
-                      minWidth: MediaQuery.of(context).size.width,
-                      height: 50,
-                      color: MyTheme.primary_color,
-                      shape: RoundedRectangleBorder(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10.0))),
-                      child: Text(
-                        'Sign In',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600),
-                      ),
-                      onPressed: () {
-                        onPressedLogin(context);
-                      },
-                    ),
-                  ),
-                ),
 
-                SizedBox(
-                  height: 10,
-                ),
+                // SizedBox(
+                //   height: 10,
+                // ),
 
-                //or and divider
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 120),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Divider(
-                          thickness: 3,
-                          height: 10,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text('OR',
-                            style: TextStyle(
-                                color: MyTheme.font_grey,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 12,
-                                fontFamily: 'Poppins')),
-                      ),
-                      Expanded(
-                        child: Divider(
-                          thickness: 3,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                // //or and divider
+                // Padding(
+                //   padding: EdgeInsets.symmetric(horizontal: 120),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: [
+                //       Expanded(
+                //         child: Divider(
+                //           thickness: 3,
+                //           height: 10,
+                //         ),
+                //       ),
+                //       Padding(
+                //         padding: EdgeInsets.symmetric(horizontal: 10),
+                //         child: Text('OR',
+                //             style: TextStyle(
+                //                 color: MyTheme.font_grey,
+                //                 fontWeight: FontWeight.w600,
+                //                 fontSize: 12,
+                //                 fontFamily: 'Poppins')),
+                //       ),
+                //       Expanded(
+                //         child: Divider(
+                //           thickness: 3,
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
 
-                SizedBox(
-                  height: 10,
-                ),
+                // SizedBox(
+                //   height: 10,
+                // ),
 
-                // signup button
-                Padding(
-                  padding: const EdgeInsets.only(left: 30.0, right: 30),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Registration()));
-                    },
-                    child: Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: MyTheme.primary_color),
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Btn.minWidthFixHeight(
-                          minWidth: MediaQuery.of(context).size.width,
-                          height: 50,
-                          //  color: MyTheme.amber,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: const BorderRadius.all(
-                                  Radius.circular(10.0))),
-                          child: Text(
-                            'Create Account',
-                            style: TextStyle(
-                                color: MyTheme.primary_color,
-                                fontFamily: 'Poppins'),
-                          )),
-                    ),
-                  ),
-                ),
+                // // signup button
+                // Padding(
+                //   padding: const EdgeInsets.only(left: 30.0, right: 30),
+                //   child: GestureDetector(
+                //     onTap: () {
+                //       Navigator.push(
+                //           context,
+                //           MaterialPageRoute(
+                //               builder: (context) => Registration()));
+                //     },
+                //     child: Container(
+                //       height: 40,
+                //       decoration: BoxDecoration(
+                //           border: Border.all(color: MyTheme.primary_color),
+                //           borderRadius: BorderRadius.circular(10)),
+                //       child: Btn.minWidthFixHeight(
+                //           minWidth: MediaQuery.of(context).size.width,
+                //           height: 50,
+                //           //  color: MyTheme.amber,
+                //           shape: RoundedRectangleBorder(
+                //               borderRadius: const BorderRadius.all(
+                //                   Radius.circular(10.0))),
+                //           child: Text(
+                //             'Create Account',
+                //             style: TextStyle(
+                //                 color: MyTheme.primary_color,
+                //                 fontFamily: 'Poppins'),
+                //           )),
+                //     ),
+                //   ),
+                // ),
 
-                // google login
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          onPressedGoogleLogin(context);
-                          // print('google');
-                        },
-                        child: Container(
-                          width: 40,
-                          child: Image.asset("assets/google_logo.png"),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                // // google login
               ],
             ),
           )

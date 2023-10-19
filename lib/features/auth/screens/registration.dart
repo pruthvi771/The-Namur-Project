@@ -315,9 +315,10 @@ class _RegistrationState extends State<Registration> {
             Padding(
               padding: const EdgeInsets.only(bottom: 8.0, right: 20, left: 20),
               child: Container(
-                height: 60,
+                height: 40,
                 // padding: EdgeInsets.symmetric(horizontal: 10),
                 child: IntlPhoneField(
+                  disableLengthCheck: true,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.all(8),
                     labelText: 'Mobile Number',
@@ -432,7 +433,7 @@ class _RegistrationState extends State<Registration> {
                     ),
                   ),
                   disabledHint: Text(
-                    'Fetch Locations first',
+                    'Enter Pin Code first',
                     style: TextStyle(
                       color: Colors.grey,
                       fontSize: 13,
