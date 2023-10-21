@@ -2,10 +2,13 @@ import 'package:active_ecommerce_flutter/custom/box_decorations.dart';
 import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/features/screen_database.dart';
+import 'package:active_ecommerce_flutter/features/sell/screens/parent_screen.dart';
 import 'package:active_ecommerce_flutter/helpers/shimmer_helper.dart';
 import 'package:active_ecommerce_flutter/presenter/bottom_appbar_index.dart';
 import 'package:active_ecommerce_flutter/screens/calender/calender.dart';
+import 'package:active_ecommerce_flutter/utils/enums.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/drawer/drawer.dart';
@@ -68,25 +71,31 @@ class _CategoryListState extends State<CategoryList> {
       textDirection:
           app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
       child: Stack(children: [
-        /*  Container(
-          height: DeviceInfo(context).height! / 4,
-          width: DeviceInfo(context).width,
-          color: MyTheme.accent_color,
-          alignment: Alignment.topRight,
-          child: Image.asset(
-            "assets/background_1.png",
-          ),
-        ),*/
         Scaffold(
             key: homeData.scaffoldKey,
             drawer: const MainDrawer(),
             backgroundColor: Colors.transparent,
-            appBar: PreferredSize(
-                child: buildAppBar(context),
-                preferredSize: Size(
-                  DeviceInfo(context).width!,
-                  50,
-                )),
+            appBar: AppBar(
+              elevation: 0,
+              // backgroundColor: MyTheme.primary_color,
+              flexibleSpace: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Color(0xff107B28), Color(0xff4C7B10)]),
+                ),
+              ),
+              title: Text(
+                AppLocalizations.of(context)!.home_ucf,
+                style: TextStyle(
+                    color: MyTheme.white,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: .5,
+                    fontFamily: 'Poppins'),
+              ),
+              centerTitle: true,
+            ),
             body: buildBody()),
         Align(
           alignment: Alignment.bottomCenter,
@@ -108,6 +117,7 @@ class _CategoryListState extends State<CategoryList> {
             delegate: SliverChildListDelegate([
           TitleBar(),
 
+          // screen database button
           // TextButton(
           //     onPressed: () {
           //       Navigator.push(context,
@@ -262,33 +272,6 @@ class _CategoryListState extends State<CategoryList> {
     );
   }
 
-  // appbar design
-  AppBar buildAppBar(BuildContext context) {
-    return AppBar(
-      leading: IconButton(
-          onPressed: () {
-            homeData.scaffoldKey.currentState?.openDrawer();
-          },
-          icon: Icon(Icons.menu)),
-      title: Text(
-        getAppBarTitle(),
-        style: TextStyle(
-            fontSize: 16, color: MyTheme.white, fontWeight: FontWeight.bold),
-      ),
-      centerTitle: true,
-      flexibleSpace: Container(
-        height: 110,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xff107B28), Color(0xff4C7B10)])),
-      ),
-      elevation: 0.0,
-      titleSpacing: 0,
-    );
-  }
-
   String getAppBarTitle() {
     String name = widget.parent_category_name == ""
         ? (widget.is_top_category
@@ -298,51 +281,6 @@ class _CategoryListState extends State<CategoryList> {
 
     return name;
   }
-
-  //Build function with future builder
-  // buildCategoryList() {
-  //   var data = widget.is_top_category
-  //       ? CategoryRepository().getTopCategories()
-  //       : CategoryRepository()
-  //           .getCategories(parent_id: widget.parent_category_id);
-  //   return FutureBuilder(
-  //       future: data,
-  //       builder: (context, AsyncSnapshot<CategoryResponse> snapshot) {
-  //         if (snapshot.connectionState == ConnectionState.waiting) {
-  //           return SingleChildScrollView(child: buildShimmer());
-  //         }
-  //         if (snapshot.hasError) {
-  //           //snapshot.hasError
-  //           print("category list error");
-  //           print(snapshot.error.toString());
-  //           return Container(
-  //             height: 10,
-  //           );
-  //         } else if (snapshot.hasData) {
-  //           return GridView.builder(
-  //             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-  //               mainAxisSpacing: 10,
-  //               crossAxisSpacing: 20,
-  //               childAspectRatio: 1.15,
-  //               crossAxisCount: 2,
-  //             ),
-  //             itemCount: snapshot.data!.categories!.length,
-  //             padding: EdgeInsets.only(
-  //                 left: 18,
-  //                 right: 18,
-  //                 bottom: widget.is_base_category ? 30 : 0),
-  //             scrollDirection: Axis.vertical,
-  //             physics: NeverScrollableScrollPhysics(),
-  //             shrinkWrap: true,
-  //             itemBuilder: (context, index) {
-  //               return buildCategoryItemCard(snapshot.data, index, isvalue);
-  //             },
-  //           );
-  //         } else {
-  //           return SingleChildScrollView(child: buildShimmer());
-  //         }
-  //       });
-  // }
 
   buildCategoryList() {
     // var data = widget.is_top_category
@@ -379,23 +317,25 @@ class _CategoryListState extends State<CategoryList> {
       child: InkWell(
         onTap: () {
           print('Tapped index $index');
-          // subCategoryCon.GetSubCategory(categoryResponse.categories[index].id);
+          // ParentEnum? parentEnum = index == 0
+          //     ? ParentEnum.animal
+          //     : index == 1
+          //         ? ParentEnum.food
+          //         : index == 2
+          //             ? ParentEnum.machine
+          //             : index == 3
+          //                 ? ParentEnum.land
+          //                 : null;
           // Navigator.push(
           //   context,
           //   MaterialPageRoute(
           //     builder: (context) {
-          //       return SubCategory(
-          //         category_id: categoryResponse.categories[index].id,
-          //         category_name: categoryResponse.categories[index].name,
-          //         isvalue: isvalue,
-          //       );
+          //       return ParentScreen(parentEnum: parentEnum!);
           //     },
           //   ),
           // );
         },
         child: Container(
-          //padding: EdgeInsets.all(8),
-          //color: Colors.amber,
           child: Column(
             children: [
               Stack(
@@ -468,9 +408,9 @@ class _CategoryListState extends State<CategoryList> {
                 index == 0
                     ? "Animal"
                     : index == 1
-                        ? "Machine"
+                        ? "Food"
                         : index == 2
-                            ? "Village"
+                            ? "Machine"
                             : index == 3
                                 ? "Land"
                                 : "Calendar",
@@ -489,7 +429,7 @@ class _CategoryListState extends State<CategoryList> {
       decoration: BoxDecoration(
         color: Colors.white,
       ),
-
+      // height: 80,
       height: widget.is_base_category ? 0 : 80,
       //color: Colors.white,
       child: Padding(

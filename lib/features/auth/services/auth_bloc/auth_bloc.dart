@@ -179,5 +179,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(LocationsForPincodeNotReceived());
       }
     });
+
+    on<LandLocationsForPincodeRequested>((event, emit) async {
+      emit(LandLocationsForPincodeLoading());
+      try {
+        var postOfficeResponse =
+            await authRepository.getLocationsForPincode(pinCode: event.pinCode);
+        emit(LandLocationsForPincodeReceived(
+            postOfficeResponse: postOfficeResponse!));
+      } catch (e) {
+        emit(AuthError(e.toString()));
+        emit(LandLocationsForPincodeNotReceived());
+      }
+    });
   }
 }

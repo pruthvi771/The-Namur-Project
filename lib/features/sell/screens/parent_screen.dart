@@ -1,11 +1,18 @@
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/drawer/drawer.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
+import 'package:active_ecommerce_flutter/features/sell/screens/product_inventory.dart';
+import 'package:active_ecommerce_flutter/utils/enums.dart' as enums;
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:get/get.dart';
 
 class ParentScreen extends StatefulWidget {
-  const ParentScreen({Key? key}) : super(key: key);
+  final enums.ParentEnum parentEnum;
+  const ParentScreen({
+    required this.parentEnum,
+  });
 
   @override
   State<ParentScreen> createState() => _ParentScreenState();
@@ -14,6 +21,7 @@ class ParentScreen extends StatefulWidget {
 class _ParentScreenState extends State<ParentScreen> {
   // HomePresenter homeData = HomePresenter();
   bool isSwitched = false;
+
   Future<void> _onPageRefresh() async {
     //reset();
     // fetchAll();
@@ -21,6 +29,12 @@ class _ParentScreenState extends State<ParentScreen> {
 
   // bool _switchValue = false;
   // String isvalue = "tractor";
+
+  var categoryListForParentEnum = enums.categoryListForParentEnum;
+  var nameForParentEnum = enums.nameForParentEnum;
+  var nameForCategoryEnum = enums.nameForCategoryEnum;
+  var subCategoryListsForCategory = enums.subCategoryListsForCategory;
+  var nameForSubCategoryEnum = enums.nameForSubCategoryEnum;
 
   final stocks = [
     'assets/onion.png',
@@ -40,73 +54,45 @@ class _ParentScreenState extends State<ParentScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: categoryListForParentEnum[widget.parentEnum]!.length,
       child: Scaffold(
         // key: homeData.scaffoldKey,
         drawer: const MainDrawer(),
-        appBar: buildCustomAppBar(context),
-        body: bodycontent(),
-      ),
-    );
-  }
-
-  PreferredSize buildCustomAppBar(context) {
-    return PreferredSize(
-      preferredSize: Size(DeviceInfo(context).width!, 80),
-      child: Container(
-        height: 92,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xff107B28), Color(0xff4C7B10)])),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20.0, right: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                    onPressed: () {
-                      // homeData.scaffoldKey.currentState?.openDrawer();
-                    },
-                    icon: Icon(
-                      Icons.menu,
-                      color: Colors.white,
-                    )),
-                Container(
-                  height: 30,
-                  child: Center(
-                    child: Text('Parent Screens',
-                        style: TextStyle(
-                            color: MyTheme.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            letterSpacing: .5,
-                            fontFamily: 'Poppins')),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(right: 0, bottom: 10),
-                  height: 30,
-                  child: Container(
-                    child: InkWell(
-                      //padding: EdgeInsets.zero,
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Icon(
-                        Icons.keyboard_arrow_left,
-                        size: 35,
-                        color: MyTheme.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+        // appBar: buildCustomAppBar(context),
+        appBar: AppBar(
+          // backgroundColor: MyTheme.primary_color,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xff107B28), Color(0xff4C7B10)]),
             ),
           ),
+          title: Text(nameForParentEnum[widget.parentEnum]!,
+              style: TextStyle(
+                  color: MyTheme.white,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: .5,
+                  fontFamily: 'Poppins')),
+          centerTitle: true,
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(
+                Icons.keyboard_arrow_left,
+                size: 35,
+                color: MyTheme.white,
+              ),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+          ],
         ),
+        body: bodycontent(),
       ),
     );
   }
@@ -115,7 +101,6 @@ class _ParentScreenState extends State<ParentScreen> {
     return Column(
       children: [
         //top bar section
-
         Container(
           width: MediaQuery.of(context).size.width,
           height: 80,
@@ -170,52 +155,6 @@ class _ParentScreenState extends State<ParentScreen> {
                   ),
                 ],
               ),
-              // Padding(
-              //   padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-              //   child: Row(
-              //     children: [
-              //       Padding(
-              //         padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-              //         child: Text(
-              //           "Buy",
-              //           style: TextStyle(
-              //               fontSize: 16, fontWeight: FontWeight.w600),
-              //         ),
-              //       ),
-              //       Container(
-              //         //  margin: EdgeInsets.only(right: 50),
-              //         height: 30,
-              //         child: Transform.scale(
-              //           scale: 1.3,
-              //           child: Switch(
-              //             // thumb color (round icon)
-              //             // activeColor: Colors.white,
-              //             activeTrackColor: Colors.grey.shade400,
-              //             inactiveThumbColor: Colors.blueGrey.shade600,
-              //             inactiveTrackColor: Colors.grey.shade400,
-              //             splashRadius: 50.0,
-              //             // boolean variable value
-              //             value: isSwitched,
-              //             // changes the state of the switch
-              //             onChanged: (value) {
-              //               setState(() {
-              //                 isSwitched = value;
-              //               });
-              //             },
-              //           ),
-              //         ),
-              //       ),
-              //       Padding(
-              //         padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-              //         child: Text(
-              //           "Rent",
-              //           style: TextStyle(
-              //               fontSize: 16, fontWeight: FontWeight.w600),
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // )
             ],
           ),
         ),
@@ -243,95 +182,144 @@ class _ParentScreenState extends State<ParentScreen> {
                 ),
                 labelColor: Colors.white,
                 unselectedLabelColor: Colors.black,
-                tabs: [
-                  Tab(
-                    child: Text(
-                      "Tractor",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        // color: Colors.black,
+                tabs: List.generate(
+                  categoryListForParentEnum[widget.parentEnum]!.length,
+                  (index) {
+                    var item =
+                        categoryListForParentEnum[widget.parentEnum]![index];
+                    return Tab(
+                      child: Text(
+                        nameForCategoryEnum[item]!,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          // color: Colors.black,
+                        ),
                       ),
-                    ),
-                  ),
-                  Tab(
-                    child: Text(
-                      "Harvester",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  // Tab(
-                  //   child: Text(
-                  //     "Cultivator",
-                  //     style: TextStyle(
-                  //       fontSize: 14,
-                  //       fontWeight: FontWeight.w600,
-                  //     ),
-                  //   ),
-                  // ),
-                ],
+                    );
+                  },
+                ).toList(),
+                // tabs: [
+                //   // ListView.builder(
+                //   itemCount: 2,
+                //   // categoryListForParentEnum[widget.parentEnum]!.length,
+                //   itemBuilder: (context, index) {
+                //     return Tab(
+                //       child: Text(
+                //         nameForCategoryEnum[categoryListForParentEnum[
+                //             widget.parentEnum]![index]]!,
+                //         style: TextStyle(
+                //           fontSize: 14,
+                //           fontWeight: FontWeight.w600,
+                //           // color: Colors.black,
+                //         ),
+                //       ),
+                //     );
+                //   },
+                // ),
+                // Tab(
+                //   child: Text(
+                //     nameForCategoryEnum[
+                //         categoryListForParentEnum[widget.parentEnum]![0]]!,
+                //     style: TextStyle(
+                //       fontSize: 14,
+                //       fontWeight: FontWeight.w600,
+                //       // color: Colors.black,
+                //     ),
+                //   ),
+                // ),
+                // Tab(
+                //   child: Text(
+                //     nameForCategoryEnum[
+                //         categoryListForParentEnum[widget.parentEnum]![1]]!,
+                //     style: TextStyle(
+                //       fontSize: 14,
+                //       fontWeight: FontWeight.w600,
+                //       // color: Colors.black,
+                //     ),
+                //   ),
+                // ),
+                // ],
               ),
             ),
           ),
         ),
 
         Expanded(
-          child: TabBarView(physics: BouncingScrollPhysics(), children: [
-            SingleChildScrollView(
-              // controller: _xcrollController,
-              physics: const BouncingScrollPhysics(
-                  parent: AlwaysScrollableScrollPhysics()),
-              child: MasonryGridView.count(
-                crossAxisCount: 3,
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-                itemCount: stocks.length,
-                shrinkWrap: true,
-                padding: EdgeInsets.only(top: 10.0, left: 18, right: 18),
-                physics: NeverScrollableScrollPhysics(),
-                scrollDirection: Axis.vertical,
-                itemBuilder: (context, index) {
-                  //
-                  return Container(
-                    //  height: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color:
-                          (index % 5 == 0) ? MyTheme.green_neon : MyTheme.white,
-                    ),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
+          child: TabBarView(
+            physics: BouncingScrollPhysics(),
+            children: List.generate(
+              categoryListForParentEnum[widget.parentEnum]!.length,
+              (index) {
+                var categoryEnum =
+                    categoryListForParentEnum[widget.parentEnum]![index];
+                return SingleChildScrollView(
+                    // controller: _xcrollController,
+                    physics: const BouncingScrollPhysics(
+                        parent: AlwaysScrollableScrollPhysics()),
+                    child: MasonryGridView.count(
+                      crossAxisCount: 3,
+                      mainAxisSpacing: 16,
+                      crossAxisSpacing: 16,
+                      itemCount:
+                          subCategoryListsForCategory[categoryEnum]!.length,
+                      shrinkWrap: true,
+                      padding: EdgeInsets.only(top: 10.0, left: 18, right: 18),
+                      physics: NeverScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      itemBuilder: (context, index) {
+                        enums.SubCategoryEnum subCategoryEnum =
+                            subCategoryListsForCategory[categoryEnum]![index];
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ProductInventory(
+                                          subCategoryEnum: subCategoryEnum,
+                                        )));
+                          },
                           child: Container(
-                            height: 50,
-                            width: 50,
-                            child: Image.asset(
-                              stocks[index],
-                              fit: BoxFit.cover,
+                            height: 120,
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(
+                                color: MyTheme.field_color,
+                              ),
+                            ),
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(3.0),
+                                    child: Image.asset(
+                                      stocks[index],
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                FittedBox(
+                                  child: Text(
+                                    nameForSubCategoryEnum[subCategoryEnum]!,
+                                    style: TextStyle(
+                                      // fontSize: 14,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                          child: Text(
-                            "Grapes",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w500),
-                          ),
-                        )
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
-            Text('data2'),
-            // Text('data3'),
-          ]),
+                        );
+                      },
+                    ));
+              },
+            ).toList(),
+          ),
         ),
       ],
     );

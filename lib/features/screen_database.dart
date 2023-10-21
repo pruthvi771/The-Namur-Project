@@ -59,6 +59,7 @@ import 'package:active_ecommerce_flutter/screens/video_description_screen.dart';
 import 'package:active_ecommerce_flutter/screens/wallet.dart';
 import 'package:active_ecommerce_flutter/screens/whole_sale_products.dart';
 import 'package:active_ecommerce_flutter/screens/wishlist.dart';
+import 'package:active_ecommerce_flutter/utils/enums.dart';
 import 'package:flutter/material.dart';
 
 import 'package:active_ecommerce_flutter/screens/about_us/about_us.dart';
@@ -81,7 +82,12 @@ class _ScreenDatabaseState extends State<ScreenDatabase> {
   @override
   Widget build(BuildContext context) {
     List screensList = [
-      ['Parent screen', ParentScreen()],
+      [
+        'Parent screen',
+        ParentScreen(
+          parentEnum: ParentEnum.animal,
+        )
+      ],
       ['Product Inventory', ProductInventory()],
       ['More Detail', MoreDetail()],
       ['Product Post', ProductPost()],

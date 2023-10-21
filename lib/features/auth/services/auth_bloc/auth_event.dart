@@ -78,6 +78,12 @@ class LocationsForPincodeRequested extends AuthEvent {
   LocationsForPincodeRequested(this.pinCode);
 }
 
+class LandLocationsForPincodeRequested extends AuthEvent {
+  final String pinCode;
+
+  LandLocationsForPincodeRequested(this.pinCode);
+}
+
 class resetPasswordForEmailRequested extends AuthEvent {
   final String email;
 

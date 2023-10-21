@@ -6,6 +6,8 @@ import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dar
     as hiveModels;
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_bloc.dart';
+import 'package:active_ecommerce_flutter/features/sell/services/bloc/sell_bloc.dart';
+import 'package:active_ecommerce_flutter/features/sell/services/sell_repository.dart';
 import 'package:active_ecommerce_flutter/features/weather/bloc/weather_bloc.dart';
 import 'package:active_ecommerce_flutter/presenter/cart_counter.dart';
 import 'package:active_ecommerce_flutter/presenter/currency_presenter.dart';
@@ -149,10 +151,9 @@ class _MyAppState extends State<MyApp> {
     final textTheme = Theme.of(context).textTheme;
     AuthRepository authRepository = AuthRepository();
     FirestoreRepository firestoreRepository = FirestoreRepository();
+    SellRepository sellRepository = SellRepository();
+
     return MultiBlocProvider(
-        // create: (context) => AuthBloc(
-        //       authRepository: RepositoryProvider.of<AuthRepository>(context),
-        //     ),
         providers: [
           BlocProvider<WeatherBloc>(
             create: (context) => WeatherBloc(),
@@ -164,6 +165,12 @@ class _MyAppState extends State<MyApp> {
             create: (context) => AuthBloc(
               authRepository: authRepository,
               firestoreRepository: firestoreRepository,
+            ),
+          ),
+          BlocProvider<SellBloc>(
+            create: (context) => SellBloc(
+              authRepository: authRepository,
+              sellRepository: sellRepository,
             ),
           ),
           BlocProvider<HiveBloc>(

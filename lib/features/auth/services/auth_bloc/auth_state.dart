@@ -83,6 +83,27 @@ class LocationsForPincodeNotReceived extends AuthState {
   List<Object?> get props => throw UnimplementedError();
 }
 
+class LandLocationsForPincodeReceived extends AuthState {
+  final PostOfficeResponse postOfficeResponse;
+
+  LandLocationsForPincodeReceived({
+    required this.postOfficeResponse,
+  });
+  // }) : super(verificationId: verificationId);
+  @override
+  List<Object?> get props => [postOfficeResponse];
+}
+
+class LandLocationsForPincodeLoading extends AuthState {
+  @override
+  List<Object?> get props => throw UnimplementedError();
+}
+
+class LandLocationsForPincodeNotReceived extends AuthState {
+  @override
+  List<Object?> get props => throw UnimplementedError();
+}
+
 class resetPasswordForEmailSent extends AuthState {
   @override
   List<Object?> get props => [];
