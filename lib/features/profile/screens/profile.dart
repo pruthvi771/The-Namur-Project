@@ -1,10 +1,6 @@
 import 'dart:async';
 import 'dart:typed_data';
-
-import 'package:active_ecommerce_flutter/custom/box_decorations.dart';
-import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
-import 'package:active_ecommerce_flutter/custom/lang_text.dart';
 import 'package:active_ecommerce_flutter/features/profile/enum.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
@@ -13,23 +9,8 @@ import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_event.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_state.dart';
 import 'package:active_ecommerce_flutter/features/profile/utils.dart';
-import 'package:active_ecommerce_flutter/helpers/auth_helper.dart';
 import 'package:active_ecommerce_flutter/presenter/home_presenter.dart';
-import 'package:active_ecommerce_flutter/screens/auction_products.dart';
-import 'package:active_ecommerce_flutter/screens/change_language.dart';
-import 'package:active_ecommerce_flutter/screens/classified_ads/classified_ads.dart';
-import 'package:active_ecommerce_flutter/screens/classified_ads/my_classified_ads.dart';
-import 'package:active_ecommerce_flutter/screens/currency_change.dart';
-import 'package:active_ecommerce_flutter/screens/digital_product/digital_products.dart';
-import 'package:active_ecommerce_flutter/screens/digital_product/purchased_digital_produts.dart';
-import 'package:active_ecommerce_flutter/screens/filter.dart';
-import 'package:active_ecommerce_flutter/screens/followed_sellers.dart';
-import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
-import 'package:active_ecommerce_flutter/screens/main.dart';
-import 'package:active_ecommerce_flutter/screens/messenger_list.dart';
 // import 'package:active_ecommerce_flutter/screens/setting/setting.dart';
-import 'package:active_ecommerce_flutter/screens/whole_sale_products.dart';
-import 'package:active_ecommerce_flutter/screens/wishlist.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:flutter/cupertino.dart';
@@ -39,18 +20,11 @@ import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/drawer/drawer.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 // import 'package:active_ecommerce_flutter/app_config.dart';
-import 'package:active_ecommerce_flutter/screens/wallet.dart';
-import 'package:active_ecommerce_flutter/screens/profile_edit.dart';
-import 'package:active_ecommerce_flutter/screens/address.dart';
-import 'package:active_ecommerce_flutter/screens/order_list.dart';
-import 'package:active_ecommerce_flutter/screens/club_point.dart';
-import 'package:active_ecommerce_flutter/screens/refund_request.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:route_transitions/route_transitions.dart';
 import 'package:toast/toast.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -67,14 +41,6 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   HomePresenter homeData = HomePresenter();
   ScrollController _mainScrollController = ScrollController();
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
-  int? _cartCounter = 0;
-  String _cartCounterString = "00";
-  int? _wishlistCounter = 0;
-  String _wishlistCounterString = "00";
-  int? _orderCounter = 0;
-  String _orderCounterString = "00";
   late BuildContext loadingcontext;
 
   ProfileSection _profileSection = ProfileSection.updates;
@@ -99,33 +65,9 @@ class _ProfileState extends State<Profile> {
   }
 
   Future<void> _onPageRefresh() async {
-    reset();
+    // reset();
     // fetchAll();
   }
-
-  onPopped(value) async {
-    reset();
-    // fetchAll();
-  }
-
-  // fetchAll() {
-  //   fetchCounters();
-  // }
-
-  // fetchCounters() async {
-  //   var profileCountersResponse =
-  //       await ProfileRepository().getProfileCountersResponse();
-  //   _cartCounter = profileCountersResponse.cart_item_count;
-  //   _wishlistCounter = profileCountersResponse.wishlist_item_count;
-  //   _orderCounter = profileCountersResponse.order_count;
-  //   _cartCounterString =
-  //       counterText(_cartCounter.toString(), default_length: 2);
-  //   _wishlistCounterString =
-  //       counterText(_wishlistCounter.toString(), default_length: 2);
-  //   _orderCounterString =
-  //       counterText(_orderCounter.toString(), default_length: 2);
-  //   setState(() {});
-  // }
 
   Uint8List? _image;
 
@@ -140,67 +82,6 @@ class _ProfileState extends State<Profile> {
     BlocProvider.of<ProfileBloc>(context).add(
       ProfileImageUpdateRequested(file: _image!),
     );
-  }
-
-  // deleteAccountReq() async {
-  //   loading();
-  //   var response = await AuthRepository().getAccountDeleteResponse();
-
-  //   if (response.result!) {
-  //     AuthHelper().clearUserData();
-  //     Navigator.pop(loadingcontext);
-  //     Navigator.pushAndRemoveUntil(context,
-  //         MaterialPageRoute(builder: (context) {
-  //       return Main();
-  //     }), (route) => false);
-  //   }
-  //   ToastComponent.showDialog(response.message!);
-  // }
-
-  String counterText(String txt, {default_length = 3}) {
-    var blank_zeros = default_length == 3 ? "000" : "00";
-    var leading_zeros = "";
-    if (txt != null) {
-      if (default_length == 3 && txt.length == 1) {
-        leading_zeros = "00";
-      } else if (default_length == 3 && txt.length == 2) {
-        leading_zeros = "0";
-      } else if (default_length == 2 && txt.length == 1) {
-        leading_zeros = "0";
-      }
-    }
-
-    var newtxt = (txt == null || txt == "" || txt == null.toString())
-        ? blank_zeros
-        : txt;
-
-    // print(txt + " " + default_length.toString());
-    // print(newtxt);
-
-    if (default_length > txt.length) {
-      newtxt = leading_zeros + newtxt;
-    }
-    //print(newtxt);
-
-    return newtxt;
-  }
-
-  reset() {
-    _cartCounter = 0;
-    _cartCounterString = "00";
-    _wishlistCounter = 0;
-    _wishlistCounterString = "00";
-    _orderCounter = 0;
-    _orderCounterString = "00";
-    setState(() {});
-  }
-
-  onTapLogout(context) async {
-    AuthHelper().clearUserData();
-
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) {
-      return Main();
-    }), (route) => false);
   }
 
   Future<List<Object?>> getNumberOfFriends() async {
@@ -227,11 +108,14 @@ class _ProfileState extends State<Profile> {
 
     for (var document in documents) {
       Map<String, dynamic> data = document.data()!;
-      if (data['profileData']['address'][0]['pincode'] == pincode) {
-        count++;
-        print('count incremented');
+      if (data['profileData']['address'].isNotEmpty) {
+        Map<String, dynamic> data = document.data()!;
+        if (data['profileData']['address'][0]['pincode'] ==
+            savedData.address[0].pincode) {
+          count++;
+          print('count incremented');
+        }
       }
-      print(data['profileData']['address'][0]['pincode']);
     }
 
     return [villageName, pincode, count];

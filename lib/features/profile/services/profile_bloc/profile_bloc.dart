@@ -1,11 +1,13 @@
 import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
+import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_event.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_state.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileBloc() : super(Loading()) {
@@ -29,37 +31,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         emit(ProfileImageUpdated());
       } catch (e) {
         emit(Error('Could Not Update Image. Please Try Again'));
-      }
-    });
-
-    on<TotalPincodeFriendsCountRequested>((event, emit) async {
-      emit(Loading());
-      try {
-        int count = 0;
-        print('----------');
-        QuerySnapshot<Map<String, dynamic>> querySnapshot =
-            await FirebaseFirestore.instance
-                .collection('buyer')
-                .where(FieldPath.documentId, isNotEqualTo: null)
-                .where('profileData', isNotEqualTo: null)
-                .get();
-
-        List<DocumentSnapshot<Map<String, dynamic>>> documents =
-            querySnapshot.docs;
-
-        for (var document in documents) {
-          Map<String, dynamic> data = document.data()!;
-          if (data['profileData']['address'][0]['pincode'] == event.pincode) {
-            count++;
-            print('count incremented');
-          }
-          print(data['profileData']['address'][0]['pincode']);
-        }
-        emit(TotalPincodeFriendsCountReceived(count: count));
-      } catch (e) {
-        print(e);
-        print(
-            'Error counting users with pincode: $e'); // Return 0 in case of an error
       }
     });
   }

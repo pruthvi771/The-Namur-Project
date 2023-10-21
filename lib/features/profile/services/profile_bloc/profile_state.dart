@@ -29,15 +29,6 @@ final class Loading extends ProfileState {
   List<Object?> get props => [];
 }
 
-final class TotalPincodeFriendsCountReceived extends ProfileState {
-  final int count;
-
-  TotalPincodeFriendsCountReceived({required this.count});
-
-  @override
-  List<Object?> get props => [count];
-}
-
 final class Error extends ProfileState {
   final String error;
 

@@ -83,12 +83,14 @@ class _TitleBarState extends State<TitleBar> {
 
     for (var document in documents) {
       Map<String, dynamic> data = document.data()!;
-      if (data['profileData']['address'][0]['pincode'] ==
-          savedData!.address[0].pincode) {
-        count++;
-        print('count incremented');
+      if (data['profileData']['address'].isNotEmpty) {
+        Map<String, dynamic> data = document.data()!;
+        if (data['profileData']['address'][0]['pincode'] ==
+            savedData.address[0].pincode) {
+          count++;
+          print('count incremented');
+        }
       }
-      print(data['profileData']['address'][0]['pincode']);
     }
 
     return [cropCount, count];
