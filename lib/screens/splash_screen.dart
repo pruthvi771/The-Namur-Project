@@ -205,7 +205,7 @@ class _SplashScreenState extends State<SplashScreen> {
     access_token.load().whenComplete(() {
       AuthHelper().fetch_and_set();
     });
-    AddonsHelper().setAddonsData();
+    // AddonsHelper().setAddonsData();
     BusinessSettingHelper().setBusinessSettingData();
     await app_language.load();
     await app_mobile_language.load();

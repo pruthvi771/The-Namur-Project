@@ -317,23 +317,23 @@ class _CategoryListState extends State<CategoryList> {
       child: InkWell(
         onTap: () {
           print('Tapped index $index');
-          // ParentEnum? parentEnum = index == 0
-          //     ? ParentEnum.animal
-          //     : index == 1
-          //         ? ParentEnum.food
-          //         : index == 2
-          //             ? ParentEnum.machine
-          //             : index == 3
-          //                 ? ParentEnum.land
-          //                 : null;
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) {
-          //       return ParentScreen(parentEnum: parentEnum!);
-          //     },
-          //   ),
-          // );
+          ParentEnum? parentEnum = index == 0
+              ? ParentEnum.animal
+              : index == 1
+                  ? ParentEnum.food
+                  : index == 2
+                      ? ParentEnum.machine
+                      : index == 3
+                          ? ParentEnum.land
+                          : null;
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return ParentScreen(parentEnum: parentEnum!);
+              },
+            ),
+          );
         },
         child: Container(
           child: Column(

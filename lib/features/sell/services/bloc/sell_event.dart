@@ -1,6 +1,7 @@
-part of 'sell_bloc.dart';
+import 'dart:typed_data';
+import 'package:equatable/equatable.dart';
 
-sealed class SellEvent extends Equatable {
+abstract class SellEvent extends Equatable {
   const SellEvent();
 
   @override
@@ -11,6 +12,7 @@ class SellAddProductEvent extends SellEvent {
   final String productName;
   final String productDescription;
   final double productPrice;
+  final int productQuantity;
   final String priceType;
   final String category;
   final String subCategory;
@@ -21,6 +23,7 @@ class SellAddProductEvent extends SellEvent {
     required this.productName,
     required this.productDescription,
     required this.productPrice,
+    required this.productQuantity,
     required this.priceType,
     required this.category,
     required this.subCategory,
@@ -33,10 +36,22 @@ class SellAddProductEvent extends SellEvent {
         productName,
         productDescription,
         productPrice,
+        productQuantity,
         priceType,
         category,
         subCategory,
         subSubCategory,
         image,
       ];
+}
+
+class ProductsForSubCategoryRequested extends SellEvent {
+  final String subCategory;
+
+  const ProductsForSubCategoryRequested({
+    required this.subCategory,
+  });
+
+  @override
+  List<Object> get props => [subCategory];
 }

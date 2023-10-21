@@ -3,10 +3,12 @@ import 'dart:typed_data';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/profile/utils.dart';
 import 'package:active_ecommerce_flutter/features/sell/services/bloc/sell_bloc.dart';
+import 'package:active_ecommerce_flutter/features/sell/services/bloc/sell_event.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/sell_screen/product_inventory/product_inventory.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart' as enums;
@@ -22,10 +24,12 @@ const List<String> productList = <String>[
 
 class ProductPost extends StatefulWidget {
   final SubCategoryEnum subCategoryEnum;
+  final List<String> alreadyExistingProductNames;
 
   const ProductPost({
     Key? key,
     required this.subCategoryEnum,
+    required this.alreadyExistingProductNames,
   }) : super(key: key);
 
   @override
@@ -36,6 +40,7 @@ class _ProductPostState extends State<ProductPost> {
   TextEditingController _nameController = TextEditingController();
   TextEditingController _additionalController = TextEditingController();
   TextEditingController _priceController = TextEditingController();
+  TextEditingController _quantityController = TextEditingController();
 
   Future<void> _onPageRefresh() async {
     //reset();
@@ -71,13 +76,6 @@ class _ProductPostState extends State<ProductPost> {
     setState(() {});
   }
 
-  // saveProfileImage() async {
-  //   await selectImage();
-  //   // BlocProvider.of<ProfileBloc>(context).add(
-  //   //   ProfileImageUpdateRequested(file: _image!),
-  //   // );
-  // }
-
   onPressedPost(BuildContext buildContext) async {
     // print('login clicked');
     var productName = _nameController.text.toString();
@@ -85,6 +83,7 @@ class _ProductPostState extends State<ProductPost> {
     var description = _additionalController.text.toString();
     var productSubCategory = subCategory;
     var productCategory = category;
+    var productQuantity = _quantityController.text.toString();
     String price = _priceController.text;
     String productPriceType = perPiecePrice ? "Per piece" : "Per kg";
 
@@ -92,19 +91,35 @@ class _ProductPostState extends State<ProductPost> {
       ToastComponent.showDialog('Enter Product Name',
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
-    } else if (productSubSubCategory == null) {
+    }
+
+    if (widget.alreadyExistingProductNames.contains(productName)) {
+      ToastComponent.showDialog('A Product By This Name Already Exists',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    if (productSubSubCategory == null) {
       ToastComponent.showDialog('Select Category',
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
-    } else if (description == "") {
+    }
+    if (description == "") {
       ToastComponent.showDialog('Enter Product Description',
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
-    } else if (price == "") {
+    }
+    if (price == "") {
       ToastComponent.showDialog('Enter Product Price',
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
-    } else if (_image == null) {
+    }
+    if (productQuantity == "") {
+      ToastComponent.showDialog('Enter Product Quantity',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+    if (_image == null) {
       ToastComponent.showDialog('Select Product Image',
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
@@ -119,18 +134,31 @@ class _ProductPostState extends State<ProductPost> {
       return;
     }
 
+    int productQuantityInt = 0;
+    try {
+      productQuantityInt = int.parse(productQuantity);
+    } catch (e) {
+      ToastComponent.showDialog('Please Enter Valid Quantity',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
     BlocProvider.of<SellBloc>(buildContext).add(
       SellAddProductEvent(
         productName: productName,
         productDescription: description,
         productPrice: productPrice,
+        productQuantity: productQuantityInt,
         priceType: productPriceType,
         category: productCategory,
         subCategory: productSubCategory,
-        subSubCategory: productSubSubCategory!,
+        subSubCategory: productSubSubCategory,
         image: _image!,
       ),
     );
+
+    ToastComponent.showDialog('Product Added Successfully',
+        gravity: Toast.center, duration: Toast.lengthLong);
 
     Navigator.pop(context);
   }
@@ -269,73 +297,7 @@ class _ProductPostState extends State<ProductPost> {
                   ),
                 ))),
 
-        // product price
-        // Padding(
-        //   padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
-        //   child: Container(
-        //       width: MediaQuery.of(context).size.width,
-        //       height: 50,
-        //       decoration: BoxDecoration(
-        //           color: MyTheme.field_color,
-        //           borderRadius: BorderRadius.circular(10)),
-        //       child: Row(
-        //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //         children: [
-        //           Padding(
-        //             padding: const EdgeInsets.all(15.0),
-        //             child: Text(
-        //               "Product Price",
-        //               style: TextStyle(
-        //                   fontSize: 15,
-        //                   fontFamily: 'Poppins',
-        //                   fontWeight: FontWeight.w400),
-        //             ),
-        //           ),
-        //           Row(
-        //             children: [
-        //               RichText(
-        //                 text: TextSpan(
-        //                     text: "Per Pis / ",
-        //                     style: TextStyle(
-        //                         fontSize: 15,
-        //                         fontFamily: 'Poppins',
-        //                         fontWeight: FontWeight.w400,
-        //                         color: Colors.black),
-        //                     children: [
-        //                       TextSpan(
-        //                           text: "Per kg",
-        //                           style: TextStyle(
-        //                               color: MyTheme.primary_color,
-        //                               fontSize: 15))
-        //                     ]),
-        //               ),
-        //               VerticalDivider(
-        //                 thickness: 1,
-        //               ),
-        //               RichText(
-        //                 text: TextSpan(
-        //                     text: "10/",
-        //                     style: TextStyle(
-        //                         fontSize: 15,
-        //                         fontFamily: 'Poppins',
-        //                         fontWeight: FontWeight.w400,
-        //                         color: Colors.black),
-        //                     children: [
-        //                       TextSpan(
-        //                           text: "Rs",
-        //                           style: TextStyle(
-        //                               color: Colors.black, fontSize: 15))
-        //                     ]),
-        //               ),
-        //               SizedBox(
-        //                 width: 5,
-        //               )
-        //             ],
-        //           ),
-        //         ],
-        //       )),
-        // ),
-
+        // product quantity
         Padding(
           padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
           child: Container(
@@ -349,13 +311,15 @@ class _ProductPostState extends State<ProductPost> {
                 children: [
                   Expanded(
                     child: TextFormField(
-                      controller: _priceController,
-                      keyboardType:
-                          TextInputType.numberWithOptions(decimal: true),
+                      controller: _quantityController,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.only(left: 15),
-                        hintText: "Price",
+                        hintText: "Quantity",
                         hintStyle: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.w400,
@@ -378,7 +342,9 @@ class _ProductPostState extends State<ProductPost> {
                             style: TextStyle(
                               fontSize: 15,
                               fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w400,
+                              fontWeight: perPiecePrice
+                                  ? FontWeight.w600
+                                  : FontWeight.w400,
                               color: perPiecePrice
                                   ? MyTheme.primary_color
                                   : Colors.black,
@@ -398,12 +364,47 @@ class _ProductPostState extends State<ProductPost> {
                                   ? Colors.black
                                   : MyTheme.primary_color,
                               fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w400,
+                              fontWeight: !perPiecePrice
+                                  ? FontWeight.w600
+                                  : FontWeight.w400,
                               fontSize: 15,
                             ),
                           ),
                         )
                       ],
+                    ),
+                  ),
+                ],
+              )),
+        ),
+
+        // product price
+        Padding(
+          padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+          child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: 50,
+              decoration: BoxDecoration(
+                  color: MyTheme.field_color,
+                  borderRadius: BorderRadius.circular(10)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: _priceController,
+                      keyboardType:
+                          TextInputType.numberWithOptions(decimal: true),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.only(left: 15),
+                        hintText:
+                            "Price (${perPiecePrice ? 'per piece' : 'per kg'})",
+                        hintStyle: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Poppins'),
+                      ),
                     ),
                   ),
                 ],

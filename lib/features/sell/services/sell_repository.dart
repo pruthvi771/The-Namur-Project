@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:active_ecommerce_flutter/features/sell/models/sell_product.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -31,6 +32,7 @@ class SellRepository {
     required String productName,
     required String productDescription,
     required double productPrice,
+    required int productQuantity,
     required String priceType,
     required String category,
     required String subCategory,
@@ -48,6 +50,7 @@ class SellRepository {
         'name': productName,
         'description': productDescription,
         'price': productPrice,
+        'quantity': productQuantity,
         'priceType': priceType,
         'category': category,
         'subCategory': subCategory,
@@ -84,5 +87,38 @@ class SellRepository {
       print(_);
       throw Exception('Something went wrong. Please try again.');
     }
+  }
+
+  Future<List<SellProduct>> getProducts({
+    required String subCategory,
+  }) async {
+    // QuerySnapshot productSnapshot = await productsCollection.get();
+
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
+        .instance
+        .collection('products')
+        .where(FieldPath.documentId, isNotEqualTo: null)
+        .where('subCategory', isEqualTo: subCategory)
+        .get();
+
+    var products = querySnapshot.docs.map((doc) {
+      Map<String, dynamic> data = doc.data();
+      print(data);
+      return SellProduct(
+        data['name'],
+        data['description'],
+        data['price'],
+        data['quantity'],
+        data['priceType'],
+        data['category'],
+        data['subCategory'],
+        data['subSubCategory'],
+        data['imageURL'],
+      );
+    }).toList();
+
+    print(products.length);
+
+    return products;
   }
 }
