@@ -49,6 +49,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   TextEditingController _yieldController = TextEditingController();
   TextEditingController _pinCodeController = TextEditingController();
+  TextEditingController _pinCodeControllerForLand = TextEditingController();
 
   final districts = addressList.districtTalukMap;
 
@@ -66,9 +67,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   String? equipmentDropdownValue;
 
   String? locationDropdownValue;
+  String? locationDropdownValueForLand;
 
   bool talukDropdownEnabled = false;
   bool isDropdownEnabled = false;
+  bool isDropdownForLandEnabled = false;
 
   PostOfficeResponse? postOfficeResponse;
 
@@ -78,7 +81,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   String? addressCircle;
   String? addressRegion;
 
+  PostOfficeResponse? postOfficeResponseForLand;
+
+  // String? pincode;
+  String? addressNameForLand;
+  String? districtNameForLand;
+  String? addressCircleForLand;
+  String? addressRegionForLand;
+
   List<String> locationsList = [];
+  List<String> locationsListForLand = [];
 
   get console => null;
 
@@ -100,6 +112,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     addressRegion = null;
   }
 
+  getAddressValuesForLand() {
+    postOfficeResponseForLand!.postOffices.forEach((postOffice) {
+      if (postOffice.name == locationDropdownValueForLand) {
+        addressNameForLand = postOffice.name;
+        districtNameForLand = postOffice.district;
+        addressCircleForLand = postOffice.circle;
+        addressRegionForLand = postOffice.region;
+      }
+    });
+  }
+
+  clearAddressValuesForLand() {
+    addressNameForLand = null;
+    districtNameForLand = null;
+    addressCircleForLand = null;
+    addressRegionForLand = null;
+  }
+
   void fetchLocations(BuildContext buildContext) {
     if (_pinCodeController.text.toString().isEmpty ||
         _pinCodeController.text.toString().length != 6) {
@@ -109,6 +139,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
     BlocProvider.of<AuthBloc>(buildContext).add(
       LocationsForPincodeRequested(_pinCodeController.text.toString()),
+    );
+  }
+
+  void fetchLocationsForLand(BuildContext buildContext) {
+    if (_pinCodeControllerForLand.text.toString().isEmpty ||
+        _pinCodeControllerForLand.text.toString().length != 6) {
+      ToastComponent.showDialog('Enter a valid Pincode',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+    BlocProvider.of<AuthBloc>(buildContext).add(
+      LandLocationsForPincodeRequested(
+          _pinCodeControllerForLand.text.toString()),
     );
   }
 
@@ -168,8 +211,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void _addLandToHive(area, syno, village) async {
-    if (village.isEmpty) {
-      ToastComponent.showDialog('Enter Village name',
+    if (village == null) {
+      ToastComponent.showDialog('Select Village',
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
@@ -763,151 +806,156 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
 
                     // pincode textbox
-                    BlocListener<AuthBloc, authState.AuthState>(
-                      listener: (context, state) {
-                        if (state is authState.LocationsForPincodeReceived) {
-                          ToastComponent.showDialog('Locations fetched.',
-                              gravity: Toast.center,
-                              duration: Toast.lengthLong);
-                          postOfficeResponse = state.postOfficeResponse;
-                          for (var postOffice
-                              in state.postOfficeResponse.postOffices) {
-                            locationsList.add(postOffice.name);
-                          }
-                          isDropdownEnabled = true;
-                          // print(state.postOfficeResponse.postOffices[0].name);
-                          // print(state.postOfficeResponse.message);
-                        }
-                        if (state is authState.LocationsForPincodeLoading) {
-                          locationDropdownValue = null;
-                          clearAddressValues();
-                          locationsList.clear();
-                          ToastComponent.showDialog('Fetching Locations...',
-                              gravity: Toast.center,
-                              duration: Toast.lengthLong);
-                        }
-                        // TODO: implement listener
-                      },
-                      child: BlocBuilder<AuthBloc, authState.AuthState>(
-                        builder: (context, state) {
-                          return Column(
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Container(
-                                    height: 40,
-                                    child: TextField(
-                                      controller: _pinCodeController,
-                                      autofocus: false,
-                                      decoration: InputDecorations
-                                          .buildInputDecoration_1(
-                                              hint_text: "Pin Code"),
+                    if (state.profileData.address.length == 0)
+                      Column(
+                        children: [
+                          BlocListener<AuthBloc, authState.AuthState>(
+                            listener: (context, state) {
+                              if (state
+                                  is authState.LocationsForPincodeReceived) {
+                                ToastComponent.showDialog('Locations fetched.',
+                                    gravity: Toast.center,
+                                    duration: Toast.lengthLong);
+                                postOfficeResponse = state.postOfficeResponse;
+                                for (var postOffice
+                                    in state.postOfficeResponse.postOffices) {
+                                  locationsList.add(postOffice.name);
+                                }
+                                isDropdownEnabled = true;
+                                // print(state.postOfficeResponse.postOffices[0].name);
+                                // print(state.postOfficeResponse.message);
+                              }
+                              if (state
+                                  is authState.LocationsForPincodeLoading) {
+                                locationDropdownValue = null;
+                                clearAddressValues();
+                                locationsList.clear();
+                                ToastComponent.showDialog(
+                                    'Fetching Locations...',
+                                    gravity: Toast.center,
+                                    duration: Toast.lengthLong);
+                              }
+                              // TODO: implement listener
+                            },
+                            child: BlocBuilder<AuthBloc, authState.AuthState>(
+                              builder: (context, state) {
+                                return Column(
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Container(
+                                          height: 40,
+                                          child: TextField(
+                                            keyboardType:
+                                                TextInputType.numberWithOptions(
+                                                    decimal: true),
+                                            controller: _pinCodeController,
+                                            autofocus: false,
+                                            decoration: InputDecorations
+                                                .buildInputDecoration_1(
+                                                    hint_text: "Pin Code"),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              fetchLocations(context);
+                                            },
+                                            child: Text(
+                                              'Get Locations',
+                                              style: TextStyle(
+                                                  color: MyTheme.accent_color,
+                                                  fontStyle: FontStyle.italic,
+                                                  decoration:
+                                                      TextDecoration.underline),
+                                            ),
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 8),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        fetchLocations(context);
-                                      },
-                                      child: Text(
-                                        'Get Locations',
+                                    Container(
+                                      height: 40,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12.0),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                          color: Colors
+                                              .grey, // You can customize the border color here
+                                        ),
+                                      ),
+                                      child: DropdownButton<String>(
+                                        isExpanded: true,
+                                        hint: Text(
+                                          'Select Location',
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                        disabledHint: Text(
+                                          'Fetch Locations first',
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                        value: locationDropdownValue,
+                                        icon: Icon(Icons.arrow_drop_down),
+                                        iconSize: 24,
+                                        elevation: 16,
+                                        underline:
+                                            SizedBox(), // Remove the underline
                                         style: TextStyle(
-                                            color: MyTheme.accent_color,
-                                            fontStyle: FontStyle.italic,
-                                            decoration:
-                                                TextDecoration.underline),
+                                          fontSize: 16,
+                                          color: Colors
+                                              .black, // You can customize the text color here
+                                        ),
+                                        onChanged: isDropdownEnabled
+                                            ? (String? newValue) {
+                                                setState(() {
+                                                  locationDropdownValue =
+                                                      newValue!;
+                                                  getAddressValues();
+                                                });
+                                              }
+                                            : null,
+                                        items: locationsList
+                                            .map<DropdownMenuItem<String>>(
+                                                (String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value),
+                                          );
+                                        }).toList(),
                                       ),
                                     ),
-                                  )
-                                ],
-                              ),
-                              Container(
-                                height: 40,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12.0),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                    color: Colors
-                                        .grey, // You can customize the border color here
-                                  ),
-                                ),
-                                child: DropdownButton<String>(
-                                  isExpanded: true,
-                                  hint: Text(
-                                    'Select Location',
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 13,
-                                    ),
-                                  ),
-                                  disabledHint: Text(
-                                    'Fetch Locations first',
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 13,
-                                    ),
-                                  ),
-                                  value: locationDropdownValue,
-                                  icon: Icon(Icons.arrow_drop_down),
-                                  iconSize: 24,
-                                  elevation: 16,
-                                  underline: SizedBox(), // Remove the underline
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors
-                                        .black, // You can customize the text color here
-                                  ),
-                                  onChanged: isDropdownEnabled
-                                      ? (String? newValue) {
-                                          setState(() {
-                                            locationDropdownValue = newValue!;
-                                            getAddressValues();
-                                          });
-                                        }
-                                      : null,
-                                  items: locationsList
-                                      .map<DropdownMenuItem<String>>(
-                                          (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
-                                ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Expanded(child: SizedBox()),
+                              TextButton(
+                                child: Text('Add Record'),
+                                onPressed: () {
+                                  _addAddressToHive(
+                                    pincode: _pinCodeController.text,
+                                    locationDropdownValue:
+                                        locationDropdownValue,
+                                  );
+                                },
                               ),
                             ],
-                          );
-                        },
+                          ),
+                        ],
                       ),
-                    ),
-
-                    // Row(
-                    //   children: [
-                    //     Text(addressName ?? 'no'),
-                    //     Text(districtName ?? 'no'),
-                    //     Text(addressCircle ?? 'no'),
-                    //     Text(addressRegion ?? 'no'),
-                    //   ],
-                    // ),
-
-                    Row(
-                      children: [
-                        Expanded(child: SizedBox()),
-                        TextButton(
-                          child: Text('Add Record'),
-                          onPressed: () {
-                            _addAddressToHive(
-                              pincode: _pinCodeController.text,
-                              locationDropdownValue: locationDropdownValue,
-                            );
-                          },
-                        ),
-                      ],
-                    ),
 
                     SizedBox(
                       height: 10,
@@ -925,6 +973,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
 
                     HeadingTextWidget('Land Details'),
+
                     Column(
                       children: List.generate(
                         state.profileData.land.length,
@@ -977,8 +1026,136 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       height: 10,
                     ),
 
-                    TextFieldWidget(
-                        'Village', _village2Controller, 'Enter Village'),
+                    BlocListener<AuthBloc, authState.AuthState>(
+                      listener: (context, state) {
+                        if (state
+                            is authState.LandLocationsForPincodeReceived) {
+                          ToastComponent.showDialog('Locations fetched.',
+                              gravity: Toast.center,
+                              duration: Toast.lengthLong);
+                          postOfficeResponseForLand = state.postOfficeResponse;
+                          for (var postOffice
+                              in state.postOfficeResponse.postOffices) {
+                            locationsListForLand.add(postOffice.name);
+                          }
+                          isDropdownForLandEnabled = true;
+                          // print(state.postOfficeResponse.postOffices[0].name);
+                          // print(state.postOfficeResponse.message);
+                        }
+                        if (state is authState.LandLocationsForPincodeLoading) {
+                          locationDropdownValueForLand = null;
+                          clearAddressValuesForLand();
+                          locationsListForLand.clear();
+                          ToastComponent.showDialog('Fetching Locations...',
+                              gravity: Toast.center,
+                              duration: Toast.lengthLong);
+                        }
+                        // TODO: implement listener
+                      },
+                      child: BlocBuilder<AuthBloc, authState.AuthState>(
+                        builder: (context, state) {
+                          return Column(
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Container(
+                                    height: 40,
+                                    child: TextField(
+                                      keyboardType:
+                                          TextInputType.numberWithOptions(
+                                              decimal: true),
+                                      controller: _pinCodeControllerForLand,
+                                      autofocus: false,
+                                      decoration: InputDecorations
+                                          .buildInputDecoration_1(
+                                              hint_text: "Pin Code"),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 8),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        fetchLocationsForLand(context);
+                                      },
+                                      child: Text(
+                                        'Get Locations',
+                                        style: TextStyle(
+                                            color: MyTheme.accent_color,
+                                            fontStyle: FontStyle.italic,
+                                            decoration:
+                                                TextDecoration.underline),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              Container(
+                                height: 40,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: Colors
+                                        .grey, // You can customize the border color here
+                                  ),
+                                ),
+                                child: DropdownButton<String>(
+                                  isExpanded: true,
+                                  hint: Text(
+                                    'Select Village',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                  disabledHint: Text(
+                                    'Enter Pin Code first',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                  value: locationDropdownValueForLand,
+                                  icon: Icon(Icons.arrow_drop_down),
+                                  iconSize: 24,
+                                  elevation: 16,
+                                  underline: SizedBox(), // Remove the underline
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors
+                                        .black, // You can customize the text color here
+                                  ),
+                                  onChanged: isDropdownForLandEnabled
+                                      ? (String? newValue) {
+                                          setState(() {
+                                            locationDropdownValueForLand =
+                                                newValue!;
+                                            getAddressValuesForLand();
+                                          });
+                                        }
+                                      : null,
+                                  items: locationsListForLand
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+
+                    SizedBox(
+                      height: 10,
+                    ),
                     TextFieldWidget('Syno', _synoController, 'Enter Syno'),
 
                     //custom Area text field for accepting double values
@@ -995,7 +1172,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             _addLandToHive(
                               _areaController.text,
                               _synoController.text,
-                              _village2Controller.text,
+                              locationDropdownValueForLand,
                             );
                             landDropdownValue = null;
                           },

@@ -385,6 +385,8 @@ class _RegistrationState extends State<Registration> {
                   Container(
                     height: 40,
                     child: TextField(
+                      keyboardType:
+                          TextInputType.numberWithOptions(decimal: true),
                       controller: _pinCodeController,
                       autofocus: false,
                       decoration: InputDecorations.buildInputDecoration_1(
