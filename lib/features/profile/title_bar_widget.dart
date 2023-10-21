@@ -93,7 +93,7 @@ class _TitleBarState extends State<TitleBar> {
       }
     }
 
-    return [cropCount, count];
+    return [cropCount, count - 1];
   }
 
   Future<BuyerData> _getUserData() async {
@@ -163,93 +163,6 @@ class _TitleBarState extends State<TitleBar> {
                               ),
 
                               //Friends and Groups text
-                              // Expanded(
-                              //   child: GestureDetector(
-                              //     onTap: () {
-                              //       Navigator.push(
-                              //           context,
-                              //           MaterialPageRoute(
-                              //               builder: (context) => Friends()));
-                              //     },
-                              //     child: BlocListener<HiveBloc,
-                              //         hiveState.HiveState>(
-                              //       listener: (context, state) {
-                              //         if (state is hiveState.HiveDataReceived) {
-                              //           print('hive data received');
-                              //           BlocProvider.of<ProfileBloc>(context)
-                              //               .add(
-                              //             TotalPincodeFriendsCountRequested(
-                              //                 pincode: state.profileData
-                              //                     .address[0].pincode),
-                              //           );
-                              //         }
-                              //       },
-                              //       child: BlocBuilder<ProfileBloc,
-                              //           profileState.ProfileState>(
-                              //         builder: (context, state) {
-                              //           if (state is profileState
-                              //               .TotalPincodeFriendsCountReceived)
-                              //             return Center(
-                              //               child: Padding(
-                              //                 padding:
-                              //                     const EdgeInsets.symmetric(
-                              //                         vertical: 8.0),
-                              //                 child: Column(
-                              //                   mainAxisAlignment:
-                              //                       MainAxisAlignment
-                              //                           .spaceEvenly,
-                              //                   crossAxisAlignment:
-                              //                       CrossAxisAlignment.start,
-                              //                   children: [
-                              //                     Text(
-                              //                       "${state.count} Friends",
-                              //                       style: TextStyle(
-                              //                           fontWeight:
-                              //                               FontWeight.w800,
-                              //                           fontSize: 13,
-                              //                           fontFamily: 'Poppins',
-                              //                           color: MyTheme
-                              //                               .primary_color,
-                              //                           letterSpacing: .5),
-                              //                     ),
-                              //                     // SizedBox(height: 1),
-                              //                     Text(
-                              //                       "5 Groups",
-                              //                       style: TextStyle(
-                              //                           fontWeight:
-                              //                               FontWeight.w700,
-                              //                           fontSize: 13,
-                              //                           fontFamily: 'Poppins',
-                              //                           color: MyTheme
-                              //                               .primary_color,
-                              //                           letterSpacing: .5,
-                              //                           height: 1.5),
-                              //                     ),
-
-                              //                     Text(
-                              //                       "3 Crops",
-                              //                       style: TextStyle(
-                              //                           fontWeight:
-                              //                               FontWeight.w700,
-                              //                           fontSize: 13,
-                              //                           fontFamily: 'Poppins',
-                              //                           color: MyTheme
-                              //                               .primary_color,
-                              //                           letterSpacing: .5,
-                              //                           height: 1.5),
-                              //                     )
-                              //                   ],
-                              //                 ),
-                              //               ),
-                              //             );
-                              //           return Center(
-                              //             child: CircularProgressIndicator(),
-                              //           );
-                              //         },
-                              //       ),
-                              //     ),
-                              //   ),
-                              // )
                               Expanded(
                                 child: GestureDetector(
                                   onTap: () {

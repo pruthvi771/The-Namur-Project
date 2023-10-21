@@ -23,6 +23,7 @@ import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:toast/toast.dart';
@@ -62,11 +63,6 @@ class _ProfileState extends State<Profile> {
   void dispose() {
     _mainScrollController.dispose();
     super.dispose();
-  }
-
-  Future<void> _onPageRefresh() async {
-    // reset();
-    // fetchAll();
   }
 
   Uint8List? _image;
@@ -118,7 +114,7 @@ class _ProfileState extends State<Profile> {
       }
     }
 
-    return [villageName, pincode, count];
+    return [villageName, pincode, count - 1];
   }
 
   @override
@@ -291,7 +287,7 @@ class _ProfileState extends State<Profile> {
                     padding:
                         const EdgeInsets.only(top: 8.0, left: 20, right: 20),
                     child: Container(
-                      height: 50,
+                      height: 60,
                       width: MediaQuery.of(context).size.width,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -316,73 +312,56 @@ class _ProfileState extends State<Profile> {
                               ],
                             ),
                           ),
-                          FutureBuilder(
-                              future: getNumberOfFriends(),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  return Column(
-                                    children: [
-                                      //Region text
-                                      SizedBox(
-                                        height: 20,
-                                        child: RichText(
-                                            text: TextSpan(children: [
-                                          TextSpan(
-                                              text: '${snapshot.data![0]} : ',
-                                              style: TextStyle(
-                                                  fontFamily: 'Poppins',
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 15,
-                                                  color: Colors.black)),
-                                          TextSpan(
-                                              text: snapshot.data![1] as String,
-                                              style: TextStyle(
-                                                  fontFamily: 'Poppins',
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 15,
-                                                  color: Colors.black))
-                                        ])),
-                                      ),
+                          Expanded(
+                            child: FutureBuilder(
+                                future: getNumberOfFriends(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    return Column(
+                                      children: [
+                                        //Region text
+                                        Text('${snapshot.data![0]}',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins',
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 15,
+                                                color: Colors.black)),
+                                        Text('${snapshot.data![1]}',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins',
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 15,
+                                                color: Colors.black)),
 
-                                      //Friends and Neighbors text
-                                      SizedBox(
-                                        height: 20,
-                                        child: RichText(
-                                            text: TextSpan(children: [
-                                          TextSpan(
-                                              text:
-                                                  '${snapshot.data![2]} Friends & ',
-                                              style: TextStyle(
-                                                  fontFamily: 'Poppins',
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 15,
-                                                  color: Colors.black)),
-                                          TextSpan(
-                                              text: 'Neighbors',
-                                              style: TextStyle(
-                                                  fontFamily: 'Poppins',
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 15,
-                                                  color: Colors.black))
-                                        ])),
-                                      ),
-                                    ],
+                                        //Friends and Neighbors text
+                                        Text(
+                                          '${snapshot.data![2]} Friends & Neighbors',
+                                          style: TextStyle(
+                                              fontFamily: 'Poppins',
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 15,
+                                              color: Colors.black),
+                                        ),
+                                      ],
+                                    );
+                                  }
+                                  if (snapshot.hasError) {
+                                    return Text(
+                                      'Add Address To See This',
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins',
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 15,
+                                          color: Colors.red),
+                                    );
+                                  }
+                                  return Center(
+                                    child: CircularProgressIndicator(),
                                   );
-                                }
-                                if (snapshot.hasError) {
-                                  return Text(
-                                    'Add Address To See This',
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 15,
-                                        color: Colors.red),
-                                  );
-                                }
-                                return Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              })
+                                }),
+                          )
                         ],
                       ),
                     ),

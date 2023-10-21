@@ -66,7 +66,7 @@ class _FriendsState extends State<Friends> {
       }
     }
 
-    return [villageName, pincode, count];
+    return [villageName, pincode, count - 1];
   }
 
   String title = "KYC";
