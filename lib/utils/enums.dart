@@ -1,3 +1,6 @@
+import 'package:active_ecommerce_flutter/features/profile/address_list.dart'
+    as addressList;
+
 enum ProductQuantity {
   units,
   wkg,
@@ -45,41 +48,29 @@ var categoryListForParentEnum = {
 
 var subCategoryListsForCategory = {
   CategoryEnum.animals: [
-    SubCategoryEnum.egg,
-    SubCategoryEnum.chicken,
-    SubCategoryEnum.castor,
-    SubCategoryEnum.cotton,
-    SubCategoryEnum.groundnut,
-    SubCategoryEnum.jute,
+    SubCategoryEnum.cows,
+    SubCategoryEnum.goats,
+    SubCategoryEnum.buffaloes,
   ],
   CategoryEnum.birds: [
-    SubCategoryEnum.mango,
-    SubCategoryEnum.muskmelon,
-    SubCategoryEnum.pineapple,
-    SubCategoryEnum.sapota,
-    SubCategoryEnum.watermelon,
+    SubCategoryEnum.parrot,
+    SubCategoryEnum.pigeon,
+    SubCategoryEnum.sparrow,
   ],
   CategoryEnum.vegetables: [
     SubCategoryEnum.beans,
     SubCategoryEnum.beetroot,
     SubCategoryEnum.bitterground,
-    SubCategoryEnum.bottleground,
-    SubCategoryEnum.brinjal,
-    SubCategoryEnum.brocolli,
   ],
   CategoryEnum.fruits: [
-    SubCategoryEnum.amla,
     SubCategoryEnum.banana,
     SubCategoryEnum.gauva,
     SubCategoryEnum.grapes,
-    SubCategoryEnum.jackfruit,
   ],
   CategoryEnum.crops: [
     SubCategoryEnum.barley,
     SubCategoryEnum.bengalGram,
     SubCategoryEnum.castor,
-    SubCategoryEnum.cotton,
-    SubCategoryEnum.groundnut,
   ],
 };
 
@@ -115,8 +106,15 @@ var nameForCategoryEnum = {
 };
 
 enum SubCategoryEnum {
-  animals,
-  birds,
+  // animals
+  cows,
+  goats,
+  buffaloes,
+
+  // birds
+  parrot,
+  pigeon,
+  sparrow,
 
   //CROPS
   barley,
@@ -239,8 +237,12 @@ enum SubCategoryEnum {
 }
 
 var nameForSubCategoryEnum = {
-  SubCategoryEnum.animals: "Animals",
-  SubCategoryEnum.birds: "Birds",
+  SubCategoryEnum.cows: "Cows",
+  SubCategoryEnum.goats: "Goats",
+  SubCategoryEnum.buffaloes: "Buffaloes",
+  SubCategoryEnum.parrot: "Parrot",
+  SubCategoryEnum.pigeon: "Pigeon",
+  SubCategoryEnum.sparrow: "Sparrow",
   SubCategoryEnum.barley: "Barley",
   SubCategoryEnum.bengalGram: "Bengal Gram",
   SubCategoryEnum.castor: "Castor",
@@ -352,20 +354,98 @@ var nameForSubCategoryEnum = {
   SubCategoryEnum.chicken: "Chicken",
 };
 
+// CategoryEnum.animals: [
+//     SubCategoryEnum.cows,
+//     SubCategoryEnum.goats,
+//     SubCategoryEnum.buffaloes,
+//   ],
+//   CategoryEnum.birds: [
+//     SubCategoryEnum.parrot,
+//     SubCategoryEnum.pigeon,
+//     SubCategoryEnum.sparrow,
+//   ],
+//   CategoryEnum.vegetables: [
+//     SubCategoryEnum.beans,
+//     SubCategoryEnum.beetroot,
+//     SubCategoryEnum.bitterground,
+//   ],
+//   CategoryEnum.fruits: [
+//     SubCategoryEnum.banana,
+//     SubCategoryEnum.gauva,
+//     SubCategoryEnum.grapes,
+//   ],
+//   CategoryEnum.crops: [
+//     SubCategoryEnum.barley,
+//     SubCategoryEnum.bengalGram,
+//     SubCategoryEnum.castor,
+//   ],
+
+var imageForCrop = addressList.imageForCrop;
+
 var SubSubCategoryList = {
+  SubCategoryEnum.cows: [
+    'Cows',
+    'Black Cows',
+    'White Cows',
+  ],
+  SubCategoryEnum.goats: [
+    'Goats',
+    'Black Goats',
+    'White Goats',
+  ],
+  SubCategoryEnum.buffaloes: [
+    'Buffaloes',
+    'Black Buffaloes',
+    'White Buffaloes',
+  ],
+  SubCategoryEnum.parrot: [
+    'Parrot',
+    'Green Parrot',
+  ],
+  SubCategoryEnum.pigeon: [
+    'Pigeon',
+    'White Pigeon',
+  ],
+  SubCategoryEnum.sparrow: [
+    'Sparrow',
+    'White Sparrow',
+  ],
+  SubCategoryEnum.beans: [
+    'Beans',
+    'Green Beans',
+    'Red Beans',
+  ],
+  SubCategoryEnum.beetroot: [
+    'Beetroot',
+    'Red Beetroot',
+  ],
+  SubCategoryEnum.bitterground: [
+    'Bitterground',
+    'Green Bitterground',
+  ],
+  SubCategoryEnum.barley: [
+    'Barley',
+    'Barley Green',
+  ],
+  SubCategoryEnum.bengalGram: [
+    'Bengal Gram',
+    'Bengal Gram Green',
+  ],
+  SubCategoryEnum.castor: [
+    'Castor',
+    'Castor Green',
+  ],
+  SubCategoryEnum.banana: [
+    'Banana',
+    'Banana Green',
+  ],
+  SubCategoryEnum.gauva: [
+    'Guava',
+    'Guava Green',
+  ],
   SubCategoryEnum.grapes: [
     'Grapes Black',
     'Grapes Green',
     'Grapes Red',
-  ],
-  SubCategoryEnum.egg: [
-    'Mango Alphonso',
-    'Mango Banganapalli',
-    'Mango Chausa',
-    'Mango Dasheri',
-    'Mango Langra',
-    'Mango Mallika',
-    'Mango Neelam',
-    'Mango Totapuri',
   ],
 };

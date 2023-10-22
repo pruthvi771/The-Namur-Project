@@ -424,6 +424,9 @@ class _CategoryListState extends State<CategoryList> {
       child: InkWell(
         onTap: () {
           print('Tapped index $index');
+          if (index == 2 || index == 3) {
+            return;
+          }
           ParentEnum? parentEnum = index == 0
               ? ParentEnum.animal
               : index == 1

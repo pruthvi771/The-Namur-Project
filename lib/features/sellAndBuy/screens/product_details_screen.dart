@@ -86,6 +86,7 @@ class _ProductDetailsState extends State<ProductDetails> {
           color: Colors.grey[200],
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 widget.sellProduct.productName,
