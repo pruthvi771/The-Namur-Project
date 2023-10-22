@@ -1,8 +1,8 @@
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
-import 'package:active_ecommerce_flutter/features/sell/models/sell_product.dart';
-import 'package:active_ecommerce_flutter/features/sell/services/bloc/sell_event.dart';
-import 'package:active_ecommerce_flutter/features/sell/services/bloc/sell_state.dart';
-import 'package:active_ecommerce_flutter/features/sell/services/sell_repository.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/sell_bloc/sell_event.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/sell_bloc/sell_state.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/sell_repository.dart';
 import 'package:bloc/bloc.dart';
 
 class SellBloc extends Bloc<SellEvent, SellState> {

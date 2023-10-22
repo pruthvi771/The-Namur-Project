@@ -1,7 +1,8 @@
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/drawer/drawer.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/buy_product_subsubcategory.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
-import 'package:active_ecommerce_flutter/features/sell/screens/product_inventory.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/product_inventory.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart' as enums;
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -10,8 +11,10 @@ import 'package:get/get.dart';
 
 class ParentScreen extends StatefulWidget {
   final enums.ParentEnum parentEnum;
+  final bool isBuy;
   const ParentScreen({
     required this.parentEnum,
+    this.isBuy = false,
   });
 
   @override
@@ -158,7 +161,7 @@ class _ParentScreenState extends State<ParentScreen> {
             ],
           ),
         ),
-
+        // Text(widget.isBuy ? 'Buy' : 'Sell'),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Card(
@@ -272,12 +275,20 @@ class _ParentScreenState extends State<ParentScreen> {
                             subCategoryListsForCategory[categoryEnum]![index];
                         return InkWell(
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ProductInventory(
-                                          subCategoryEnum: subCategoryEnum,
-                                        )));
+                            widget.isBuy
+                                ? Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            BuyProductSubSubCategories(
+                                              subCategoryEnum: subCategoryEnum,
+                                            )))
+                                : Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ProductInventory(
+                                              subCategoryEnum: subCategoryEnum,
+                                            )));
                           },
                           child: Container(
                             height: 120,

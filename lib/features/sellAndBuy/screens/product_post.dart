@@ -2,9 +2,9 @@ import 'dart:typed_data';
 
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/profile/utils.dart';
-import 'package:active_ecommerce_flutter/features/sell/models/sell_product.dart';
-import 'package:active_ecommerce_flutter/features/sell/services/bloc/sell_bloc.dart';
-import 'package:active_ecommerce_flutter/features/sell/services/bloc/sell_event.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/sell_bloc/sell_bloc.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/sell_bloc/sell_event.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/sell_screen/product_inventory/product_inventory.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart';

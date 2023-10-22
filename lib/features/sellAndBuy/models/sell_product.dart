@@ -10,6 +10,7 @@ class SellProduct {
   final String subCategory;
   final String subSubCategory;
   final String imageURL;
+  final String sellerId;
 
   SellProduct({
     required this.id,
@@ -22,5 +23,6 @@ class SellProduct {
     required this.subCategory,
     required this.subSubCategory,
     required this.imageURL,
+    required this.sellerId,
   });
 }

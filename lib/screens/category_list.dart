@@ -5,7 +5,7 @@ import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/screen_database.dart';
-import 'package:active_ecommerce_flutter/features/sell/screens/parent_screen.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/parent_screen.dart';
 import 'package:active_ecommerce_flutter/helpers/shimmer_helper.dart';
 import 'package:active_ecommerce_flutter/presenter/bottom_appbar_index.dart';
 import 'package:active_ecommerce_flutter/screens/calender/calender.dart';
@@ -183,8 +183,10 @@ class _CategoryListState extends State<CategoryList> {
                   // screen database button
                   // TextButton(
                   //     onPressed: () {
-                  //       Navigator.push(context,
-                  //           MaterialPageRoute(builder: (context) => ScreenDatabase()));
+                  //       Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //               builder: (context) => ScreenDatabase()));
                   //     },
                   //     child: Text('Screen database')),
 
@@ -322,8 +324,6 @@ class _CategoryListState extends State<CategoryList> {
                           ]),
                         ),
 
-                  //  SizedBox(height:16),
-
                   // Calender widget design start
                   Column(
                     children: [
@@ -408,14 +408,14 @@ class _CategoryListState extends State<CategoryList> {
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        return buildCategoryItemCard(index, isvalue);
+        return buildCategoryItemCard(index, isvalue, isBuy);
       },
     );
   }
 
   //widget for each category
   // Widget buildCategoryItemCard(categoryResponse, index, isvalue) {
-  Widget buildCategoryItemCard(index, isvalue) {
+  Widget buildCategoryItemCard(index, isvalue, isBuy) {
     var itemWidth = ((DeviceInfo(context).width! - 31) / 2);
     print(itemWidth);
 
@@ -433,14 +433,28 @@ class _CategoryListState extends State<CategoryList> {
                       : index == 3
                           ? ParentEnum.land
                           : null;
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                return ParentScreen(parentEnum: parentEnum!);
-              },
-            ),
-          );
+          if (!isBuy) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return ParentScreen(parentEnum: parentEnum!);
+                },
+              ),
+            );
+          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return ParentScreen(
+                    parentEnum: parentEnum!,
+                    isBuy: true,
+                  );
+                },
+              ),
+            );
+          }
         },
         child: Container(
           child: Column(

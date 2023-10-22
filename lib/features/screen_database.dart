@@ -1,5 +1,5 @@
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
-import 'package:active_ecommerce_flutter/features/sell/screens/parent_screen.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/parent_screen.dart';
 import 'package:active_ecommerce_flutter/screens/Payment_info/payment_info_screen.dart';
 import 'package:active_ecommerce_flutter/screens/auction_products.dart';
 import 'package:active_ecommerce_flutter/screens/auction_products_details.dart';

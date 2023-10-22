@@ -6,8 +6,10 @@ import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dar
     as hiveModels;
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_bloc.dart';
-import 'package:active_ecommerce_flutter/features/sell/services/bloc/sell_bloc.dart';
-import 'package:active_ecommerce_flutter/features/sell/services/sell_repository.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/buy_bloc/buy_bloc.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/buy_repository.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/sell_bloc/sell_bloc.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/sell_repository.dart';
 import 'package:active_ecommerce_flutter/features/weather/bloc/weather_bloc.dart';
 import 'package:active_ecommerce_flutter/presenter/cart_counter.dart';
 import 'package:active_ecommerce_flutter/presenter/currency_presenter.dart';
@@ -152,6 +154,7 @@ class _MyAppState extends State<MyApp> {
     AuthRepository authRepository = AuthRepository();
     FirestoreRepository firestoreRepository = FirestoreRepository();
     SellRepository sellRepository = SellRepository();
+    BuyRepository buyRepository = BuyRepository();
 
     return MultiBlocProvider(
         providers: [
@@ -171,6 +174,11 @@ class _MyAppState extends State<MyApp> {
             create: (context) => SellBloc(
               authRepository: authRepository,
               sellRepository: sellRepository,
+            ),
+          ),
+          BlocProvider<BuyBloc>(
+            create: (context) => BuyBloc(
+              buyRepository: buyRepository,
             ),
           ),
           BlocProvider<HiveBloc>(
@@ -271,12 +279,13 @@ class _MyAppState extends State<MyApp> {
               ],
               // locale: provider.locale,
               supportedLocales: LangConfig().supportedLocales(),
-              localeResolutionCallback: (deviceLocale, supportedLocales) {
-                if (AppLocalizations.delegate.isSupported(deviceLocale!)) {
-                  return deviceLocale;
-                }
-                return const Locale('en');
-              },
+              locale: Locale('en'),
+              // localeResolutionCallback: (deviceLocale, supportedLocales) {
+              //   if (AppLocalizations.delegate.isSupported(deviceLocale!)) {
+              //     return deviceLocale;
+              //   }
+              //   return const Locale('ar');
+              // },
               //home: SplashScreen(),
               // home: Splash(),
             )));

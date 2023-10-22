@@ -358,4 +358,14 @@ var SubSubCategoryList = {
     'Grapes Green',
     'Grapes Red',
   ],
+  SubCategoryEnum.egg: [
+    'Mango Alphonso',
+    'Mango Banganapalli',
+    'Mango Chausa',
+    'Mango Dasheri',
+    'Mango Langra',
+    'Mango Mallika',
+    'Mango Neelam',
+    'Mango Totapuri',
+  ],
 };

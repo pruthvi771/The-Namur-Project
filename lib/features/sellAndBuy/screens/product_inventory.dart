@@ -1,10 +1,10 @@
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
-import 'package:active_ecommerce_flutter/features/sell/models/sell_product.dart';
-import 'package:active_ecommerce_flutter/features/sell/services/bloc/sell_bloc.dart';
-import 'package:active_ecommerce_flutter/features/sell/services/bloc/sell_event.dart';
-import 'package:active_ecommerce_flutter/features/sell/services/bloc/sell_state.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/sell_bloc/sell_bloc.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/sell_bloc/sell_event.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/sell_bloc/sell_state.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
-import 'package:active_ecommerce_flutter/features/sell/screens/product_post.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/product_post.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -185,6 +185,7 @@ class _ProductInventoryState extends State<ProductInventory> {
                         quantityUnit: state.products[index].quantityUnit,
                         // priceType: state.products[index].priceType,
                         subCategoryEnum: widget.subCategoryEnum,
+                        sellerId: state.products[index].sellerId,
                       );
                     },
                   );
@@ -215,6 +216,7 @@ class ProductInventoryWidget extends StatelessWidget {
     required this.quantityUnit,
     // required this.priceType,
     required this.subCategoryEnum,
+    required this.sellerId,
     // required this.
   });
 
@@ -225,6 +227,7 @@ class ProductInventoryWidget extends StatelessWidget {
   final String imageURL;
   final int productQuantity;
   final String quantityUnit;
+  final String sellerId;
   // final String priceType;
   final SubCategoryEnum subCategoryEnum;
 
@@ -359,6 +362,7 @@ class ProductInventoryWidget extends StatelessWidget {
                                                         subSubCategory:
                                                             productSubSubCategory,
                                                         imageURL: imageURL,
+                                                        sellerId: sellerId,
                                                       ),
                                                     )));
                                       },

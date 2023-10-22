@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:active_ecommerce_flutter/features/sell/models/sell_product.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -135,6 +135,7 @@ class SellRepository {
         subCategory: data['subCategory'],
         subSubCategory: data['subSubCategory'],
         imageURL: data['imageURL'],
+        sellerId: data['sellerId'],
       );
     }).toList();
     print(products.length);

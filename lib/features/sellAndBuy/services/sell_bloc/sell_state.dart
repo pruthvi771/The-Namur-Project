@@ -1,4 +1,4 @@
-import 'package:active_ecommerce_flutter/features/sell/models/sell_product.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class SellState extends Equatable {
