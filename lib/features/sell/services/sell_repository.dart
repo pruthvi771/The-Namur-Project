@@ -47,6 +47,40 @@ class SellRepository {
     }
   }
 
+  Future<String?> editProductBuying({
+    required String productId,
+    required String productName,
+    required String productDescription,
+    required double productPrice,
+    required int productQuantity,
+    required String priceType,
+    required String category,
+    required String subCategory,
+    required String subSubCategory,
+    // required String imageURL,
+    // required String userId,
+  }) async {
+    CollectionReference products =
+        FirebaseFirestore.instance.collection('products');
+
+    try {
+      await products.doc(productId).update({
+        'name': productName,
+        'description': productDescription,
+        'price': productPrice,
+        'quantity': productQuantity,
+        'priceType': priceType,
+        'category': category,
+        'subCategory': subCategory,
+        'subSubCategory': subSubCategory,
+        // 'imageURL': imageURL,
+      });
+    } catch (e) {
+      print('Error updating product: $e');
+      // Handle the error according to your application's requirements
+    }
+  }
+
   Future<String> uploadImagetoFirebase(String childName, Uint8List file) async {
     Reference ref = _storage.ref().child(childName);
     UploadTask uploadTask = ref.putData(file);
@@ -88,19 +122,18 @@ class SellRepository {
       Map<String, dynamic> data = doc.data();
       print(doc.id);
       return SellProduct(
-        doc.id,
-        data['name'],
-        data['description'],
-        data['price'],
-        data['quantity'],
-        data['priceType'],
-        data['category'],
-        data['subCategory'],
-        data['subSubCategory'],
-        data['imageURL'],
+        id: doc.id,
+        productName: data['name'],
+        productDescription: data['description'],
+        productPrice: data['price'],
+        productQuantity: data['quantity'],
+        priceType: data['priceType'],
+        category: data['category'],
+        subCategory: data['subCategory'],
+        subSubCategory: data['subSubCategory'],
+        imageURL: data['imageURL'],
       );
     }).toList();
-
     print(products.length);
 
     return products;

@@ -28,8 +28,8 @@ final class ProductLoading extends SellState {
   List<Object> get props => [];
 }
 
-final class ProductAddedSuccessfully extends SellState {
-  const ProductAddedSuccessfully();
+final class ProductAddEditDeleteSuccessfully extends SellState {
+  const ProductAddEditDeleteSuccessfully();
 
   @override
   List<Object> get props => [];

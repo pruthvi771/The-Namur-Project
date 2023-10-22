@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/profile/utils.dart';
+import 'package:active_ecommerce_flutter/features/sell/models/sell_product.dart';
 import 'package:active_ecommerce_flutter/features/sell/services/bloc/sell_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sell/services/bloc/sell_event.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
@@ -26,10 +27,15 @@ class ProductPost extends StatefulWidget {
   final SubCategoryEnum subCategoryEnum;
   final List<String> alreadyExistingProductNames;
 
+  final bool isProductEditScreen;
+  final SellProduct? sellProduct;
+
   const ProductPost({
     Key? key,
     required this.subCategoryEnum,
     required this.alreadyExistingProductNames,
+    this.isProductEditScreen = false,
+    this.sellProduct,
   }) : super(key: key);
 
   @override
@@ -55,6 +61,16 @@ class _ProductPostState extends State<ProductPost> {
     category = enums.nameForCategoryEnum[
         enums.findCategoryForSubCategory(widget.subCategoryEnum)]!;
     subCategory = enums.nameForSubCategoryEnum[widget.subCategoryEnum]!;
+    perPiecePrice = true;
+    if (widget.isProductEditScreen) {
+      _nameController.text = widget.sellProduct!.productName;
+      _additionalController.text = widget.sellProduct!.productDescription;
+      _priceController.text = widget.sellProduct!.productPrice.toString();
+      _quantityController.text = widget.sellProduct!.productQuantity.toString();
+      imageURL = widget.sellProduct!.imageURL;
+      _selectedItem = widget.sellProduct!.subSubCategory;
+      perPiecePrice = widget.sellProduct!.priceType == "Per piece";
+    }
   }
 
   bool _switchValue = false;
@@ -65,9 +81,11 @@ class _ProductPostState extends State<ProductPost> {
 
   late String category;
   late String subCategory;
-  bool perPiecePrice = true;
+  late bool perPiecePrice;
 
   Uint8List? _image;
+
+  String? imageURL;
 
   selectImage() async {
     Uint8List img = await pickImage(ImageSource.gallery);
@@ -157,8 +175,90 @@ class _ProductPostState extends State<ProductPost> {
       ),
     );
 
-    ToastComponent.showDialog('Product Added Successfully',
-        gravity: Toast.center, duration: Toast.lengthLong);
+    Navigator.pop(context);
+  }
+
+  onPressedEdit(BuildContext buildContext) async {
+    // print('login clicked');
+    var productName = _nameController.text.toString();
+    var productSubSubCategory = _selectedItem;
+    var description = _additionalController.text.toString();
+    var productSubCategory = subCategory;
+    var productCategory = category;
+    var productQuantity = _quantityController.text.toString();
+    String price = _priceController.text;
+    String productPriceType = perPiecePrice ? "Per piece" : "Per kg";
+
+    if (productName == "") {
+      ToastComponent.showDialog('Enter Product Name',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    if (widget.alreadyExistingProductNames.contains(productName)) {
+      ToastComponent.showDialog('A Product By This Name Already Exists',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    if (productSubSubCategory == null) {
+      ToastComponent.showDialog('Select Category',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+    if (description == "") {
+      ToastComponent.showDialog('Enter Product Description',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+    if (price == "") {
+      ToastComponent.showDialog('Enter Product Price',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+    if (productQuantity == "") {
+      ToastComponent.showDialog('Enter Product Quantity',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+    // if (_image == null) {
+    //   ToastComponent.showDialog('Select Product Image',
+    //       gravity: Toast.center, duration: Toast.lengthLong);
+    //   return;
+    // }
+
+    double productPrice = 0.0;
+    try {
+      productPrice = double.parse(price);
+    } catch (e) {
+      ToastComponent.showDialog('Please Enter Valid Price',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    int productQuantityInt = 0;
+    try {
+      productQuantityInt = int.parse(productQuantity);
+    } catch (e) {
+      ToastComponent.showDialog('Please Enter Valid Quantity',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    BlocProvider.of<SellBloc>(buildContext).add(
+      EditProductRequested(
+        productId: widget.sellProduct!.id,
+        productName: productName,
+        productDescription: description,
+        productPrice: productPrice,
+        productQuantity: productQuantityInt,
+        priceType: productPriceType,
+        category: productCategory,
+        subCategory: productSubCategory,
+        subSubCategory: productSubSubCategory,
+        // image: _image!,
+      ),
+    );
 
     Navigator.pop(context);
   }
@@ -168,7 +268,10 @@ class _ProductPostState extends State<ProductPost> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text(AppLocalizations.of(context)!.product_post_ucf,
+        title: Text(
+            widget.isProductEditScreen
+                ? "Product"
+                : AppLocalizations.of(context)!.product_post_ucf,
             style: TextStyle(
                 color: MyTheme.white,
                 fontWeight: FontWeight.w500,
@@ -204,12 +307,9 @@ class _ProductPostState extends State<ProductPost> {
         width: double.infinity,
         child: ElevatedButton(
           onPressed: () async {
-            await onPressedPost(context);
-            // Navigator.pop(context);
-            // BlocProvider.of<SellBloc>(context)
-            //     .add(ProductsForSubCategoryRequested(
-            //   subCategory: nameForSubCategoryEnum[widget.subCategoryEnum]!,
-            // ));
+            widget.isProductEditScreen
+                ? await onPressedEdit(context)
+                : await onPressedPost(context);
           },
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(MyTheme.primary_color),
@@ -217,7 +317,7 @@ class _ProductPostState extends State<ProductPost> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(0))),
           ),
           child: Text(
-            "Add to Stock",
+            widget.isProductEditScreen ? "Edit Product" : "Add to Stock",
             style: TextStyle(
                 color: Colors.white, fontSize: 20, fontWeight: FontWeight.w500),
           ),
@@ -440,69 +540,71 @@ class _ProductPostState extends State<ProductPost> {
         ),
 
         // add image
-        Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Container(
-            height: 200,
-            padding: EdgeInsets.all(10),
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-                border: Border.all(width: 1, color: MyTheme.light_grey),
-                borderRadius: BorderRadius.circular(10)),
-            child: _image != null
-                ? InkWell(
-                    onTap: () {
-                      selectImage();
-                    },
-                    child: Image.memory(
-                      _image!,
-                      fit: BoxFit.cover,
-                    ),
-                  )
-                : Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.add,
-                            color: MyTheme.primary_color,
-                          ),
-                          Text(
-                            "Add Featured Image",
-                            style: TextStyle(
-                                color: MyTheme.primary_color,
-                                fontSize: 17,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      Text(
-                        "Supported formats are JPG and PNG",
-                        style: TextStyle(
-                          color: MyTheme.dark_grey,
-                          fontSize: 14,
-                        ),
-                      ),
-                      Divider(),
-                      InkWell(
-                        onTap: () {
-                          selectImage();
-                        },
-                        child: Container(
-                          height: 110,
-                          width: MediaQuery.of(context).size.width,
-                          child: Image.asset(
-                            "assets/imgplaceholder.png",
+        widget.isProductEditScreen
+            ? Container()
+            : Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Container(
+                  height: 200,
+                  padding: EdgeInsets.all(10),
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                      border: Border.all(width: 1, color: MyTheme.light_grey),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: _image != null
+                      ? InkWell(
+                          onTap: () {
+                            selectImage();
+                          },
+                          child: Image.memory(
+                            _image!,
                             fit: BoxFit.cover,
                           ),
+                        )
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.add,
+                                  color: MyTheme.primary_color,
+                                ),
+                                Text(
+                                  "Add Featured Image",
+                                  style: TextStyle(
+                                      color: MyTheme.primary_color,
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              "Supported formats are JPG and PNG",
+                              style: TextStyle(
+                                color: MyTheme.dark_grey,
+                                fontSize: 14,
+                              ),
+                            ),
+                            Divider(),
+                            InkWell(
+                              onTap: () {
+                                selectImage();
+                              },
+                              child: Container(
+                                height: 110,
+                                width: MediaQuery.of(context).size.width,
+                                child: Image.asset(
+                                  "assets/imgplaceholder.png",
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-          ),
-        ),
+                ),
+              ),
 
         Container(
           height: 60,

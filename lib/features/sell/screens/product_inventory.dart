@@ -1,3 +1,5 @@
+import 'package:active_ecommerce_flutter/custom/toast_component.dart';
+import 'package:active_ecommerce_flutter/features/sell/models/sell_product.dart';
 import 'package:active_ecommerce_flutter/features/sell/services/bloc/sell_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sell/services/bloc/sell_event.dart';
 import 'package:active_ecommerce_flutter/features/sell/services/bloc/sell_state.dart';
@@ -8,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:toast/toast.dart';
 
 class ProductInventory extends StatefulWidget {
   final SubCategoryEnum subCategoryEnum;
@@ -93,16 +96,6 @@ class _ProductInventoryState extends State<ProductInventory> {
     );
   }
 
-  // RefreshIndicator buildBody() {
-  //   return RefreshIndicator(
-  //     color: MyTheme.white,
-  //     backgroundColor: MyTheme.primary_color,
-  //     onRefresh: _onPageRefresh,
-  //     displacement: 10,
-  //     child: bodycontent(),
-  //   );
-  // }
-
   late List<String> productNames;
   bool floatingActionButtomEnabled = false;
 
@@ -120,7 +113,9 @@ class _ProductInventoryState extends State<ProductInventory> {
             productNames.add(product.productName);
           }
         }
-        if (state is ProductAddedSuccessfully) {
+        if (state is ProductAddEditDeleteSuccessfully) {
+          ToastComponent.showDialog('Stock Updated Successfully',
+              gravity: Toast.center, duration: Toast.lengthLong);
           BlocProvider.of<SellBloc>(context)
               .add(ProductsForSubCategoryRequested(
             subCategory: nameForSubCategoryEnum[widget.subCategoryEnum]!,
@@ -173,31 +168,6 @@ class _ProductInventoryState extends State<ProductInventory> {
                       ],
                     ),
                   )
-                // : ListView(physics: BouncingScrollPhysics(), children: [
-                //     Container(
-                //       child: ListView.builder(
-                //           itemCount: state.products.length,
-                //           shrinkWrap: true,
-                //           physics: NeverScrollableScrollPhysics(),
-                //           scrollDirection: Axis.vertical,
-                //           itemBuilder: (context, index) {
-                //             var productName = state.products[index].productName;
-                //             var productSubSubCategory =
-                //                 state.products[index].subSubCategory;
-                //             return ProductInventoryWidget(
-                //               productId: state.products[index].id,
-                //               productName: productName,
-                //               productSubSubCategory: productSubSubCategory,
-                //               productPrice: state.products[index].productPrice,
-                //               productPriceType: state.products[index].priceType,
-                //               imageURL: state.products[index].imageURL,
-                //               productQuantity:
-                //                   state.products[index].productQuantity,
-                //               priceType: state.products[index].priceType,
-                //             );
-                //           }),
-                //     ),
-                //   ]);
                 : ListView.builder(
                     physics: BouncingScrollPhysics(),
                     itemCount: state.products.length,
@@ -290,9 +260,9 @@ class ProductInventoryWidget extends StatelessWidget {
     BlocProvider.of<SellBloc>(context).add(DeleteProductRequested(
       productId: productId,
     ));
-    BlocProvider.of<SellBloc>(context).add(ProductsForSubCategoryRequested(
-      subCategory: nameForSubCategoryEnum[subCategoryEnum]!,
-    ));
+    // BlocProvider.of<SellBloc>(context).add(ProductsForSubCategoryRequested(
+    //   subCategory: nameForSubCategoryEnum[subCategoryEnum]!,
+    // ));
   }
 
   @override
@@ -394,7 +364,33 @@ class ProductInventoryWidget extends StatelessWidget {
                                     child: IconButton(
                                       splashRadius: 20,
                                       onPressed: () {
-                                        print('tapped');
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ProductPost(
+                                                      subCategoryEnum:
+                                                          subCategoryEnum,
+                                                      alreadyExistingProductNames: [],
+                                                      isProductEditScreen: true,
+                                                      sellProduct: SellProduct(
+                                                        id: productId,
+                                                        productName:
+                                                            productName,
+                                                        productDescription:
+                                                            productSubSubCategory,
+                                                        productPrice:
+                                                            productPrice,
+                                                        productQuantity:
+                                                            productQuantity,
+                                                        priceType: priceType,
+                                                        category: "",
+                                                        subCategory: "",
+                                                        subSubCategory:
+                                                            productSubSubCategory,
+                                                        imageURL: imageURL,
+                                                      ),
+                                                    )));
                                       },
                                       icon: Image.asset(
                                         "assets/edit1.png",

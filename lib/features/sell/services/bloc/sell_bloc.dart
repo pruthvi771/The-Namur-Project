@@ -34,7 +34,7 @@ class SellBloc extends Bloc<SellEvent, SellState> {
 
         await sellRepository.saveProductImage(file: event.image, docId: docId!);
 
-        emit(ProductAddedSuccessfully());
+        emit(ProductAddEditDeleteSuccessfully());
 
         // emit(SellAddProductSuccessState());
       } catch (e) {
@@ -60,9 +60,34 @@ class SellBloc extends Bloc<SellEvent, SellState> {
     on<DeleteProductRequested>((event, emit) async {
       try {
         await sellRepository.deleteProduct(productId: event.productId);
+        emit(ProductAddEditDeleteSuccessfully());
       } catch (e) {
         // emit(SellAddProductErrorState(message: e.toString()));
         print('error happened in DeleteProductRequested');
+        print(e.toString());
+      }
+    });
+
+    on<EditProductRequested>((event, emit) async {
+      try {
+        await sellRepository.editProductBuying(
+          productId: event.productId,
+          productName: event.productName,
+          productDescription: event.productDescription,
+          productPrice: event.productPrice,
+          productQuantity: event.productQuantity,
+          priceType: event.priceType,
+          category: event.category,
+          subCategory: event.subCategory,
+          subSubCategory: event.subSubCategory,
+          // imageURL: event.imageURL,
+          // userId: authRepository.currentUser!.userId,
+        );
+
+        emit(ProductAddEditDeleteSuccessfully());
+      } catch (e) {
+        // emit(SellAddProductErrorState(message: e.toString()));
+        print('error happened in EditProductRequested');
         print(e.toString());
       }
     });

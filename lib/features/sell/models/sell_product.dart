@@ -10,16 +10,16 @@ class SellProduct {
   final String subSubCategory;
   final String imageURL;
 
-  SellProduct(
-    this.id,
-    this.productName,
-    this.productDescription,
-    this.productPrice,
-    this.productQuantity,
-    this.priceType,
-    this.category,
-    this.subCategory,
-    this.subSubCategory,
-    this.imageURL,
-  );
+  SellProduct({
+    required this.id,
+    required this.productName,
+    required this.productDescription,
+    required this.productPrice,
+    required this.productQuantity,
+    required this.priceType,
+    required this.category,
+    required this.subCategory,
+    required this.subSubCategory,
+    required this.imageURL,
+  });
 }
