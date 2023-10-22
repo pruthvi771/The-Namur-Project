@@ -319,47 +319,47 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
                                       height: 15,
                                     ),
                                     LandExpandedTile(
-                                        controller2: _landController,
-                                        title: 'Machines and Equipments',
-                                        content: (item.equipments.length != 0)
-                                            ? Container(
-                                                // padding: const EdgeInsets.symmetric(
-                                                //     horizontal: 12),
-                                                height: 140,
-                                                child: ListView(
-                                                  physics:
-                                                      BouncingScrollPhysics(),
-                                                  scrollDirection:
-                                                      Axis.horizontal,
-                                                  children: List.generate(
-                                                    item.equipments.length,
-                                                    (index) {
-                                                      var equipment = item
-                                                          .equipments[index];
-                                                      return EquipmentWidget(
-                                                        title: equipment,
-                                                        image:
-                                                            imageForEquipment[
-                                                                equipment]!,
-                                                      );
-                                                    },
+                                      controller2: _landController,
+                                      title: 'Machines and Equipments',
+                                      content: (item.equipments.length != 0)
+                                          ? Container(
+                                              // padding: const EdgeInsets.symmetric(
+                                              //     horizontal: 12),
+                                              height: 140,
+                                              child: ListView(
+                                                physics:
+                                                    BouncingScrollPhysics(),
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                children: List.generate(
+                                                  item.equipments.length,
+                                                  (index) {
+                                                    var equipment =
+                                                        item.equipments[index];
+                                                    return EquipmentWidget(
+                                                      title: equipment,
+                                                      image: imageForEquipment[
+                                                          equipment]!,
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            )
+                                          : Container(
+                                              height: 50,
+                                              child: Center(
+                                                child: Text(
+                                                  'No Equipment Data found',
+                                                  style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w600,
+                                                    letterSpacing: .5,
+                                                    fontFamily: 'Poppins',
                                                   ),
                                                 ),
-                                              )
-                                            : Container(
-                                                height: 50,
-                                                child: Center(
-                                                  child: Text(
-                                                    'No Equipment Data found',
-                                                    style: TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      letterSpacing: .5,
-                                                      fontFamily: 'Poppins',
-                                                    ),
-                                                  ),
-                                                ))),
+                                              ),
+                                            ),
+                                    ),
                                   ],
                                 ),
                               ),

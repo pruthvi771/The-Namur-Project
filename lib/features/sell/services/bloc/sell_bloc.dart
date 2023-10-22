@@ -15,7 +15,7 @@ class SellBloc extends Bloc<SellEvent, SellState> {
       // TODO: implement event handler
     });
 
-    on<SellAddProductEvent>((event, emit) async {
+    on<AddProductRequested>((event, emit) async {
       var currentUser = authRepository.currentUser!;
 
       try {
@@ -34,6 +34,8 @@ class SellBloc extends Bloc<SellEvent, SellState> {
 
         await sellRepository.saveProductImage(file: event.image, docId: docId!);
 
+        emit(ProductAddedSuccessfully());
+
         // emit(SellAddProductSuccessState());
       } catch (e) {
         // emit(SellAddProductErrorState(message: e.toString()));
@@ -43,6 +45,7 @@ class SellBloc extends Bloc<SellEvent, SellState> {
 
     on<ProductsForSubCategoryRequested>((event, emit) async {
       try {
+        emit(ProductLoading());
         List<SellProduct> products =
             await sellRepository.getProducts(subCategory: event.subCategory);
 
@@ -50,6 +53,16 @@ class SellBloc extends Bloc<SellEvent, SellState> {
       } catch (e) {
         // emit(SellAddProductErrorState(message: e.toString()));
         print('error happened in ProductsForSubCategoryRequested');
+        print(e.toString());
+      }
+    });
+
+    on<DeleteProductRequested>((event, emit) async {
+      try {
+        await sellRepository.deleteProduct(productId: event.productId);
+      } catch (e) {
+        // emit(SellAddProductErrorState(message: e.toString()));
+        print('error happened in DeleteProductRequested');
         print(e.toString());
       }
     });

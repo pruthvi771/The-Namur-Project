@@ -144,7 +144,7 @@ class _ProductPostState extends State<ProductPost> {
     }
 
     BlocProvider.of<SellBloc>(buildContext).add(
-      SellAddProductEvent(
+      AddProductRequested(
         productName: productName,
         productDescription: description,
         productPrice: productPrice,
@@ -205,6 +205,11 @@ class _ProductPostState extends State<ProductPost> {
         child: ElevatedButton(
           onPressed: () async {
             await onPressedPost(context);
+            // Navigator.pop(context);
+            // BlocProvider.of<SellBloc>(context)
+            //     .add(ProductsForSubCategoryRequested(
+            //   subCategory: nameForSubCategoryEnum[widget.subCategoryEnum]!,
+            // ));
           },
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(MyTheme.primary_color),

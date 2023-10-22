@@ -20,3 +20,17 @@ final class ProductsForSubCategoryReceived extends SellState {
   @override
   List<Object> get props => [products];
 }
+
+final class ProductLoading extends SellState {
+  const ProductLoading();
+
+  @override
+  List<Object> get props => [];
+}
+
+final class ProductAddedSuccessfully extends SellState {
+  const ProductAddedSuccessfully();
+
+  @override
+  List<Object> get props => [];
+}

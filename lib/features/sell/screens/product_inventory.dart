@@ -29,10 +29,10 @@ class _ProductInventoryState extends State<ProductInventory> {
   }
 
   void initState() {
-    super.initState();
     BlocProvider.of<SellBloc>(context).add(ProductsForSubCategoryRequested(
       subCategory: nameForSubCategoryEnum[widget.subCategoryEnum]!,
     ));
+    super.initState();
     // fetchAll();
   }
 
@@ -111,12 +111,20 @@ class _ProductInventoryState extends State<ProductInventory> {
       listener: (context, state) {
         if (state is ProductsForSubCategoryReceived) {
           productNames = [];
+          if (state.products.isNotEmpty) {
+            setState(() {
+              floatingActionButtomEnabled = true;
+            });
+          }
           for (var product in state.products) {
             productNames.add(product.productName);
           }
-          setState(() {
-            floatingActionButtomEnabled = true;
-          });
+        }
+        if (state is ProductAddedSuccessfully) {
+          BlocProvider.of<SellBloc>(context)
+              .add(ProductsForSubCategoryRequested(
+            subCategory: nameForSubCategoryEnum[widget.subCategoryEnum]!,
+          ));
         }
       },
       child: BlocBuilder<SellBloc, SellState>(
@@ -124,42 +132,97 @@ class _ProductInventoryState extends State<ProductInventory> {
           if (state is ProductsForSubCategoryReceived) {
             return state.products.isEmpty
                 ? Center(
-                    child: Text(
-                      'No products found',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'No products found',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: MyTheme.accent_color,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Text(
+                            'Add Product',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: .5,
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ProductPost(
+                                          subCategoryEnum:
+                                              widget.subCategoryEnum,
+                                          alreadyExistingProductNames: [],
+                                        )));
+                          },
+                        ),
+                      ],
                     ),
                   )
-                : ListView(
+                // : ListView(physics: BouncingScrollPhysics(), children: [
+                //     Container(
+                //       child: ListView.builder(
+                //           itemCount: state.products.length,
+                //           shrinkWrap: true,
+                //           physics: NeverScrollableScrollPhysics(),
+                //           scrollDirection: Axis.vertical,
+                //           itemBuilder: (context, index) {
+                //             var productName = state.products[index].productName;
+                //             var productSubSubCategory =
+                //                 state.products[index].subSubCategory;
+                //             return ProductInventoryWidget(
+                //               productId: state.products[index].id,
+                //               productName: productName,
+                //               productSubSubCategory: productSubSubCategory,
+                //               productPrice: state.products[index].productPrice,
+                //               productPriceType: state.products[index].priceType,
+                //               imageURL: state.products[index].imageURL,
+                //               productQuantity:
+                //                   state.products[index].productQuantity,
+                //               priceType: state.products[index].priceType,
+                //             );
+                //           }),
+                //     ),
+                //   ]);
+                : ListView.builder(
                     physics: BouncingScrollPhysics(),
-                    children: [
-                      Container(
-                        child: ListView.builder(
-                            itemCount: state.products.length,
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            scrollDirection: Axis.vertical,
-                            itemBuilder: (context, index) {
-                              var productName =
-                                  state.products[index].productName;
-                              var productSubSubCategory =
-                                  state.products[index].subSubCategory;
-                              return ProductInventoryWidget(
-                                productName: productName,
-                                productSubSubCategory: productSubSubCategory,
-                                productPrice:
-                                    state.products[index].productPrice,
-                                productPriceType:
-                                    state.products[index].priceType,
-                                imageURL: state.products[index].imageURL,
-                                productQuantity:
-                                    state.products[index].productQuantity,
-                                priceType: state.products[index].priceType,
-                              );
-                            }),
-                      ),
-                    ],
+                    itemCount: state.products.length,
+                    itemBuilder: (context, index) {
+                      var productName = state.products[index].productName;
+                      var productSubSubCategory =
+                          state.products[index].subSubCategory;
+                      return ProductInventoryWidget(
+                        productId: state.products[index].id,
+                        productName: productName,
+                        productSubSubCategory: productSubSubCategory,
+                        productPrice: state.products[index].productPrice,
+                        productPriceType: state.products[index].priceType,
+                        imageURL: state.products[index].imageURL,
+                        productQuantity: state.products[index].productQuantity,
+                        priceType: state.products[index].priceType,
+                        subCategoryEnum: widget.subCategoryEnum,
+                      );
+                    },
                   );
+          }
+          if (state is ProductLoading) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           }
           return Center(
             child: CircularProgressIndicator(),
@@ -201,6 +264,7 @@ class _ProductInventoryState extends State<ProductInventory> {
 class ProductInventoryWidget extends StatelessWidget {
   ProductInventoryWidget({
     super.key,
+    required this.productId,
     required this.productName,
     required this.productSubSubCategory,
     required this.productPrice,
@@ -208,9 +272,11 @@ class ProductInventoryWidget extends StatelessWidget {
     required this.imageURL,
     required this.productQuantity,
     required this.priceType,
+    required this.subCategoryEnum,
     // required this.
   });
 
+  final String productId;
   final String productName;
   final String productSubSubCategory;
   final double productPrice;
@@ -218,6 +284,16 @@ class ProductInventoryWidget extends StatelessWidget {
   final String imageURL;
   final int productQuantity;
   final String priceType;
+  final SubCategoryEnum subCategoryEnum;
+
+  void onPressedDelete(BuildContext context, String productId) {
+    BlocProvider.of<SellBloc>(context).add(DeleteProductRequested(
+      productId: productId,
+    ));
+    BlocProvider.of<SellBloc>(context).add(ProductsForSubCategoryRequested(
+      subCategory: nameForSubCategoryEnum[subCategoryEnum]!,
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -329,7 +405,53 @@ class ProductInventoryWidget extends StatelessWidget {
                                     child: IconButton(
                                       splashRadius: 20,
                                       onPressed: () {
-                                        print('tapped');
+                                        showAdaptiveDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: Text(
+                                                  'Delete Product',
+                                                  style: TextStyle(
+                                                    color:
+                                                        MyTheme.primary_color,
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.w800,
+                                                  ),
+                                                ),
+                                                content: Text(
+                                                    'Are you sure you want to delete this product? \n\nProduct Name: $productName'),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Text(
+                                                      'Cancel',
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 15,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      onPressedDelete(
+                                                          context, productId);
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Text(
+                                                      'Delete',
+                                                      style: TextStyle(
+                                                        color: Colors.red,
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            });
                                       },
                                       icon: Image.asset(
                                         "assets/delet1.png",

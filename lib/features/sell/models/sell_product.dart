@@ -1,4 +1,5 @@
 class SellProduct {
+  final String id;
   final String productName;
   final String productDescription;
   final double productPrice;
@@ -10,6 +11,7 @@ class SellProduct {
   final String imageURL;
 
   SellProduct(
+    this.id,
     this.productName,
     this.productDescription,
     this.productPrice,

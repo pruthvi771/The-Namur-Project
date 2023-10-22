@@ -10,24 +10,6 @@ class SellRepository {
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   FirebaseStorage _storage = FirebaseStorage.instance;
 
-  // Future<void> loginWithEmail({
-  //   required String email,
-  //   required String password,
-  // }) async {
-  //   try {
-  //     await _firebaseAuth.signInWithEmailAndPassword(
-  //         email: email, password: password);
-  //   } on FirebaseAuthException catch (e) {
-  //     if (e.code == 'user-not-found') {
-  //       throw Exception('User not found. Please register first.');
-  //     } else {
-  //       throw Exception('Something went wrong. Please try again.');
-  //     }
-  //   } catch (_) {
-  //     throw Exception('Something went wrong. Please try again.');
-  //   }
-  // }
-
   Future<String?> addProductBuying({
     required String productName,
     required String productDescription,
@@ -99,12 +81,14 @@ class SellRepository {
         .collection('products')
         .where(FieldPath.documentId, isNotEqualTo: null)
         .where('subCategory', isEqualTo: subCategory)
+        .where('sellerId', isEqualTo: _firebaseAuth.currentUser!.uid)
         .get();
 
     var products = querySnapshot.docs.map((doc) {
       Map<String, dynamic> data = doc.data();
-      print(data);
+      print(doc.id);
       return SellProduct(
+        doc.id,
         data['name'],
         data['description'],
         data['price'],
@@ -120,5 +104,16 @@ class SellRepository {
     print(products.length);
 
     return products;
+  }
+
+  Future<void> deleteProduct({
+    required String productId,
+  }) async {
+    try {
+      await _firestore.collection('products').doc(productId).delete();
+    } catch (_) {
+      print(_);
+      throw Exception('Something went wrong. Please try again.');
+    }
   }
 }

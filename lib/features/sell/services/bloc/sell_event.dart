@@ -8,7 +8,7 @@ abstract class SellEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class SellAddProductEvent extends SellEvent {
+class AddProductRequested extends SellEvent {
   final String productName;
   final String productDescription;
   final double productPrice;
@@ -19,7 +19,7 @@ class SellAddProductEvent extends SellEvent {
   final String subSubCategory;
   final Uint8List image;
 
-  const SellAddProductEvent({
+  const AddProductRequested({
     required this.productName,
     required this.productDescription,
     required this.productPrice,
@@ -54,4 +54,15 @@ class ProductsForSubCategoryRequested extends SellEvent {
 
   @override
   List<Object> get props => [subCategory];
+}
+
+class DeleteProductRequested extends SellEvent {
+  final String productId;
+
+  const DeleteProductRequested({
+    required this.productId,
+  });
+
+  @override
+  List<Object> get props => [productId];
 }
