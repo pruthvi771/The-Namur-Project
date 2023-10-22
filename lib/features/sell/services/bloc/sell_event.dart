@@ -13,7 +13,8 @@ class AddProductRequested extends SellEvent {
   final String productDescription;
   final double productPrice;
   final int productQuantity;
-  final String priceType;
+  final String quantityUnit;
+  // final String priceType;
   final String category;
   final String subCategory;
   final String subSubCategory;
@@ -24,7 +25,8 @@ class AddProductRequested extends SellEvent {
     required this.productDescription,
     required this.productPrice,
     required this.productQuantity,
-    required this.priceType,
+    required this.quantityUnit,
+    // required this.priceType,
     required this.category,
     required this.subCategory,
     required this.subSubCategory,
@@ -37,7 +39,7 @@ class AddProductRequested extends SellEvent {
         productDescription,
         productPrice,
         productQuantity,
-        priceType,
+        quantityUnit,
         category,
         subCategory,
         subSubCategory,
@@ -51,7 +53,8 @@ class EditProductRequested extends SellEvent {
   final String productDescription;
   final double productPrice;
   final int productQuantity;
-  final String priceType;
+  final String quantityUnit;
+  // final String priceType;
   final String category;
   final String subCategory;
   final String subSubCategory;
@@ -63,7 +66,7 @@ class EditProductRequested extends SellEvent {
     required this.productDescription,
     required this.productPrice,
     required this.productQuantity,
-    required this.priceType,
+    required this.quantityUnit,
     required this.category,
     required this.subCategory,
     required this.subSubCategory,
@@ -77,7 +80,7 @@ class EditProductRequested extends SellEvent {
         productDescription,
         productPrice,
         productQuantity,
-        priceType,
+        quantityUnit,
         category,
         subCategory,
         subSubCategory,

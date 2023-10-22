@@ -180,10 +180,10 @@ class _ProductInventoryState extends State<ProductInventory> {
                         productName: productName,
                         productSubSubCategory: productSubSubCategory,
                         productPrice: state.products[index].productPrice,
-                        productPriceType: state.products[index].priceType,
                         imageURL: state.products[index].imageURL,
                         productQuantity: state.products[index].productQuantity,
-                        priceType: state.products[index].priceType,
+                        quantityUnit: state.products[index].quantityUnit,
+                        // priceType: state.products[index].priceType,
                         subCategoryEnum: widget.subCategoryEnum,
                       );
                     },
@@ -238,10 +238,10 @@ class ProductInventoryWidget extends StatelessWidget {
     required this.productName,
     required this.productSubSubCategory,
     required this.productPrice,
-    required this.productPriceType,
     required this.imageURL,
     required this.productQuantity,
-    required this.priceType,
+    required this.quantityUnit,
+    // required this.priceType,
     required this.subCategoryEnum,
     // required this.
   });
@@ -250,10 +250,10 @@ class ProductInventoryWidget extends StatelessWidget {
   final String productName;
   final String productSubSubCategory;
   final double productPrice;
-  final String productPriceType;
   final String imageURL;
   final int productQuantity;
-  final String priceType;
+  final String quantityUnit;
+  // final String priceType;
   final SubCategoryEnum subCategoryEnum;
 
   void onPressedDelete(BuildContext context, String productId) {
@@ -335,7 +335,7 @@ class ProductInventoryWidget extends StatelessWidget {
                                           fontWeight: FontWeight.w600),
                                     ),
                                     Text(
-                                      "Stock: $productQuantity ${priceType == 'Per kg' ? 'kg' : 'units'}",
+                                      "Stock: $productQuantity x $quantityUnit",
                                       maxLines: 2,
                                       style: TextStyle(
                                           fontSize: 14,
@@ -344,7 +344,7 @@ class ProductInventoryWidget extends StatelessWidget {
                                           height: 1.2),
                                     ),
                                     Text(
-                                      "₹ $productPrice/${priceType == 'Per kg' ? 'kg' : 'unit'}",
+                                      "₹ $productPrice per ${quantityUnit == "Units" ? 'unit' : quantityUnit}",
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
@@ -383,7 +383,8 @@ class ProductInventoryWidget extends StatelessWidget {
                                                             productPrice,
                                                         productQuantity:
                                                             productQuantity,
-                                                        priceType: priceType,
+                                                        quantityUnit:
+                                                            quantityUnit,
                                                         category: "",
                                                         subCategory: "",
                                                         subSubCategory:

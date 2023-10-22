@@ -61,7 +61,7 @@ class _ProductPostState extends State<ProductPost> {
     category = enums.nameForCategoryEnum[
         enums.findCategoryForSubCategory(widget.subCategoryEnum)]!;
     subCategory = enums.nameForSubCategoryEnum[widget.subCategoryEnum]!;
-    perPiecePrice = true;
+    // perPiecePrice = true;
     if (widget.isProductEditScreen) {
       _nameController.text = widget.sellProduct!.productName;
       _additionalController.text = widget.sellProduct!.productDescription;
@@ -69,7 +69,8 @@ class _ProductPostState extends State<ProductPost> {
       _quantityController.text = widget.sellProduct!.productQuantity.toString();
       imageURL = widget.sellProduct!.imageURL;
       _selectedItem = widget.sellProduct!.subSubCategory;
-      perPiecePrice = widget.sellProduct!.priceType == "Per piece";
+      selectedQuantityUnit = widget.sellProduct!.quantityUnit;
+      // perPiecePrice = widget.sellProduct!.priceType == "Per piece";
     }
   }
 
@@ -81,11 +82,17 @@ class _ProductPostState extends State<ProductPost> {
 
   late String category;
   late String subCategory;
-  late bool perPiecePrice;
+  // late bool perPiecePrice;
 
   Uint8List? _image;
 
   String? imageURL;
+
+  var listOfQuantityUnits = nameForProductQuantity.values.toList();
+  String? selectedQuantityUnit;
+
+  // Output the list of names
+  // print(listOfNames);
 
   selectImage() async {
     Uint8List img = await pickImage(ImageSource.gallery);
@@ -102,8 +109,9 @@ class _ProductPostState extends State<ProductPost> {
     var productSubCategory = subCategory;
     var productCategory = category;
     var productQuantity = _quantityController.text.toString();
+    var quantityUnit = selectedQuantityUnit;
     String price = _priceController.text;
-    String productPriceType = perPiecePrice ? "Per piece" : "Per kg";
+    // String productPriceType = perPiecePrice ? "Per piece" : "Per kg";
 
     if (productName == "") {
       ToastComponent.showDialog('Enter Product Name',
@@ -119,6 +127,11 @@ class _ProductPostState extends State<ProductPost> {
 
     if (productSubSubCategory == null) {
       ToastComponent.showDialog('Select Category',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+    if (quantityUnit == null) {
+      ToastComponent.showDialog('Select Quantity Unit',
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
@@ -167,7 +180,7 @@ class _ProductPostState extends State<ProductPost> {
         productDescription: description,
         productPrice: productPrice,
         productQuantity: productQuantityInt,
-        priceType: productPriceType,
+        quantityUnit: quantityUnit,
         category: productCategory,
         subCategory: productSubCategory,
         subSubCategory: productSubSubCategory,
@@ -186,8 +199,10 @@ class _ProductPostState extends State<ProductPost> {
     var productSubCategory = subCategory;
     var productCategory = category;
     var productQuantity = _quantityController.text.toString();
+    var quantityUnit = selectedQuantityUnit;
+
     String price = _priceController.text;
-    String productPriceType = perPiecePrice ? "Per piece" : "Per kg";
+    // String productPriceType = perPiecePrice ? "Per piece" : "Per kg";
 
     if (productName == "") {
       ToastComponent.showDialog('Enter Product Name',
@@ -203,6 +218,11 @@ class _ProductPostState extends State<ProductPost> {
 
     if (productSubSubCategory == null) {
       ToastComponent.showDialog('Select Category',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+    if (quantityUnit == null) {
+      ToastComponent.showDialog('Select Quantity Unit',
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
@@ -252,7 +272,7 @@ class _ProductPostState extends State<ProductPost> {
         productDescription: description,
         productPrice: productPrice,
         productQuantity: productQuantityInt,
-        priceType: productPriceType,
+        quantityUnit: quantityUnit,
         category: productCategory,
         subCategory: productSubCategory,
         subSubCategory: productSubSubCategory,
@@ -345,7 +365,7 @@ class _ProductPostState extends State<ProductPost> {
                 contentPadding: EdgeInsets.only(left: 15),
                 hintText: "Product Name",
                 hintStyle: TextStyle(
-                    color: Colors.black,
+                    color: Colors.grey[600],
                     fontWeight: FontWeight.w400,
                     fontFamily: 'Poppins'),
               ),
@@ -355,66 +375,58 @@ class _ProductPostState extends State<ProductPost> {
 
         // product category
         Padding(
-            padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
-            child: Container(
-                decoration: BoxDecoration(
-                    color: MyTheme.field_color,
-                    borderRadius: BorderRadius.circular(10)),
-                child: DropdownButton<String>(
-                  padding: EdgeInsets.only(left: 15),
-                  icon: SizedBox.shrink(),
-                  underline: Container(
-                    // Remove the underline
-                    height: 0,
-                    color: Colors.transparent,
+          padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+          child: Container(
+              decoration: BoxDecoration(
+                  color: MyTheme.field_color,
+                  borderRadius: BorderRadius.circular(10)),
+              child: DropdownButton<String>(
+                padding: EdgeInsets.only(left: 15),
+                underline: Container(
+                  // Remove the underline
+                  height: 0,
+                  color: Colors.transparent,
+                ),
+                value: _selectedItem,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedItem = newValue!;
+                  });
+                },
+                items: _dropdownItems
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                hint: SizedBox(
+                  width: MediaQuery.of(context).size.width /
+                      1.3, // Adjust the width to your desired value
+                  child: Text(
+                    'Product Category',
+                    style: TextStyle(
+                        color: Colors.grey[600],
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Poppins'),
                   ),
-                  value: _selectedItem,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _selectedItem = newValue!;
-                    });
-                  },
-                  items: _dropdownItems
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  hint: Row(
-                    children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width /
-                            1.3, // Adjust the width to your desired value
-                        child: Text(
-                          'Product Category',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: 'Poppins'),
-                        ),
-                      ),
-                      Icon(
-                        Icons.arrow_drop_down,
-                        size: 24,
-                      ),
-                    ],
-                  ),
-                ))),
+                ),
+              )),
+        ),
 
         // product quantity
         Padding(
           padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
           child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: 50,
-              decoration: BoxDecoration(
-                  color: MyTheme.field_color,
-                  borderRadius: BorderRadius.circular(10)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
+            height: 50, // Specify a fixed height for the container
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: MyTheme.field_color,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                     child: TextFormField(
                       controller: _quantityController,
                       inputFormatters: <TextInputFormatter>[
@@ -426,74 +438,81 @@ class _ProductPostState extends State<ProductPost> {
                         contentPadding: EdgeInsets.only(left: 15),
                         hintText: "Quantity",
                         hintStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Poppins'),
+                          color: Colors.grey[600],
+                          fontWeight: FontWeight.w400,
+                          fontFamily: 'Poppins',
+                        ),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(right: 10),
-                    child: Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              perPiecePrice = true;
-                            });
-                          },
-                          child: Text(
-                            "Per piece / ",
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontFamily: 'Poppins',
-                              fontWeight: perPiecePrice
-                                  ? FontWeight.w600
-                                  : FontWeight.w400,
-                              color: perPiecePrice
-                                  ? MyTheme.primary_color
-                                  : Colors.black,
-                            ),
+                ),
+                SizedBox(width: 10),
+                Container(
+                  // width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: MyTheme.field_color,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 6),
+                        child: Icon(
+                          Icons.close,
+                          color: Colors.grey[600],
+                          size: 15,
+                        ),
+                      ),
+                      DropdownButton<String>(
+                        padding: EdgeInsets.only(left: 15, right: 5),
+                        underline: Container(
+                          height: 0,
+                          color: Colors.transparent,
+                        ),
+                        value: selectedQuantityUnit,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            selectedQuantityUnit = newValue!;
+                          });
+                        },
+                        items: listOfQuantityUnits
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        hint: Text(
+                          'Select Unit',
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Poppins',
                           ),
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              perPiecePrice = false;
-                            });
-                          },
-                          child: Text(
-                            "Per kg",
-                            style: TextStyle(
-                              color: perPiecePrice
-                                  ? Colors.black
-                                  : MyTheme.primary_color,
-                              fontFamily: 'Poppins',
-                              fontWeight: !perPiecePrice
-                                  ? FontWeight.w600
-                                  : FontWeight.w400,
-                              fontSize: 15,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
+                        // icon: SizedBox(width: 24),
+                      ),
+                    ],
                   ),
-                ],
-              )),
+                ),
+              ],
+            ),
+          ),
         ),
 
         // product price
         Padding(
           padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
           child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: 50,
-              decoration: BoxDecoration(
-                  color: MyTheme.field_color,
-                  borderRadius: BorderRadius.circular(10)),
+            width: MediaQuery.of(context).size.width,
+            height: 50,
+            decoration: BoxDecoration(
+              color: MyTheme.field_color,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 15.0, right: 15.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
                     child: TextFormField(
@@ -502,18 +521,20 @@ class _ProductPostState extends State<ProductPost> {
                           TextInputType.numberWithOptions(decimal: true),
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        contentPadding: EdgeInsets.only(left: 15),
                         hintText:
-                            "Price (${perPiecePrice ? 'per piece' : 'per kg'})",
+                            "Price (per ${selectedQuantityUnit == "Units" ? 'unit' : selectedQuantityUnit ?? 'unit'})",
                         hintStyle: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Poppins'),
+                          color: Colors.grey[600],
+                          fontWeight: FontWeight.w400,
+                          fontFamily: 'Poppins',
+                        ),
                       ),
                     ),
                   ),
                 ],
-              )),
+              ),
+            ),
+          ),
         ),
 
         // additional description
@@ -531,7 +552,7 @@ class _ProductPostState extends State<ProductPost> {
                 contentPadding: EdgeInsets.only(left: 15),
                 hintText: "Additional Description",
                 hintStyle: TextStyle(
-                    color: Colors.black,
+                    color: Colors.grey[600],
                     fontWeight: FontWeight.w400,
                     fontFamily: 'Poppins'),
               ),

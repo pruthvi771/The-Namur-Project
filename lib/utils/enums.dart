@@ -1,3 +1,17 @@
+enum ProductQuantity {
+  units,
+  wkg,
+  w500g,
+  w250g,
+}
+
+var nameForProductQuantity = {
+  ProductQuantity.units: "Units",
+  ProductQuantity.wkg: "Kg",
+  ProductQuantity.w500g: "500g",
+  ProductQuantity.w250g: "250g",
+};
+
 enum ParentEnum {
   animal,
   food,

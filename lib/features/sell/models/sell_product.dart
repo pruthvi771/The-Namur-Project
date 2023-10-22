@@ -4,7 +4,8 @@ class SellProduct {
   final String productDescription;
   final double productPrice;
   final int productQuantity;
-  final String priceType;
+  final String quantityUnit;
+  // final String priceType;
   final String category;
   final String subCategory;
   final String subSubCategory;
@@ -16,7 +17,7 @@ class SellProduct {
     required this.productDescription,
     required this.productPrice,
     required this.productQuantity,
-    required this.priceType,
+    required this.quantityUnit,
     required this.category,
     required this.subCategory,
     required this.subSubCategory,
