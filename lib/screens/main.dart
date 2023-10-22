@@ -97,43 +97,6 @@ class _MainState extends State<Main> {
     super.initState();
   }
 
-  // Location location = Location();
-  // late bool _serviceEnabled;
-  // late permissionHandler.PermissionStatus _permissionGranted;
-  // late LocationData _locationData;
-
-  // Future<void> checkLocationPermission() async {
-  //   var dataBox = Hive.box<hiveModels.PrimaryLocation>('primaryLocationBox');
-  //   var savedData = dataBox.get('locationData');
-  //   if (savedData != null) {
-  //     print("saved Latitude: ${savedData.latitude}");
-  //     print("saved Longitude: ${savedData.longitude}");
-  //     return;
-  //   }
-  //   print('no saved location data found');
-  //   _serviceEnabled = await location.serviceEnabled();
-  //   if (!_serviceEnabled) {
-  //     _serviceEnabled = await location.requestService();
-  //     if (!_serviceEnabled) {
-  //       return;
-  //     }
-  //   }
-  //   _permissionGranted = await permissionHandler.Permission.location.request();
-  //   if (_permissionGranted != permissionHandler.PermissionStatus.granted) {
-  //     return;
-  //   }
-  //   _locationData = await location.getLocation();
-  //   print("new Latitude: ${_locationData.latitude}");
-  //   print("new Longitude: ${_locationData.longitude}");
-  //   var primaryLocation = hiveModels.PrimaryLocation()
-  //     ..id = "locationData"
-  //     ..isAddress = false
-  //     ..latitude = _locationData.latitude as double
-  //     ..longitude = _locationData.longitude as double
-  //     ..address = "";
-  //   await dataBox.put(primaryLocation.id, primaryLocation);
-  // }
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(

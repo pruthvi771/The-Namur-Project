@@ -201,34 +201,6 @@ class _ProductInventoryState extends State<ProductInventory> {
       ),
     );
   }
-
-  // bodycontent() {
-  //   return ListView(
-  //     physics: BouncingScrollPhysics(),
-  //     children: [
-  //       Text(nameForSubCategoryEnum[widget.subCategoryEnum]!,
-  //           style: TextStyle(
-  //               fontSize: 20,
-  //               fontWeight: FontWeight.w600,
-  //               color: MyTheme.font_grey)),
-  //       Column(),
-  //       Container(
-  //         child: ListView.builder(
-  //             itemCount: 3,
-  //             shrinkWrap: true,
-  //             physics: NeverScrollableScrollPhysics(),
-  //             scrollDirection: Axis.vertical,
-  //             itemBuilder: (context, index) {
-  //               var productName = 'Fresh Green Grapes';
-  //               var productSubSubCategory = "Grapes Black";
-  //               return ProductInventoryWidget(
-  //                   productName: productName,
-  //                   productSubSubCategory: productSubSubCategory);
-  //             }),
-  //       ),
-  //     ],
-  //   );
-  // }
 }
 
 class ProductInventoryWidget extends StatelessWidget {
@@ -260,9 +232,6 @@ class ProductInventoryWidget extends StatelessWidget {
     BlocProvider.of<SellBloc>(context).add(DeleteProductRequested(
       productId: productId,
     ));
-    // BlocProvider.of<SellBloc>(context).add(ProductsForSubCategoryRequested(
-    //   subCategory: nameForSubCategoryEnum[subCategoryEnum]!,
-    // ));
   }
 
   @override

@@ -48,15 +48,29 @@ class _MoreDetailsState extends State<MoreDetails> {
     if (!(profileData.address.length == 0)) {
       tempProgress += 0.2;
     }
-    if (!profileData.kyc.aadhar.isEmpty) {
+    if (profileData.kyc.aadhar.isNotEmpty) {
       tempProgress += 0.2;
     }
-    // if (!profileData.kyc.pan.isEmpty) {
-    //   tempProgress += 0.2;
-    // }
-    // if (!profileData.kyc.gst.isEmpty) {
-    //   tempProgress += 0.2;
-    // }
+    int cropCount = 0;
+
+    for (Land land in profileData.land) {
+      cropCount += land.crops.length;
+    }
+
+    if (cropCount > 0) {
+      tempProgress += 0.2;
+    }
+
+    int machineCount = 0;
+
+    for (Land land in profileData.land) {
+      machineCount += land.equipments.length;
+    }
+
+    if (machineCount > 0) {
+      tempProgress += 0.2;
+    }
+
     if (!(profileData.land.length == 0)) {
       tempProgress += 0.2;
     }
@@ -134,14 +148,17 @@ class _MoreDetailsState extends State<MoreDetails> {
 
     for (var document in documents) {
       Map<String, dynamic> data = document.data()!;
-      if (data['profileData']['address'][0]['pincode'] == pincode) {
-        count++;
-        print('count incremented');
+      if (data['profileData']['address'].isNotEmpty) {
+        Map<String, dynamic> data = document.data()!;
+        if (data['profileData']['address'][0]['pincode'] ==
+            savedData.address[0].pincode) {
+          count++;
+          print('count incremented');
+        }
       }
-      print(data['profileData']['address'][0]['pincode']);
     }
 
-    return [villageName, pincode, count];
+    return [villageName, pincode, count - 1];
   }
 
   @override
