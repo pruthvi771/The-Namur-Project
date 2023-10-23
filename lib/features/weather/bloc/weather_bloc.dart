@@ -15,10 +15,22 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
 
     on<WeatherSreenDataRequested>((event, emit) async {
       emit(Loading());
-      final responseData = await WeatherRepository().fetchForecast();
-      // await Future.delayed(Duration(seconds: 3));
-      emit(WeatherSreenDataReceived(responseData: responseData));
-      // });
+      try {
+        var responseData = [];
+        responseData = await WeatherRepository().fetchForecast();
+
+        if (responseData[0] == null) {
+          emit(ScreenNoLocationDataFound());
+          return;
+        }
+        // await Future.delayed(Duration(seconds: 3));
+        emit(WeatherSreenDataReceived(responseData: responseData as dynamic));
+        // });
+      } catch (e) {
+        final errorMessage = e.toString().replaceAll('Exception:', '');
+        print('error message: $errorMessage');
+        emit(Error(e.toString()));
+      }
     });
   }
 }

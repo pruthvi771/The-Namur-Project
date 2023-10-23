@@ -20,13 +20,14 @@ class AddressAdapter extends TypeAdapter<Address> {
       ..district = fields[0] as String
       ..taluk = fields[1] as String
       ..hobli = fields[2] as String
-      ..village = fields[3] as String;
+      ..village = fields[3] as String
+      ..pincode = fields[4] as String;
   }
 
   @override
   void write(BinaryWriter writer, Address obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.district)
       ..writeByte(1)
@@ -34,7 +35,9 @@ class AddressAdapter extends TypeAdapter<Address> {
       ..writeByte(2)
       ..write(obj.hobli)
       ..writeByte(3)
-      ..write(obj.village);
+      ..write(obj.village)
+      ..writeByte(4)
+      ..write(obj.pincode);
   }
 
   @override
@@ -101,7 +104,7 @@ class LandAdapter extends TypeAdapter<Land> {
       ..village = fields[0] as String
       ..syno = fields[1] as String
       ..area = fields[2] as double
-      ..crops = (fields[3] as List).cast<String>()
+      ..crops = (fields[3] as List).cast<Crop>()
       ..equipments = (fields[4] as List).cast<String>();
   }
 
@@ -173,6 +176,123 @@ class ProfileDataAdapter extends TypeAdapter<ProfileData> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is ProfileDataAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class CropAdapter extends TypeAdapter<Crop> {
+  @override
+  final int typeId = 4;
+
+  @override
+  Crop read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return Crop()
+      ..name = fields[0] as String
+      ..yieldOfCrop = fields[1] as double;
+  }
+
+  @override
+  void write(BinaryWriter writer, Crop obj) {
+    writer
+      ..writeByte(2)
+      ..writeByte(0)
+      ..write(obj.name)
+      ..writeByte(1)
+      ..write(obj.yieldOfCrop);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CropAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class PrimaryLocationAdapter extends TypeAdapter<PrimaryLocation> {
+  @override
+  final int typeId = 5;
+
+  @override
+  PrimaryLocation read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return PrimaryLocation()
+      ..id = fields[0] as String
+      ..isAddress = fields[1] as bool
+      ..latitude = fields[2] as double
+      ..longitude = fields[3] as double
+      ..address = fields[4] as String?;
+  }
+
+  @override
+  void write(BinaryWriter writer, PrimaryLocation obj) {
+    writer
+      ..writeByte(5)
+      ..writeByte(0)
+      ..write(obj.id)
+      ..writeByte(1)
+      ..write(obj.isAddress)
+      ..writeByte(2)
+      ..write(obj.latitude)
+      ..writeByte(3)
+      ..write(obj.longitude)
+      ..writeByte(4)
+      ..write(obj.address);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PrimaryLocationAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class SecondaryLocationsAdapter extends TypeAdapter<SecondaryLocations> {
+  @override
+  final int typeId = 6;
+
+  @override
+  SecondaryLocations read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return SecondaryLocations()
+      ..id = fields[0] as String
+      ..address = (fields[1] as List).cast<String>();
+  }
+
+  @override
+  void write(BinaryWriter writer, SecondaryLocations obj) {
+    writer
+      ..writeByte(2)
+      ..writeByte(0)
+      ..write(obj.id)
+      ..writeByte(1)
+      ..write(obj.address);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SecondaryLocationsAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

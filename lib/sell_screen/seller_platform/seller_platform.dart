@@ -25,21 +25,48 @@ class _SellerPlatformState extends State<SellerPlatform> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      height: DeviceInfo(context).height,
-      child: Stack(
-        children: [
-          Scaffold(
-            // key: homeData.scaffoldKey,
-            // drawer: const MainDrawer(),
-            backgroundColor: Colors.transparent,
-            appBar: buildCustomAppBar(context),
-            body: buildBody(),
+    return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: Text(AppLocalizations.of(context)!.seller_platform_ucf,
+              style: TextStyle(
+                  color: MyTheme.white,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: .5,
+                  fontFamily: 'Poppins')),
+          centerTitle: true,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xff107B28), Color(0xff4C7B10)]),
+            ),
           ),
-        ],
-      ),
-    );
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(
+                Icons.keyboard_arrow_left,
+                size: 35,
+                color: MyTheme.white,
+              ),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+          ],
+        ),
+        body: buildBody(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ProductPost()));
+          },
+          child: Image.asset("assets/add 2.png"),
+        ));
   }
 
   RefreshIndicator buildBody() {
@@ -49,63 +76,6 @@ class _SellerPlatformState extends State<SellerPlatform> {
       onRefresh: _onPageRefresh,
       displacement: 10,
       child: bodycontent(),
-    );
-  }
-
-  PreferredSize buildCustomAppBar(context) {
-    return PreferredSize(
-      preferredSize: Size(DeviceInfo(context).width!, 80),
-      child: Container(
-        height: 92,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xff107B28), Color(0xff4C7B10)])),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20.0, right: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  width: 30,
-                ),
-                Container(
-                  height: 30,
-                  child: Center(
-                    child: Text(
-                        AppLocalizations.of(context)!.seller_platform_ucf,
-                        style: TextStyle(
-                            color: MyTheme.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            letterSpacing: .5,
-                            fontFamily: 'Poppins')),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(right: 0, bottom: 10),
-                  height: 30,
-                  child: Container(
-                    child: InkWell(
-                      //padding: EdgeInsets.zero,
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Icon(
-                        Icons.keyboard_arrow_left,
-                        size: 35,
-                        color: MyTheme.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -146,18 +116,24 @@ class _SellerPlatformState extends State<SellerPlatform> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        border: Border.all(
+                                            width: 1,
+                                            color: MyTheme.medium_grey)),
                                     width:
                                         MediaQuery.of(context).size.width / 3,
                                     child: ClipRRect(
                                         borderRadius: BorderRadius.circular(15),
                                         child:
                                             Image.asset("assets/orange.png"))),
-                                SizedBox(),
+                                // SizedBox(),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                      MainAxisAlignment.spaceAround,
                                   children: [
+                                    SizedBox(),
                                     Text(
                                       "Orange",
                                       style: TextStyle(
@@ -165,7 +141,7 @@ class _SellerPlatformState extends State<SellerPlatform> {
                                           fontWeight: FontWeight.w600),
                                     ),
                                     Text(
-                                      "20%off",
+                                      "20% Off",
                                       maxLines: 2,
                                       style: TextStyle(
                                           fontSize: 15,
@@ -186,13 +162,13 @@ class _SellerPlatformState extends State<SellerPlatform> {
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
                                       Text(
-                                        "1kg",
+                                        "1 kg",
                                         style: TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight.w500),
                                       ),
                                       Text(
-                                        "Rs 10/kg",
+                                        "₹ 10/kg",
                                         maxLines: 2,
                                         style: TextStyle(
                                             fontSize: 13,
@@ -202,7 +178,7 @@ class _SellerPlatformState extends State<SellerPlatform> {
                                       ),
                                       Container(
                                         height: 25,
-                                        width: 50,
+                                        width: 60,
                                         decoration: BoxDecoration(
                                             border: Border.all(
                                                 color: MyTheme.primary_color),
@@ -224,20 +200,27 @@ class _SellerPlatformState extends State<SellerPlatform> {
           ],
         ),
         Positioned(
-          bottom: 80,
+          bottom: 85,
           left: 15,
           right: 15,
-          child: InkWell(
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SellerPlatform()));
-            },
-            child: Container(
-              height: 50,
-              width: MediaQuery.of(context).size.width / 1.2,
-              decoration: BoxDecoration(
-                  color: MyTheme.primary_color,
-                  borderRadius: BorderRadius.circular(10)),
+          child: Container(
+            height: 60,
+            width: MediaQuery.of(context).size.width / 1.2,
+            decoration: BoxDecoration(
+                color: MyTheme.primary_color,
+                borderRadius: BorderRadius.circular(10)),
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => SellerPlatform()));
+              },
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(MyTheme.primary_color),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          side: BorderSide(color: MyTheme.primary_color)))),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -257,6 +240,7 @@ class _SellerPlatformState extends State<SellerPlatform> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
@@ -303,25 +287,6 @@ class _SellerPlatformState extends State<SellerPlatform> {
             ),
           ),
         ),
-        Container(
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Spacer(),
-              Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: FloatingActionButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => ProductPost()));
-                  },
-                  child: Image.asset("assets/add 2.png"),
-                ),
-              ),
-            ],
-          ),
-        )
       ],
     );
   }

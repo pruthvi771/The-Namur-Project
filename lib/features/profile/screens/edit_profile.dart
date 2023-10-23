@@ -1,26 +1,30 @@
+import 'dart:math';
+
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/custom/input_decorations.dart';
+import 'package:active_ecommerce_flutter/custom/toast_component.dart';
+import 'package:active_ecommerce_flutter/features/auth/models/postoffice_response_model.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_bloc.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_event.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_state.dart'
+    as authState;
 import 'package:active_ecommerce_flutter/features/profile/enum.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_event.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_state.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/more_details.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import 'package:active_ecommerce_flutter/features/profile/expanded_tile_widget.dart';
-import 'package:active_ecommerce_flutter/features/profile/screens/land_screen.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:hive/hive.dart';
-import '../../../custom/device_info.dart';
+import 'package:toast/toast.dart';
 
-import 'package:flutter_expanded_tile/flutter_expanded_tile.dart';
-import 'package:percent_indicator/percent_indicator.dart';
+import 'package:active_ecommerce_flutter/features/profile/address_list.dart'
+    as addressList;
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -30,12 +34,8 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  final String title = 'KYC';
-  var _textController = TextEditingController();
-  String hintText = "Email ID";
-
-  TextEditingController _districtController = TextEditingController();
-  TextEditingController _talukController = TextEditingController();
+  // TextEditingController _districtController = TextEditingController();
+  // TextEditingController _talukController = TextEditingController();
   TextEditingController _hobliController = TextEditingController();
   TextEditingController _villageController = TextEditingController();
 
@@ -47,43 +47,142 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController _panController = TextEditingController();
   TextEditingController _gstController = TextEditingController();
 
-  void _viewDataFromHive() {
-    var dataBox = Hive.box<ProfileData>('profileDataBox3');
+  TextEditingController _yieldController = TextEditingController();
+  TextEditingController _pinCodeController = TextEditingController();
+  TextEditingController _pinCodeControllerForLand = TextEditingController();
 
-    // dataBox.clear();
-    print('viewing them');
+  final districts = addressList.districtTalukMap;
 
-    var savedData = dataBox.get('profile');
+  final cropsList = addressList.crops;
+  final equipmentsList = addressList.equipment;
 
-    if (savedData != null) {
-      print('Length: ${savedData.address.length}');
+  List<String> taluks = [];
 
-      for (var address in savedData.address) {
-        print(
-            'Address: ${address.district}, ${address.taluk}, ${address.hobli}, ${address.village}');
+  String? districtDropdownValue;
+  String? talukDropdownValue;
+
+  String? landDropdownValue;
+
+  String? cropDropdownValue;
+  String? equipmentDropdownValue;
+
+  String? locationDropdownValue;
+  String? locationDropdownValueForLand;
+
+  bool talukDropdownEnabled = false;
+  bool isDropdownEnabled = false;
+  bool isDropdownForLandEnabled = false;
+
+  PostOfficeResponse? postOfficeResponse;
+
+  // String? pincode;
+  String? addressName;
+  String? districtName;
+  String? addressCircle;
+  String? addressRegion;
+
+  PostOfficeResponse? postOfficeResponseForLand;
+
+  // String? pincode;
+  String? addressNameForLand;
+  String? districtNameForLand;
+  String? addressCircleForLand;
+  String? addressRegionForLand;
+
+  List<String> locationsList = [];
+  List<String> locationsListForLand = [];
+
+  get console => null;
+
+  getAddressValues() {
+    postOfficeResponse!.postOffices.forEach((postOffice) {
+      if (postOffice.name == locationDropdownValue) {
+        addressName = postOffice.name;
+        districtName = postOffice.district;
+        addressCircle = postOffice.circle;
+        addressRegion = postOffice.region;
       }
-    } else {
-      print('Data not found');
+    });
+  }
+
+  clearAddressValues() {
+    addressName = null;
+    districtName = null;
+    addressCircle = null;
+    addressRegion = null;
+  }
+
+  getAddressValuesForLand() {
+    postOfficeResponseForLand!.postOffices.forEach((postOffice) {
+      if (postOffice.name == locationDropdownValueForLand) {
+        addressNameForLand = postOffice.name;
+        districtNameForLand = postOffice.district;
+        addressCircleForLand = postOffice.circle;
+        addressRegionForLand = postOffice.region;
+      }
+    });
+  }
+
+  clearAddressValuesForLand() {
+    addressNameForLand = null;
+    districtNameForLand = null;
+    addressCircleForLand = null;
+    addressRegionForLand = null;
+  }
+
+  void fetchLocations(BuildContext buildContext) {
+    if (_pinCodeController.text.toString().isEmpty ||
+        _pinCodeController.text.toString().length != 6) {
+      ToastComponent.showDialog('Enter a valid Pincode',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
     }
+    BlocProvider.of<AuthBloc>(buildContext).add(
+      LocationsForPincodeRequested(_pinCodeController.text.toString()),
+    );
   }
 
-  void _clearHive() {
-    var dataBox = Hive.box<ProfileData>('profileDataBox3');
-
-    // dataBox.clear();
-    print('Hive cleared');
+  void fetchLocationsForLand(BuildContext buildContext) {
+    if (_pinCodeControllerForLand.text.toString().isEmpty ||
+        _pinCodeControllerForLand.text.toString().length != 6) {
+      ToastComponent.showDialog('Enter a valid Pincode',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+    BlocProvider.of<AuthBloc>(buildContext).add(
+      LandLocationsForPincodeRequested(
+          _pinCodeControllerForLand.text.toString()),
+    );
   }
 
-  void _addAddressToHive(district, taluk, hobli, village) async {
+  void _addAddressToHive(
+      {required String pincode, String? locationDropdownValue}) async {
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
 
     var savedData = dataBox.get('profile');
+
+    if (savedData!.address.length != 0) {
+      ToastComponent.showDialog('You have already added an address',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+    if (pincode.isEmpty) {
+      ToastComponent.showDialog('Enter Pin Code',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+    if (locationDropdownValue == null) {
+      ToastComponent.showDialog('Select Location',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
 
     var address = Address()
-      ..district = district
-      ..taluk = taluk
-      ..hobli = hobli
-      ..village = village;
+      ..district = districtName!
+      ..taluk = addressRegion!
+      ..hobli = addressCircle!
+      ..village = addressName!
+      ..pincode = pincode;
 
     if (savedData != null) {
       print('object detected');
@@ -97,21 +196,54 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
       await dataBox.put(newData.id, newData);
       print('object updated');
+
+      BlocProvider.of<HiveBloc>(context).add(
+        SyncHiveToFirestoreRequested(profileData: newData),
+      );
     }
+
+    _hobliController.clear();
+    _villageController.clear();
 
     BlocProvider.of<HiveBloc>(context).add(
       HiveDataRequested(),
-      // HiveAppendAddress(context: context),
     );
   }
 
   void _addLandToHive(area, syno, village) async {
+    if (village == null) {
+      ToastComponent.showDialog('Select Village',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    if (syno.isEmpty) {
+      ToastComponent.showDialog('Enter Sy No',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    if (area.isEmpty) {
+      ToastComponent.showDialog('Enter Area name',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    double areaDouble = 0.0;
+    try {
+      areaDouble = double.parse(area);
+    } catch (e) {
+      ToastComponent.showDialog('Please Enter Valid Area',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
 
     var savedData = dataBox.get('profile');
 
     var land = Land()
-      ..area = area
+      ..area = areaDouble
       ..syno = syno
       ..village = village
       ..crops = []
@@ -129,7 +261,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
       await dataBox.put(newData.id, newData);
       print('object updated');
+
+      BlocProvider.of<HiveBloc>(context).add(
+        SyncHiveToFirestoreRequested(profileData: newData),
+      );
     }
+
+    _areaController.clear();
+    _synoController.clear();
+    _village2Controller.clear();
 
     BlocProvider.of<HiveBloc>(context).add(
       HiveDataRequested(),
@@ -162,17 +302,33 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  void _saveKycToHive(KycSection kycSection, value) async {
+  void _saveKycToHive(aadhar, pan, gst) async {
+    if (aadhar.length != 12) {
+      ToastComponent.showDialog('Enter a valid Aadhar Number',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    // if (pan.length != 12) {
+    //   ToastComponent.showDialog('Enter a valid PAN Card Number',
+    //       gravity: Toast.center, duration: Toast.lengthLong);
+    //   return;
+    // }
+    // if (gst.length != 15) {
+    //   ToastComponent.showDialog('Enter a valid GST Number',
+    //       gravity: Toast.center, duration: Toast.lengthLong);
+    //   return;
+    // }
+
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
 
     var savedData = dataBox.get('profile');
 
     if (savedData != null) {
       var kyc = KYC()
-        ..aadhar =
-            kycSection == KycSection.aadhar ? value : savedData.kyc.aadhar
-        ..pan = kycSection == KycSection.pan ? value : savedData.kyc.pan
-        ..gst = kycSection == KycSection.gst ? value : savedData.kyc.gst;
+        ..aadhar = aadhar
+        ..pan = pan
+        ..gst = gst;
 
       var newData = ProfileData()
         ..id = savedData.id
@@ -182,6 +338,40 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ..land = savedData.land;
 
       await dataBox.put(newData.id, newData);
+
+      BlocProvider.of<HiveBloc>(context).add(
+        SyncHiveToFirestoreRequested(profileData: newData),
+      );
+    }
+
+    BlocProvider.of<HiveBloc>(context).add(
+      HiveDataRequested(),
+    );
+  }
+
+  void _deleteKycFromHive() async {
+    var dataBox = Hive.box<ProfileData>('profileDataBox3');
+
+    var savedData = dataBox.get('profile');
+
+    if (savedData != null) {
+      var kyc = KYC()
+        ..aadhar = ''
+        ..pan = ''
+        ..gst = '';
+
+      var newData = ProfileData()
+        ..id = savedData.id
+        ..updated = savedData.updated
+        ..address = savedData.address
+        ..kyc = kyc
+        ..land = savedData.land;
+
+      await dataBox.put(newData.id, newData);
+
+      BlocProvider.of<HiveBloc>(context).add(
+        SyncHiveToFirestoreRequested(profileData: newData),
+      );
     }
 
     BlocProvider.of<HiveBloc>(context).add(
@@ -197,6 +387,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (dataCollectionType == DataCollectionType.address) {
       savedData!.address.removeAt(index);
     } else if (dataCollectionType == DataCollectionType.land) {
+      landDropdownValue = null;
       savedData!.land.removeAt(index);
     }
 
@@ -210,8 +401,195 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     await dataBox.put(newData.id, newData);
 
     BlocProvider.of<HiveBloc>(context).add(
+      SyncHiveToFirestoreRequested(profileData: savedData),
+    );
+
+    BlocProvider.of<HiveBloc>(context).add(
       HiveDataRequested(),
       // HiveAppendAddress(context: context),
+    );
+  }
+
+  void _addCropToHive(landSyno, crop, yieldOfCrop) async {
+    if (landSyno.isEmpty) {
+      ToastComponent.showDialog('Select Land',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    if (crop.isEmpty) {
+      ToastComponent.showDialog('Select Crop',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    if (yieldOfCrop.isEmpty) {
+      ToastComponent.showDialog('Enter Yield',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    double yieldOfCropDouble = 0.0;
+    try {
+      yieldOfCropDouble = double.parse(yieldOfCrop);
+    } catch (e) {
+      ToastComponent.showDialog('Please Enter Valid Yield',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    var dataBox = Hive.box<ProfileData>('profileDataBox3');
+
+    var savedData = dataBox.get('profile');
+
+    // Find the Land instance with the specified syno
+    int index = savedData!.land.indexWhere((land) => land.syno == landSyno);
+
+    if (index != -1) {
+      savedData.land[index].crops.add(Crop()
+        ..name = crop
+        ..yieldOfCrop = yieldOfCropDouble);
+
+      dataBox.put(savedData.id, savedData);
+
+      BlocProvider.of<HiveBloc>(context).add(
+        SyncHiveToFirestoreRequested(profileData: savedData),
+      );
+
+      print('Crop added');
+    } else {
+      // Handle the case where the Land instance with the specified syno is not found
+      print('Land with syno $landSyno not found.');
+    }
+
+    _yieldController.clear();
+
+    BlocProvider.of<HiveBloc>(context).add(
+      HiveDataRequested(),
+    );
+  }
+
+  void _deleteCropFromHive(landSyno, indexToDelete) async {
+    var dataBox = Hive.box<ProfileData>('profileDataBox3');
+
+    var savedData = dataBox.get('profile');
+
+    // Find the Land instance with the specified syno
+    int index = savedData!.land.indexWhere((land) => land.syno == landSyno);
+
+    if (index != -1) {
+      savedData.land[index].crops.removeAt(indexToDelete);
+
+      dataBox.put(savedData.id, savedData);
+
+      print('Crop removed');
+      dataBox.put(savedData.id, savedData);
+
+      BlocProvider.of<HiveBloc>(context).add(
+        SyncHiveToFirestoreRequested(profileData: savedData),
+      );
+    } else {
+      print('Land with syno $landSyno not found.');
+    }
+
+    BlocProvider.of<HiveBloc>(context).add(
+      HiveDataRequested(),
+    );
+  }
+
+  List<Crop> getCropsForSyno(ProfileData profileData, String? landSyno) {
+    if (landSyno == null) {
+      return [];
+    }
+    int index = profileData.land.indexWhere((land) => land.syno == landSyno);
+    // if (index != -1) {
+    return profileData.land[index].crops;
+  }
+
+  List<String> getMachinesForSyno(ProfileData profileData, String? landSyno) {
+    if (landSyno == null) {
+      return [];
+    }
+    int index = profileData.land.indexWhere((land) => land.syno == landSyno);
+    // if (index != -1) {
+    return profileData.land[index].equipments;
+  }
+
+  void _addEquipmentToHive(landSyno, equipment) async {
+    if (landSyno.isEmpty) {
+      ToastComponent.showDialog('Select Land',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    if (equipment.isEmpty) {
+      ToastComponent.showDialog('Select Crop',
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    var dataBox = Hive.box<ProfileData>('profileDataBox3');
+
+    var savedData = dataBox.get('profile');
+
+    // Find the Land instance with the specified syno
+    int index = savedData!.land.indexWhere((land) => land.syno == landSyno);
+
+    if (index != -1) {
+      savedData.land[index].equipments.add(equipment);
+
+      dataBox.put(savedData.id, savedData);
+
+      var equipmentDict = [];
+
+      for (equipment in savedData.land[index].equipments) {
+        equipmentDict.add(equipment);
+      }
+
+      dataBox.put(savedData.id, savedData);
+      dataBox.put(savedData.id, savedData);
+
+      BlocProvider.of<HiveBloc>(context).add(
+        SyncHiveToFirestoreRequested(profileData: savedData),
+      );
+
+      print('equipment added');
+    } else {
+      // Handle the case where the Land instance with the specified syno is not found
+      print('Land with syno $landSyno not found.');
+    }
+
+    BlocProvider.of<HiveBloc>(context).add(
+      HiveDataRequested(),
+    );
+  }
+
+  void _deleteEquipmentFromHive(landSyno, indexToDelete) async {
+    var dataBox = Hive.box<ProfileData>('profileDataBox3');
+
+    var savedData = dataBox.get('profile');
+
+    // Find the Land instance with the specified syno
+    int index = savedData!.land.indexWhere((land) => land.syno == landSyno);
+
+    if (index != -1) {
+      savedData.land[index].equipments.removeAt(indexToDelete);
+
+      dataBox.put(savedData.id, savedData);
+
+      print('equipment removed');
+      dataBox.put(savedData.id, savedData);
+
+      BlocProvider.of<HiveBloc>(context).add(
+        SyncHiveToFirestoreRequested(profileData: savedData),
+      );
+    } else {
+      // Handle the case where the Land instance with the specified syno is not found
+      print('Land with syno $landSyno not found.');
+    }
+
+    BlocProvider.of<HiveBloc>(context).add(
+      HiveDataRequested(),
     );
   }
 
@@ -235,6 +613,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             }
             if (state is HiveDataReceived) {
               print('STATE: Data Received');
+              print(state.profileData.land);
             }
           },
           child: BlocBuilder<HiveBloc, HiveState>(
@@ -253,6 +632,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       height: 10,
                     ),
                     HeadingTextWidget('KYC'),
+
                     if (state.profileData.kyc.aadhar.isNotEmpty)
                       Padding(
                         padding: const EdgeInsets.symmetric(
@@ -267,91 +647,43 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Expanded(
-                                  child: Text(
-                                      'Aadhar: ${state.profileData.kyc.aadhar}')),
-                              // Expanded(child: Text('PAN')),
-                              InkWell(
-                                onTap: () {
-                                  _saveKycToHive(KycSection.aadhar, '');
-                                },
-                                child: CircleAvatar(
-                                  radius: 12,
-                                  backgroundColor: MyTheme.green,
-                                  child: Icon(
-                                    Icons.delete,
-                                    size: 15.0,
-                                    color: Colors.white,
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                        'Aadhar: ${state.profileData.kyc.aadhar}'),
                                   ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    if (state.profileData.kyc.pan.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8.0, vertical: 3),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: MyTheme.green_lighter,
-                          ),
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                  child: Text(
-                                      'PAN: ${state.profileData.kyc.pan}')),
-                              // Expanded(child: Text('PAN')),
-                              InkWell(
-                                onTap: () {
-                                  _saveKycToHive(KycSection.pan, '');
-                                },
-                                child: CircleAvatar(
-                                  radius: 12,
-                                  backgroundColor: MyTheme.green,
-                                  child: Icon(
-                                    Icons.delete,
-                                    size: 15.0,
-                                    color: Colors.white,
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                        "PAN: ${state.profileData.kyc.pan == '' ? 'N/A' : state.profileData.kyc.pan}"),
                                   ),
-                                ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                        "GST: ${state.profileData.kyc.gst == '' ? 'N/A' : state.profileData.kyc.gst}"),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    if (state.profileData.kyc.gst.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8.0, vertical: 3),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: MyTheme.green_lighter,
-                          ),
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                  child: Text(
-                                      'GST: ${state.profileData.kyc.gst}')),
                               // Expanded(child: Text('PAN')),
                               InkWell(
                                 onTap: () {
-                                  _saveKycToHive(KycSection.gst, '');
+                                  _aadharController.text =
+                                      state.profileData.kyc.aadhar;
+                                  _panController.text =
+                                      state.profileData.kyc.pan.toString();
+                                  _gstController.text =
+                                      state.profileData.kyc.gst.toString();
+                                  _deleteKycFromHive();
+                                  // _editKyc();
                                 },
                                 child: CircleAvatar(
                                   radius: 12,
                                   backgroundColor: MyTheme.green,
                                   child: Icon(
-                                    Icons.delete,
+                                    Icons.edit,
                                     size: 15.0,
                                     color: Colors.white,
                                   ),
@@ -371,42 +703,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               'Enter Aadhar Card Number'),
                           Row(
                             children: [
-                              Expanded(child: SizedBox()),
-                              TextButton(
-                                child: Text('Save'),
-                                onPressed: () {
-                                  _saveKycToHive(KycSection.aadhar,
-                                      _aadharController.text);
-                                  _aadharController.clear();
-                                },
+                              Expanded(child: SizedBox.shrink()),
+                              Text(
+                                '${_aadharController.text.length}/12',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: _aadharController.text.length > 12
+                                      ? Colors.red
+                                      : _aadharController.text.length == 12
+                                          ? Colors.green
+                                          : Colors.grey,
+                                ),
                               ),
+                              SizedBox(
+                                width: 5,
+                              )
                             ],
                           ),
-                        ],
-                      ),
-                    if (state.profileData.kyc.pan.isEmpty)
-                      Column(
-                        children: [
+                          SizedBox(
+                            height: 10,
+                          ),
                           TextFieldWidget('PAN Card', _panController,
                               'Enter PAN Card Number'),
-                          Row(
-                            children: [
-                              Expanded(child: SizedBox()),
-                              TextButton(
-                                child: Text('Save'),
-                                onPressed: () {
-                                  _saveKycToHive(
-                                      KycSection.pan, _panController.text);
-                                  _panController.clear();
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    if (state.profileData.kyc.gst.isEmpty)
-                      Column(
-                        children: [
                           TextFieldWidget(
                               'GST', _gstController, 'Enter GST Number'),
                           Row(
@@ -415,9 +733,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               TextButton(
                                 child: Text('Save'),
                                 onPressed: () {
-                                  _saveKycToHive(
-                                      KycSection.gst, _gstController.text);
-                                  _gstController.clear();
+                                  _saveKycToHive(_aadharController.text,
+                                      _panController.text, _gstController.text);
                                 },
                               ),
                             ],
@@ -437,16 +754,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
 
                     HeadingTextWidget('Address Details'),
-                    // Column(
-                    //   children: state.profileData.address.map((item) {
-                    //     return Row(children: [
-                    //       Text(item.district),
-                    //       Text(item.taluk),
-                    //       Text(item.hobli),
-                    //       Text(item.village),
-                    //     ]);
-                    //   }).toList(),
-                    // ),
                     Column(
                       children: List.generate(
                         state.profileData.address.length,
@@ -497,51 +804,162 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     SizedBox(
                       height: 10,
                     ),
-                    TextFieldWidget(
-                        'District', _districtController, 'Enter District'),
-                    TextFieldWidget('Taluk', _talukController, 'Enter Taluk'),
-                    TextFieldWidget('Hobli', _hobliController, 'Enter Hobli'),
-                    TextFieldWidget(
-                        'Village', _villageController, 'Enter Village'),
-                    Row(
-                      children: [
-                        Expanded(child: SizedBox()),
-                        TextButton(
-                          child: Text('Add Record'),
-                          onPressed: () {
-                            print('District: ${_districtController.text}');
-                            print('taluk: ${_talukController.text}');
-                            print('hobli: ${_hobliController.text}');
-                            print('village: ${_villageController.text}');
 
-                            _addAddressToHive(
-                                _districtController.text,
-                                _talukController.text,
-                                _hobliController.text,
-                                _villageController.text);
+                    // pincode textbox
+                    if (state.profileData.address.length == 0)
+                      Column(
+                        children: [
+                          BlocListener<AuthBloc, authState.AuthState>(
+                            listener: (context, state) {
+                              if (state
+                                  is authState.LocationsForPincodeReceived) {
+                                ToastComponent.showDialog('Locations fetched.',
+                                    gravity: Toast.center,
+                                    duration: Toast.lengthLong);
+                                postOfficeResponse = state.postOfficeResponse;
+                                for (var postOffice
+                                    in state.postOfficeResponse.postOffices) {
+                                  locationsList.add(postOffice.name);
+                                }
+                                isDropdownEnabled = true;
+                                // print(state.postOfficeResponse.postOffices[0].name);
+                                // print(state.postOfficeResponse.message);
+                              }
+                              if (state
+                                  is authState.LocationsForPincodeLoading) {
+                                locationDropdownValue = null;
+                                clearAddressValues();
+                                locationsList.clear();
+                                ToastComponent.showDialog(
+                                    'Fetching Locations...',
+                                    gravity: Toast.center,
+                                    duration: Toast.lengthLong);
+                              }
+                              // TODO: implement listener
+                            },
+                            child: BlocBuilder<AuthBloc, authState.AuthState>(
+                              builder: (context, state) {
+                                return Column(
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Container(
+                                          height: 40,
+                                          child: TextField(
+                                            keyboardType:
+                                                TextInputType.numberWithOptions(
+                                                    decimal: true),
+                                            controller: _pinCodeController,
+                                            autofocus: false,
+                                            decoration: InputDecorations
+                                                .buildInputDecoration_1(
+                                                    hint_text: "Pin Code"),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              fetchLocations(context);
+                                            },
+                                            child: Text(
+                                              'Get Locations',
+                                              style: TextStyle(
+                                                  color: MyTheme.accent_color,
+                                                  fontStyle: FontStyle.italic,
+                                                  decoration:
+                                                      TextDecoration.underline),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    Container(
+                                      height: 40,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12.0),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                          color: Colors
+                                              .grey, // You can customize the border color here
+                                        ),
+                                      ),
+                                      child: DropdownButton<String>(
+                                        isExpanded: true,
+                                        hint: Text(
+                                          'Select Location',
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                        disabledHint: Text(
+                                          'Fetch Locations first',
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                        value: locationDropdownValue,
+                                        icon: Icon(Icons.arrow_drop_down),
+                                        iconSize: 24,
+                                        elevation: 16,
+                                        underline:
+                                            SizedBox(), // Remove the underline
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors
+                                              .black, // You can customize the text color here
+                                        ),
+                                        onChanged: isDropdownEnabled
+                                            ? (String? newValue) {
+                                                setState(() {
+                                                  locationDropdownValue =
+                                                      newValue!;
+                                                  getAddressValues();
+                                                });
+                                              }
+                                            : null,
+                                        items: locationsList
+                                            .map<DropdownMenuItem<String>>(
+                                                (String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value),
+                                          );
+                                        }).toList(),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Expanded(child: SizedBox()),
+                              TextButton(
+                                child: Text('Add Record'),
+                                onPressed: () {
+                                  _addAddressToHive(
+                                    pincode: _pinCodeController.text,
+                                    locationDropdownValue:
+                                        locationDropdownValue,
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
 
-                            _districtController.clear();
-                            _talukController.clear();
-                            _hobliController.clear();
-                            _villageController.clear();
-                          },
-                        ),
-                      ],
+                    SizedBox(
+                      height: 10,
                     ),
-                    // Row(
-                    //   children: [
-                    //     Expanded(child: SizedBox()),
-                    //     TextButton(
-                    //         onPressed: _viewDataFromHive,
-                    //         child: Text('View Record')),
-                    //   ],
-                    // ),
-                    // Row(
-                    //   children: [
-                    //     Expanded(child: SizedBox()),
-                    //     TextButton(onPressed: _clearHive, child: Text('Clear')),
-                    //   ],
-                    // ),
 
                     SizedBox(
                       height: 8,
@@ -555,6 +973,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
 
                     HeadingTextWidget('Land Details'),
+
                     Column(
                       children: List.generate(
                         state.profileData.land.length,
@@ -584,6 +1003,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         DataCollectionType.land,
                                         index,
                                       );
+                                      setState(() {});
                                     },
                                     child: CircleAvatar(
                                       radius: 12,
@@ -605,11 +1025,144 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     SizedBox(
                       height: 10,
                     ),
-                    TextFieldWidget(
-                        'Village', _village2Controller, 'Enter Village'),
+
+                    BlocListener<AuthBloc, authState.AuthState>(
+                      listener: (context, state) {
+                        if (state
+                            is authState.LandLocationsForPincodeReceived) {
+                          ToastComponent.showDialog('Locations fetched.',
+                              gravity: Toast.center,
+                              duration: Toast.lengthLong);
+                          postOfficeResponseForLand = state.postOfficeResponse;
+                          for (var postOffice
+                              in state.postOfficeResponse.postOffices) {
+                            locationsListForLand.add(postOffice.name);
+                          }
+                          isDropdownForLandEnabled = true;
+                          // print(state.postOfficeResponse.postOffices[0].name);
+                          // print(state.postOfficeResponse.message);
+                        }
+                        if (state is authState.LandLocationsForPincodeLoading) {
+                          locationDropdownValueForLand = null;
+                          clearAddressValuesForLand();
+                          locationsListForLand.clear();
+                          ToastComponent.showDialog('Fetching Locations...',
+                              gravity: Toast.center,
+                              duration: Toast.lengthLong);
+                        }
+                        // TODO: implement listener
+                      },
+                      child: BlocBuilder<AuthBloc, authState.AuthState>(
+                        builder: (context, state) {
+                          return Column(
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Container(
+                                    height: 40,
+                                    child: TextField(
+                                      keyboardType:
+                                          TextInputType.numberWithOptions(
+                                              decimal: true),
+                                      controller: _pinCodeControllerForLand,
+                                      autofocus: false,
+                                      decoration: InputDecorations
+                                          .buildInputDecoration_1(
+                                              hint_text: "Pin Code"),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 8),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        fetchLocationsForLand(context);
+                                      },
+                                      child: Text(
+                                        'Get Locations',
+                                        style: TextStyle(
+                                            color: MyTheme.accent_color,
+                                            fontStyle: FontStyle.italic,
+                                            decoration:
+                                                TextDecoration.underline),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              Container(
+                                height: 40,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: Colors
+                                        .grey, // You can customize the border color here
+                                  ),
+                                ),
+                                child: DropdownButton<String>(
+                                  isExpanded: true,
+                                  hint: Text(
+                                    'Select Village',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                  disabledHint: Text(
+                                    'Enter Pin Code first',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                  value: locationDropdownValueForLand,
+                                  icon: Icon(Icons.arrow_drop_down),
+                                  iconSize: 24,
+                                  elevation: 16,
+                                  underline: SizedBox(), // Remove the underline
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors
+                                        .black, // You can customize the text color here
+                                  ),
+                                  onChanged: isDropdownForLandEnabled
+                                      ? (String? newValue) {
+                                          setState(() {
+                                            locationDropdownValueForLand =
+                                                newValue!;
+                                            getAddressValuesForLand();
+                                          });
+                                        }
+                                      : null,
+                                  items: locationsListForLand
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+
+                    SizedBox(
+                      height: 10,
+                    ),
                     TextFieldWidget('Syno', _synoController, 'Enter Syno'),
-                    TextFieldWidget(
-                        'Area', _areaController, 'Enter Area (in acres)'),
+
+                    //custom Area text field for accepting double values
+                    TexiFieldWidgetForDouble(
+                        'Area', _areaController, 'Enter Area (in Acres)'),
+
+                    //Add Land to Hive
                     Row(
                       children: [
                         Expanded(child: SizedBox()),
@@ -617,17 +1170,267 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           child: Text('Add Record'),
                           onPressed: () {
                             _addLandToHive(
-                              int.parse(_areaController.text).toDouble(),
+                              _areaController.text,
                               _synoController.text,
-                              _village2Controller.text,
+                              locationDropdownValueForLand,
                             );
-                            _areaController.clear();
-                            _synoController.clear();
-                            _village2Controller.clear();
+                            landDropdownValue = null;
                           },
                         ),
                       ],
                     ),
+
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Divider(
+                      // color: MyTheme.grey_153,
+                      thickness: 2,
+                    ),
+                    SizedBox(
+                      height: 12,
+                    ),
+
+                    HeadingTextWidget('Farm Details'),
+                    SizedBox(
+                      height: 10,
+                    ),
+
+                    (state.profileData.land.length == 0)
+                        ? Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                'Add Land First',
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  letterSpacing: .5,
+                                  fontFamily: 'Poppins',
+                                ),
+                              ),
+                            ),
+                          )
+                        : Column(
+                            children: [
+                              DropdownButtonWidget(
+                                  'Land',
+                                  'Select Land',
+                                  List.generate(
+                                    state.profileData.land.length,
+                                    (index) {
+                                      var item = state.profileData.land[index];
+                                      return DropdownMenuItem(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(child: Text(item.village)),
+                                            Expanded(child: Text(item.syno)),
+                                            Expanded(
+                                                child:
+                                                    Text(item.area.toString())),
+                                            // Expanded(child: Text(item.village)),
+                                          ],
+                                        ),
+                                        value: item.syno,
+                                      );
+                                    },
+                                  ),
+                                  landDropdownValue, (value) {
+                                setState(() {
+                                  landDropdownValue = value;
+                                  setState(() {});
+                                });
+                              }),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 8, top: 10, bottom: 5),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    'Add Crop',
+                                    style: TextStyle(
+                                        // color: MyTheme.accent_color,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                        letterSpacing: .5,
+                                        fontFamily: 'Poppins'),
+                                  ),
+                                ),
+                              ),
+                              if (landDropdownValue != null)
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Wrap(
+                                    children: List.generate(
+                                      getCropsForSyno(state.profileData,
+                                              landDropdownValue)
+                                          .length,
+                                      (index) {
+                                        var item = getCropsForSyno(
+                                            state.profileData,
+                                            landDropdownValue)[index];
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 2),
+                                          child: Chip(
+                                            backgroundColor:
+                                                MyTheme.green_lighter,
+                                            labelPadding: EdgeInsets.symmetric(
+                                                horizontal: 10, vertical: 0),
+                                            label: Text(
+                                                '${item.name} (${item.yieldOfCrop.toInt()})'),
+                                            // deleteIcon: Icon(Icons.delete),
+                                            onDeleted: () {
+                                              _deleteCropFromHive(
+                                                  landDropdownValue, index);
+                                              setState(() {});
+                                            },
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              // for crop
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 5),
+                                child: Column(
+                                  children: [
+                                    DropdownButtonWidget(
+                                        '',
+                                        'Select Crop',
+                                        cropsList.map<DropdownMenuItem<String>>(
+                                            (String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value),
+                                          );
+                                        }).toList(),
+                                        cropDropdownValue, (value) {
+                                      setState(() {
+                                        cropDropdownValue = value;
+                                      });
+                                    }),
+                                    TexiFieldWidgetForDouble(
+                                        'Yield',
+                                        _yieldController,
+                                        'Enter Crop Yield (in Acres)'),
+                                    Row(
+                                      children: [
+                                        Expanded(child: SizedBox()),
+                                        TextButton(
+                                          child: Text('Add Record'),
+                                          onPressed: () {
+                                            _addCropToHive(
+                                              landDropdownValue,
+                                              cropDropdownValue,
+                                              _yieldController.text,
+                                            );
+                                            setState(() {});
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 8, top: 10, bottom: 5),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    'Add Machines',
+                                    style: TextStyle(
+                                        // color: MyTheme.accent_color,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                        letterSpacing: .5,
+                                        fontFamily: 'Poppins'),
+                                  ),
+                                ),
+                              ),
+                              if (landDropdownValue != null)
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Wrap(
+                                    children: List.generate(
+                                      getMachinesForSyno(state.profileData,
+                                              landDropdownValue)
+                                          .length,
+                                      (index) {
+                                        var item = getMachinesForSyno(
+                                            state.profileData,
+                                            landDropdownValue)[index];
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 2),
+                                          child: Chip(
+                                            backgroundColor:
+                                                MyTheme.green_lighter,
+                                            labelPadding: EdgeInsets.symmetric(
+                                                horizontal: 10, vertical: 0),
+                                            label: Text(item),
+                                            // deleteIcon: Icon(Icons.delete),
+                                            onDeleted: () {
+                                              _deleteEquipmentFromHive(
+                                                  landDropdownValue, index);
+                                              setState(() {});
+                                            },
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 5),
+                                child: Column(
+                                  children: [
+                                    DropdownButtonWidget(
+                                        '',
+                                        'Select Equipments',
+                                        equipmentsList
+                                            .map<DropdownMenuItem<String>>(
+                                                (String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value),
+                                          );
+                                        }).toList(),
+                                        equipmentDropdownValue, (value) {
+                                      setState(() {
+                                        equipmentDropdownValue = value;
+                                      });
+                                    }),
+                                    Row(
+                                      children: [
+                                        Expanded(child: SizedBox()),
+                                        TextButton(
+                                          child: Text('Add Record'),
+                                          onPressed: () {
+                                            _addEquipmentToHive(
+                                              landDropdownValue,
+                                              equipmentDropdownValue,
+                                            );
+                                            setState(() {});
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+
                     // SizedBox(
                     //   height: 8,
                     // ),
@@ -638,8 +1441,126 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     // SizedBox(
                     //   height: 12,
                     // ),
-                    // HeadingTextWidget('Crops Grown and Planned'),
-                    // TextFieldWidget('Crop', _textController, 'Enter Crop Name'),
+                    // HeadingTextWidget('Machines and Equipments'),
+
+                    // (state.profileData.land.length == 0)
+                    //     ? Padding(
+                    //         padding: const EdgeInsets.all(20),
+                    //         child: Align(
+                    //           alignment: Alignment.center,
+                    //           child: Text(
+                    //             'Add Land First',
+                    //             style: TextStyle(
+                    //               color: Colors.red,
+                    //               fontSize: 18,
+                    //               fontWeight: FontWeight.w500,
+                    //               letterSpacing: .5,
+                    //               fontFamily: 'Poppins',
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       )
+                    //     : Column(
+                    //         children: [
+                    //           // DropdownButtonWidget(
+                    //           //     'Select Land',
+                    //           //     List.generate(
+                    //           //       state.profileData.land.length + 1,
+                    //           //       (index) {
+                    //           //         var item = [
+                    //           //           Land()
+                    //           //             ..village = ''
+                    //           //             ..area = 0
+                    //           //             ..syno = '',
+                    //           //           ...state.profileData.land
+                    //           //         ][index];
+                    //           //         return DropdownMenuItem(
+                    //           //           child: Row(
+                    //           //             mainAxisAlignment:
+                    //           //                 MainAxisAlignment.spaceBetween,
+                    //           //             children: [
+                    //           //               Expanded(child: Text(item.village)),
+                    //           //               Expanded(child: Text(item.syno)),
+                    //           //               Expanded(
+                    //           //                   child:
+                    //           //                       Text(item.area.toString())),
+                    //           //               // Expanded(child: Text(item.village)),
+                    //           //             ],
+                    //           //           ),
+                    //           //           value: item.syno,
+                    //           //         );
+                    //           //       },
+                    //           //     ),
+                    //           //     landDropdownValue, (value) {
+                    //           //   setState(() {
+                    //           //     landDropdownValue = value;
+                    //           //     setState(() {});
+                    //           //   });
+                    //           // }),
+                    //           if (landDropdownValue.isNotEmpty)
+                    //             Align(
+                    //               alignment: Alignment.topLeft,
+                    //               child: Wrap(
+                    //                 children: List.generate(
+                    //                   getMachinesForSyno(state.profileData,
+                    //                           landDropdownValue)
+                    //                       .length,
+                    //                   (index) {
+                    //                     var item = getMachinesForSyno(
+                    //                         state.profileData,
+                    //                         landDropdownValue)[index];
+                    //                     return Padding(
+                    //                       padding: const EdgeInsets.symmetric(
+                    //                           horizontal: 2),
+                    //                       child: Chip(
+                    //                         backgroundColor:
+                    //                             MyTheme.green_lighter,
+                    //                         labelPadding: EdgeInsets.symmetric(
+                    //                             horizontal: 10, vertical: 0),
+                    //                         label: Text(item),
+                    //                         // deleteIcon: Icon(Icons.delete),
+                    //                         onDeleted: () {
+                    //                           _deleteEquipmentFromHive(
+                    //                               landDropdownValue, index);
+                    //                           setState(() {});
+                    //                         },
+                    //                       ),
+                    //                     );
+                    //                   },
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //           DropdownButtonWidget(
+                    //               'Select Machine',
+                    //               equipmentsList.map<DropdownMenuItem<String>>(
+                    //                   (String value) {
+                    //                 return DropdownMenuItem<String>(
+                    //                   value: value,
+                    //                   child: Text(value),
+                    //                 );
+                    //               }).toList(),
+                    //               equipmentDropdownValue, (value) {
+                    //             setState(() {
+                    //               equipmentDropdownValue = value;
+                    //             });
+                    //           }),
+                    //           Row(
+                    //             children: [
+                    //               Expanded(child: SizedBox()),
+                    //               TextButton(
+                    //                 child: Text('Add Record'),
+                    //                 onPressed: () {
+                    //                   _addEquipmentToHive(
+                    //                     landDropdownValue,
+                    //                     equipmentDropdownValue,
+                    //                   );
+                    //                   setState(() {});
+                    //                 },
+                    //               ),
+                    //             ],
+                    //           ),
+                    //         ],
+                    //       ),
                   ],
                 );
               return Container(
@@ -650,6 +1571,133 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Container CropDisplayWidget() {
+    return Container(
+      color: MyTheme.green_lighter,
+      margin: EdgeInsets.all(5),
+      padding: EdgeInsets.all(5),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Text('Croperinsta',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 13,
+            )),
+        SizedBox(width: 8),
+        CircleAvatar(
+          radius: 12,
+          backgroundColor: MyTheme.green,
+          child: Icon(
+            Icons.delete,
+            size: 15.0,
+            color: Colors.white,
+          ),
+        ),
+      ]),
+    );
+  }
+
+  Column TexiFieldWidgetForDouble(
+      String title, TextEditingController _textController, String hintText) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Padding(
+        //   padding: const EdgeInsets.only(left: 4, bottom: 5),
+        //   child: Text(
+        //     title,
+        //     style: TextStyle(
+        //         // color: MyTheme.accent_color,
+        //         fontSize: 12,
+        //         fontWeight: FontWeight.w500,
+        //         letterSpacing: .5,
+        //         fontFamily: 'Poppins'),
+        //   ),
+        // ),
+        Container(
+          height: 40,
+          child: TextField(
+            controller: _textController,
+            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            autofocus: false,
+            decoration:
+                InputDecorations.buildInputDecoration_1(hint_text: hintText),
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        )
+      ],
+    );
+  }
+
+  Column DropdownButtonWidget(
+      String title,
+      String hintText,
+      List<DropdownMenuItem<String>>? itemList,
+      String? dropdownValue,
+      Function(String) onChanged) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Padding(
+        //   padding: const EdgeInsets.only(left: 4, bottom: 5),
+        //   child: Text(
+        //     title,
+        //     style: TextStyle(
+        //         // color: MyTheme.accent_color,
+        //         fontSize: 12,
+        //         fontWeight: FontWeight.w500,
+        //         letterSpacing: .5,
+        //         fontFamily: 'Poppins'),
+        //   ),
+        // ),
+        Container(
+          height: 40,
+          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: Colors.grey, // You can customize the border color here
+            ),
+          ),
+          child: DropdownButton<String>(
+            hint: Text(
+              hintText,
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 14,
+              ),
+            ),
+            isExpanded: true,
+            value: dropdownValue,
+            icon: Icon(Icons.arrow_drop_down),
+            iconSize: 24,
+            elevation: 16,
+            underline: SizedBox(), // Remove the underline
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.black, // You can customize the text color here
+            ),
+            onChanged: (String? value) {
+              // This is called when the user selects an item.
+              onChanged(value!);
+            },
+            // items: itemList.map<DropdownMenuItem<String>>((String value) {
+            //   return DropdownMenuItem<String>(
+            //     value: value,
+            //     child: Text(value),
+            //   );
+            // }).toList(),
+            items: itemList,
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        )
+      ],
     );
   }
 
@@ -674,21 +1722,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 4, bottom: 5),
-          child: Text(
-            title,
-            style: TextStyle(
-                // color: MyTheme.accent_color,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                letterSpacing: .5,
-                fontFamily: 'Poppins'),
-          ),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.only(left: 4, bottom: 5),
+        //   child: Text(
+        //     title,
+        //     style: TextStyle(
+        //         // color: MyTheme.accent_color,
+        //         fontSize: 12,
+        //         fontWeight: FontWeight.w500,
+        //         letterSpacing: .5,
+        //         fontFamily: 'Poppins'),
+        //   ),
+        // ),
         Container(
           height: 40,
           child: TextField(
+            onChanged: (value) {
+              setState(() {});
+            },
             controller: _textController,
             autofocus: false,
             decoration:

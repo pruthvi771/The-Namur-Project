@@ -1,3 +1,4 @@
+import 'package:active_ecommerce_flutter/features/profile/enum.dart';
 import 'package:hive/hive.dart';
 
 part 'models.g.dart'; // Hive Part File
@@ -15,6 +16,9 @@ class Address {
 
   @HiveField(3)
   late String village;
+
+  @HiveField(4)
+  late String pincode;
 }
 
 @HiveType(typeId: 1)
@@ -41,7 +45,7 @@ class Land {
   late double area;
 
   @HiveField(3)
-  late List<String> crops;
+  late List<Crop> crops;
 
   @HiveField(4)
   late List<String> equipments;
@@ -63,4 +67,40 @@ class ProfileData {
 
   @HiveField(4)
   late List<Land> land;
+}
+
+@HiveType(typeId: 4)
+class Crop {
+  @HiveField(0)
+  late String name;
+
+  @HiveField(1)
+  late double yieldOfCrop;
+}
+
+@HiveType(typeId: 5)
+class PrimaryLocation {
+  @HiveField(0)
+  late String id;
+
+  @HiveField(1)
+  late bool isAddress;
+
+  @HiveField(2)
+  late double latitude;
+
+  @HiveField(3)
+  late double longitude;
+
+  @HiveField(4)
+  late String? address;
+}
+
+@HiveType(typeId: 6)
+class SecondaryLocations {
+  @HiveField(0)
+  late String id;
+
+  @HiveField(1)
+  late List<String> address;
 }

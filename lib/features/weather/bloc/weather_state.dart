@@ -31,7 +31,7 @@ final class Loading extends WeatherState {
 }
 
 final class WeatherSreenDataReceived extends WeatherState {
-  final ForecastWeatherResponse responseData;
+  final List<ForecastWeatherResponse?> responseData;
 
   WeatherSreenDataReceived({
     required this.responseData,
@@ -42,6 +42,11 @@ final class WeatherSreenDataReceived extends WeatherState {
 }
 
 final class WeatherScreenDataNotReceived extends WeatherState {
+  @override
+  List<Object?> get props => [];
+}
+
+final class ScreenNoLocationDataFound extends WeatherState {
   @override
   List<Object?> get props => [];
 }

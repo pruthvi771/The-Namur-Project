@@ -1,7 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
-import 'package:active_ecommerce_flutter/features/auth/services/auth_exceptions.dart';
+import 'package:active_ecommerce_flutter/features/auth/models/postoffice_response_model.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
+import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:hive/hive.dart';
+
+import 'package:http/http.dart' as http;
 
 import 'package:firebase_auth/firebase_auth.dart'
     show
@@ -14,6 +21,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirestoreRepository firestoreRepository = FirestoreRepository();
 
   AuthUser? get currentUser {
     final user = _firebaseAuth.currentUser;
@@ -47,10 +55,16 @@ class AuthRepository {
   Future<void> createUserWithEmail({
     required String email,
     required String password,
+    required String name,
   }) async {
     try {
-      await _firebaseAuth.createUserWithEmailAndPassword(
+      var userCredentials = await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
+
+      firestoreRepository.addUserToBuyerSellerCollections(
+          userId: userCredentials.user!.uid,
+          name: name,
+          email: userCredentials.user!.email!);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         throw Exception('The password is not strong enough.');
@@ -92,14 +106,14 @@ class AuthRepository {
     }
   }
 
-  Future<void> sendEmailVerification() async {
-    final user = _firebaseAuth.currentUser;
-    if (user != null) {
-      await user.sendEmailVerification();
-    } else {
-      throw UserNotLoggedInAuthException();
-    }
-  }
+  // Future<void> sendEmailVerification() async {
+  //   final user = _firebaseAuth.currentUser;
+  //   if (user != null) {
+  //     await user.sendEmailVerification();
+  //   } else {
+  //     throw UserNotLoggedInAuthException();
+  //   }
+  // }
 
   Future<void> loginWithGoogle() async {
     try {
@@ -112,7 +126,26 @@ class AuthRepository {
         idToken: gAuth.idToken,
       );
 
-      await _firebaseAuth.signInWithCredential(credential);
+      var userCredential = await _firebaseAuth.signInWithCredential(credential);
+
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('buyer')
+          .doc(userCredential.user!.uid)
+          .get();
+
+      if (!userSnapshot.exists) {
+        firestoreRepository.addUserToBuyerSellerCollections(
+            userId: userCredential.user!.uid,
+            name: userCredential.user!.displayName!,
+            email: userCredential.user!.email!,
+            photoURL: userCredential.user!.photoURL!);
+
+        firestoreRepository.createEmptyHiveDataInstance(
+            userId: userCredential.user!.uid);
+      } else {
+        await firestoreRepository.syncFirestoreDataWithHive(
+            userId: userCredential.user!.uid);
+      }
 
       // final user = currentUser;
       // return user != null ? user : throw UserNotFoundAuthException();
@@ -124,10 +157,14 @@ class AuthRepository {
         throw Exception('Something went wrong. Please contact support.');
       } else if (e.code == 'user-disabled') {
         throw Exception('User is disabled. Please contact support.');
+      } else if (e.code == 'play-services-not-available') {
+        throw Exception('Please install Google Play Store first.');
       } else {
+        print(e);
         throw Exception('Something went wrong. Please try again.');
       }
     } catch (_) {
+      print(_);
       throw Exception('Something went wrong. Please try again.');
     }
   }
@@ -146,7 +183,8 @@ class AuthRepository {
         verificationFailed: (FirebaseAuthException e) {
           print(e.code);
           print(e.message);
-          verificationIdCompleter.completeError('Verification failed');
+          verificationIdCompleter.completeError(
+              'Verification failed. Please check your phone number and try again.');
         },
         codeSent: (String verificationId, int? resendToken) {
           print('OTP sent to your phone number');
@@ -185,6 +223,76 @@ class AuthRepository {
       if (user == null) {
         throw Exception('Something went wrong. Please try again.');
       }
+
+      firestoreRepository.syncFirestoreDataWithHive(userId: user.userId);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'invalid-verification-code') {
+        throw Exception('Invalid OTP. Please try again.');
+      } else if (e.code == 'too-many-requests') {
+        throw Exception(
+            'Maximum requests limit reached. Please try again later');
+      } else if (e.code == 'session-expired') {
+        throw Exception('OTP expired. Please try again.');
+      } else {
+        // print(e);
+        throw Exception('Something went wrong. Please try again.');
+      }
+    } catch (_) {
+      // print(_);
+      throw Exception('Something went wrong. Please try again.');
+    }
+  }
+
+  Future<void> signupWithPhone({
+    required String verificationId,
+    required String phoneNumber,
+    required String otp,
+    required String username,
+    required String email,
+    required String addressName,
+    required String districtName,
+    required String addressCircle,
+    required String addressRegion,
+    required String pincode,
+  }) async {
+    final credentials = PhoneAuthProvider.credential(
+      verificationId: verificationId,
+      smsCode: otp,
+    );
+
+    try {
+      var userCredential =
+          await _firebaseAuth.signInWithCredential(credentials);
+      final user = currentUser;
+      // return user != null ? user : throw UserNotFoundAuthException();
+
+      if (user == null) {
+        throw Exception('Something went wrong. Please try again.');
+      }
+
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('buyer')
+          .doc(userCredential.user!.uid)
+          .get();
+
+      if (!userSnapshot.exists) {
+        firestoreRepository.addUserToBuyerSellerCollections(
+          userId: userCredential.user!.uid,
+          name: username,
+          email: email,
+          phoneNumber: phoneNumber,
+        );
+
+        firestoreRepository.createEmptyHiveDataInstance(
+          userId: userCredential.user!.uid,
+          isAddressAvailable: true,
+          village: addressName,
+          district: districtName,
+          taluk: addressRegion,
+          hobli: addressCircle,
+          pincode: pincode,
+        );
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-verification-code') {
         throw Exception('Invalid OTP. Please try again.');
@@ -220,6 +328,31 @@ class AuthRepository {
     } catch (_) {
       throw Exception('Something went wrong. Please try again.');
       // throw GenericAuthException();
+    }
+  }
+
+  Future<PostOfficeResponse?> getLocationsForPincode(
+      {required String pinCode}) async {
+    try {
+      print('starting');
+      var postOfficeResponse = await http
+          .get(Uri.parse('https://api.postalpincode.in/pincode/$pinCode'));
+
+      // if (postOfficeResponse.statusCode == 200) {
+      var jsonResponse = json.decode(postOfficeResponse.body);
+
+      print(jsonResponse);
+      if (jsonResponse[0]['Status'] == 'Success') {
+        print('success');
+        // return PostOfficeResponse.fromJson(jsonResponse);
+        return PostOfficeResponse.fromJson(jsonResponse[0]);
+      } else {
+        print('error happened in forecast');
+        throw Exception('Failed to fetch locations. Please try again.');
+      }
+    } catch (e) {
+      print(e);
+      throw Exception('Failed to fetch locations. Please try again.');
     }
   }
 }

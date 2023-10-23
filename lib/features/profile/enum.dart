@@ -13,3 +13,8 @@ enum DataCollectionType {
   address,
   land,
 }
+
+enum WeatherLocationType {
+  coordinates,
+  address,
+}

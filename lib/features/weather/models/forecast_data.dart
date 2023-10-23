@@ -6,6 +6,7 @@ class ForecastWeatherResponse {
     var forecastData = json['forecast']['forecastday'];
 
     responseData = {
+      'name': json['location']['name'],
       'current data': {
         'date': currentData['last_updated'],
         'humidity': currentData['humidity'],

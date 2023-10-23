@@ -1,30 +1,34 @@
-import 'dart:io' show Platform;
-
 import 'package:active_ecommerce_flutter/features/auth/screens/otp.dart';
-import 'package:active_ecommerce_flutter/features/auth/screens/password_forget.dart';
 // import 'package:active_ecommerce_flutter/screens/password_otp.dart';
 import 'package:active_ecommerce_flutter/features/auth/screens/registration.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_bloc.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_state.dart';
-import 'package:active_ecommerce_flutter/features/auth/services/auth_exceptions.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
+import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart'
+    as hiveModels;
+import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
+import 'package:active_ecommerce_flutter/features/weather/weather_repository.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 // import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 // import 'package:google_sign_in/google_sign_in.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:location/location.dart';
+import 'package:permission_handler/permission_handler.dart'
+    as permissionHandler;
 // import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:toast/toast.dart';
 
 import '../../../app_config.dart';
 import '../../../custom/btn.dart';
-import '../../../custom/input_decorations.dart';
-import '../../../custom/intl_phone_input.dart';
 import '../../../custom/toast_component.dart';
-import '../../../helpers/shared_value_helper.dart';
 import '../../../my_theme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -41,19 +45,20 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  String _login_by = "email"; //phone or email
+  String _login_by = "phone"; //phone or email
   String initialCountry = 'US';
 
   // final _auth = FirebaseAuth.instance;
 
   // PhoneNumber phoneCode = PhoneNumber(isoCode: 'US', dialCode: "+1");
   var countries_code = <String?>[];
-
-  String? _phone = "";
-
-  TextEditingController _phoneNumberController = TextEditingController();
+  // String? _isoCode = 'IN';
+  // String? _newPhone = '';
+  String? newPhone = '';
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+
+  WeatherRepository _weatherRepository = WeatherRepository();
 
   @override
   void initState() {
@@ -80,41 +85,31 @@ class _LoginState extends State<Login> {
   // late User loggedInUser;
 
   onPressedLogin(BuildContext buildContext) async {
-    print('login clicked');
+    // print('login clicked');
     var email = _emailController.text.toString();
-    var phone = _phoneNumberController.text.toString();
+    var phone = newPhone;
     var password = _passwordController.text.toString();
 
-    if (_login_by == 'email' && email == "") {
-      ToastComponent.showDialog(AppLocalizations.of(context)!.enter_email,
-          gravity: Toast.center, duration: Toast.lengthLong);
-      return Main(
-        go_back: false,
-      );
-    } else if (_login_by == 'phone' && _phone == "") {
+    // if (_login_by == 'email' && email == "") {
+    //   ToastComponent.showDialog(AppLocalizations.of(context)!.enter_email,
+    //       gravity: Toast.center, duration: Toast.lengthLong);
+    //   return Main(
+    //     go_back: false,
+    //   );
+    // } else
+    if (_login_by == 'phone' && phone == "") {
       ToastComponent.showDialog(
           AppLocalizations.of(context)!.enter_phone_number,
           gravity: Toast.center,
           duration: Toast.lengthLong);
       return;
-    } else if (_login_by == 'email' && password == "") {
-      ToastComponent.showDialog(AppLocalizations.of(context)!.enter_password,
-          gravity: Toast.center, duration: Toast.lengthLong);
-      return;
     }
 
-    if (_login_by == "phone") {
-      String newNumber = '+91 $phone';
-      BlocProvider.of<AuthBloc>(buildContext).add(
-        PhoneVerificationRequested(newNumber),
-      );
-    } else {
-      // print('calling begins');
-      BlocProvider.of<AuthBloc>(buildContext).add(
-        SignInWithEmailRequested(email, password),
-      );
-      // print('calling ends');
-    }
+    // if (_login_by == "phone") {
+    // String newNumber = '+91 $phone';
+    BlocProvider.of<AuthBloc>(buildContext).add(
+      PhoneVerificationRequested(phone!),
+    );
   }
 
   onPressedGoogleLogin(BuildContext buildContext) async {
@@ -133,18 +128,76 @@ class _LoginState extends State<Login> {
     //     }), (newRoute) => false);
   }
 
+  Location location = Location();
+  late bool _serviceEnabled;
+  late permissionHandler.PermissionStatus _permissionGranted;
+  late LocationData _locationData;
+
+  Future<void> checkLocationPermission() async {
+    var dataBox = Hive.box<hiveModels.PrimaryLocation>('primaryLocationBox');
+
+    var savedData = dataBox.get('locationData');
+
+    if (savedData != null) {
+      print("saved Latitude: ${savedData.latitude}");
+      print("saved Longitude: ${savedData.longitude}");
+      return;
+    }
+
+    print('no saved location data found');
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await permissionHandler.Permission.location.request();
+    if (_permissionGranted != permissionHandler.PermissionStatus.granted) {
+      return;
+    }
+
+    _locationData = await location.getLocation();
+    print("new Latitude: ${_locationData.latitude}");
+    print("new Longitude: ${_locationData.longitude}");
+
+    String? address = await _weatherRepository.getNameFromLatLong(
+        _locationData.latitude!, _locationData.longitude!);
+
+    if (address == null) {
+      print('Error getting address from lat and long');
+    }
+
+    var primaryLocation = hiveModels.PrimaryLocation()
+      ..id = "locationData"
+      ..isAddress = false
+      ..latitude = _locationData.latitude as double
+      ..longitude = _locationData.longitude as double
+      ..address = address;
+
+    await dataBox.put(primaryLocation.id, primaryLocation);
+  }
+
   @override
   Widget build(BuildContext context) {
     final _screen_height = MediaQuery.of(context).size.height;
     final _screen_width = MediaQuery.of(context).size.width;
     AuthRepository _authRepository = AuthRepository();
+    FirestoreRepository _firestoreRepository = FirestoreRepository();
     return BlocProvider(
-      create: (context) => AuthBloc(authRepository: _authRepository),
+      create: (context) => AuthBloc(
+          authRepository: _authRepository,
+          firestoreRepository: _firestoreRepository),
       child: BlocListener<AuthBloc, AuthState>(
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state is Authenticated) {
             ToastComponent.showDialog('Login Successful',
                 gravity: Toast.center, duration: Toast.lengthLong);
+
+            await checkLocationPermission();
+
             Navigator.pushAndRemoveUntil(context,
                 MaterialPageRoute(builder: (context) {
               return Main();
@@ -163,11 +216,10 @@ class _LoginState extends State<Login> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => Otp(
-                        verify_by: 'phone',
-                        verificationId: state.verificationId.toString()
-                        // resendToken: resendToken
-                        )));
+                    builder: (context) =>
+                        Otp(verificationId: state.verificationId.toString()
+                            // resendToken: resendToken
+                            )));
           }
         },
         child: BlocBuilder<AuthBloc, AuthState>(
@@ -178,12 +230,12 @@ class _LoginState extends State<Login> {
                   child: CircularProgressIndicator(),
                 ),
               );
-            // if (state is Authenticated)
-            //   return Scaffold(
-            //     body: Center(
-            //       child: Text('It fucking worked.'),
-            //     ),
-            //   );
+            if (state is Authenticated)
+              return Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
             return Scaffold(
               body: AuthScreen.buildScreen(
                   context,
@@ -198,394 +250,283 @@ class _LoginState extends State<Login> {
   }
 
   Widget buildBody(BuildContext context, double _screen_width) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Container(
-          width: _screen_width,
-          height: MediaQuery.of(context).size.height / 2.01,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                "ನಮ್ಮೂರ್",
-                style: TextStyle(
-                    color: MyTheme.primary_color,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 15,
-                    fontFamily: 'Poppins'),
-              ),
-              Text(
-                "Welcome to namur",
-                style: TextStyle(
-                    color: MyTheme.primary_color,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 15,
-                    fontFamily: 'Poppins'),
-              ),
-              SizedBox(height: 10),
-              (_login_by == "phone") ? SizedBox(height: 30) : Container(),
-
-              if (_login_by == "email")
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            width: _screen_width,
+            height: MediaQuery.of(context).size.height / 2.01,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
                 Padding(
-                  padding: const EdgeInsets.only(
-                    left: 20,
-                    right: 20,
-                  ),
+                  padding: EdgeInsets.only(top: 10),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Container(
-                        height: 40,
-                        //"Email_ Id" text field
-                        child: TextField(
-                          controller: _emailController,
-                          autofocus: false,
-                          decoration: InputDecorations.buildInputDecoration_1(
-                              hint_text: "Email Id"),
+                      Text(
+                        "ನಮ್ಮೂರ್",
+                        style: TextStyle(
+                          color: MyTheme.primary_color,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20,
+                          fontFamily: 'Poppins',
                         ),
                       ),
-                      otp_addon_installed.$
-                          ? GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _login_by = "phone";
-                                });
-                              },
-                              child: Text(
-                                AppLocalizations.of(context)!
-                                    .or_login_with_a_phone,
-                                style: TextStyle(
-                                    color: MyTheme.accent_color,
-                                    fontStyle: FontStyle.italic,
-                                    decoration: TextDecoration.underline),
-                              ),
-                            )
-                          : Container()
-                    ],
-                  ),
-                )
-              else
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Container(
-                        height: 40,
-                        child: CustomInternationalPhoneNumberInput(
-                          maxLength: 12,
-                          countries: countries_code,
-                          initialValue: PhoneNumber(isoCode: 'IN'),
-                          // Set the initial value to India (ISO code: 'IN')
-                          onInputChanged: (PhoneNumber number) {
-                            print(number.phoneNumber);
-                            setState(() {
-                              _phone = number.phoneNumber;
-                            });
-                          },
-                          onInputValidated: (bool value) {
-                            print(value);
-                          },
-                          selectorConfig: SelectorConfig(
-                            selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
-                            leadingPadding: 0.0,
-                            showFlags: false,
-                            trailingSpace: false,
-                            setSelectorButtonAsPrefixIcon: false,
-                          ),
-                          ignoreBlank: false,
-                          autoValidateMode: AutovalidateMode.disabled,
-                          selectorTextStyle:
-                              TextStyle(color: MyTheme.font_grey),
-                          textStyle: TextStyle(color: MyTheme.font_grey),
-                          // initialValue: PhoneNumber(
-                          //     isoCode: countries_code[0].toString()),
-                          textFieldController: _phoneNumberController,
-                          formatInput: false,
-                          // Set this to false to remove the space after the 4th character
-                          keyboardType: TextInputType.numberWithOptions(
-                              signed: true, decimal: true),
-                          inputDecoration:
-                              InputDecorations.buildInputDecoration_phone(
-                                  hint_text: "Mobile Number"),
-                          onSaved: (PhoneNumber number) {
-                            print('On Saved: $number');
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-              //Password textbox
-              Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    (_login_by == "email")
-                        ? Container(
-                            height: 40,
-                            child: TextField(
-                              controller: _passwordController,
-                              autofocus: false,
-                              obscureText: true,
-                              enableSuggestions: false,
-                              autocorrect: false,
-                              decoration:
-                                  InputDecorations.buildInputDecoration_1(
-                                      hint_text: "Password"),
-                            ),
-                          )
-                        : Container(),
-
-                    SizedBox(height: 10),
-
-                    //"Forgot Password" Text button
-                    if (_login_by == "email")
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return PasswordForget();
-                          }));
-                        },
-                        child: Text(
-                          AppLocalizations.of(context)!
-                              .login_screen_forgot_password,
-                          style: TextStyle(
-                              color: MyTheme.primary_color,
-                              fontFamily: 'Poppins',
-                              fontStyle: FontStyle.italic,
-                              decoration: TextDecoration.underline),
-                        ),
-                      )
-                  ],
-                ),
-              ),
-
-              //SIGNUP and LOGIN buttons row
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0, left: 20, right: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    //SIGNUP button
-                    Container(
-                      height: 50,
-                      width: MediaQuery.of(context).size.width / 2.5,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              color: MyTheme.textfield_grey, width: 1),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(12.0)),
-                          color: MyTheme.primary_color),
-                      child: Btn.minWidthFixHeight(
-                        minWidth: MediaQuery.of(context).size.width,
-                        height: 44,
-                        //  color: MyTheme.amber,
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10.0))),
-                        child: Text(
-                          AppLocalizations.of(context)!
-                              .login_screen_create_account,
-                          style: TextStyle(
-                              color: MyTheme.white,
-                              fontFamily: 'Poppins',
-                              letterSpacing: .5,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600),
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Registration()));
-                        },
-                      ),
-                    ),
-
-                    SizedBox(width: 20),
-
-                    //LOGIN button
-                    Container(
-                      height: 50,
-                      width: MediaQuery.of(context).size.width / 2.5,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              color: MyTheme.textfield_grey, width: 1),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(12.0))),
-                      child: Btn.minWidthFixHeight(
-                        minWidth: MediaQuery.of(context).size.width,
-                        height: 50,
-                        color: MyTheme.primary_color,
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10.0))),
-                        child: Text(
-                          AppLocalizations.of(context)!.login_screen_log_in,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              letterSpacing: .5,
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w500),
-                        ),
-                        onPressed: () {
-                          onPressedLogin(context);
-                          // BlocProvider.of<AuthBloc>(context).add(
-                          //   SignInWithEmailRequested(
-                          //       _emailController.text.toString(),
-                          //       _passwordController.text.toString()),
-                          // );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              //login with email/phone button
-              if (_login_by == "email")
-                Padding(
-                  padding:
-                      const EdgeInsets.only(left: 20.0, right: 20, top: 20),
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _login_by = "phone";
-                      });
-                    },
-                    child: Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: MyTheme.primary_color),
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Btn.minWidthFixHeight(
-                          minWidth: MediaQuery.of(context).size.width,
-                          height: 50,
-                          //  color: MyTheme.amber,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: const BorderRadius.all(
-                                  Radius.circular(10.0))),
-                          child: Text(
-                            AppLocalizations.of(context)!.or_login_with_a_phone,
-                            style: TextStyle(
-                                color: MyTheme.primary_color,
-                                fontFamily: 'Poppins'),
-                          )),
-                    ),
-                  ),
-                )
-              else
-                Padding(
-                  padding:
-                      const EdgeInsets.only(left: 20.0, right: 20, top: 25),
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _login_by = "email";
-                      });
-                    },
-                    child: Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: MyTheme.primary_color),
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Btn.minWidthFixHeight(
-                        minWidth: MediaQuery.of(context).size.width,
-                        height: 50,
-                        //  color: MyTheme.amber,
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10.0))),
-                        child: Text(
-                          AppLocalizations.of(context)!.or_login_with_an_email,
-                          style: TextStyle(
+                      SizedBox(height: 5),
+                      Text(
+                        "Welcome to Namur",
+                        style: TextStyle(
                             color: MyTheme.primary_color,
-                            fontFamily: 'Poppins',
-                          ),
-                        ),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 22,
+                            fontFamily: 'Poppins'),
                       ),
-                    ),
+                    ],
                   ),
                 ),
 
-              Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        onPressedGoogleLogin(context);
-                        // print('google');
-                      },
-                      child: Container(
-                        width: 40,
-                        child: Image.asset("assets/google_logo.png"),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                // SizedBox(height: 10),
 
-              // if (Platform.isIOS)
-              //   Padding(
-              //     padding: const EdgeInsets.only(top: 20.0),
-              //     child: SignInWithAppleButton(
-              //       onPressed: () async {
-              //         // signInWithApple();
-              //         print('apple');
-              //       },
-              //     ),
-              //   ),
-              // Container(
-              //   child: Center(
-              //     child: Container(
-              //       child: Row(
-              //         mainAxisAlignment: MainAxisAlignment.center,
-              //         children: [
-              //           Visibility(
-              //             visible: allow_google_login.$,
-              //             child: InkWell(
-              //               onTap: () {
-              //                 onPressedGoogleLogin(context);
-              //                 // print('google');
-              //               },
-              //               child: Container(
-              //                 width: 28,
-              //                 child: Image.asset("assets/google_logo.png"),
-              //               ),
-              //             ),
-              //           ),
-              //           if (allow_twitter_login.$)
-              //             Padding(
-              //               padding: const EdgeInsets.only(left: 15.0),
-              //               child: InkWell(
-              //                 onTap: () {
-              //                   // onPressedTwitterLogin();
-              //                   print('Twitter');
-              //                 },
-              //                 child: Container(
-              //                   width: 28,
-              //                   child: Image.asset("assets/twitter_logo.png"),
-              //                 ),
-              //               ),
-              //             ),
-              //         ],
-              //       ),
-              //     ),
-              //   ),
-              // ),
-            ],
-          ),
-        )
-      ],
+                // SizedBox(height: 30),
+
+                // phone text field
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(left: 20, right: 20, top: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Container(
+                              height: 65,
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: IntlPhoneField(
+                                disableLengthCheck: true,
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.all(8),
+                                  labelText: 'Mobile Number',
+                                  labelStyle: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 13,
+                                  ),
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide(),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                        color: Colors
+                                            .green), // Set your desired border color when focused
+                                  ),
+                                ),
+                                cursorColor: MyTheme.green_light,
+                                dropdownTextStyle: TextStyle(
+                                    color: MyTheme.font_grey, fontSize: 13),
+                                style: TextStyle(color: MyTheme.font_grey),
+                                flagsButtonPadding:
+                                    EdgeInsets.symmetric(horizontal: 15),
+                                showCountryFlag: false,
+                                showDropdownIcon: false,
+                                initialCountryCode: 'IN',
+                                onChanged: (phone) {
+                                  setState(() {
+                                    newPhone =
+                                        '${phone.countryCode} ${phone.number}';
+                                  });
+                                  print(newPhone);
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.only(right: 10),
+                                height: 44,
+                                child: Btn.minWidthFixHeight(
+                                  minWidth:
+                                      MediaQuery.of(context).size.width / 2.5,
+                                  height: 50,
+                                  color: MyTheme.primary_color,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(10.0))),
+                                  child: Text(
+                                    'Login',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  onPressed: () {
+                                    onPressedLogin(context);
+                                  },
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 20, right: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        onPressedGoogleLogin(context);
+                                        // print('google');
+                                      },
+                                      child: Container(
+                                        width: 40,
+                                        child: Image.asset(
+                                            "assets/google_logo.png"),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 10, right: 20),
+                                child: InkWell(
+                                  onTap: () {
+                                    // onPressedGoogleLogin(context);
+                                    print('facebook');
+                                  },
+                                  child: Container(
+                                    width: 40,
+                                    child:
+                                        Image.asset("assets/facebook_logo.png"),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 35, top: 10),
+                            child: Row(
+                              children: [
+                                Expanded(child: SizedBox()),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Registration()));
+                                    },
+                                    child: Text(
+                                      'Create Account?',
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w700,
+                                        color: MyTheme.grey_153,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(),
+                    ],
+                  ),
+                ),
+
+                //login button
+
+                // SizedBox(
+                //   height: 10,
+                // ),
+
+                // //or and divider
+                // Padding(
+                //   padding: EdgeInsets.symmetric(horizontal: 120),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: [
+                //       Expanded(
+                //         child: Divider(
+                //           thickness: 3,
+                //           height: 10,
+                //         ),
+                //       ),
+                //       Padding(
+                //         padding: EdgeInsets.symmetric(horizontal: 10),
+                //         child: Text('OR',
+                //             style: TextStyle(
+                //                 color: MyTheme.font_grey,
+                //                 fontWeight: FontWeight.w600,
+                //                 fontSize: 12,
+                //                 fontFamily: 'Poppins')),
+                //       ),
+                //       Expanded(
+                //         child: Divider(
+                //           thickness: 3,
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+
+                // SizedBox(
+                //   height: 10,
+                // ),
+
+                // // signup button
+                // Padding(
+                //   padding: const EdgeInsets.only(left: 30.0, right: 30),
+                //   child: GestureDetector(
+                //     onTap: () {
+                //       Navigator.push(
+                //           context,
+                //           MaterialPageRoute(
+                //               builder: (context) => Registration()));
+                //     },
+                //     child: Container(
+                //       height: 40,
+                //       decoration: BoxDecoration(
+                //           border: Border.all(color: MyTheme.primary_color),
+                //           borderRadius: BorderRadius.circular(10)),
+                //       child: Btn.minWidthFixHeight(
+                //           minWidth: MediaQuery.of(context).size.width,
+                //           height: 50,
+                //           //  color: MyTheme.amber,
+                //           shape: RoundedRectangleBorder(
+                //               borderRadius: const BorderRadius.all(
+                //                   Radius.circular(10.0))),
+                //           child: Text(
+                //             'Create Account',
+                //             style: TextStyle(
+                //                 color: MyTheme.primary_color,
+                //                 fontFamily: 'Poppins'),
+                //           )),
+                //     ),
+                //   ),
+                // ),
+
+                // // google login
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart'
+    as hiveModels;
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/screens/about_us/about_us.dart';
 import 'package:active_ecommerce_flutter/screens/change_language.dart';
@@ -5,6 +7,7 @@ import 'package:active_ecommerce_flutter/screens/contact_us/contact_us.dart';
 import 'package:active_ecommerce_flutter/screens/my_account/my_account.dart';
 import 'package:active_ecommerce_flutter/screens/notification/notification_screen.dart';
 import 'package:active_ecommerce_flutter/screens/setting/setting.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,6 +24,8 @@ import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:active_ecommerce_flutter/app_config.dart';
 import 'package:active_ecommerce_flutter/helpers/auth_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:hive/hive.dart';
 import 'package:toast/toast.dart';
 
 import '../custom/toast_component.dart';
@@ -73,11 +78,11 @@ class _MainDrawerState extends State<MainDrawer> {
               children: <Widget>[
                 user != null
                     ? ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            "${avatar_original.$}",
-                          ),
-                        ),
+                        // leading: CircleAvatar(
+                        //   backgroundImage: NetworkImage(
+                        //     "${avatar_original.$}",
+                        //   ),
+                        // ),
                         title: Text(
                           "${user_name.$}",
                           style: TextStyle(
@@ -352,16 +357,38 @@ class _MainDrawerState extends State<MainDrawer> {
                               onTap: () async {
                                 // await AuthService.firebase().logOut();
                                 // final user = AuthService.firebase().currentUser;
-                                final user = null;
-                                if (user == null) {
-                                  ToastComponent.showDialog('Logout Successful',
-                                      gravity: Toast.center,
-                                      duration: Toast.lengthLong);
-                                } else {
-                                  ToastComponent.showDialog('Still logged in',
-                                      gravity: Toast.center,
-                                      duration: Toast.lengthLong);
-                                }
+
+                                await FirebaseAuth.instance.signOut();
+                                final GoogleSignIn googleSignIn =
+                                    GoogleSignIn();
+                                await googleSignIn.signOut();
+
+                                var dataBox1 =
+                                    Hive.box<hiveModels.PrimaryLocation>(
+                                        'primaryLocationBox');
+
+                                await dataBox1.clear();
+
+                                var dataBox2 = Hive.box<hiveModels.ProfileData>(
+                                    'profileDataBox3');
+
+                                await dataBox2.clear();
+
+                                var dataBox3 =
+                                    Hive.box<hiveModels.SecondaryLocations>(
+                                        'secondaryLocationsBox');
+                                await dataBox3.clear();
+
+                                // final user = null;
+                                // if (user == null) {
+                                ToastComponent.showDialog('Logout Successful',
+                                    gravity: Toast.center,
+                                    duration: Toast.lengthLong);
+                                // } else {
+                                //   ToastComponent.showDialog('Still logged in',
+                                //       gravity: Toast.center,
+                                //       duration: Toast.lengthLong);
+                                // }
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
@@ -372,41 +399,6 @@ class _MainDrawerState extends State<MainDrawer> {
                                   (route) => false,
                                 );
                               }),
-                          /* ListTile(
-                              visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-                              leading: Image.asset("assets/home.png",
-                                  height: 16, color: Color.fromRGBO(153, 153, 153, 1)),
-                              title: Text( "Description",
-                                  style: TextStyle(
-                                      color: MyTheme.primary_color,
-                                      fontSize: 14)),
-                              onTap: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                      return Description();
-                                    }));
-                              }),*/
-                          // wallet_system_status.$
-                          /* ? ListTile(
-                                  visualDensity: VisualDensity(
-                                      horizontal: -4, vertical: -4),
-                                  leading: Image.asset("assets/wallet.png",
-                                      height: 16,
-                                    color: MyTheme.primary_color,),
-                                  title: Text(
-                                      AppLocalizations.of(context)!
-                                          .wallet_ucf,
-                                      style: TextStyle(
-                                          color:
-                                              Color.fromRGBO(153, 153, 153, 1),
-                                          fontSize: 14)),
-                                  onTap: () {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) {
-                                      return Main(); //Wallet();
-                                    }));
-                                  })
-                              : Container(),*/
                         ],
                       )
                     : Container(),
@@ -456,21 +448,6 @@ class _MainDrawerState extends State<MainDrawer> {
                           ),
                         ),
                       )
-
-                    /*ListTile(
-                        visualDensity:
-                            VisualDensity(horizontal: -4, vertical: -4),
-                        leading: Image.asset("assets/logout.png",
-                            height: 16,
-                            color: Color.fromRGBO(153, 153, 153, 1)),
-                        title: Text(
-                            AppLocalizations.of(context)!.logout_ucf,
-                            style: TextStyle(
-                                color: MyTheme.primary_color,
-                                fontSize: 14)),
-                        onTap: () {
-                          onTapLogout(context);
-                        })*/
                     : Container(),
                 SizedBox(
                   height: 150,
