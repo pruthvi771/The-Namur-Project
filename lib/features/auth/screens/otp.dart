@@ -312,31 +312,6 @@ class _OtpState extends State<Otp> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Center(
-                        //   child: OTPTextField(
-                        //     obscureText: true,
-                        //     controller: _verificationController,
-                        //     length: 6, // Change this to 6 for a 6-digit OTP
-                        //     width: MediaQuery.of(context).size.width,
-                        //     textFieldAlignment: MainAxisAlignment.spaceAround,
-                        //     otpFieldStyle: OtpFieldStyle(
-                        //       backgroundColor: Color(0xffC3FF77),
-                        //     ),
-                        //     fieldWidth: 40,
-                        //     fieldStyle: FieldStyle.box,
-                        //     outlineBorderRadius: 10,
-                        //     style: TextStyle(fontSize: 17),
-                        //     onChanged: (pin) {
-                        //       setState(() {
-                        //         otp = pin.split('');
-                        //       });
-                        //       print("Changed: " + pin);
-                        //     },
-                        //     onCompleted: (pin) {
-                        //       print("Completed: " + pin);
-                        //     },
-                        //   ),
-                        // ),
                         Center(
                           child: OTPInputField(
                             onCompleted: (value) {
@@ -353,7 +328,7 @@ class _OtpState extends State<Otp> {
                             },
                           ),
                         ),
-                        SizedBox(height: 80),
+                        SizedBox(height: 20),
                         Center(
                           child: Padding(
                             padding: const EdgeInsets.only(top: 40.0),

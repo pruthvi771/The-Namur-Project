@@ -25,7 +25,7 @@ class SubCategoryController extends GetxController {
         throw Exception("error in sub category controller");
       }
     } catch (e) {
-      print("error");
+      print("error in sub category controller (not my file)");
     }
   }
 

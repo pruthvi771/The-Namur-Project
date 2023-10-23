@@ -169,10 +169,10 @@ class _CategoryListState extends State<CategoryList> {
     return FutureBuilder(
         future: _getProfileDataFuture,
         builder: (context, snapshot) {
-          profileProgress =
-              calculatingProfileProgress(profileData: snapshot.data!);
-          print('profile progress is $profileProgress');
           if (snapshot.hasData) {
+            profileProgress =
+                calculatingProfileProgress(profileData: snapshot.data!);
+            print('profile progress is $profileProgress');
             return CustomScrollView(
               physics: AlwaysScrollableScrollPhysics(),
               slivers: [
