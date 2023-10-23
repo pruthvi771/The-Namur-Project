@@ -73,6 +73,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     return ListView(
       physics: BouncingScrollPhysics(),
       children: [
+        // image
         Container(
           height: 300,
           color: MyTheme.green_light,
@@ -81,6 +82,8 @@ class _ProductDetailsState extends State<ProductDetails> {
             fit: BoxFit.fitWidth,
           ),
         ),
+
+        // product name and price
         Container(
           padding: EdgeInsets.only(top: 10, left: 15, right: 10, bottom: 10),
           color: Colors.grey[200],
@@ -133,6 +136,8 @@ class _ProductDetailsState extends State<ProductDetails> {
             ],
           ),
         ),
+
+        // seller data
         FutureBuilder(
           future: _getSellerData,
           builder: (context, snapshot) {
@@ -193,8 +198,10 @@ class _ProductDetailsState extends State<ProductDetails> {
             return Container();
           },
         ),
+
+        // description
         Container(
-          padding: EdgeInsets.all(15),
+          padding: EdgeInsets.all(20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -209,17 +216,17 @@ class _ProductDetailsState extends State<ProductDetails> {
                     letterSpacing: .5,
                     fontFamily: 'Poppins'),
               ),
-              SizedBox(
-                height: 5,
-              ),
-              Text(
-                widget.sellProduct.productDescription,
-                // "aksbfkjafknangg englkng lkegnang kegne",
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: .5,
-                    fontFamily: 'Poppins'),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Text(
+                  widget.sellProduct.productDescription,
+                  // "aksbfkjafknangg englkng lkegnang kegne",
+                  style: TextStyle(
+                      fontSize: 15,
+                      height: 1.4,
+                      letterSpacing: .5,
+                      fontFamily: 'Poppins'),
+                ),
               ),
             ],
           ),

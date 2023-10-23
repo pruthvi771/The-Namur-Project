@@ -542,10 +542,13 @@ class _ProductPostState extends State<ProductPost> {
           padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
           child: Container(
             height: 130,
+            padding: EdgeInsets.only(left: 5, top: 15, right: 5),
             decoration: BoxDecoration(
                 color: MyTheme.field_color,
                 borderRadius: BorderRadius.circular(10)),
             child: TextFormField(
+              maxLines: 5,
+              // maxLength: 300,
               controller: _additionalController,
               decoration: InputDecoration(
                 border: InputBorder.none,

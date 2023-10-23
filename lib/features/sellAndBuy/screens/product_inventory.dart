@@ -186,6 +186,8 @@ class _ProductInventoryState extends State<ProductInventory> {
                         // priceType: state.products[index].priceType,
                         subCategoryEnum: widget.subCategoryEnum,
                         sellerId: state.products[index].sellerId,
+                        productDescription:
+                            state.products[index].productDescription,
                       );
                     },
                   );
@@ -217,6 +219,7 @@ class ProductInventoryWidget extends StatelessWidget {
     // required this.priceType,
     required this.subCategoryEnum,
     required this.sellerId,
+    required this.productDescription,
     // required this.
   });
 
@@ -228,6 +231,7 @@ class ProductInventoryWidget extends StatelessWidget {
   final int productQuantity;
   final String quantityUnit;
   final String sellerId;
+  final String productDescription;
   // final String priceType;
   final SubCategoryEnum subCategoryEnum;
 
@@ -350,7 +354,7 @@ class ProductInventoryWidget extends StatelessWidget {
                                                         productName:
                                                             productName,
                                                         productDescription:
-                                                            productSubSubCategory,
+                                                            productDescription,
                                                         productPrice:
                                                             productPrice,
                                                         productQuantity:
