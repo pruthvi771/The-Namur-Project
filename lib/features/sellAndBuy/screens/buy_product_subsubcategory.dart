@@ -100,13 +100,13 @@ class _BuyProductSubSubCategoriesState
               itemBuilder: (context, index) {
                 return InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => BuyProductList(
-                                subSubCategory: subSubCategoryList[index],
-                              )),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) => BuyProductList(
+                    //             subSubCategory: subSubCategoryList[index],
+                    //           )),
+                    // );
                   },
                   child: BuyProductSubSubCategoriesWidget(
                       context: context,

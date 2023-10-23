@@ -150,7 +150,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                     Container(
                       height: 70,
                       width: 70,
-                      child: snapshot.data!.photoURL == null
+                      child: snapshot.data!.photoURL == null ||
+                              snapshot.data!.photoURL!.isEmpty
                           ? Image.asset('assets/profile_placeholder.png')
                           : ClipRRect(
                               borderRadius: BorderRadius.all(

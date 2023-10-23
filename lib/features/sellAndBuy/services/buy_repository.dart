@@ -44,6 +44,41 @@ class BuyRepository {
     return products;
   }
 
+  Future<List<SellProduct>> getProductsForSubCategory({
+    required String subCategory,
+  }) async {
+    // QuerySnapshot productSnapshot = await productsCollection.get();
+
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
+        .instance
+        .collection('products')
+        .where(FieldPath.documentId, isNotEqualTo: null)
+        .where('subCategory', isEqualTo: subCategory)
+        .get();
+
+    var products = querySnapshot.docs.map((doc) {
+      Map<String, dynamic> data = doc.data();
+      print(doc.id);
+      return SellProduct(
+        id: doc.id,
+        productName: data['name'],
+        productDescription: data['description'],
+        productPrice: data['price'],
+        productQuantity: data['quantity'],
+        quantityUnit: data['quantityUnit'],
+        // priceType: data['priceType'],
+        category: data['category'],
+        subCategory: data['subCategory'],
+        subSubCategory: data['subSubCategory'],
+        imageURL: data['imageURL'],
+        sellerId: data['sellerId'],
+      );
+    }).toList();
+    print(products.length);
+
+    return products;
+  }
+
   Future<BuyerData> getSellerData({
     required String userId,
   }) async {

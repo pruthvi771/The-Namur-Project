@@ -1,5 +1,6 @@
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/drawer/drawer.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/buy_product_list.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/buy_product_subsubcategory.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/product_inventory.dart';
@@ -280,9 +281,13 @@ class _ParentScreenState extends State<ParentScreen> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            BuyProductSubSubCategories(
+                                            // BuyProductSubSubCategories(
+                                            //   subCategoryEnum: subCategoryEnum,
+                                            // )))
+                                            BuyProductList(
                                               subCategoryEnum: subCategoryEnum,
-                                            )))
+                                            )),
+                                  )
                                 : Navigator.push(
                                     context,
                                     MaterialPageRoute(

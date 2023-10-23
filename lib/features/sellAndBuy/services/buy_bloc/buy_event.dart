@@ -9,14 +9,14 @@ abstract class BuyEvent extends Equatable {
 }
 
 class BuyProductsForSubCategoryRequested extends BuyEvent {
-  final String subSubCategory;
+  final String subCategory;
 
   const BuyProductsForSubCategoryRequested({
-    required this.subSubCategory,
+    required this.subCategory,
   });
 
   @override
-  List<Object> get props => [subSubCategory];
+  List<Object> get props => [subCategory];
 }
 
 // class SellerDataRequested extends BuyEvent {

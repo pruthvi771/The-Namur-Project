@@ -17,7 +17,7 @@ class BuyBloc extends Bloc<BuyEvent, BuyState> {
       try {
         emit(BuyLoading());
         List<SellProduct> products = await buyRepository
-            .getProductsForSubSubCategory(subSubCategory: event.subSubCategory);
+            .getProductsForSubCategory(subCategory: event.subCategory);
 
         // print(products[0].productName);
 
