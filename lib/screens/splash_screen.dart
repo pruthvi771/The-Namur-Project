@@ -206,12 +206,12 @@ class _SplashScreenState extends State<SplashScreen> {
       AuthHelper().fetch_and_set();
     });
     // AddonsHelper().setAddonsData();
-    BusinessSettingHelper().setBusinessSettingData();
+    // BusinessSettingHelper().setBusinessSettingData();
     await app_language.load();
     await app_mobile_language.load();
     await app_language_rtl.load();
     await system_currency.load();
-    Provider.of<CurrencyPresenter>(context, listen: false).fetchListData();
+    // Provider.of<CurrencyPresenter>(context, listen: false).fetchListData();
 
     // print("new splash screen ${app_mobile_language.$}");
     // print("new splash screen app_language_rtl ${app_language_rtl.$}");

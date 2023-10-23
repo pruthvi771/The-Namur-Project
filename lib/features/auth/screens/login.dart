@@ -66,13 +66,13 @@ class _LoginState extends State<Login> {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.bottom]);
     super.initState();
-    fetch_country();
+    // fetch_country();
   }
 
-  fetch_country() async {
-    var data = await AddressRepository().getCountryList();
-    data.countries.forEach((c) => countries_code.add(c.code));
-  }
+  // fetch_country() async {
+  //   var data = await AddressRepository().getCountryList();
+  //   data.countries.forEach((c) => countries_code.add(c.code));
+  // }
 
   @override
   void dispose() {
