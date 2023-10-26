@@ -455,5 +455,7 @@
   "you_need_to_login_to_give_a_review": "تحتاج إلى تسجيل الدخول لإعطاء مراجعة",
   "your_app_is_now": "تطبيقك الآن",
   "your_delivery_location": "موقع التسليم الخاص بك. . .",
-  "your_ordered_all_lower": "لقد طلبت"
+  "your_ordered_all_lower": "لقد طلبت",
+  "enter_full_code": "أدخل الرمز الكامل",
+  "otp_sent_to_phone": "تم إرسال OTP إلى رقم هاتفك"
 }
