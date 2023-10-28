@@ -72,6 +72,19 @@ var subCategoryListsForCategory = {
     SubCategoryEnum.bengalGram,
     SubCategoryEnum.castor,
   ],
+  CategoryEnum.electronics: [
+    SubCategoryEnum.mobile,
+    SubCategoryEnum.laptop,
+    SubCategoryEnum.tv,
+  ],
+  CategoryEnum.jcb: [
+    SubCategoryEnum.jcb,
+  ],
+  CategoryEnum.equipments: [
+    SubCategoryEnum.tractor,
+    SubCategoryEnum.rotavator,
+    SubCategoryEnum.cultivator,
+  ],
 };
 
 CategoryEnum? findCategoryForSubCategory(SubCategoryEnum subCategory) {
@@ -234,6 +247,19 @@ enum SubCategoryEnum {
   // MISCELLANEOUS
   egg,
   chicken,
+
+  // ELECTRONICS
+  mobile,
+  laptop,
+  tv,
+
+  // JCB
+  jcb,
+
+  // EQUIPMENTS
+  tractor,
+  rotavator,
+  cultivator,
 }
 
 var nameForSubCategoryEnum = {
@@ -352,6 +378,13 @@ var nameForSubCategoryEnum = {
   SubCategoryEnum.marigold: "Marigold",
   SubCategoryEnum.egg: "Egg",
   SubCategoryEnum.chicken: "Chicken",
+  // SubCategoryEnum.mobile: "Mobile",
+  // SubCategoryEnum.laptop: "Laptop",
+  // SubCategoryEnum.tv: "TV",
+  // SubCategoryEnum.jcb: "JCB",
+  // SubCategoryEnum.tractor: "Tractor",
+  // SubCategoryEnum.rotavator: "Rotavator",
+  // SubCategoryEnum.cultivator: "Cultivator",
 };
 
 // CategoryEnum.animals: [
@@ -448,4 +481,34 @@ var SubSubCategoryList = {
     'Grapes Green',
     'Grapes Red',
   ],
+  // SubCategoryEnum.laptop: [
+  //   'Laptop',
+  //   'Laptop Black',
+  //   'Laptop White',
+  // ],
+  // SubCategoryEnum.tv: [
+  //   'TV',
+  //   'TV Black',
+  //   'TV White',
+  // ],
+  // SubCategoryEnum.jcb: [
+  //   'JCB',
+  //   'JCB Black',
+  //   'JCB White',
+  // ],
+  // SubCategoryEnum.tractor: [
+  //   'Tractor',
+  //   'Tractor Black',
+  //   'Tractor White',
+  // ],
+  // SubCategoryEnum.rotavator: [
+  //   'Rotavator',
+  //   'Rotavator Black',
+  //   'Rotavator White',
+  // ],
+  // SubCategoryEnum.cultivator: [
+  //   'Cultivator',
+  //   'Cultivator Black',
+  //   'Cultivator White',
+  // ],
 };

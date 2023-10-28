@@ -642,5 +642,7 @@
   "your_ordered_all_lower": "you ordered",
   "youtube_ucf": "Youtube",
   "enter_full_code": "Enter full code",
-  "otp_sent_to_phone": "OTP sent to your phone number"
+  "otp_sent_to_phone": "OTP sent to your phone number",
+  "rent_a_machine" : "Rent A Machine",
+  "book" : "Book"
 }

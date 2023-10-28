@@ -1,4 +1,5 @@
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/machine_rent_form.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/parent_screen.dart';
 import 'package:active_ecommerce_flutter/screens/Payment_info/payment_info_screen.dart';
 import 'package:active_ecommerce_flutter/screens/auction_products.dart';
@@ -88,6 +89,7 @@ class _ScreenDatabaseState extends State<ScreenDatabase> {
           parentEnum: ParentEnum.animal,
         )
       ],
+      ['Machine Rent Form', MachineRentForm()],
       ['Product Inventory', ProductInventory()],
       ['More Detail', MoreDetail()],
       ['Product Post', ProductPost()],
@@ -108,7 +110,7 @@ class _ScreenDatabaseState extends State<ScreenDatabase> {
       ['Wishlist', Wishlist()],
       ['wholesale products', WholeSaleProducts()],
       ['wallet', Wallet()],
-      ['video description', VideoDescription()],
+      ['video description (DO NOT ENTER)', VideoDescription()],
       ['top selling products', TopSellingProducts()],
       ['todays deal products', TodaysDealProducts()],
       ['splash', Splash()],

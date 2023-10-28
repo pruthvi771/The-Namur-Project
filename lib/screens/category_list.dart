@@ -132,7 +132,7 @@ class _CategoryListState extends State<CategoryList> {
             drawer: const MainDrawer(),
             backgroundColor: Colors.transparent,
             appBar: AppBar(
-              elevation: 0,
+              // elevation: 0,
               // backgroundColor: MyTheme.primary_color,
               flexibleSpace: Container(
                 decoration: const BoxDecoration(
@@ -181,14 +181,14 @@ class _CategoryListState extends State<CategoryList> {
                   TitleBar(),
 
                   // screen database button
-                  // TextButton(
-                  //     onPressed: () {
-                  //       Navigator.push(
-                  //           context,
-                  //           MaterialPageRoute(
-                  //               builder: (context) => ScreenDatabase()));
-                  //     },
-                  //     child: Text('Screen database')),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ScreenDatabase()));
+                      },
+                      child: Text('Screen database')),
 
                   SizedBox(height: 24),
 
@@ -424,9 +424,9 @@ class _CategoryListState extends State<CategoryList> {
       child: InkWell(
         onTap: () {
           print('Tapped index $index');
-          if (index == 2 || index == 3) {
-            return;
-          }
+          // if (index == 2 || index == 3) {
+          //   return;
+          // }
           ParentEnum? parentEnum = index == 0
               ? ParentEnum.animal
               : index == 1

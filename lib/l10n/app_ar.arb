@@ -457,5 +457,7 @@
   "your_delivery_location": "موقع التسليم الخاص بك. . .",
   "your_ordered_all_lower": "لقد طلبت",
   "enter_full_code": "أدخل الرمز الكامل",
-  "otp_sent_to_phone": "تم إرسال OTP إلى رقم هاتفك"
+  "otp_sent_to_phone": "تم إرسال OTP إلى رقم هاتفك",
+  "rent_a_machine" : "استئجار آلة",
+  "book" : "كتاب"
 }
