@@ -236,28 +236,28 @@ class _ProfileState extends State<Profile> {
                         right: 4,
                         child: Padding(
                           padding: const EdgeInsets.only(bottom: 5, right: 10),
-                          child: GestureDetector(
+                          child: InkWell(
                             onTap: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return MoreDetails();
-                              }));
+                              saveProfileImage();
                             },
-                            child: CircleAvatar(
-                              radius: 25,
-                              backgroundColor: Colors.black.withOpacity(01),
-                              // backgroundColor: MyTheme.green.withOpacity(0.5),
-                              child: IconButton(
-                                onPressed: saveProfileImage,
-                                icon: Icon(
-                                  Icons.image,
-                                  // size: 30,
-                                  // color: MyTheme.green,
-                                  color: Colors.white,
-                                  // weight: 10,
-                                ),
-                              ),
-                            ),
+                            child: Container(
+                                padding: EdgeInsets.all(11),
+                                decoration: BoxDecoration(
+                                    color: Colors.black.withOpacity(0.7),
+                                    borderRadius: BorderRadius.circular(50)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.image,
+                                      color: Colors.white,
+                                    ),
+                                    Icon(
+                                      Icons.edit,
+                                      color: Colors.white,
+                                    ),
+                                  ],
+                                )),
                           ),
                         ),
                       ),
