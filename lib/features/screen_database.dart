@@ -89,7 +89,15 @@ class _ScreenDatabaseState extends State<ScreenDatabase> {
           parentEnum: ParentEnum.animal,
         )
       ],
-      ['Machine Rent Form', MachineRentForm()],
+      [
+        'Machine Rent Form',
+        MachineRentForm(
+          imageURL:
+              'https://www.deere.co.in/assets/images/region-1/products/tractors/d-series-tractors/john-deere-india-d-series-tractors.jpg',
+          machineName: 'John Deere 5310',
+          machinePrice: 1000,
+        )
+      ],
       ['Product Inventory', ProductInventory()],
       ['More Detail', MoreDetail()],
       ['Product Post', ProductPost()],

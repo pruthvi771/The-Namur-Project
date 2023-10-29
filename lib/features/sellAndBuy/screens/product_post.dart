@@ -30,12 +30,15 @@ class ProductPost extends StatefulWidget {
   final bool isProductEditScreen;
   final SellProduct? sellProduct;
 
+  final bool isMachine;
+
   const ProductPost({
     Key? key,
     required this.subCategoryEnum,
     required this.alreadyExistingProductNames,
     this.isProductEditScreen = false,
     this.sellProduct,
+    this.isMachine = false,
   }) : super(key: key);
 
   @override
@@ -348,6 +351,23 @@ class _ProductPostState extends State<ProductPost> {
   }
 
   bodycontent() {
+    var productCategoryEnum =
+        enums.findCategoryForSubCategory(widget.subCategoryEnum);
+    var showQuantityDropdown = true;
+    String machinePriceHintText = 'Price';
+    if (productCategoryEnum == CategoryEnum.animals ||
+        productCategoryEnum == CategoryEnum.birds ||
+        productCategoryEnum == CategoryEnum.electronics ||
+        productCategoryEnum == CategoryEnum.equipments ||
+        productCategoryEnum == CategoryEnum.jcb) {
+      selectedQuantityUnit = listOfQuantityUnits[0];
+      showQuantityDropdown = false;
+    }
+    if (_selectedItem == "On Rent") {
+      machinePriceHintText = 'Price (per 30 mins)';
+    } else if (_selectedItem == "Sell") {
+      machinePriceHintText = 'Price (per unit)';
+    }
     return ListView(
       physics: BouncingScrollPhysics(),
       children: [
@@ -416,7 +436,7 @@ class _ProductPostState extends State<ProductPost> {
 
         // product quantity
         Padding(
-          padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+          padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 15.0),
           child: Container(
             height: 50, // Specify a fixed height for the container
             child: Row(
@@ -447,54 +467,55 @@ class _ProductPostState extends State<ProductPost> {
                   ),
                 ),
                 SizedBox(width: 10),
-                Container(
-                  // width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: MyTheme.field_color,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 6),
-                        child: Icon(
-                          Icons.close,
-                          color: Colors.grey[600],
-                          size: 15,
-                        ),
-                      ),
-                      DropdownButton<String>(
-                        padding: EdgeInsets.only(left: 15, right: 5),
-                        underline: Container(
-                          height: 0,
-                          color: Colors.transparent,
-                        ),
-                        value: selectedQuantityUnit,
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            selectedQuantityUnit = newValue!;
-                          });
-                        },
-                        items: listOfQuantityUnits
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        hint: Text(
-                          'Select Unit',
-                          style: TextStyle(
+                if (showQuantityDropdown)
+                  Container(
+                    // width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: MyTheme.field_color,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 6),
+                          child: Icon(
+                            Icons.close,
                             color: Colors.grey[600],
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Poppins',
+                            size: 15,
                           ),
                         ),
-                        // icon: SizedBox(width: 24),
-                      ),
-                    ],
+                        DropdownButton<String>(
+                          padding: EdgeInsets.only(left: 15, right: 5),
+                          underline: Container(
+                            height: 0,
+                            color: Colors.transparent,
+                          ),
+                          value: selectedQuantityUnit,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedQuantityUnit = newValue!;
+                            });
+                          },
+                          items: listOfQuantityUnits
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          hint: Text(
+                            'Select Unit',
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
+                          // icon: SizedBox(width: 24),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
               ],
             ),
           ),
@@ -514,23 +535,42 @@ class _ProductPostState extends State<ProductPost> {
               padding: const EdgeInsets.only(left: 15.0, right: 15.0),
               child: Row(
                 children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: _priceController,
-                      keyboardType:
-                          TextInputType.numberWithOptions(decimal: true),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText:
-                            "Price (per ${selectedQuantityUnit == "Units" ? 'unit' : selectedQuantityUnit ?? 'unit'})",
-                        hintStyle: TextStyle(
-                          color: Colors.grey[600],
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Poppins',
+                  (productCategoryEnum == CategoryEnum.electronics ||
+                          productCategoryEnum == CategoryEnum.equipments ||
+                          productCategoryEnum == CategoryEnum.jcb)
+                      ? Expanded(
+                          child: TextFormField(
+                            controller: _priceController,
+                            keyboardType:
+                                TextInputType.numberWithOptions(decimal: true),
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: machinePriceHintText,
+                              hintStyle: TextStyle(
+                                color: Colors.grey[600],
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'Poppins',
+                              ),
+                            ),
+                          ),
+                        )
+                      : Expanded(
+                          child: TextFormField(
+                            controller: _priceController,
+                            keyboardType:
+                                TextInputType.numberWithOptions(decimal: true),
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText:
+                                  "Price (per ${selectedQuantityUnit == "Units" ? 'unit' : selectedQuantityUnit ?? 'unit'})",
+                              hintStyle: TextStyle(
+                                color: Colors.grey[600],
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'Poppins',
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),

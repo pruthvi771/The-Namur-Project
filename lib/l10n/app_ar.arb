@@ -459,5 +459,6 @@
   "enter_full_code": "أدخل الرمز الكامل",
   "otp_sent_to_phone": "تم إرسال OTP إلى رقم هاتفك",
   "rent_a_machine" : "استئجار آلة",
-  "book" : "كتاب"
+  "book" : "كتاب",
+  "no_image_found" : "لم يتم العثور على صورة"
 }

@@ -40,8 +40,8 @@ var categoryListForParentEnum = {
     CategoryEnum.crops,
   ],
   ParentEnum.machine: [
-    CategoryEnum.electronics,
     CategoryEnum.jcb,
+    CategoryEnum.electronics,
     CategoryEnum.equipments,
   ],
 };
@@ -378,13 +378,13 @@ var nameForSubCategoryEnum = {
   SubCategoryEnum.marigold: "Marigold",
   SubCategoryEnum.egg: "Egg",
   SubCategoryEnum.chicken: "Chicken",
-  // SubCategoryEnum.mobile: "Mobile",
-  // SubCategoryEnum.laptop: "Laptop",
-  // SubCategoryEnum.tv: "TV",
-  // SubCategoryEnum.jcb: "JCB",
-  // SubCategoryEnum.tractor: "Tractor",
-  // SubCategoryEnum.rotavator: "Rotavator",
-  // SubCategoryEnum.cultivator: "Cultivator",
+  SubCategoryEnum.mobile: "Mobile",
+  SubCategoryEnum.laptop: "Laptop",
+  SubCategoryEnum.tv: "TV",
+  SubCategoryEnum.jcb: "JCB",
+  SubCategoryEnum.tractor: "Tractor",
+  SubCategoryEnum.rotavator: "Rotavator",
+  SubCategoryEnum.cultivator: "Cultivator",
 };
 
 // CategoryEnum.animals: [
@@ -491,24 +491,20 @@ var SubSubCategoryList = {
   //   'TV Black',
   //   'TV White',
   // ],
-  // SubCategoryEnum.jcb: [
-  //   'JCB',
-  //   'JCB Black',
-  //   'JCB White',
-  // ],
-  // SubCategoryEnum.tractor: [
-  //   'Tractor',
-  //   'Tractor Black',
-  //   'Tractor White',
-  // ],
-  // SubCategoryEnum.rotavator: [
-  //   'Rotavator',
-  //   'Rotavator Black',
-  //   'Rotavator White',
-  // ],
-  // SubCategoryEnum.cultivator: [
-  //   'Cultivator',
-  //   'Cultivator Black',
-  //   'Cultivator White',
-  // ],
+  SubCategoryEnum.jcb: [
+    'On Rent',
+    'Sell',
+  ],
+  SubCategoryEnum.tractor: [
+    'On Rent',
+    'Sell',
+  ],
+  SubCategoryEnum.rotavator: [
+    'On Rent',
+    'Sell',
+  ],
+  SubCategoryEnum.cultivator: [
+    'On Rent',
+    'Sell',
+  ],
 };
