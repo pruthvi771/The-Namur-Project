@@ -9,7 +9,7 @@ class SellProduct {
   final String category;
   final String subCategory;
   final String subSubCategory;
-  final String imageURL;
+  final List<dynamic> imageURL;
   final String sellerId;
 
   SellProduct({

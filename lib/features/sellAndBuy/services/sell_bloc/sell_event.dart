@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:equatable/equatable.dart';
+import 'package:image_picker/image_picker.dart';
 
 abstract class SellEvent extends Equatable {
   const SellEvent();
@@ -18,7 +19,7 @@ class AddProductRequested extends SellEvent {
   final String category;
   final String subCategory;
   final String subSubCategory;
-  final Uint8List image;
+  final List<XFile> imageList;
 
   const AddProductRequested({
     required this.productName,
@@ -30,7 +31,7 @@ class AddProductRequested extends SellEvent {
     required this.category,
     required this.subCategory,
     required this.subSubCategory,
-    required this.image,
+    required this.imageList,
   });
 
   @override
@@ -43,7 +44,7 @@ class AddProductRequested extends SellEvent {
         category,
         subCategory,
         subSubCategory,
-        image,
+        imageList,
       ];
 }
 

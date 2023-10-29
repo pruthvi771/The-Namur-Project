@@ -29,11 +29,13 @@ class SellBloc extends Bloc<SellEvent, SellState> {
           category: event.category,
           subCategory: event.subCategory,
           subSubCategory: event.subSubCategory,
-          imageURL: "",
+          imageURL: [],
           userId: currentUser.userId,
         );
 
-        await sellRepository.saveProductImage(file: event.image, docId: docId!);
+        // await sellRepository.saveProductImage(file: event.image, docId: docId!);
+        await sellRepository.saveProductImages(
+            imageList: event.imageList, docId: docId!);
 
         emit(ProductAddEditDeleteSuccessfully());
 

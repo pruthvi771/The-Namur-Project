@@ -1,9 +1,11 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SellRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -20,7 +22,7 @@ class SellRepository {
     required String category,
     required String subCategory,
     required String subSubCategory,
-    required String imageURL,
+    required List imageURL,
     required String userId,
   }) async {
     try {
@@ -83,30 +85,6 @@ class SellRepository {
     }
   }
 
-  Future<String> uploadImagetoFirebase(String childName, Uint8List file) async {
-    Reference ref = _storage.ref().child(childName);
-    UploadTask uploadTask = ref.putData(file);
-
-    TaskSnapshot taskSnapshot = await uploadTask;
-    String downloadURL = await taskSnapshot.ref.getDownloadURL();
-    return downloadURL;
-  }
-
-  Future<void> saveProductImage({
-    required Uint8List file,
-    required String docId,
-  }) async {
-    try {
-      var imageURL = await uploadImagetoFirebase('products/$docId', file);
-      await _firestore.collection('products').doc(docId).update({
-        'imageURL': imageURL,
-      });
-    } catch (_) {
-      print(_);
-      throw Exception('Something went wrong. Please try again.');
-    }
-  }
-
   Future<List<SellProduct>> getProducts({
     required String subCategory,
   }) async {
@@ -151,6 +129,94 @@ class SellRepository {
     } catch (_) {
       print(_);
       throw Exception('Something went wrong. Please try again.');
+    }
+  }
+
+  Future<List<String>?> uploadImagesToFirebaseStorage({
+    required List<XFile> imageFiles,
+    required String docId,
+  }) async {
+    try {
+      FirebaseStorage storage = FirebaseStorage.instance;
+
+      List<String> downloadURLs = [];
+
+      int fileNameIndex = 0;
+
+      for (var imageFile in imageFiles) {
+        File file = File(imageFile.path);
+        String fileName = fileNameIndex.toString();
+        fileNameIndex++;
+
+        // Reference to the image file in Firebase Storage
+        Reference ref = storage.ref().child('products/$docId/$fileName');
+
+        // Upload file to Firebase Storage
+        await ref.putFile(file);
+
+        // Get the download URL of the uploaded file
+        String downloadURL = await ref.getDownloadURL();
+        downloadURLs.add(downloadURL);
+      }
+
+      return downloadURLs;
+    } catch (e) {
+      print('Error uploading images: $e');
+    }
+  }
+
+  Future<void> saveProductImages({
+    required List<XFile> imageList,
+    required String docId,
+  }) async {
+    try {
+      var imageURL = await uploadImagesToFirebaseStorage(
+          docId: docId, imageFiles: imageList);
+      await _firestore.collection('products').doc(docId).update({
+        'imageURL': imageURL,
+      });
+    } catch (_) {
+      print(_);
+      throw Exception('Something went wrong. Please try again.');
+    }
+  }
+
+  Future<String?> addMachineBuying({
+    required String productName,
+    required String productDescription,
+    required double productPrice,
+    required int productQuantity,
+    required String quantityUnit,
+    // required String priceType,
+    required String category,
+    required String subCategory,
+    required String subSubCategory,
+    required List imageURL,
+    required String userId,
+  }) async {
+    try {
+      // Get a reference to the Firestore collection
+      CollectionReference products =
+          FirebaseFirestore.instance.collection('machines');
+
+      // Add a new document with a generated ID
+      DocumentReference documentReference = await products.add({
+        'name': productName,
+        'description': productDescription,
+        'price': productPrice,
+        'quantity': productQuantity,
+        'quantityUnit': quantityUnit,
+        // 'priceType': priceType,
+        'category': category,
+        'subCategory': subCategory,
+        'subSubCategory': subSubCategory,
+        'imageURL': imageURL,
+        'sellerId': userId,
+      });
+      return documentReference.id;
+    } catch (e) {
+      print('Error adding document: $e');
+      return null; // Return null in case of error
     }
   }
 }

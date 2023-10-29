@@ -332,7 +332,7 @@ class _BuyProductListState extends State<BuyProductList> {
   Padding BuyProductTile({
     required BuildContext context,
     required String name,
-    required String imageURL,
+    required List<dynamic> imageURL,
     required double price,
     required String quantityUnit,
     required String description,
@@ -365,7 +365,7 @@ class _BuyProductListState extends State<BuyProductList> {
                           : ClipRRect(
                               borderRadius: BorderRadius.circular(15),
                               child: Image.network(
-                                imageURL,
+                                imageURL[0],
                                 fit: BoxFit.cover,
                               ),
                             )),

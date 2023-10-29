@@ -227,7 +227,7 @@ class ProductInventoryWidget extends StatelessWidget {
   final String productName;
   final String productSubSubCategory;
   final double productPrice;
-  final String imageURL;
+  final List<dynamic> imageURL;
   final int productQuantity;
   final String quantityUnit;
   final String sellerId;
@@ -285,7 +285,7 @@ class ProductInventoryWidget extends StatelessWidget {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
                               child: Image.network(
-                                imageURL,
+                                imageURL[0],
                                 fit: BoxFit.cover,
                               ),
                             )),

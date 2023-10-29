@@ -1,14 +1,9 @@
-import 'dart:ui';
-
 import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
-import 'package:active_ecommerce_flutter/features/sellAndBuy/services/buy_bloc/buy_bloc.dart';
-import 'package:active_ecommerce_flutter/features/sellAndBuy/services/buy_bloc/buy_event.dart';
-import 'package:active_ecommerce_flutter/features/sellAndBuy/services/buy_bloc/buy_state.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/buy_repository.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -74,12 +69,47 @@ class _ProductDetailsState extends State<ProductDetails> {
       physics: BouncingScrollPhysics(),
       children: [
         // image
+        // Container(
+        //   height: 300,
+        //   color: MyTheme.green_light,
+        //   child: Image.network(
+        //     widget.sellProduct.imageURL,
+        //     fit: BoxFit.fitWidth,
+        //   ),
+        // ),
+
+        // image slider
         Container(
           height: 300,
-          color: MyTheme.green_light,
-          child: Image.network(
-            widget.sellProduct.imageURL,
-            fit: BoxFit.fitWidth,
+          color: Colors.grey[200],
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          child: CarouselSlider(
+            options: CarouselOptions(
+              height: double.infinity,
+              aspectRatio: 1 / 1.5,
+              enlargeCenterPage: true,
+              enableInfiniteScroll: false,
+              autoPlay: false,
+              padEnds: false,
+            ),
+            items: widget.sellProduct.imageURL.map((fileURL) {
+              return Builder(
+                builder: (BuildContext context) {
+                  return Container(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                      child: Image.network(
+                        fileURL,
+                        fit: BoxFit.cover,
+                        width: MediaQuery.of(context).size.width,
+                      ),
+                    ),
+                  );
+                },
+              );
+            }).toList(),
           ),
         ),
 
@@ -107,7 +137,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '₹ ${widget.sellProduct.productPrice.toString()} per ${widget.sellProduct.quantityUnit}',
+                    '₹ ${widget.sellProduct.productPrice.toString()} per ${widget.sellProduct.quantityUnit == "Units" ? 'unit' : widget.sellProduct.quantityUnit}',
                     // "aksbfkjafknangg englkng lkegnang kegne",
                     style: TextStyle(
                         fontSize: 20,
