@@ -181,16 +181,16 @@ class _CategoryListState extends State<CategoryList> {
                   TitleBar(),
 
                   // screen database button
-                  TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ScreenDatabase()));
-                      },
-                      child: Text('Screen database')),
+                  // TextButton(
+                  //     onPressed: () {
+                  //       Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //               builder: (context) => ScreenDatabase()));
+                  //     },
+                  //     child: Text('Screen database')),
 
-                  SizedBox(height: 24),
+                  SizedBox(height: 12),
 
                   //Buy Sell Button Design
                   Center(
@@ -282,7 +282,7 @@ class _CategoryListState extends State<CategoryList> {
 
                   // buy sell button design closed
 
-                  SizedBox(height: 24),
+                  SizedBox(height: 10),
 
                   // Category hexagonal widget design start
                   isBuyActive
@@ -403,7 +403,7 @@ class _CategoryListState extends State<CategoryList> {
       ),
       itemCount: 4,
       padding: EdgeInsets.only(
-          left: 18, right: 18, bottom: widget.is_base_category ? 30 : 0),
+          left: 18, right: 18, bottom: widget.is_base_category ? 10 : 0),
       scrollDirection: Axis.vertical,
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
@@ -441,7 +441,10 @@ class _CategoryListState extends State<CategoryList> {
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  return ParentScreen(parentEnum: parentEnum!);
+                  return ParentScreen(
+                      parentEnum: parentEnum!,
+                      isSecondHand:
+                          parentEnum == ParentEnum.land ? true : false);
                 },
               ),
             );
@@ -453,6 +456,7 @@ class _CategoryListState extends State<CategoryList> {
                   return ParentScreen(
                     parentEnum: parentEnum!,
                     isBuy: true,
+                    isSecondHand: parentEnum == ParentEnum.land ? true : false,
                   );
                 },
               ),

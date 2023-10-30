@@ -30,6 +30,8 @@ class ProductPost extends StatefulWidget {
 
   final bool isMachine;
 
+  final bool isSecondHand;
+
   const ProductPost({
     Key? key,
     required this.subCategoryEnum,
@@ -37,6 +39,7 @@ class ProductPost extends StatefulWidget {
     this.isProductEditScreen = false,
     this.sellProduct,
     this.isMachine = false,
+    required this.isSecondHand,
   }) : super(key: key);
 
   @override
@@ -74,8 +77,6 @@ class _ProductPostState extends State<ProductPost> {
       // perPiecePrice = widget.sellProduct!.priceType == "Per piece";
     }
   }
-
-  bool _switchValue = false;
 
   String? _selectedItem;
 
@@ -236,6 +237,10 @@ class _ProductPostState extends State<ProductPost> {
         subCategory: productSubCategory,
         subSubCategory: productSubSubCategory,
         imageList: _mediaFileList!,
+        isSecondHand: widget.isSecondHand,
+        productType: widget.isSecondHand
+            ? ProductType.secondHand
+            : ProductType.newProduct,
       ),
     );
 
@@ -673,7 +678,7 @@ class _ProductPostState extends State<ProductPost> {
                                 child: CarouselSlider(
                                   options: CarouselOptions(
                                     enlargeCenterPage: true,
-                                    // enableInfiniteScroll: true,
+                                    enableInfiniteScroll: false,
                                     autoPlay: false,
                                   ),
                                   // items: _mediaFileList!

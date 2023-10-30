@@ -1,6 +1,12 @@
 import 'package:active_ecommerce_flutter/features/profile/address_list.dart'
     as addressList;
 
+enum ProductType {
+  newProduct,
+  secondHand,
+  // onRent,
+}
+
 enum ProductQuantity {
   units,
   wkg,
@@ -40,6 +46,16 @@ var categoryListForParentEnum = {
     CategoryEnum.crops,
   ],
   ParentEnum.machine: [
+    CategoryEnum.jcb,
+    CategoryEnum.electronics,
+    CategoryEnum.equipments,
+  ],
+  ParentEnum.land: [
+    CategoryEnum.animals,
+    CategoryEnum.birds,
+    CategoryEnum.vegetables,
+    CategoryEnum.fruits,
+    CategoryEnum.crops,
     CategoryEnum.jcb,
     CategoryEnum.electronics,
     CategoryEnum.equipments,

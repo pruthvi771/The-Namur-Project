@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
+import 'package:active_ecommerce_flutter/utils/enums.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -24,6 +25,7 @@ class SellRepository {
     required String subSubCategory,
     required List imageURL,
     required String userId,
+    required bool isSecondHand,
   }) async {
     try {
       // Get a reference to the Firestore collection
@@ -43,6 +45,7 @@ class SellRepository {
         'subSubCategory': subSubCategory,
         'imageURL': imageURL,
         'sellerId': userId,
+        'isSecondHand': isSecondHand,
       });
       return documentReference.id;
     } catch (e) {
@@ -87,6 +90,7 @@ class SellRepository {
 
   Future<List<SellProduct>> getProducts({
     required String subCategory,
+    required bool isSecondHand,
   }) async {
     // QuerySnapshot productSnapshot = await productsCollection.get();
 
@@ -96,6 +100,7 @@ class SellRepository {
         .where(FieldPath.documentId, isNotEqualTo: null)
         .where('subCategory', isEqualTo: subCategory)
         .where('sellerId', isEqualTo: _firebaseAuth.currentUser!.uid)
+        .where('isSecondHand', isEqualTo: isSecondHand)
         .get();
 
     var products = querySnapshot.docs.map((doc) {
@@ -114,6 +119,7 @@ class SellRepository {
         subSubCategory: data['subSubCategory'],
         imageURL: data['imageURL'],
         sellerId: data['sellerId'],
+        isSecondHand: data['isSecondHand'],
       );
     }).toList();
     print(products.length);
@@ -217,6 +223,35 @@ class SellRepository {
     } catch (e) {
       print('Error adding document: $e');
       return null; // Return null in case of error
+    }
+  }
+
+  Future<String?> addProductToSellerDocument({
+    required String productDocId,
+    required ProductType productType,
+    required String sellerId,
+  }) async {
+    CollectionReference sellerCollection =
+        FirebaseFirestore.instance.collection('seller');
+
+    try {
+      if (productType == ProductType.newProduct) {
+        await sellerCollection.doc(sellerId).update({
+          'products': FieldValue.arrayUnion([productDocId])
+        });
+      } else if (productType == ProductType.secondHand) {
+        await sellerCollection.doc(sellerId).update({
+          'secondHandProducts': FieldValue.arrayUnion([productDocId])
+        });
+      }
+      // else if (productType == ProductType.onRent) {
+      //   await sellerCollection.doc(sellerId).update({
+      //     'onRent': FieldValue.arrayUnion([productDocId])
+      //   });
+      // }
+    } catch (e) {
+      print('Error updating seller document for adding product: $e');
+      // Handle the error according to your application's requirements
     }
   }
 }

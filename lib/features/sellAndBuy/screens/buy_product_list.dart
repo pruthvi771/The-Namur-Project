@@ -2,22 +2,23 @@ import 'dart:ui';
 
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/subSubCategory_filter_item.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/machine_rent_form.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/product_details_screen.dart';
-import 'package:active_ecommerce_flutter/features/sellAndBuy/services/buy_bloc/buy_bloc.dart';
-import 'package:active_ecommerce_flutter/features/sellAndBuy/services/buy_bloc/buy_event.dart';
-import 'package:active_ecommerce_flutter/features/sellAndBuy/services/buy_bloc/buy_state.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class BuyProductList extends StatefulWidget {
   final SubCategoryEnum subCategoryEnum;
-  BuyProductList({Key? key, required this.subCategoryEnum}) : super(key: key);
+  final bool isSecondHand;
+  BuyProductList({
+    Key? key,
+    required this.subCategoryEnum,
+    required this.isSecondHand,
+  }) : super(key: key);
 
   @override
   _BuyProductListState createState() => _BuyProductListState();
@@ -71,41 +72,6 @@ class _BuyProductListState extends State<BuyProductList> {
 
   bool isALL = true;
 
-  // Stream<List<SellProduct>> getProductsStreamForSubCategory({
-  //   required String subCategory,
-  // }) {
-  //   return FirebaseFirestore.instance
-  //       .collection('products')
-  //       .where('subCategory', isEqualTo: subCategory)
-  //       .snapshots()
-  //       .map((QuerySnapshot<Map<String, dynamic>> querySnapshot) {
-  //     return querySnapshot.docs.map((doc) {
-  //       Map<String, dynamic> data = doc.data();
-  //       return SellProduct(
-  //         id: doc.id,
-  //         productName: data['name'],
-  //         productDescription: data['description'],
-  //         productPrice: data['price'],
-  //         productQuantity: data['quantity'],
-  //         quantityUnit: data['quantityUnit'],
-  //         category: data['category'],
-  //         subCategory: data['subCategory'],
-  //         subSubCategory: data['subSubCategory'],
-  //         imageURL: data['imageURL'],
-  //         sellerId: data['sellerId'],
-  //       );
-  //     }).toList();
-  //   });
-  // }
-  Stream<QuerySnapshot<Map<String, dynamic>>> getProductsStreamForSubCategory({
-    required String subCategory,
-  }) {
-    return FirebaseFirestore.instance
-        .collection('products')
-        .where('subCategory', isEqualTo: subCategory)
-        .snapshots();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -139,11 +105,12 @@ class _BuyProductListState extends State<BuyProductList> {
                   .collection('products')
                   .where('subCategory',
                       isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
+                  .where('isSecondHand', isEqualTo: widget.isSecondHand)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   var products = snapshot.data!.docs.map((doc) {
-                    var data = doc.data() as Map<String, dynamic>;
+                    var data = doc.data();
                     return SellProduct(
                       id: doc.id,
                       productName: data['name'],
@@ -157,6 +124,7 @@ class _BuyProductListState extends State<BuyProductList> {
                       subSubCategory: data['subSubCategory'],
                       imageURL: data['imageURL'],
                       sellerId: data['sellerId'],
+                      isSecondHand: data['isSecondHand'],
                     );
                   }).toList();
 
@@ -282,15 +250,44 @@ class _BuyProductListState extends State<BuyProductList> {
                                                           .subSubCategory)
                                               ? InkWell(
                                                   onTap: () {
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
+                                                    if (products[index]
+                                                            .subSubCategory ==
+                                                        'On Rent') {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                MachineRentForm(
+                                                              imageURL:
+                                                                  products[
+                                                                          index]
+                                                                      .imageURL,
+                                                              machineName:
+                                                                  products[
+                                                                          index]
+                                                                      .productName,
+                                                              machinePrice:
+                                                                  products[
+                                                                          index]
+                                                                      .productPrice,
+                                                              machineDescription:
+                                                                  products[
+                                                                          index]
+                                                                      .productDescription,
+                                                            ),
+                                                          ));
+                                                    } else {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
                                                             builder: (context) =>
                                                                 ProductDetails(
-                                                                  sellProduct:
-                                                                      products[
-                                                                          index],
-                                                                )));
+                                                              sellProduct:
+                                                                  products[
+                                                                      index],
+                                                            ),
+                                                          ));
+                                                    }
                                                   },
                                                   child: BuyProductTile(
                                                     context: context,
@@ -358,7 +355,7 @@ class _BuyProductListState extends State<BuyProductList> {
                   flex: 1,
                   child: Container(
                       height: 110,
-                      child: imageURL.isEmpty
+                      child: imageURL.isEmpty || imageURL.length == 0
                           ? Center(
                               child: CircularProgressIndicator(),
                             )
@@ -399,7 +396,7 @@ class _BuyProductListState extends State<BuyProductList> {
                           height: 4,
                         ),
                         Text(
-                          '₹$price per $quantityUnit',
+                          '₹$price per ${quantityUnit == "Units" ? 'unit' : quantityUnit}',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,

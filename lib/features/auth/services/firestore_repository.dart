@@ -43,6 +43,9 @@ class FirestoreRepository {
         'PAN_verified': false,
         'profile_complete': false,
         'photoURL': photoURL ?? '',
+        'products': [],
+        'secondHandProducts': [],
+        // 'onRent': []
         // add other fields as needed
       });
     } catch (_) {

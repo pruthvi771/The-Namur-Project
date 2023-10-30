@@ -34,3 +34,10 @@ final class ProductAddEditDeleteSuccessfully extends SellState {
   @override
   List<Object> get props => [];
 }
+
+final class ProductAddEditDeleteLoading extends SellState {
+  const ProductAddEditDeleteLoading();
+
+  @override
+  List<Object> get props => [];
+}

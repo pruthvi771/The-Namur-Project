@@ -17,6 +17,7 @@ class SellBloc extends Bloc<SellEvent, SellState> {
 
     on<AddProductRequested>((event, emit) async {
       var currentUser = authRepository.currentUser!;
+      emit(ProductAddEditDeleteLoading());
 
       try {
         var docId = await sellRepository.addProductBuying(
@@ -31,11 +32,18 @@ class SellBloc extends Bloc<SellEvent, SellState> {
           subSubCategory: event.subSubCategory,
           imageURL: [],
           userId: currentUser.userId,
+          isSecondHand: event.isSecondHand,
         );
 
         // await sellRepository.saveProductImage(file: event.image, docId: docId!);
         await sellRepository.saveProductImages(
             imageList: event.imageList, docId: docId!);
+
+        await sellRepository.addProductToSellerDocument(
+          productDocId: docId,
+          sellerId: currentUser.userId,
+          productType: event.productType,
+        );
 
         emit(ProductAddEditDeleteSuccessfully());
 
@@ -49,8 +57,10 @@ class SellBloc extends Bloc<SellEvent, SellState> {
     on<ProductsForSubCategoryRequested>((event, emit) async {
       try {
         emit(ProductLoading());
-        List<SellProduct> products =
-            await sellRepository.getProducts(subCategory: event.subCategory);
+        List<SellProduct> products = await sellRepository.getProducts(
+          subCategory: event.subCategory,
+          isSecondHand: event.isSecondHand,
+        );
 
         emit(ProductsForSubCategoryReceived(products: products));
       } catch (e) {
@@ -62,6 +72,7 @@ class SellBloc extends Bloc<SellEvent, SellState> {
 
     on<DeleteProductRequested>((event, emit) async {
       try {
+        emit(ProductAddEditDeleteLoading());
         await sellRepository.deleteProduct(productId: event.productId);
         emit(ProductAddEditDeleteSuccessfully());
       } catch (e) {
@@ -72,6 +83,7 @@ class SellBloc extends Bloc<SellEvent, SellState> {
     });
 
     on<EditProductRequested>((event, emit) async {
+      emit(ProductAddEditDeleteLoading());
       try {
         await sellRepository.editProductBuying(
           productId: event.productId,

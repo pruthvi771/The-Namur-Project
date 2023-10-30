@@ -1,21 +1,20 @@
-import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/drawer/drawer.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/buy_product_list.dart';
-import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/buy_product_subsubcategory.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/product_inventory.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart' as enums;
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:get/get.dart';
 
 class ParentScreen extends StatefulWidget {
   final enums.ParentEnum parentEnum;
   final bool isBuy;
+  final bool isSecondHand;
   const ParentScreen({
     required this.parentEnum,
     this.isBuy = false,
+    this.isSecondHand = false,
   });
 
   @override
@@ -163,6 +162,7 @@ class _ParentScreenState extends State<ParentScreen> {
           ),
         ),
         // Text(widget.isBuy ? 'Buy' : 'Sell'),
+        // Text(widget.isSecondHand ? 'second hand' : 'first hand'),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Card(
@@ -186,6 +186,10 @@ class _ParentScreenState extends State<ParentScreen> {
                 ),
                 labelColor: Colors.white,
                 unselectedLabelColor: Colors.black,
+                isScrollable:
+                    categoryListForParentEnum[widget.parentEnum]!.length > 3
+                        ? true
+                        : false,
                 tabs: List.generate(
                   categoryListForParentEnum[widget.parentEnum]!.length,
                   (index) {
@@ -203,47 +207,6 @@ class _ParentScreenState extends State<ParentScreen> {
                     );
                   },
                 ).toList(),
-                // tabs: [
-                //   // ListView.builder(
-                //   itemCount: 2,
-                //   // categoryListForParentEnum[widget.parentEnum]!.length,
-                //   itemBuilder: (context, index) {
-                //     return Tab(
-                //       child: Text(
-                //         nameForCategoryEnum[categoryListForParentEnum[
-                //             widget.parentEnum]![index]]!,
-                //         style: TextStyle(
-                //           fontSize: 14,
-                //           fontWeight: FontWeight.w600,
-                //           // color: Colors.black,
-                //         ),
-                //       ),
-                //     );
-                //   },
-                // ),
-                // Tab(
-                //   child: Text(
-                //     nameForCategoryEnum[
-                //         categoryListForParentEnum[widget.parentEnum]![0]]!,
-                //     style: TextStyle(
-                //       fontSize: 14,
-                //       fontWeight: FontWeight.w600,
-                //       // color: Colors.black,
-                //     ),
-                //   ),
-                // ),
-                // Tab(
-                //   child: Text(
-                //     nameForCategoryEnum[
-                //         categoryListForParentEnum[widget.parentEnum]![1]]!,
-                //     style: TextStyle(
-                //       fontSize: 14,
-                //       fontWeight: FontWeight.w600,
-                //       // color: Colors.black,
-                //     ),
-                //   ),
-                // ),
-                // ],
               ),
             ),
           ),
@@ -280,12 +243,9 @@ class _ParentScreenState extends State<ParentScreen> {
                                 ? Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            // BuyProductSubSubCategories(
-                                            //   subCategoryEnum: subCategoryEnum,
-                                            // )))
-                                            BuyProductList(
+                                        builder: (context) => BuyProductList(
                                               subCategoryEnum: subCategoryEnum,
+                                              isSecondHand: widget.isSecondHand,
                                             )),
                                   )
                                 : Navigator.push(
@@ -293,6 +253,7 @@ class _ParentScreenState extends State<ParentScreen> {
                                     MaterialPageRoute(
                                         builder: (context) => ProductInventory(
                                               subCategoryEnum: subCategoryEnum,
+                                              isSecondHand: widget.isSecondHand,
                                             )));
                           },
                           child: Container(

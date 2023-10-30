@@ -1,8 +1,9 @@
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
+import 'package:carousel_slider/carousel_options.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hive/hive.dart';
 import '../../../custom/device_info.dart';
 
@@ -11,14 +12,17 @@ import 'package:time_range_picker/time_range_picker.dart';
 // import '../seller_platform/seller_platform.dart';
 
 class MachineRentForm extends StatefulWidget {
-  final String imageURL;
+  final List imageURL;
   final String machineName;
   final double machinePrice;
+  final String machineDescription;
+
   const MachineRentForm({
     Key? key,
     required this.imageURL,
     required this.machineName,
     required this.machinePrice,
+    required this.machineDescription,
   }) : super(key: key);
 
   @override
@@ -120,32 +124,53 @@ class _MachineRentFormState extends State<MachineRentForm> {
               height: 10,
             ),
 
-            // Machine Image
+            // Machine
             Padding(
               padding: const EdgeInsets.all(6.0),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: Colors.grey[100],
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Machine Image
                     Container(
-                      padding: EdgeInsets.all(8),
-                      height: 200,
-                      child: widget.imageURL.isEmpty
-                          ? Center(
-                              child: Text(
-                                  AppLocalizations.of(context)!.no_image_found))
-                          : ClipRRect(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(12)),
-                              child: Image.network(
-                                widget.imageURL,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+                      height: 250,
+                      color: Colors.grey[200],
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      child: CarouselSlider(
+                        options: CarouselOptions(
+                          height: double.infinity,
+                          aspectRatio: 1 / 1.5,
+                          enlargeCenterPage: true,
+                          enableInfiniteScroll: false,
+                          autoPlay: false,
+                          padEnds: false,
+                        ),
+                        items: widget.imageURL.map((fileURL) {
+                          return Builder(
+                            builder: (BuildContext context) {
+                              return Container(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                  child: Image.network(
+                                    fileURL,
+                                    fit: BoxFit.cover,
+                                    width: MediaQuery.of(context).size.width,
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        }).toList(),
+                      ),
                     ),
+
                     SizedBox(
                       height: 10,
                     ),
@@ -153,25 +178,42 @@ class _MachineRentFormState extends State<MachineRentForm> {
                     // Machine Price
                     Container(
                       padding: EdgeInsets.only(
-                          left: 10, right: 10, bottom: 12, top: 5),
-                      child: Row(
+                          left: 18, right: 18, bottom: 12, top: 5),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            child: Text(
-                              widget.machineName,
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w900,
-                                color: Colors.black,
-                              ),
+                          Text(
+                            widget.machineName,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w900,
+                              color: Colors.black,
                             ),
+                          ),
+                          SizedBox(
+                            height: 10,
                           ),
                           Text(
                             '\₹${widget.machinePrice}/30 mins',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w900,
-                              color: Colors.black,
+                              color: Colors.grey[700],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Container(
+                            // padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              widget.machineDescription,
+                              style: TextStyle(
+                                fontSize: 13.5,
+                                height: 1.2,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                              ),
                             ),
                           ),
                         ],
@@ -371,6 +413,10 @@ class _MachineRentFormState extends State<MachineRentForm> {
                     child: CircularProgressIndicator(),
                   );
                 }),
+
+            Container(
+              height: 65,
+            ),
           ],
         ),
       ),
