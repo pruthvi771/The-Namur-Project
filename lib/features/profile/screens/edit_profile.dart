@@ -1565,7 +1565,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 );
               return Container(
                 color: Colors.white30,
-                child: Text('Error'),
+                child: Text('Something Went Wrong'),
               );
             },
           ),

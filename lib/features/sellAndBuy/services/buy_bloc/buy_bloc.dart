@@ -31,32 +31,5 @@ class BuyBloc extends Bloc<BuyEvent, BuyState> {
         print(e.toString());
       }
     });
-
-    // on<SellerDataRequested>((event, emit) async {
-    //   try {
-    //     // emit(BuyLoading());
-    //     BuyerData sellerData =
-    //         await buyRepository.getSellerData(userId: event.sellerId);
-
-    //     // print(products[0].productName);
-
-    //     emit(SellerDataReceived(sellerData: sellerData));
-    //   } catch (e) {
-    //     // emit(SellAddProductErrorState(message: e.toString()));
-    //     print('error happened in ProductsForSubCategoryRequested');
-    //     print(e.toString());
-    //   }
-    // });
-
-    // on<DeleteProductRequested>((event, emit) async {
-    //   try {
-    //     await sellRepository.deleteProduct(productId: event.productId);
-    //     emit(ProductAddEditDeleteSuccessfully());
-    //   } catch (e) {
-    //     // emit(SellAddProductErrorState(message: e.toString()));
-    //     print('error happened in DeleteProductRequested');
-    //     print(e.toString());
-    //   }
-    // });
   }
 }

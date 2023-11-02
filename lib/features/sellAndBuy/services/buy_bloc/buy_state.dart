@@ -37,14 +37,3 @@ final class BuyError extends BuyState {
   @override
   List<Object> get props => [message];
 }
-
-// class SellerDataReceived extends BuyState {
-//   final BuyerData sellerData;
-
-//   const SellerDataReceived({
-//     required this.sellerData,
-//   });
-
-//   @override
-//   List<Object> get props => [sellerData];
-// }

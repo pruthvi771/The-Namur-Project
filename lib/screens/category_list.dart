@@ -190,7 +190,7 @@ class _CategoryListState extends State<CategoryList> {
                   //     },
                   //     child: Text('Screen database')),
 
-                  SizedBox(height: 12),
+                  SizedBox(height: 15),
 
                   //Buy Sell Button Design
                   Center(
@@ -373,6 +373,7 @@ class _CategoryListState extends State<CategoryList> {
             );
           }
           if (snapshot.hasError) {
+            _getProfileDataFuture = _getProfileData();
             return Text('Error');
           }
           return buildShimmer();
