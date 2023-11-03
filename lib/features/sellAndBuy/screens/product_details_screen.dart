@@ -1,10 +1,15 @@
 import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/buy_repository.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_bloc.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_event.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_state.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_repository.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProductDetails extends StatefulWidget {
@@ -21,6 +26,9 @@ class ProductDetails extends StatefulWidget {
 class _ProductDetailsState extends State<ProductDetails> {
   initState() {
     _getSellerData = getSellerDataFuture();
+    BlocProvider.of<CartBloc>(context).add(
+      CheckIfAlreadyInCartRequested(productId: widget.sellProduct.id),
+    );
     super.initState();
   }
 
@@ -146,20 +154,193 @@ class _ProductDetailsState extends State<ProductDetails> {
                         letterSpacing: .5,
                         fontFamily: 'Poppins'),
                   ),
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: MyTheme.primary_color, // background
-                    ),
-                    child: Text(
-                      "Add to cart",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: .5,
-                          fontFamily: 'Poppins'),
-                    ),
+                  BlocBuilder<CartBloc, CartState>(
+                    builder: (context, state) {
+                      if (state is CartLoading)
+                        return ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                MyTheme.primary_color, // background
+                          ),
+                          child: Container(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          ),
+                        );
+                      if (state is AddToCartSuccessful)
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 5, bottom: 5),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 35,
+                                height: 35,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color:
+                                        MyTheme.primary_color, // Border color
+                                    width: 2.0, // Border width
+                                  ),
+                                  borderRadius: BorderRadius.circular(
+                                      8.0), // Border radius
+                                ),
+                                child: TextButton(
+                                  onPressed: () {
+                                    BlocProvider.of<CartBloc>(context).add(
+                                      UpdateCartQuantityRequested(
+                                        productId: widget.sellProduct.id,
+                                        currentQuantity: state.quantity,
+                                        type: UpdateCartQuantityType.decrement,
+                                      ),
+                                    );
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    padding: EdgeInsets.all(0),
+                                    elevation: 0,
+                                  ),
+                                  child: Icon(
+                                    Icons.remove,
+                                    color: MyTheme.primary_color,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 12),
+                                child: Text(
+                                  state.quantity.toString(),
+                                  style: TextStyle(
+                                      color: Colors.grey[700],
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w700,
+                                      letterSpacing: .5,
+                                      fontFamily: 'Poppins'),
+                                ),
+                              ),
+                              Container(
+                                width: 35,
+                                height: 35,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color:
+                                        MyTheme.primary_color, // Border color
+                                    width: 2.0, // Border width
+                                  ),
+                                  borderRadius: BorderRadius.circular(
+                                      8.0), // Border radius
+                                ),
+                                child: TextButton(
+                                  onPressed: () {
+                                    BlocProvider.of<CartBloc>(context).add(
+                                      UpdateCartQuantityRequested(
+                                        productId: widget.sellProduct.id,
+                                        currentQuantity: state.quantity,
+                                        type: UpdateCartQuantityType.increment,
+                                      ),
+                                    );
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    padding: EdgeInsets.all(0),
+                                    elevation: 0,
+                                  ),
+                                  child: Icon(
+                                    Icons.add,
+                                    color: MyTheme.primary_color,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      if (state is CartQuantityLoading)
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 5, bottom: 5),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 35,
+                                height: 35,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: MyTheme.primary_color,
+                                    width: 2.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: TextButton(
+                                  onPressed: () {},
+                                  style: ElevatedButton.styleFrom(
+                                    padding: EdgeInsets.all(0),
+                                    elevation: 0,
+                                  ),
+                                  child: Icon(
+                                    Icons.remove,
+                                    color: MyTheme.primary_color,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                  height: 40,
+                                  width: 40,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 10),
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      color: MyTheme.primary_color,
+                                      strokeWidth: 3,
+                                    ),
+                                  )),
+                              Container(
+                                width: 35,
+                                height: 35,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: MyTheme.primary_color,
+                                    width: 2.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: TextButton(
+                                  onPressed: () {},
+                                  style: ElevatedButton.styleFrom(
+                                    padding: EdgeInsets.all(0),
+                                    elevation: 0,
+                                  ),
+                                  child: Icon(
+                                    Icons.add,
+                                    color: MyTheme.primary_color,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      return ElevatedButton(
+                        onPressed: () {
+                          BlocProvider.of<CartBloc>(context).add(
+                            AddToCartRequested(
+                                productId: widget.sellProduct.id),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: MyTheme.primary_color, // background
+                        ),
+                        child: Text(
+                          "Add to cart",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: .5,
+                              fontFamily: 'Poppins'),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),

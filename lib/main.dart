@@ -8,6 +8,8 @@ import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/buy_bloc/buy_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/buy_repository.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_bloc.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_repository.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/sell_bloc/sell_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/sell_repository.dart';
 import 'package:active_ecommerce_flutter/features/weather/bloc/weather_bloc.dart';
@@ -155,6 +157,7 @@ class _MyAppState extends State<MyApp> {
     FirestoreRepository firestoreRepository = FirestoreRepository();
     SellRepository sellRepository = SellRepository();
     BuyRepository buyRepository = BuyRepository();
+    CartRepository cartRepository = CartRepository();
 
     return MultiBlocProvider(
         providers: [
@@ -185,6 +188,9 @@ class _MyAppState extends State<MyApp> {
             create: (context) => HiveBloc(),
           ),
           BlocProvider<ProfileBloc>(create: (context) => ProfileBloc()),
+          BlocProvider<CartBloc>(
+            create: (context) => CartBloc(cartRepository: cartRepository),
+          ),
         ],
         child: MultiProvider(
             providers: [
