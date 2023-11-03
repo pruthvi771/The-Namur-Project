@@ -259,12 +259,13 @@ class ProductInventoryWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 20.0, right: 20, top: 10),
       child: Material(
-        elevation: 1,
-        borderRadius: BorderRadius.circular(15),
+        elevation: 0.5,
+        borderRadius: BorderRadius.circular(5),
         child: Container(
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              border: Border.all(width: 1, color: MyTheme.medium_grey)),
+              borderRadius: BorderRadius.circular(5),
+              border: Border.all(
+                  width: 1, color: MyTheme.medium_grey.withOpacity(0.5))),
           height: 140,
           width: MediaQuery.of(context).size.width,
           child: Padding(
@@ -279,8 +280,8 @@ class ProductInventoryWidget extends StatelessWidget {
                     child: Text(productName,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
+                          fontSize: 19,
+                          fontWeight: FontWeight.w600,
                         )),
                   ),
                 ),
@@ -296,7 +297,7 @@ class ProductInventoryWidget extends StatelessWidget {
                         child: Container(
                             padding: EdgeInsets.all(7),
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(5),
                               child: Image.network(
                                 imageURL[0],
                                 fit: BoxFit.cover,
@@ -321,7 +322,7 @@ class ProductInventoryWidget extends StatelessWidget {
                                       productSubSubCategory,
                                       style: TextStyle(
                                           fontSize: 15,
-                                          fontWeight: FontWeight.w600),
+                                          fontWeight: FontWeight.w500),
                                     ),
                                     Text(
                                       "Stock: $productQuantity x $quantityUnit",

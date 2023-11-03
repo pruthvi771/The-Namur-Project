@@ -156,6 +156,10 @@ class CartRepository {
         Map<String, dynamic> updatedProduct = Map.from(products[productIndex]);
         updatedProduct['quantity'] = newQuantity;
 
+        if (newQuantity == 0) {
+          removeFromCart(productId: productId);
+        }
+
         // Update the 'products' array with the updated product
         products[productIndex] = updatedProduct;
 

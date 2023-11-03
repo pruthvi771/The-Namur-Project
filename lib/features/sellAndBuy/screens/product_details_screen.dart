@@ -40,6 +40,9 @@ class _ProductDetailsState extends State<ProductDetails> {
     return user;
   }
 
+  int _current = 0;
+  final CarouselController _controller = CarouselController();
+
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -76,41 +79,38 @@ class _ProductDetailsState extends State<ProductDetails> {
     return ListView(
       physics: BouncingScrollPhysics(),
       children: [
-        // image
-        // Container(
-        //   height: 300,
-        //   color: MyTheme.green_light,
-        //   child: Image.network(
-        //     widget.sellProduct.imageURL,
-        //     fit: BoxFit.fitWidth,
-        //   ),
-        // ),
+        SizedBox(
+          height: 10,
+        ),
+        Padding(
+          padding:
+              const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 15),
+          child: Text(
+            widget.sellProduct.productName,
+            // "aksbfkjafknangg englkng lkegnang kegne",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              // letterSpacing: 1,
+            ),
+          ),
+        ),
 
-        // image slider
         Container(
           height: 300,
-          color: Colors.grey[200],
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          // color: Colors.red[100],
           child: CarouselSlider(
-            options: CarouselOptions(
-              height: double.infinity,
-              aspectRatio: 1 / 1.5,
-              enlargeCenterPage: true,
-              enableInfiniteScroll: false,
-              autoPlay: false,
-              padEnds: false,
-            ),
             items: widget.sellProduct.imageURL.map((fileURL) {
               return Builder(
                 builder: (BuildContext context) {
                   return Container(
                     child: ClipRRect(
                       borderRadius: BorderRadius.all(
-                        Radius.circular(10),
+                        Radius.circular(5),
                       ),
                       child: Image.network(
                         fileURL,
-                        fit: BoxFit.cover,
+                        fit: BoxFit.contain,
                         width: MediaQuery.of(context).size.width,
                       ),
                     ),
@@ -118,41 +118,94 @@ class _ProductDetailsState extends State<ProductDetails> {
                 },
               );
             }).toList(),
+            carouselController: _controller,
+            options: CarouselOptions(
+                autoPlay: false,
+                enlargeCenterPage: true,
+                enableInfiniteScroll: false,
+                aspectRatio: 1 / 1.5,
+                onPageChanged: (index, reason) {
+                  setState(() {
+                    _current = index;
+                  });
+                }),
           ),
+        ),
+
+        SizedBox(
+          height: 10,
+        ),
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: widget.sellProduct.imageURL.asMap().entries.map((entry) {
+            return GestureDetector(
+              onTap: () => _controller.animateToPage(entry.key),
+              child: Container(
+                width: 8.0,
+                height: 10.0,
+                margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: (Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black)
+                        .withOpacity(_current == entry.key ? 0.9 : 0.4)),
+              ),
+            );
+          }).toList(),
         ),
 
         // product name and price
         Container(
-          padding: EdgeInsets.only(top: 10, left: 15, right: 10, bottom: 10),
-          color: Colors.grey[200],
+          padding: EdgeInsets.only(top: 5, left: 15, right: 10, bottom: 15),
+          // color: Colors.grey[200],
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                widget.sellProduct.productName,
-                // "aksbfkjafknangg englkng lkegnang kegne",
-                style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: .5,
-                    fontFamily: 'Poppins'),
-              ),
-              SizedBox(
-                height: 5,
-              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    '₹ ${widget.sellProduct.productPrice.toString()} per ${widget.sellProduct.quantityUnit == "Units" ? 'unit' : widget.sellProduct.quantityUnit}',
-                    // "aksbfkjafknangg englkng lkegnang kegne",
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.grey[700],
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: .5,
-                        fontFamily: 'Poppins'),
+                  Row(
+                    children: [
+                      Container(
+                        height: 30,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '₹ ',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            SizedBox.shrink()
+                          ],
+                        ),
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                        textBaseline: TextBaseline.alphabetic,
+                        children: [
+                          Text(
+                            '${widget.sellProduct.productPrice.toInt().toString()}',
+                            style: TextStyle(
+                              fontSize: 35,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          Text(
+                            ' per ${widget.sellProduct.quantityUnit == "Units" ? 'unit' : widget.sellProduct.quantityUnit}',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                   BlocBuilder<CartBloc, CartState>(
                     builder: (context, state) {
@@ -328,6 +381,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                           );
                         },
                         style: ElevatedButton.styleFrom(
+                          elevation: 0.5,
                           backgroundColor: MyTheme.primary_color, // background
                         ),
                         child: Text(
@@ -354,8 +408,8 @@ class _ProductDetailsState extends State<ProductDetails> {
           builder: (context, snapshot) {
             if (snapshot.hasData)
               return Container(
-                padding: EdgeInsets.all(15),
-                color: Colors.grey[300],
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                color: Colors.grey[200],
                 child: Row(
                   children: [
                     Container(

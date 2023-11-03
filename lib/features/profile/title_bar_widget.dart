@@ -433,59 +433,63 @@ class WeatherSection extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.only(top: 8, right: 8, bottom: 8),
           child: Container(
-            // height: 85,
             decoration: BoxDecoration(
                 border: Border.all(
                   color: MyTheme.green_light as Color,
                 ),
                 borderRadius: BorderRadius.circular(8)),
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(6),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               // crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Image.asset('assets/weather.png'),
+                        Text(
+                          temperature,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 17,
+                            fontFamily: 'Poppins',
+                            color: MyTheme.primary_color,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Image.asset('assets/weather.png'),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            temperature,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 15,
-                              fontFamily: 'Poppins',
-                              color: MyTheme.primary_color,
-                            ),
-                          ),
-                          Text(
-                            description,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 11,
-                              fontFamily: 'Poppins',
-                              color: MyTheme.primary_color,
-                            ),
-                          ),
-                        ],
+                      Text(
+                        description,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                          fontFamily: 'Poppins',
+                          color: MyTheme.primary_color,
+                        ),
+                      ),
+                      Text(
+                        location,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 14,
+                          fontFamily: 'Poppins',
+                          color: MyTheme.primary_color,
+                        ),
                       )
                     ],
                   ),
                 ),
-                Text(
-                  location,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 15,
-                    fontFamily: 'Poppins',
-                    color: MyTheme.primary_color,
-                  ),
-                )
               ],
             ),
           ),
