@@ -153,7 +153,7 @@ class _BuyProductListState extends State<BuyProductList> {
                                     Container(
                                       // width: 40,
                                       padding: EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 5),
+                                          horizontal: 10, vertical: 7.5),
                                       child: ElevatedButton(
                                         onPressed: () {
                                           setState(() {
@@ -167,12 +167,12 @@ class _BuyProductListState extends State<BuyProductList> {
                                         ),
                                         style: ButtonStyle(
                                             elevation:
-                                                MaterialStateProperty.all(1),
+                                                MaterialStateProperty.all(0),
                                             backgroundColor: isALL
                                                 ? MaterialStatePropertyAll(
-                                                    Colors.green[100])
+                                                    Colors.green[300])
                                                 : MaterialStatePropertyAll(
-                                                    Colors.green[50])),
+                                                    Colors.green[100])),
                                       ),
                                     ),
                                     Expanded(
@@ -205,7 +205,7 @@ class _BuyProductListState extends State<BuyProductList> {
                                                             : Colors.white,
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            10),
+                                                            5),
                                                     border: Border.all(
                                                         width: 1,
                                                         color:
@@ -234,84 +234,102 @@ class _BuyProductListState extends State<BuyProductList> {
                                   ],
                                 ),
                               ),
-                              Expanded(
-                                child: ListView(
-                                  physics: BouncingScrollPhysics(),
-                                  children: [
-                                    ListView.builder(
-                                        itemCount: products.length,
-                                        shrinkWrap: true,
-                                        physics: NeverScrollableScrollPhysics(),
-                                        scrollDirection: Axis.vertical,
-                                        itemBuilder: (context, index) {
-                                          return containsSelected(
-                                                  subSubCategoryName:
-                                                      products[index]
-                                                          .subSubCategory)
-                                              ? InkWell(
-                                                  onTap: () {
-                                                    if (products[index]
-                                                            .subSubCategory ==
-                                                        'On Rent') {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                MachineRentForm(
-                                                              imageURL:
-                                                                  products[
-                                                                          index]
-                                                                      .imageURL,
-                                                              machineName:
-                                                                  products[
-                                                                          index]
-                                                                      .productName,
-                                                              machinePrice:
-                                                                  products[
-                                                                          index]
-                                                                      .productPrice,
-                                                              machineDescription:
-                                                                  products[
-                                                                          index]
-                                                                      .productDescription,
-                                                            ),
-                                                          ));
-                                                    } else {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                ProductDetails(
-                                                              sellProduct:
-                                                                  products[
-                                                                      index],
-                                                            ),
-                                                          ));
-                                                    }
-                                                  },
-                                                  child: BuyProductTile(
-                                                    context: context,
-                                                    name: products[index]
-                                                        .productName,
-                                                    imageURL: products[index]
-                                                        .imageURL,
-                                                    price: products[index]
-                                                        .productPrice,
-                                                    quantityUnit:
-                                                        products[index]
-                                                            .quantityUnit,
-                                                    description: products[index]
-                                                        .productDescription,
-                                                    subSubCategory:
-                                                        products[index]
-                                                            .subSubCategory,
-                                                  ),
-                                                )
-                                              : Container();
-                                        }),
-                                  ],
-                                ),
-                              ),
+                              selectedSubSubcategories
+                                      .every((item) => !item.isSelected)
+                                  ? Container(
+                                      height: 400,
+                                      child: Center(
+                                        child: Text(
+                                          'Please select at least one sub category.',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : Expanded(
+                                      child: ListView(
+                                        physics: BouncingScrollPhysics(),
+                                        children: [
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          ListView.builder(
+                                              itemCount: products.length,
+                                              shrinkWrap: true,
+                                              physics:
+                                                  NeverScrollableScrollPhysics(),
+                                              scrollDirection: Axis.vertical,
+                                              itemBuilder: (context, index) {
+                                                return containsSelected(
+                                                        subSubCategoryName:
+                                                            products[index]
+                                                                .subSubCategory)
+                                                    ? InkWell(
+                                                        onTap: () {
+                                                          if (products[index]
+                                                                  .subSubCategory ==
+                                                              'On Rent') {
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          MachineRentForm(
+                                                                    imageURL: products[
+                                                                            index]
+                                                                        .imageURL,
+                                                                    machineName:
+                                                                        products[index]
+                                                                            .productName,
+                                                                    machinePrice:
+                                                                        products[index]
+                                                                            .productPrice,
+                                                                    machineDescription:
+                                                                        products[index]
+                                                                            .productDescription,
+                                                                  ),
+                                                                ));
+                                                          } else {
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          ProductDetails(
+                                                                    sellProduct:
+                                                                        products[
+                                                                            index],
+                                                                  ),
+                                                                ));
+                                                          }
+                                                        },
+                                                        child: BuyProductTile(
+                                                          context: context,
+                                                          name: products[index]
+                                                              .productName,
+                                                          imageURL:
+                                                              products[index]
+                                                                  .imageURL,
+                                                          price: products[index]
+                                                              .productPrice,
+                                                          quantityUnit:
+                                                              products[index]
+                                                                  .quantityUnit,
+                                                          description: products[
+                                                                  index]
+                                                              .productDescription,
+                                                          subSubCategory:
+                                                              products[index]
+                                                                  .subSubCategory,
+                                                        ),
+                                                      )
+                                                    : Container();
+                                              }),
+                                        ],
+                                      ),
+                                    ),
                             ],
                           ),
                   );
@@ -336,31 +354,37 @@ class _BuyProductListState extends State<BuyProductList> {
     required String subSubCategory,
   }) {
     return Padding(
-      padding: const EdgeInsets.only(left: 20.0, right: 20, top: 10),
+      padding: const EdgeInsets.only(
+        left: 8,
+        right: 8,
+        bottom: 8,
+      ),
       child: Material(
-        elevation: 1,
-        borderRadius: BorderRadius.circular(15),
+        elevation: 0,
+        borderRadius: BorderRadius.circular(6),
         child: Container(
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              border: Border.all(width: 1, color: MyTheme.medium_grey)),
-          height: 130,
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(
+                  width: 1, color: MyTheme.medium_grey.withOpacity(0.5))),
+          height: 160,
           width: MediaQuery.of(context).size.width,
           child: Padding(
-            padding: const EdgeInsets.all(7.0),
+            padding: const EdgeInsets.all(5),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
-                  flex: 1,
+                  flex: 2,
                   child: Container(
-                      height: 110,
+                      padding: EdgeInsets.only(left: 5),
+                      height: 140,
                       child: imageURL.isEmpty || imageURL.length == 0
                           ? Center(
                               child: CircularProgressIndicator(),
                             )
                           : ClipRRect(
-                              borderRadius: BorderRadius.circular(15),
+                              borderRadius: BorderRadius.circular(5),
                               child: Image.network(
                                 imageURL[0],
                                 fit: BoxFit.cover,
@@ -368,9 +392,9 @@ class _BuyProductListState extends State<BuyProductList> {
                             )),
                 ),
                 Expanded(
-                  flex: 2,
+                  flex: 3,
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 8, bottom: 8, left: 15),
+                    padding: const EdgeInsets.only(top: 8, bottom: 8, left: 12),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -378,29 +402,62 @@ class _BuyProductListState extends State<BuyProductList> {
                         Text(
                           name,
                           // 'skgknkl kgsne ksngkla lkgnlkang lkenglkg',
-                          maxLines: 2,
+                          maxLines: 3,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.w600),
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                         Text(
-                          subSubCategory,
+                          subSubCategory.toUpperCase(),
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey[600],
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                            color: Colors.grey[700],
                           ),
                         ),
-                        SizedBox(
-                          height: 4,
-                        ),
-                        Text(
-                          '₹$price per ${quantityUnit == "Units" ? 'unit' : quantityUnit}',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
+                        Row(
+                          children: [
+                            Container(
+                              height: 20,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '₹',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      // fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  SizedBox.shrink()
+                                ],
+                              ),
+                            ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.baseline,
+                              textBaseline: TextBaseline.alphabetic,
+                              children: [
+                                Text(
+                                  '${price.toInt()}',
+                                  style: TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                Text(
+                                  ' per ${quantityUnit == "Units" ? 'unit' : quantityUnit}',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    // fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                         Text(
                           description,
@@ -408,7 +465,7 @@ class _BuyProductListState extends State<BuyProductList> {
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 14,
-                            fontWeight: FontWeight.w600,
+                            // fontWeight: FontWeight.w600,
                             color: MyTheme.grey_153,
                           ),
                         ),
