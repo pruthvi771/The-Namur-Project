@@ -1,19 +1,11 @@
-import 'package:active_ecommerce_flutter/drawer/drawer.dart';
-import 'package:active_ecommerce_flutter/features/profile/expanded_tile_widget.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
-import 'package:active_ecommerce_flutter/features/profile/screens/land_screen.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_html/flutter_html.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import '../../../custom/device_info.dart';
-
-import 'package:flutter_expanded_tile/flutter_expanded_tile.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 
 // import '../seller_platform/seller_platform.dart';
 

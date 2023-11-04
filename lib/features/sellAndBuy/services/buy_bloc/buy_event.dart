@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:equatable/equatable.dart';
 
 abstract class BuyEvent extends Equatable {

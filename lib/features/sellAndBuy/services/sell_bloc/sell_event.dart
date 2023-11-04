@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:active_ecommerce_flutter/utils/enums.dart';
 import 'package:equatable/equatable.dart';
 import 'package:image_picker/image_picker.dart';

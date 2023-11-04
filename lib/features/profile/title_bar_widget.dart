@@ -6,16 +6,10 @@ import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_event.dart';
-import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_state.dart'
-    as hiveState;
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/friends_screen.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/profile.dart';
-import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_bloc.dart';
-import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_event.dart';
-import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_state.dart'
-    as profileState;
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_event.dart';
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_state.dart';

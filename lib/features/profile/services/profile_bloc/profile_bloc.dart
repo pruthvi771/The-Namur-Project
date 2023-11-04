@@ -1,13 +1,10 @@
 import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
-import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_event.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_state.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileBloc() : super(Loading()) {

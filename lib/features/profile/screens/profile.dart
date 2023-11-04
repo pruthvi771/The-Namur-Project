@@ -23,13 +23,13 @@ import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:toast/toast.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+// ignore: must_be_immutable
 class Profile extends StatefulWidget {
   Profile({Key? key, this.show_back_button = false}) : super(key: key);
 
@@ -602,49 +602,6 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
       ),
     );
   }
-
-/*
-  AppBar buildAppBar(BuildContext context) {
-    return AppBar(
-      backgroundColor: Colors.white,
-      centerTitle: true,
-      automaticallyImplyLeading: false,
-      /* leading: GestureDetector(
-        child: widget.show_back_button
-            ? Builder(
-                builder: (context) => IconButton(
-                  icon:
-                      Icon(CupertinoIcons.arrow_left, color: MyTheme.dark_grey),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-              )
-            : Builder(
-                builder: (context) => GestureDetector(
-                  onTap: () {
-                    _scaffoldKey.currentState.openDrawer();
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 18.0, horizontal: 0.0),
-                    child: Container(
-                      child: Image.asset(
-                        'assets/hamburger.png',
-                        height: 16,
-                        color: MyTheme.dark_grey,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-      ),*/
-      title: Text(
-        AppLocalizations.of(context).profile_screen_account,
-        style: TextStyle(fontSize: 16, color: MyTheme.accent_color),
-      ),
-      elevation: 0.0,
-      titleSpacing: 0,
-    );
-  }*/
 
   loading() {
     showDialog(

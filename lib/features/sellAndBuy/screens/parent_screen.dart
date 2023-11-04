@@ -5,7 +5,7 @@ import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/product_inv
 import 'package:active_ecommerce_flutter/utils/enums.dart' as enums;
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ParentScreen extends StatefulWidget {
   final enums.ParentEnum parentEnum;

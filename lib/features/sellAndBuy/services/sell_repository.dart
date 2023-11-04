@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart';
@@ -11,7 +10,6 @@ import 'package:image_picker/image_picker.dart';
 class SellRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  FirebaseStorage _storage = FirebaseStorage.instance;
 
   Future<String?> addProductBuying({
     required String productName,
