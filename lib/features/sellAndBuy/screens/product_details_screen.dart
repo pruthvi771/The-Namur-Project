@@ -408,7 +408,7 @@ class _ProductDetailsState extends State<ProductDetails> {
           builder: (context, snapshot) {
             if (snapshot.hasData)
               return Container(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 color: Colors.grey[200],
                 child: Row(
                   children: [
@@ -439,21 +439,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                           Text(
                             "Seller",
                             // "aksbfkjafknangg englkng lkegnang kegne",
-                            style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                                letterSpacing: .5,
-                                fontFamily: 'Poppins'),
+                            style: TextStyle(fontSize: 15),
                           ),
                           Text(
                             snapshot.data!.name,
                             // "aksbfkjafknangg englkng lkegnang kegne",
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                                letterSpacing: .5,
-                                fontFamily: 'Poppins'),
+                            style: TextStyle(fontSize: 18),
                           ),
                         ],
                       ),

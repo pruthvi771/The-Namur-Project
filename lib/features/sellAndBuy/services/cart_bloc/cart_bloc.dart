@@ -48,15 +48,24 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     on<UpdateCartQuantityRequested>((event, emit) async {
       try {
         emit(CartQuantityLoading());
-        CartProduct? cartProduct = await cartRepository.updateCartQuantity(
-          productId: event.productId,
-          currentQuantity: event.currentQuantity,
-          type: event.type,
-        );
-        if (cartProduct != null) {
-          emit(AddToCartSuccessful(quantity: cartProduct.quantity));
-        } else {
+        if (event.currentQuantity == 1 &&
+            event.type == UpdateCartQuantityType.decrement) {
+          await cartRepository.removeFromCart(
+            productId: event.productId,
+          );
           emit(CartInitial());
+          return;
+        } else {
+          CartProduct? cartProduct = await cartRepository.updateCartQuantity(
+            productId: event.productId,
+            currentQuantity: event.currentQuantity,
+            type: event.type,
+          );
+          if (cartProduct != null) {
+            emit(AddToCartSuccessful(quantity: cartProduct.quantity));
+          } else {
+            emit(CartInitial());
+          }
         }
       } catch (e) {
         // emit(SellAddProductErrorState(message: e.toString()));

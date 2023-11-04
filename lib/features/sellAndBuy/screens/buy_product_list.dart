@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/subSubCategory_filter_item.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/machine_rent_form.dart';
@@ -266,64 +264,73 @@ class _BuyProductListState extends State<BuyProductList> {
                                                         subSubCategoryName:
                                                             products[index]
                                                                 .subSubCategory)
-                                                    ? InkWell(
-                                                        onTap: () {
-                                                          if (products[index]
-                                                                  .subSubCategory ==
-                                                              'On Rent') {
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          MachineRentForm(
-                                                                    imageURL: products[
-                                                                            index]
-                                                                        .imageURL,
-                                                                    machineName:
-                                                                        products[index]
-                                                                            .productName,
-                                                                    machinePrice:
-                                                                        products[index]
-                                                                            .productPrice,
-                                                                    machineDescription:
-                                                                        products[index]
-                                                                            .productDescription,
-                                                                  ),
-                                                                ));
-                                                          } else {
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          ProductDetails(
-                                                                    sellProduct:
-                                                                        products[
-                                                                            index],
-                                                                  ),
-                                                                ));
-                                                          }
-                                                        },
-                                                        child: BuyProductTile(
-                                                          context: context,
-                                                          name: products[index]
-                                                              .productName,
-                                                          imageURL:
-                                                              products[index]
-                                                                  .imageURL,
-                                                          price: products[index]
-                                                              .productPrice,
-                                                          quantityUnit:
-                                                              products[index]
-                                                                  .quantityUnit,
-                                                          description: products[
-                                                                  index]
-                                                              .productDescription,
-                                                          subSubCategory:
-                                                              products[index]
-                                                                  .subSubCategory,
-                                                        ),
+                                                    ? Column(
+                                                        children: [
+                                                          InkWell(
+                                                            onTap: () {
+                                                              if (products[
+                                                                          index]
+                                                                      .subSubCategory ==
+                                                                  'On Rent') {
+                                                                Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) =>
+                                                                              MachineRentForm(
+                                                                        imageURL:
+                                                                            products[index].imageURL,
+                                                                        machineName:
+                                                                            products[index].productName,
+                                                                        machinePrice:
+                                                                            products[index].productPrice,
+                                                                        machineDescription:
+                                                                            products[index].productDescription,
+                                                                      ),
+                                                                    ));
+                                                              } else {
+                                                                Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) =>
+                                                                              ProductDetails(
+                                                                        sellProduct:
+                                                                            products[index],
+                                                                      ),
+                                                                    ));
+                                                              }
+                                                            },
+                                                            child:
+                                                                BuyProductTile(
+                                                              context: context,
+                                                              name: products[
+                                                                      index]
+                                                                  .productName,
+                                                              imageURL:
+                                                                  products[
+                                                                          index]
+                                                                      .imageURL,
+                                                              price: products[
+                                                                      index]
+                                                                  .productPrice,
+                                                              quantityUnit:
+                                                                  products[
+                                                                          index]
+                                                                      .quantityUnit,
+                                                              description: products[
+                                                                      index]
+                                                                  .productDescription,
+                                                              subSubCategory:
+                                                                  products[
+                                                                          index]
+                                                                      .subSubCategory,
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 8,
+                                                          ),
+                                                        ],
                                                       )
                                                     : Container();
                                               }),
@@ -357,7 +364,7 @@ class _BuyProductListState extends State<BuyProductList> {
       padding: const EdgeInsets.only(
         left: 8,
         right: 8,
-        bottom: 8,
+        // bottom: 8,
       ),
       child: Material(
         elevation: 0,
