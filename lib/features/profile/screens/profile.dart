@@ -39,7 +39,7 @@ class Profile extends StatefulWidget {
   _ProfileState createState() => _ProfileState();
 }
 
-class _ProfileState extends State<Profile> {
+class _ProfileState extends State<Profile> with TickerProviderStateMixin {
   HomePresenter homeData = HomePresenter();
   ScrollController _mainScrollController = ScrollController();
   late BuildContext loadingcontext;
@@ -119,10 +119,13 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection:
-          app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
-      child: buildView(context, _profileSection),
+    return DefaultTabController(
+      length: 2,
+      child: Directionality(
+        textDirection:
+            app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
+        child: buildView(context, _profileSection),
+      ),
     );
   }
 
@@ -156,6 +159,9 @@ class _ProfileState extends State<Profile> {
       'assets/bugs.png',
       'assets/orange (1).png',
       'assets/onion.png',
+      'assets/coconut 1.png',
+      'assets/bugs.png',
+      'assets/orange (1).png',
       'assets/coconut 1.png',
       'assets/bugs.png',
       'assets/orange (1).png',
@@ -212,6 +218,8 @@ class _ProfileState extends State<Profile> {
               BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
             if (state is ProfileDataReceived) {
               BuyerData buyerUserData = state.buyerProfileData;
+              TabController tabController =
+                  TabController(length: 2, vsync: this);
               return SliverList(
                 delegate: SliverChildListDelegate([
                   Stack(
@@ -367,196 +375,147 @@ class _ProfileState extends State<Profile> {
                     ),
                   ),
 
-                  //Updates, My Strock navigation buttons
                   Padding(
-                    padding:
-                        const EdgeInsets.only(left: 20.0, right: 20, top: 16),
-                    child: Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 5),
-                              child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _profileSection = ProfileSection.updates;
-                                  });
-                                },
-                                child: Container(
-                                  width: 100,
-                                  height: 44,
-                                  decoration: BoxDecoration(
-                                      color: _profileSection ==
-                                              ProfileSection.updates
-                                          ? MyTheme.primary_color
-                                          : MyTheme.field_color,
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Center(
-                                    child: Text(
-                                      "Updates",
-                                      style: TextStyle(
-                                          color: _profileSection ==
-                                                  ProfileSection.updates
-                                              ? Colors.white
-                                              : Colors.black,
-                                          fontWeight: FontWeight.w600,
-                                          letterSpacing: .5,
-                                          fontFamily: "Poppins",
-                                          fontSize: 15),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      child: Container(
+                        height: 45,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12.0),
+                          border: Border.all(
+                            color: MyTheme.field_color,
                           ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 5),
-                              child: GestureDetector(
-                                onTap: () {
-                                  print('clicked');
-                                  setState(() {
-                                    _profileSection = ProfileSection.myStock;
-                                  });
-                                },
-                                child: Container(
-                                  // width: 100,
-                                  height: 44,
-                                  decoration: BoxDecoration(
-                                      // color: MyTheme.primary_color,
-                                      color: _profileSection ==
-                                              ProfileSection.myStock
-                                          ? MyTheme.primary_color
-                                          : MyTheme.field_color,
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Center(
-                                    child: Text(
-                                      "My Stock",
-                                      style: TextStyle(
-                                          color: _profileSection ==
-                                                  ProfileSection.myStock
-                                              ? Colors.white
-                                              : Colors.black,
-                                          fontWeight: FontWeight.w600,
-                                          fontFamily: "Poppins",
-                                          letterSpacing: .5,
-                                          fontSize: 15),
-                                    ),
-                                  ),
+                        ),
+                        child: TabBar(
+                            indicator: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12.0),
+                              color: Color(0xff4C7B10),
+                            ),
+                            labelColor: Colors.white,
+                            unselectedLabelColor: Colors.black,
+                            controller: tabController,
+                            labelPadding: EdgeInsets.symmetric(horizontal: 25),
+                            tabs: [
+                              Tab(
+                                child: Text(
+                                  'Updates',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Poppins'),
                                 ),
                               ),
-                            ),
-                          )
-                        ],
+                              Tab(
+                                child: Text(
+                                  'My Stock',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Poppins'),
+                                ),
+                              ),
+                            ]),
                       ),
                     ),
                   ),
-
-                  if (_profileSection == ProfileSection.updates)
-                    Column(
+                  Container(
+                    height: MediaQuery.of(context).size.height - 300,
+                    child: TabBarView(
+                      controller: tabController,
                       children: [
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: InkWell(
-                              onTap: () async {
-                                await _launchYouTubeVideo(
-                                    'https://www.youtube.com/watch?v=o5DGLMY7jsc');
-                              },
-                              child: Image.network(
-                                  'https://i.ytimg.com/vi/o5DGLMY7jsc/maxresdefault.jpg'),
+                        Column(
+                          children: [
+                            SizedBox(
+                              height: 20,
                             ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: InkWell(
+                                  onTap: () async {
+                                    await _launchYouTubeVideo(
+                                        'https://www.youtube.com/watch?v=o5DGLMY7jsc');
+                                  },
+                                  child: Image.network(
+                                      'https://i.ytimg.com/vi/o5DGLMY7jsc/maxresdefault.jpg'),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: InkWell(
+                                  onTap: () async {
+                                    await _launchYouTubeVideo(
+                                        'https://www.youtube.com/watch?v=VeO_kVYPmmg');
+                                  },
+                                  child: Image.network(
+                                      'https://i.ytimg.com/vi/VeO_kVYPmmg/maxresdefault.jpg'),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SingleChildScrollView(
+                          child: MasonryGridView.count(
+                            crossAxisCount: 3,
+                            mainAxisSpacing: 16,
+                            crossAxisSpacing: 16,
+                            itemCount: stocks.length,
+                            shrinkWrap: true,
+                            padding:
+                                EdgeInsets.only(top: 10.0, left: 18, right: 18),
+                            physics: NeverScrollableScrollPhysics(),
+                            scrollDirection: Axis.vertical,
+                            itemBuilder: (context, index) {
+                              //
+                              return Container(
+                                //  height: 100,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  color: (index % 5 == 0)
+                                      ? MyTheme.green_neon
+                                      : MyTheme.white,
+                                ),
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Container(
+                                        height: 50,
+                                        width: 50,
+                                        child: Image.asset(
+                                          stocks[index],
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 8.0, bottom: 8.0),
+                                      child: Text(
+                                        "Grapes",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              );
+                            },
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: InkWell(
-                              onTap: () async {
-                                await _launchYouTubeVideo(
-                                    'https://www.youtube.com/watch?v=VeO_kVYPmmg');
-                              },
-                              child: Image.network(
-                                  'https://i.ytimg.com/vi/VeO_kVYPmmg/maxresdefault.jpg'),
-                            ),
-                          ),
-                        ),
-                        // ElevatedButton(
-                        //   onPressed: () {
-                        //     Navigator.push(context,
-                        //         MaterialPageRoute(builder: (context) {
-                        //       return EditProfileScreen();
-                        //     }));
-                        //   },
-                        //   child: Text('Profile Edit'),
-                        // )
                       ],
                     ),
-
-                  if (_profileSection == ProfileSection.myStock)
-                    // Text(
-                    //   'updates',
-                    // ),
-                    SingleChildScrollView(
-                      // controller: _xcrollController,
-                      /* physics: const BouncingScrollPhysics(
-                            parent: AlwaysScrollableScrollPhysics()),*/
-                      child: MasonryGridView.count(
-                        crossAxisCount: 3,
-                        mainAxisSpacing: 16,
-                        crossAxisSpacing: 16,
-                        itemCount: stocks.length,
-                        shrinkWrap: true,
-                        padding:
-                            EdgeInsets.only(top: 10.0, left: 18, right: 18),
-                        physics: NeverScrollableScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        itemBuilder: (context, index) {
-                          //
-                          return Container(
-                            //  height: 100,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              color: (index % 5 == 0)
-                                  ? MyTheme.green_neon
-                                  : MyTheme.white,
-                            ),
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8.0),
-                                  child: Container(
-                                    height: 50,
-                                    width: 50,
-                                    child: Image.asset(
-                                      stocks[index],
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 8.0, bottom: 8.0),
-                                  child: Text(
-                                    "Grapes",
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                )
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
+                  ),
                 ]),
               );
             }
