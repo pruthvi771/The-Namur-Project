@@ -1,6 +1,5 @@
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -56,9 +55,6 @@ class _MachineRentFormState extends State<MachineRentForm> {
 
     return savedData.land;
   }
-
-  int _current = 0;
-  final CarouselController _controller = CarouselController();
 
   @override
   Widget build(BuildContext context) {
@@ -140,56 +136,32 @@ class _MachineRentFormState extends State<MachineRentForm> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Machine Image
-                    // Container(
-                    //   height: 250,
-                    //   color: Colors.grey[200],
-                    //   padding:
-                    //       EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                    //   child: CarouselSlider(
-                    //     options: CarouselOptions(
-                    //       height: double.infinity,
-                    //       aspectRatio: 1 / 1.5,
-                    //       enlargeCenterPage: true,
-                    //       enableInfiniteScroll: false,
-                    //       autoPlay: false,
-                    //       padEnds: false,
-                    //     ),
-                    //     items: widget.imageURL.map((fileURL) {
-                    //       return Builder(
-                    //         builder: (BuildContext context) {
-                    //           return Container(
-                    //             child: ClipRRect(
-                    //               borderRadius: BorderRadius.all(
-                    //                 Radius.circular(10),
-                    //               ),
-                    //               child: CachedNetworkImage(
-                    //                 imageUrl: fileURL,
-                    //                 fit: BoxFit.cover,
-                    //                 width: MediaQuery.of(context).size.width,
-                    //               ),
-                    //             ),
-                    //           );
-                    //         },
-                    //       );
-                    //     }).toList(),
-                    //   ),
-                    // ),
-
                     Container(
                       height: 250,
-                      // color: Colors.red[100],
+                      color: Colors.grey[200],
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       child: CarouselSlider(
+                        options: CarouselOptions(
+                          viewportFraction: 1,
+                          height: double.infinity,
+                          aspectRatio: 1 / 1.5,
+                          enlargeCenterPage: true,
+                          enableInfiniteScroll: false,
+                          autoPlay: false,
+                          padEnds: false,
+                        ),
                         items: widget.imageURL.map((fileURL) {
                           return Builder(
                             builder: (BuildContext context) {
                               return Container(
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.all(
-                                    Radius.circular(5),
+                                    Radius.circular(10),
                                   ),
-                                  child: CachedNetworkImage(
-                                    imageUrl: fileURL,
-                                    fit: BoxFit.contain,
+                                  child: Image.network(
+                                    fileURL,
+                                    fit: BoxFit.cover,
                                     width: MediaQuery.of(context).size.width,
                                   ),
                                 ),
@@ -197,45 +169,7 @@ class _MachineRentFormState extends State<MachineRentForm> {
                             },
                           );
                         }).toList(),
-                        carouselController: _controller,
-                        options: CarouselOptions(
-                            autoPlay: false,
-                            enlargeCenterPage: true,
-                            enableInfiniteScroll: false,
-                            onPageChanged: (index, reason) {
-                              setState(() {
-                                _current = index;
-                              });
-                            }),
                       ),
-                    ),
-
-                    SizedBox(
-                      height: 10,
-                    ),
-
-                    // product image indicator
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: widget.imageURL.asMap().entries.map((entry) {
-                        return GestureDetector(
-                          onTap: () => _controller.animateToPage(entry.key),
-                          child: Container(
-                            width: 8.0,
-                            height: 10.0,
-                            margin: EdgeInsets.symmetric(
-                                vertical: 8.0, horizontal: 4.0),
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: (Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? Colors.white
-                                        : Colors.black)
-                                    .withOpacity(
-                                        _current == entry.key ? 0.9 : 0.4)),
-                          ),
-                        );
-                      }).toList(),
                     ),
 
                     SizedBox(
@@ -260,26 +194,13 @@ class _MachineRentFormState extends State<MachineRentForm> {
                           SizedBox(
                             height: 10,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                '₹${widget.machinePrice}',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.grey[700],
-                                ),
-                              ),
-                              Text(
-                                '30 mins',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.grey[700],
-                                ),
-                              ),
-                            ],
+                          Text(
+                            '\₹${widget.machinePrice}/30 mins',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w900,
+                              color: Colors.grey[700],
+                            ),
                           ),
                           SizedBox(
                             height: 8,

@@ -148,6 +148,7 @@ class _ProductDetailsState extends State<ProductDetails> {
             }).toList(),
             carouselController: _controller,
             options: CarouselOptions(
+                viewportFraction: 1,
                 autoPlay: false,
                 enlargeCenterPage: true,
                 enableInfiniteScroll: false,

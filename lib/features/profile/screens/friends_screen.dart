@@ -223,14 +223,15 @@ class _FriendsState extends State<Friends> {
               SizedBox(
                 height: 10,
               ),
+
               Padding(
                   padding: EdgeInsets.all(8),
                   child: Align(
                     alignment: Alignment.centerLeft,
-                    child: Text('Society: Pitlali 577511 (125 Members)',
+                    child: Text('People in your Area...',
                         style: TextStyle(
                           color: Colors.black,
-                          fontSize: 15,
+                          fontSize: 18,
                           fontWeight: FontWeight.w500,
                           letterSpacing: .5,
                           fontFamily: 'Poppins',
@@ -254,34 +255,36 @@ class _FriendsState extends State<Friends> {
                       child: Container(
                         // height: 50,
                         // width: 50,
-                        child: Stack(children: [
-                          AspectRatio(
-                            aspectRatio: 1 / 1,
-                            child: Image.asset(
-                              (index % 3 == 0)
-                                  ? 'assets/Ellipse2.png'
-                                  : 'assets/Ellipse3.png',
-                              fit: BoxFit.fill,
+                        child: Stack(
+                          children: [
+                            AspectRatio(
+                              aspectRatio: 1 / 1,
+                              child: Image.asset(
+                                (index % 3 == 0)
+                                    ? 'assets/Ellipse2.png'
+                                    : 'assets/Ellipse3.png',
+                                fit: BoxFit.fill,
+                              ),
                             ),
-                          ),
-                          (index % 3 == 0)
-                              ? Positioned(
-                                  bottom: 10,
-                                  left: 50,
-                                  child: ClipRRect(
-                                    child: CircleAvatar(
-                                      radius: 10,
-                                      backgroundColor: MyTheme.green,
-                                      child: Icon(
-                                        Icons.check,
-                                        size: 15.0,
-                                        color: Colors.white,
+                            (index % 3 == 0)
+                                ? Positioned(
+                                    bottom: 10,
+                                    left: 50,
+                                    child: ClipRRect(
+                                      child: CircleAvatar(
+                                        radius: 10,
+                                        backgroundColor: MyTheme.green,
+                                        child: Icon(
+                                          Icons.check,
+                                          size: 15.0,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                )
-                              : SizedBox.shrink()
-                        ]),
+                                  )
+                                : SizedBox.shrink()
+                          ],
+                        ),
                       ),
                     ),
                   );
