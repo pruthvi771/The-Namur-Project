@@ -1,3 +1,4 @@
+import 'package:active_ecommerce_flutter/dummy_data/single_product.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/subSubCategory_filter_item.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/machine_rent_form.dart';
@@ -9,6 +10,7 @@ import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class BuyProductList extends StatefulWidget {
   final SubCategoryEnum subCategoryEnum;
@@ -265,74 +267,104 @@ class _BuyProductListState extends State<BuyProductList> {
                                                         subSubCategoryName:
                                                             products[index]
                                                                 .subSubCategory)
-                                                    ? Column(
-                                                        children: [
-                                                          InkWell(
-                                                            onTap: () {
-                                                              if (products[
-                                                                          index]
-                                                                      .subSubCategory ==
-                                                                  'On Rent') {
-                                                                Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                      builder:
-                                                                          (context) =>
-                                                                              MachineRentForm(
-                                                                        imageURL:
-                                                                            products[index].imageURL,
-                                                                        machineName:
-                                                                            products[index].productName,
-                                                                        machinePrice:
-                                                                            products[index].productPrice,
-                                                                        machineDescription:
-                                                                            products[index].productDescription,
-                                                                      ),
-                                                                    ));
-                                                              } else {
-                                                                Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                      builder:
-                                                                          (context) =>
-                                                                              ProductDetails(
-                                                                        sellProduct:
-                                                                            products[index],
-                                                                      ),
-                                                                    ));
-                                                              }
-                                                            },
-                                                            child:
-                                                                BuyProductTile(
-                                                              context: context,
-                                                              name: products[
-                                                                      index]
-                                                                  .productName,
-                                                              imageURL:
-                                                                  products[
-                                                                          index]
-                                                                      .imageURL,
-                                                              price: products[
-                                                                      index]
-                                                                  .productPrice,
-                                                              quantityUnit:
-                                                                  products[
-                                                                          index]
-                                                                      .quantityUnit,
-                                                              description: products[
-                                                                      index]
-                                                                  .productDescription,
-                                                              subSubCategory:
-                                                                  products[
-                                                                          index]
-                                                                      .subSubCategory,
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            height: 8,
-                                                          ),
-                                                        ],
-                                                      )
+                                                    ? StreamBuilder<
+                                                            DocumentSnapshot>(
+                                                        stream:
+                                                            FirebaseFirestore
+                                                                .instance
+                                                                .collection(
+                                                                    'buyer')
+                                                                .doc(products[
+                                                                        index]
+                                                                    .sellerId)
+                                                                .snapshots(),
+                                                        builder: (context,
+                                                            sellerSnapshot) {
+                                                          if (sellerSnapshot
+                                                                  .hasData &&
+                                                              sellerSnapshot
+                                                                  .data!
+                                                                  .exists &&
+                                                              sellerSnapshot
+                                                                      .data !=
+                                                                  null) {
+                                                            var sellerData =
+                                                                sellerSnapshot
+                                                                        .data!
+                                                                        .data()
+                                                                    as Map<
+                                                                        String,
+                                                                        dynamic>?;
+                                                            return Column(
+                                                              children: [
+                                                                InkWell(
+                                                                  onTap: () {
+                                                                    if (products[index]
+                                                                            .subSubCategory ==
+                                                                        'On Rent') {
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                            builder: (context) =>
+                                                                                MachineRentForm(
+                                                                              imageURL: products[index].imageURL,
+                                                                              machineName: products[index].productName,
+                                                                              machinePrice: products[index].productPrice,
+                                                                              machineDescription: products[index].productDescription,
+                                                                            ),
+                                                                          ));
+                                                                    } else {
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                            builder: (context) =>
+                                                                                ProductDetails(
+                                                                              sellProduct: products[index],
+                                                                            ),
+                                                                          ));
+                                                                    }
+                                                                  },
+                                                                  child:
+                                                                      BuyProductTile(
+                                                                    context:
+                                                                        context,
+                                                                    name: products[
+                                                                            index]
+                                                                        .productName,
+                                                                    imageURL: products[
+                                                                            index]
+                                                                        .imageURL,
+                                                                    price: products[
+                                                                            index]
+                                                                        .productPrice,
+                                                                    quantityUnit:
+                                                                        products[index]
+                                                                            .quantityUnit,
+                                                                    // description:
+                                                                    //     products[index]
+                                                                    //         .productDescription,
+                                                                    subSubCategory:
+                                                                        products[index]
+                                                                            .subSubCategory,
+                                                                    village: sellerData!['profileData']['address'][0]
+                                                                            [
+                                                                            'village'] ??
+                                                                        '---',
+                                                                    district: sellerData['profileData']['address'][0]
+                                                                            [
+                                                                            'district'] ??
+                                                                        '---',
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 8,
+                                                                ),
+                                                              ],
+                                                            );
+                                                          }
+                                                          return SizedBox
+                                                              .shrink();
+                                                        })
                                                     : Container();
                                               }),
                                         ],
@@ -358,8 +390,10 @@ class _BuyProductListState extends State<BuyProductList> {
     required List<dynamic> imageURL,
     required double price,
     required String quantityUnit,
-    required String description,
+    // required String description,
     required String subSubCategory,
+    required String village,
+    required String district,
   }) {
     return Padding(
       padding: const EdgeInsets.only(
@@ -467,15 +501,27 @@ class _BuyProductListState extends State<BuyProductList> {
                             ),
                           ],
                         ),
-                        Text(
-                          description,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 14,
-                            // fontWeight: FontWeight.w600,
-                            color: MyTheme.grey_153,
-                          ),
+                        Row(
+                          children: [
+                            FaIcon(
+                              FontAwesomeIcons.locationPin,
+                              size: 14,
+                              color: Colors.red,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Expanded(
+                              child: Text(
+                                '$village, $district',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  letterSpacing: -0.7,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
