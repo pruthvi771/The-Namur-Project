@@ -677,6 +677,7 @@ class _ProductPostState extends State<ProductPost> {
                               child: Center(
                                 child: CarouselSlider(
                                   options: CarouselOptions(
+                                    viewportFraction: 1,
                                     enlargeCenterPage: true,
                                     enableInfiniteScroll: false,
                                     autoPlay: false,

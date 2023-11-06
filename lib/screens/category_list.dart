@@ -9,6 +9,7 @@ import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/parent_scre
 import 'package:active_ecommerce_flutter/helpers/shimmer_helper.dart';
 import 'package:active_ecommerce_flutter/presenter/bottom_appbar_index.dart';
 import 'package:active_ecommerce_flutter/screens/calender/calender.dart';
+import 'package:active_ecommerce_flutter/screens/profile_edit.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -27,6 +28,7 @@ import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../controller/sub_category_controller.dart';
+import '../features/profile/screens/edit_profile.dart';
 import '../presenter/home_presenter.dart';
 import 'category/sub_category.dart';
 import 'home_widget/buy_sell_button_widget.dart';
@@ -315,15 +317,42 @@ class _CategoryListState extends State<CategoryList> {
                                                     padding:
                                                         const EdgeInsets.all(
                                                             30),
-                                                    child: Text(
-                                                      'Complete Your Profile to Become a Seller',
-                                                      style: TextStyle(
-                                                          fontSize: 20,
-                                                          color: Colors.black,
-                                                          fontWeight:
-                                                              FontWeight.w700),
-                                                      textAlign: TextAlign
-                                                          .center, // Align text to the center
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          'Complete Your Profile to Become a Seller',
+                                                          style: TextStyle(
+                                                              fontSize: 20,
+                                                              color:
+                                                                  Colors.black,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700),
+                                                          textAlign: TextAlign
+                                                              .center, // Align text to the center
+                                                        ),
+                                                        ElevatedButton(
+                                                            style:
+                                                                ElevatedButton
+                                                                    .styleFrom(
+                                                              backgroundColor:
+                                                                  MyTheme
+                                                                      .primary_color,
+                                                            ),
+                                                            onPressed: () {
+                                                              Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) =>
+                                                                              EditProfileScreen()));
+                                                            },
+                                                            child: Text(
+                                                                'Complete Profile')),
+                                                      ],
                                                     ),
                                                   ),
                                                 ),
