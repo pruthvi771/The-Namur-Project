@@ -1,13 +1,11 @@
-import 'dart:typed_data';
-
+import 'dart:io';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
-import 'package:active_ecommerce_flutter/features/profile/utils.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/sell_bloc/sell_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/sell_bloc/sell_event.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
-import 'package:active_ecommerce_flutter/sell_screen/product_inventory/product_inventory.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,12 +28,18 @@ class ProductPost extends StatefulWidget {
   final bool isProductEditScreen;
   final SellProduct? sellProduct;
 
+  final bool isMachine;
+
+  final bool isSecondHand;
+
   const ProductPost({
     Key? key,
     required this.subCategoryEnum,
     required this.alreadyExistingProductNames,
     this.isProductEditScreen = false,
     this.sellProduct,
+    this.isMachine = false,
+    required this.isSecondHand,
   }) : super(key: key);
 
   @override
@@ -74,8 +78,6 @@ class _ProductPostState extends State<ProductPost> {
     }
   }
 
-  bool _switchValue = false;
-
   String? _selectedItem;
 
   late List<String> _dropdownItems;
@@ -84,22 +86,72 @@ class _ProductPostState extends State<ProductPost> {
   late String subCategory;
   // late bool perPiecePrice;
 
-  Uint8List? _image;
+  // List<Uint8List?>? _image;
 
-  String? imageURL;
+  List<dynamic>? imageURL;
 
   var listOfQuantityUnits = nameForProductQuantity.values.toList();
   String? selectedQuantityUnit;
 
-  // Output the list of names
-  // print(listOfNames);
+  List<XFile>? _mediaFileList;
 
-  selectImage() async {
-    Uint8List img = await pickImage(ImageSource.gallery);
-    print('image uploaded');
-    _image = img;
-    setState(() {});
+  final ImagePicker imagePicker = ImagePicker();
+
+  // selectImage() async {
+  //   List<Uint8List> img = await pickImage(ImageSource.gallery);
+  //   print('image uploaded');
+  //   _image = img;
+  //   setState(() {});
+  //   await _displayPickImageDialog(context,
+  //       (double? maxWidth, double? maxHeight, int? quality) async {
+  //     try {
+  //       final List<XFile> pickedFileList = await _picker.pickMultiImage(
+  //         maxWidth: maxWidth,
+  //         maxHeight: maxHeight,
+  //         imageQuality: quality,
+  //       );
+  //       setState(() {
+  //         _mediaFileList = pickedFileList;
+  //       });
+  //     } catch (e) {
+  //       setState(() {
+  //         _pickImageError = e;
+  //       });
+  //     }
+  //   });
+  // }
+
+  selectImages() async {
+    final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
+    if (selectedImages != null || selectedImages!.isNotEmpty) {
+      _mediaFileList = selectedImages;
+      setState(() {});
+    }
   }
+
+  // Center(
+  //       child: CarouselSlider(
+  //         options: CarouselOptions(
+  //           enlargeCenterPage: true,
+  //           // enableInfiniteScroll: true,
+  //           autoPlay: false,
+  //         ),
+  //         items: imageList.map((e) => ClipRRect(
+  //           borderRadius : BorderRadius.circular(8),
+  //           child: Stack(
+  //             fit: StackFit.expand,
+  //             children: [
+  //               Image.asset(
+  //                 e,
+  //                 width: 500,
+  //                 height: 1500,
+  //                 fit: BoxFit.cover,
+  //               )
+  //             ]
+  //           )
+  //         )).toList(),
+  //       ),
+  //     ),
 
   onPressedPost(BuildContext buildContext) async {
     // print('login clicked');
@@ -150,7 +202,7 @@ class _ProductPostState extends State<ProductPost> {
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
-    if (_image == null) {
+    if (_mediaFileList == null || _mediaFileList!.isEmpty) {
       ToastComponent.showDialog('Select Product Image',
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
@@ -184,7 +236,11 @@ class _ProductPostState extends State<ProductPost> {
         category: productCategory,
         subCategory: productSubCategory,
         subSubCategory: productSubSubCategory,
-        image: _image!,
+        imageList: _mediaFileList!,
+        isSecondHand: widget.isSecondHand,
+        productType: widget.isSecondHand
+            ? ProductType.secondHand
+            : ProductType.newProduct,
       ),
     );
 
@@ -348,6 +404,23 @@ class _ProductPostState extends State<ProductPost> {
   }
 
   bodycontent() {
+    var productCategoryEnum =
+        enums.findCategoryForSubCategory(widget.subCategoryEnum);
+    var showQuantityDropdown = true;
+    String machinePriceHintText = 'Price';
+    if (productCategoryEnum == CategoryEnum.animals ||
+        productCategoryEnum == CategoryEnum.birds ||
+        productCategoryEnum == CategoryEnum.electronics ||
+        productCategoryEnum == CategoryEnum.equipments ||
+        productCategoryEnum == CategoryEnum.jcb) {
+      selectedQuantityUnit = listOfQuantityUnits[0];
+      showQuantityDropdown = false;
+    }
+    if (_selectedItem == "On Rent") {
+      machinePriceHintText = 'Price (per 30 mins)';
+    } else if (_selectedItem == "Sell") {
+      machinePriceHintText = 'Price (per unit)';
+    }
     return ListView(
       physics: BouncingScrollPhysics(),
       children: [
@@ -416,7 +489,7 @@ class _ProductPostState extends State<ProductPost> {
 
         // product quantity
         Padding(
-          padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+          padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 15.0),
           child: Container(
             height: 50, // Specify a fixed height for the container
             child: Row(
@@ -447,54 +520,55 @@ class _ProductPostState extends State<ProductPost> {
                   ),
                 ),
                 SizedBox(width: 10),
-                Container(
-                  // width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: MyTheme.field_color,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 6),
-                        child: Icon(
-                          Icons.close,
-                          color: Colors.grey[600],
-                          size: 15,
-                        ),
-                      ),
-                      DropdownButton<String>(
-                        padding: EdgeInsets.only(left: 15, right: 5),
-                        underline: Container(
-                          height: 0,
-                          color: Colors.transparent,
-                        ),
-                        value: selectedQuantityUnit,
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            selectedQuantityUnit = newValue!;
-                          });
-                        },
-                        items: listOfQuantityUnits
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        hint: Text(
-                          'Select Unit',
-                          style: TextStyle(
+                if (showQuantityDropdown)
+                  Container(
+                    // width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: MyTheme.field_color,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 6),
+                          child: Icon(
+                            Icons.close,
                             color: Colors.grey[600],
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Poppins',
+                            size: 15,
                           ),
                         ),
-                        // icon: SizedBox(width: 24),
-                      ),
-                    ],
+                        DropdownButton<String>(
+                          padding: EdgeInsets.only(left: 15, right: 5),
+                          underline: Container(
+                            height: 0,
+                            color: Colors.transparent,
+                          ),
+                          value: selectedQuantityUnit,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedQuantityUnit = newValue!;
+                            });
+                          },
+                          items: listOfQuantityUnits
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          hint: Text(
+                            'Select Unit',
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
+                          // icon: SizedBox(width: 24),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
               ],
             ),
           ),
@@ -514,23 +588,42 @@ class _ProductPostState extends State<ProductPost> {
               padding: const EdgeInsets.only(left: 15.0, right: 15.0),
               child: Row(
                 children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: _priceController,
-                      keyboardType:
-                          TextInputType.numberWithOptions(decimal: true),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText:
-                            "Price (per ${selectedQuantityUnit == "Units" ? 'unit' : selectedQuantityUnit ?? 'unit'})",
-                        hintStyle: TextStyle(
-                          color: Colors.grey[600],
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Poppins',
+                  (productCategoryEnum == CategoryEnum.electronics ||
+                          productCategoryEnum == CategoryEnum.equipments ||
+                          productCategoryEnum == CategoryEnum.jcb)
+                      ? Expanded(
+                          child: TextFormField(
+                            controller: _priceController,
+                            keyboardType:
+                                TextInputType.numberWithOptions(decimal: true),
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: machinePriceHintText,
+                              hintStyle: TextStyle(
+                                color: Colors.grey[600],
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'Poppins',
+                              ),
+                            ),
+                          ),
+                        )
+                      : Expanded(
+                          child: TextFormField(
+                            controller: _priceController,
+                            keyboardType:
+                                TextInputType.numberWithOptions(decimal: true),
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText:
+                                  "Price (per ${selectedQuantityUnit == "Units" ? 'unit' : selectedQuantityUnit ?? 'unit'})",
+                              hintStyle: TextStyle(
+                                color: Colors.grey[600],
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'Poppins',
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -575,16 +668,85 @@ class _ProductPostState extends State<ProductPost> {
                   decoration: BoxDecoration(
                       border: Border.all(width: 1, color: MyTheme.light_grey),
                       borderRadius: BorderRadius.circular(10)),
-                  child: _image != null
-                      ? InkWell(
-                          onTap: () {
-                            selectImage();
-                          },
-                          child: Image.memory(
-                            _image!,
-                            fit: BoxFit.cover,
-                          ),
-                        )
+                  child: _mediaFileList != null
+                      ? _mediaFileList!.isNotEmpty
+                          ? InkWell(
+                              onTap: () {
+                                selectImages();
+                              },
+                              child: Center(
+                                child: CarouselSlider(
+                                  options: CarouselOptions(
+                                    enlargeCenterPage: true,
+                                    enableInfiniteScroll: false,
+                                    autoPlay: false,
+                                  ),
+                                  // items: _mediaFileList!
+                                  //     .map((e) => ClipRRect(
+                                  //         borderRadius: BorderRadius.circular(8),
+                                  //         child: Stack(
+                                  //             fit: StackFit.expand,
+                                  //             children: [
+                                  //               Image.memory(
+                                  //                 e,
+                                  //                 width: 500,
+                                  //                 height: 1500,
+                                  //                 fit: BoxFit.cover,
+                                  //               )
+                                  //             ])))
+                                  //     .toList(),
+                                  items: _mediaFileList!.map((XFile imageFile) {
+                                    return Builder(
+                                      builder: (BuildContext context) {
+                                        return Image.file(File(imageFile.path));
+                                      },
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            )
+                          : Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.add,
+                                      color: MyTheme.primary_color,
+                                    ),
+                                    Text(
+                                      "Add Featured Image",
+                                      style: TextStyle(
+                                          color: MyTheme.primary_color,
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  "Supported formats are JPG and PNG",
+                                  style: TextStyle(
+                                    color: MyTheme.dark_grey,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                Divider(),
+                                InkWell(
+                                  onTap: () {
+                                    selectImages();
+                                  },
+                                  child: Container(
+                                    height: 110,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Image.asset(
+                                      "assets/imgplaceholder.png",
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
                       : Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -614,7 +776,7 @@ class _ProductPostState extends State<ProductPost> {
                             Divider(),
                             InkWell(
                               onTap: () {
-                                selectImage();
+                                selectImages();
                               },
                               child: Container(
                                 height: 110,

@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 
 // @immutable
 // sealed class WeatherEvent {}
@@ -15,6 +14,7 @@ class ProfileDataRequested extends ProfileEvent {
   ProfileDataRequested();
 }
 
+// ignore: must_be_immutable
 class ProfileImageUpdateRequested extends ProfileEvent {
   Uint8List file;
   ProfileImageUpdateRequested({

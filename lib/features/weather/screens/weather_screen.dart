@@ -749,6 +749,7 @@ class WeatherDayCard extends StatelessWidget {
       width: MediaQuery.of(context).size.width / 4.15,
       child: Column(
         // mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
             width: double.infinity,
@@ -770,8 +771,7 @@ class WeatherDayCard extends StatelessWidget {
             ),
           ),
           Container(
-            padding:
-                const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+            padding: const EdgeInsets.only(left: 20, right: 20),
             width: double.infinity,
             child: Image.asset(
               image,
@@ -782,13 +782,15 @@ class WeatherDayCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Text(
               desc.toUpperCase(),
+              maxLines: 2,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 10,
                 color: Colors.grey[700],
               ),
             ),
-          )
+          ),
+          SizedBox(),
         ],
       ),
     );

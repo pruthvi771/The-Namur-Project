@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/custom/input_decorations.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
@@ -14,12 +12,9 @@ import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_event.d
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_state.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/more_details.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:toast/toast.dart';
 
@@ -184,23 +179,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ..village = addressName!
       ..pincode = pincode;
 
-    if (savedData != null) {
-      print('object detected');
-      print(savedData.id);
-      var newData = ProfileData()
-        ..id = savedData.id
-        ..updated = savedData.updated
-        ..address = [...savedData.address, address]
-        ..kyc = savedData.kyc
-        ..land = savedData.land;
+    // if (savedData != null) {
+    print('object detected');
+    print(savedData.id);
+    var newData = ProfileData()
+      ..id = savedData.id
+      ..updated = savedData.updated
+      ..address = [...savedData.address, address]
+      ..kyc = savedData.kyc
+      ..land = savedData.land;
 
-      await dataBox.put(newData.id, newData);
-      print('object updated');
+    await dataBox.put(newData.id, newData);
+    print('object updated');
 
-      BlocProvider.of<HiveBloc>(context).add(
-        SyncHiveToFirestoreRequested(profileData: newData),
-      );
-    }
+    BlocProvider.of<HiveBloc>(context).add(
+      SyncHiveToFirestoreRequested(profileData: newData),
+    );
+    // }
 
     _hobliController.clear();
     _villageController.clear();
@@ -1565,7 +1560,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 );
               return Container(
                 color: Colors.white30,
-                child: Text('Error'),
+                child: Text('Something Went Wrong'),
               );
             },
           ),

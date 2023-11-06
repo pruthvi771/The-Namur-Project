@@ -4,23 +4,16 @@ import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_e
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_state.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
-import 'package:active_ecommerce_flutter/features/profile/enum.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart'
     as hiveModels;
 import 'package:active_ecommerce_flutter/features/weather/weather_repository.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
-// import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
-// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:active_ecommerce_flutter/custom/input_decorations.dart';
-import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
-// import 'package:active_ecommerce_flutter/repositories/auth_repository.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:location/location.dart';
-import 'package:otp_text_field/style.dart';
 import 'package:permission_handler/permission_handler.dart'
     as permissionHandler;
 import 'package:toast/toast.dart';
@@ -29,7 +22,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 
 import 'package:active_ecommerce_flutter/screens/main.dart';
-// import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 
 class Otp extends StatefulWidget {
   Otp({
@@ -64,9 +56,6 @@ class Otp extends StatefulWidget {
 }
 
 class _OtpState extends State<Otp> {
-  //controllers
-  TextEditingController _verificationCodeController = TextEditingController();
-  OtpFieldController _verificationController = OtpFieldController();
   WeatherRepository _weatherRepository = WeatherRepository();
 
   @override
@@ -85,18 +74,6 @@ class _OtpState extends State<Otp> {
     super.dispose();
   }
 
-  // onTapResend() async {
-  //   var resendCodeResponse = await AuthRepository()
-  //       .getResendCodeResponse(widget.user_id, widget.verify_by);
-  //   if (resendCodeResponse.result == false) {
-  //     ToastComponent.showDialog(resendCodeResponse.message!,
-  //         gravity: Toast.center, duration: Toast.lengthLong);
-  //   } else {
-  //     ToastComponent.showDialog(resendCodeResponse.message!,
-  //         gravity: Toast.center, duration: Toast.lengthLong);
-  //   }
-  // }
-
   onPressConfirm(BuildContext buildContext) async {
     // var code = _verificationController.toString();
     // String code = otp.join('');
@@ -113,7 +90,7 @@ class _OtpState extends State<Otp> {
     }
     if (code.length < 6) {
       ToastComponent.showDialog(
-        'Please enter full code',
+        AppLocalizations.of(context)!.enter_full_code,
         gravity: Toast.center,
         duration: Toast.lengthLong,
       );
@@ -198,7 +175,6 @@ class _OtpState extends State<Otp> {
   @override
   Widget build(BuildContext context) {
     // String _verify_by = widget.verify_by; //phone or email
-    final _screen_height = MediaQuery.of(context).size.height;
     final _screen_width = MediaQuery.of(context).size.width;
 
     AuthRepository _authRepository = AuthRepository();
@@ -312,31 +288,6 @@ class _OtpState extends State<Otp> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Center(
-                        //   child: OTPTextField(
-                        //     obscureText: true,
-                        //     controller: _verificationController,
-                        //     length: 6, // Change this to 6 for a 6-digit OTP
-                        //     width: MediaQuery.of(context).size.width,
-                        //     textFieldAlignment: MainAxisAlignment.spaceAround,
-                        //     otpFieldStyle: OtpFieldStyle(
-                        //       backgroundColor: Color(0xffC3FF77),
-                        //     ),
-                        //     fieldWidth: 40,
-                        //     fieldStyle: FieldStyle.box,
-                        //     outlineBorderRadius: 10,
-                        //     style: TextStyle(fontSize: 17),
-                        //     onChanged: (pin) {
-                        //       setState(() {
-                        //         otp = pin.split('');
-                        //       });
-                        //       print("Changed: " + pin);
-                        //     },
-                        //     onCompleted: (pin) {
-                        //       print("Completed: " + pin);
-                        //     },
-                        //   ),
-                        // ),
                         Center(
                           child: OTPInputField(
                             onCompleted: (value) {
@@ -353,7 +304,7 @@ class _OtpState extends State<Otp> {
                             },
                           ),
                         ),
-                        SizedBox(height: 80),
+                        SizedBox(height: 20),
                         Center(
                           child: Padding(
                             padding: const EdgeInsets.only(top: 40.0),

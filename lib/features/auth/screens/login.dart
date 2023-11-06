@@ -66,13 +66,13 @@ class _LoginState extends State<Login> {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.bottom]);
     super.initState();
-    fetch_country();
+    // fetch_country();
   }
 
-  fetch_country() async {
-    var data = await AddressRepository().getCountryList();
-    data.countries.forEach((c) => countries_code.add(c.code));
-  }
+  // fetch_country() async {
+  //   var data = await AddressRepository().getCountryList();
+  //   data.countries.forEach((c) => countries_code.add(c.code));
+  // }
 
   @override
   void dispose() {
@@ -193,8 +193,9 @@ class _LoginState extends State<Login> {
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) async {
           if (state is Authenticated) {
-            ToastComponent.showDialog('Login Successful',
-                gravity: Toast.center, duration: Toast.lengthLong);
+            // ToastComponent.showDialog(AppLocalizations.of(context)!
+            //                               .if_you_are_finding_any_problem_while_logging_in,
+            //     gravity: Toast.center, duration: Toast.lengthLong);
 
             await checkLocationPermission();
 
@@ -210,8 +211,12 @@ class _LoginState extends State<Login> {
                 gravity: Toast.center, duration: Toast.lengthLong);
           }
           if (state is PhoneVerificationCompleted) {
-            ToastComponent.showDialog('OTP sent to your phone number',
-                gravity: Toast.center, duration: Toast.lengthLong);
+            // ToastComponent.showDialog('OTP sent to your phone number',
+            //     gravity: Toast.center, duration: Toast.lengthLong);
+            ToastComponent.showDialog(
+                AppLocalizations.of(context)!.otp_sent_to_phone,
+                gravity: Toast.center,
+                duration: Toast.lengthLong);
 
             Navigator.push(
                 context,
@@ -228,6 +233,9 @@ class _LoginState extends State<Login> {
               return Scaffold(
                 body: Center(
                   child: CircularProgressIndicator(),
+                  // child: Text(
+                  //   'loading',
+                  // ),
                 ),
               );
             if (state is Authenticated)
@@ -288,10 +296,6 @@ class _LoginState extends State<Login> {
                   ),
                 ),
 
-                // SizedBox(height: 10),
-
-                // SizedBox(height: 30),
-
                 // phone text field
                 Expanded(
                   child: Column(
@@ -310,7 +314,8 @@ class _LoginState extends State<Login> {
                                 disableLengthCheck: true,
                                 decoration: InputDecoration(
                                   contentPadding: EdgeInsets.all(8),
-                                  labelText: 'Mobile Number',
+                                  labelText: AppLocalizations.of(context)!
+                                      .phone_number_ucf,
                                   labelStyle: TextStyle(
                                     color: Colors.grey,
                                     fontSize: 13,
@@ -365,7 +370,8 @@ class _LoginState extends State<Login> {
                                       borderRadius: const BorderRadius.all(
                                           Radius.circular(10.0))),
                                   child: Text(
-                                    'Login',
+                                    AppLocalizations.of(context)!
+                                        .login_screen_log_in,
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 14,
@@ -430,7 +436,8 @@ class _LoginState extends State<Login> {
                                                   Registration()));
                                     },
                                     child: Text(
-                                      'Create Account?',
+                                      AppLocalizations.of(context)!
+                                          .login_screen_or_create_new_account,
                                       style: TextStyle(
                                         fontSize: 13,
                                         fontWeight: FontWeight.w700,
@@ -448,80 +455,6 @@ class _LoginState extends State<Login> {
                     ],
                   ),
                 ),
-
-                //login button
-
-                // SizedBox(
-                //   height: 10,
-                // ),
-
-                // //or and divider
-                // Padding(
-                //   padding: EdgeInsets.symmetric(horizontal: 120),
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.center,
-                //     children: [
-                //       Expanded(
-                //         child: Divider(
-                //           thickness: 3,
-                //           height: 10,
-                //         ),
-                //       ),
-                //       Padding(
-                //         padding: EdgeInsets.symmetric(horizontal: 10),
-                //         child: Text('OR',
-                //             style: TextStyle(
-                //                 color: MyTheme.font_grey,
-                //                 fontWeight: FontWeight.w600,
-                //                 fontSize: 12,
-                //                 fontFamily: 'Poppins')),
-                //       ),
-                //       Expanded(
-                //         child: Divider(
-                //           thickness: 3,
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // ),
-
-                // SizedBox(
-                //   height: 10,
-                // ),
-
-                // // signup button
-                // Padding(
-                //   padding: const EdgeInsets.only(left: 30.0, right: 30),
-                //   child: GestureDetector(
-                //     onTap: () {
-                //       Navigator.push(
-                //           context,
-                //           MaterialPageRoute(
-                //               builder: (context) => Registration()));
-                //     },
-                //     child: Container(
-                //       height: 40,
-                //       decoration: BoxDecoration(
-                //           border: Border.all(color: MyTheme.primary_color),
-                //           borderRadius: BorderRadius.circular(10)),
-                //       child: Btn.minWidthFixHeight(
-                //           minWidth: MediaQuery.of(context).size.width,
-                //           height: 50,
-                //           //  color: MyTheme.amber,
-                //           shape: RoundedRectangleBorder(
-                //               borderRadius: const BorderRadius.all(
-                //                   Radius.circular(10.0))),
-                //           child: Text(
-                //             'Create Account',
-                //             style: TextStyle(
-                //                 color: MyTheme.primary_color,
-                //                 fontFamily: 'Poppins'),
-                //           )),
-                //     ),
-                //   ),
-                // ),
-
-                // // google login
               ],
             ),
           )

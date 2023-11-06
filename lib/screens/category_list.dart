@@ -132,7 +132,7 @@ class _CategoryListState extends State<CategoryList> {
             drawer: const MainDrawer(),
             backgroundColor: Colors.transparent,
             appBar: AppBar(
-              elevation: 0,
+              // elevation: 0,
               // backgroundColor: MyTheme.primary_color,
               flexibleSpace: Container(
                 decoration: const BoxDecoration(
@@ -169,210 +169,227 @@ class _CategoryListState extends State<CategoryList> {
     return FutureBuilder(
         future: _getProfileDataFuture,
         builder: (context, snapshot) {
-          profileProgress =
-              calculatingProfileProgress(profileData: snapshot.data!);
-          print('profile progress is $profileProgress');
           if (snapshot.hasData) {
-            return CustomScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              slivers: [
-                SliverList(
-                    delegate: SliverChildListDelegate([
-                  TitleBar(),
+            profileProgress =
+                calculatingProfileProgress(profileData: snapshot.data!);
+            print('profile progress is $profileProgress');
+            return Column(
+              children: [
+                TitleBar(),
+                Expanded(
+                  child: CustomScrollView(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    slivers: [
+                      SliverList(
+                          delegate: SliverChildListDelegate([
+                        // TitleBar(),
 
-                  // screen database button
-                  // TextButton(
-                  //     onPressed: () {
-                  //       Navigator.push(
-                  //           context,
-                  //           MaterialPageRoute(
-                  //               builder: (context) => ScreenDatabase()));
-                  //     },
-                  //     child: Text('Screen database')),
+                        // screen database button
+                        // TextButton(
+                        //     onPressed: () {
+                        //       Navigator.push(
+                        //           context,
+                        //           MaterialPageRoute(
+                        //               builder: (context) => ScreenDatabase()));
+                        //     },
+                        //     child: Text('Screen database')),
 
-                  SizedBox(height: 24),
+                        SizedBox(height: 15),
 
-                  //Buy Sell Button Design
-                  Center(
-                    child: Stack(
-                      children: [
-                        Container(
-                          height: 44,
-                          width: 162,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: MyTheme.light_grey,
-                              border: Border.all(color: MyTheme.light_grey)),
-                          child: Center(
-                              child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //Buy Sell Button Design
+                        Center(
+                          child: Stack(
                             children: [
-                              SizedBox(),
-                              InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    color = "sell";
-                                    isBuyActive = false;
-                                    isvalue = false;
-                                    CategoryList();
-                                  });
-                                  //  Navigator.push(context, MaterialPageRoute(builder: (context)=> ProductInventory() ));
-                                },
-                                child: Container(
-                                  height: 44,
-                                  width: 77,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
-                                      color: !isBuyActive
-                                          ? MyTheme.primary_color
-                                          : MyTheme.light_grey),
-                                  child: Center(
-                                    child: Text(
-                                      "SELL",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                        color: !isBuyActive
-                                            ? MyTheme.white
-                                            : Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )),
-                        ),
-                        Positioned(
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                isBuyActive = true;
-                                isvalue = true;
-                              });
-                            },
-                            child: Container(
-                              height: 44,
-                              width: 77,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  color: isBuyActive
-                                      ? MyTheme.primary_color
-                                      : MyTheme.light_grey),
-                              child: Center(
-                                child: Text(
-                                  "BUY",
-                                  textAlign: TextAlign.right,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                    color: isBuyActive
-                                        ? MyTheme.white
-                                        : Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-
-                  // buy sell button design closed
-
-                  SizedBox(height: 24),
-
-                  // Category hexagonal widget design start
-                  isBuyActive
-                      ? buildCategoryList(isBuy: true)
-                      : ClipRRect(
-                          child: Stack(children: [
-                            IgnorePointer(
-                              ignoring: profileProgress == 1 ? false : true,
-                              child: buildCategoryList(isBuy: false),
-                            ),
-                            profileProgress == 1
-                                ? SizedBox.shrink()
-                                : Positioned.fill(
-                                    child: Center(
-                                      child: BackdropFilter(
-                                        filter: ImageFilter.blur(
-                                            sigmaX: 10, sigmaY: 10),
-                                        child: Container(
-                                          // color: Colors.black.withOpacity(0.5),
-                                          child: Center(
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(30),
-                                              child: Text(
-                                                'Complete Your Profile to Become a Seller',
-                                                style: TextStyle(
-                                                    fontSize: 20,
-                                                    color: Colors.black,
-                                                    fontWeight:
-                                                        FontWeight.w700),
-                                                textAlign: TextAlign
-                                                    .center, // Align text to the center
-                                              ),
+                              Container(
+                                height: 44,
+                                width: 162,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: MyTheme.light_grey,
+                                    border:
+                                        Border.all(color: MyTheme.light_grey)),
+                                child: Center(
+                                    child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SizedBox(),
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          color = "sell";
+                                          isBuyActive = false;
+                                          isvalue = false;
+                                          CategoryList();
+                                        });
+                                        //  Navigator.push(context, MaterialPageRoute(builder: (context)=> ProductInventory() ));
+                                      },
+                                      child: Container(
+                                        height: 44,
+                                        width: 77,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            color: !isBuyActive
+                                                ? MyTheme.primary_color
+                                                : MyTheme.light_grey),
+                                        child: Center(
+                                          child: Text(
+                                            "SELL",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                              color: !isBuyActive
+                                                  ? MyTheme.white
+                                                  : Colors.black,
                                             ),
                                           ),
                                         ),
                                       ),
                                     ),
+                                  ],
+                                )),
+                              ),
+                              Positioned(
+                                child: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      isBuyActive = true;
+                                      isvalue = true;
+                                    });
+                                  },
+                                  child: Container(
+                                    height: 44,
+                                    width: 77,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: isBuyActive
+                                            ? MyTheme.primary_color
+                                            : MyTheme.light_grey),
+                                    child: Center(
+                                      child: Text(
+                                        "BUY",
+                                        textAlign: TextAlign.right,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: isBuyActive
+                                              ? MyTheme.white
+                                              : Colors.black,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                          ]),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
 
-                  // Calender widget design start
-                  Column(
-                    children: [
-                      Stack(
-                        children: [
-                          HexagonWidget.flat(
-                            width: 122,
-                            cornerRadius: 15,
-                            color: Colors.black,
-                            elevation: 3,
-                          ),
-                          Positioned(
-                            top: 1,
-                            left: 1,
-                            right: 1,
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Calender()));
-                              },
-                              child: HexagonWidget.flat(
-                                  width: 120,
+                        // buy sell button design closed
+
+                        SizedBox(height: 10),
+
+                        // Category hexagonal widget design start
+                        isBuyActive
+                            ? buildCategoryList(isBuy: true)
+                            : ClipRRect(
+                                child: Stack(children: [
+                                  IgnorePointer(
+                                    ignoring:
+                                        profileProgress == 1 ? false : true,
+                                    child: buildCategoryList(isBuy: false),
+                                  ),
+                                  profileProgress == 1
+                                      ? SizedBox.shrink()
+                                      : Positioned.fill(
+                                          child: Center(
+                                            child: BackdropFilter(
+                                              filter: ImageFilter.blur(
+                                                  sigmaX: 10, sigmaY: 10),
+                                              child: Container(
+                                                // color: Colors.black.withOpacity(0.5),
+                                                child: Center(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            30),
+                                                    child: Text(
+                                                      'Complete Your Profile to Become a Seller',
+                                                      style: TextStyle(
+                                                          fontSize: 20,
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.w700),
+                                                      textAlign: TextAlign
+                                                          .center, // Align text to the center
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                ]),
+                              ),
+
+                        // Calender widget design start
+                        Column(
+                          children: [
+                            Stack(
+                              children: [
+                                HexagonWidget.flat(
+                                  width: 122,
                                   cornerRadius: 15,
-                                  color: MyTheme.field_color,
+                                  color: Colors.black,
                                   elevation: 3,
-                                  child: Image.asset('assets/calender.png')),
+                                ),
+                                Positioned(
+                                  top: 1,
+                                  left: 1,
+                                  right: 1,
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Calender()));
+                                    },
+                                    child: HexagonWidget.flat(
+                                        width: 120,
+                                        cornerRadius: 15,
+                                        color: MyTheme.field_color,
+                                        elevation: 3,
+                                        child:
+                                            Image.asset('assets/calender.png')),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 5),
-                      Text(
-                        "Calender",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600, fontFamily: 'Poppins'),
-                      ),
+                            SizedBox(height: 5),
+                            Text(
+                              "Calender",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'Poppins'),
+                            ),
+                          ],
+                        ),
+
+                        Container(
+                          height: widget.is_base_category ? 90 : 90,
+                        ),
+                      ]))
                     ],
                   ),
-
-                  Container(
-                    height: widget.is_base_category ? 90 : 90,
-                  ),
-                ]))
+                ),
               ],
             );
           }
           if (snapshot.hasError) {
+            _getProfileDataFuture = _getProfileData();
             return Text('Error');
           }
           return buildShimmer();
@@ -403,7 +420,7 @@ class _CategoryListState extends State<CategoryList> {
       ),
       itemCount: 4,
       padding: EdgeInsets.only(
-          left: 18, right: 18, bottom: widget.is_base_category ? 30 : 0),
+          left: 18, right: 18, bottom: widget.is_base_category ? 10 : 0),
       scrollDirection: Axis.vertical,
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
@@ -424,9 +441,9 @@ class _CategoryListState extends State<CategoryList> {
       child: InkWell(
         onTap: () {
           print('Tapped index $index');
-          if (index == 2 || index == 3) {
-            return;
-          }
+          // if (index == 2 || index == 3) {
+          //   return;
+          // }
           ParentEnum? parentEnum = index == 0
               ? ParentEnum.animal
               : index == 1
@@ -441,7 +458,10 @@ class _CategoryListState extends State<CategoryList> {
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  return ParentScreen(parentEnum: parentEnum!);
+                  return ParentScreen(
+                      parentEnum: parentEnum!,
+                      isSecondHand:
+                          parentEnum == ParentEnum.land ? true : false);
                 },
               ),
             );
@@ -453,6 +473,7 @@ class _CategoryListState extends State<CategoryList> {
                   return ParentScreen(
                     parentEnum: parentEnum!,
                     isBuy: true,
+                    isSecondHand: parentEnum == ParentEnum.land ? true : false,
                   );
                 },
               ),

@@ -6,7 +6,6 @@ import 'package:active_ecommerce_flutter/features/sellAndBuy/services/sell_bloc/
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/product_post.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -14,9 +13,11 @@ import 'package:toast/toast.dart';
 
 class ProductInventory extends StatefulWidget {
   final SubCategoryEnum subCategoryEnum;
+  final bool isSecondHand;
   const ProductInventory({
     Key? key,
     required this.subCategoryEnum,
+    required this.isSecondHand,
   }) : super(key: key);
 
   @override
@@ -34,6 +35,7 @@ class _ProductInventoryState extends State<ProductInventory> {
   void initState() {
     BlocProvider.of<SellBloc>(context).add(ProductsForSubCategoryRequested(
       subCategory: nameForSubCategoryEnum[widget.subCategoryEnum]!,
+      isSecondHand: widget.isSecondHand,
     ));
     super.initState();
     // fetchAll();
@@ -88,6 +90,7 @@ class _ProductInventoryState extends State<ProductInventory> {
                         builder: (context) => ProductPost(
                               subCategoryEnum: widget.subCategoryEnum,
                               alreadyExistingProductNames: productNames,
+                              isSecondHand: widget.isSecondHand,
                             )));
               },
               child: Image.asset("assets/add 2.png"),
@@ -119,6 +122,7 @@ class _ProductInventoryState extends State<ProductInventory> {
           BlocProvider.of<SellBloc>(context)
               .add(ProductsForSubCategoryRequested(
             subCategory: nameForSubCategoryEnum[widget.subCategoryEnum]!,
+            isSecondHand: widget.isSecondHand,
           ));
         }
       },
@@ -162,6 +166,7 @@ class _ProductInventoryState extends State<ProductInventory> {
                                           subCategoryEnum:
                                               widget.subCategoryEnum,
                                           alreadyExistingProductNames: [],
+                                          isSecondHand: widget.isSecondHand,
                                         )));
                           },
                         ),
@@ -188,11 +193,17 @@ class _ProductInventoryState extends State<ProductInventory> {
                         sellerId: state.products[index].sellerId,
                         productDescription:
                             state.products[index].productDescription,
+                        isSecondHand: state.products[index].isSecondHand,
                       );
                     },
                   );
           }
           if (state is ProductLoading) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (state is ProductAddEditDeleteLoading) {
             return Center(
               child: CircularProgressIndicator(),
             );
@@ -220,6 +231,7 @@ class ProductInventoryWidget extends StatelessWidget {
     required this.subCategoryEnum,
     required this.sellerId,
     required this.productDescription,
+    required this.isSecondHand,
     // required this.
   });
 
@@ -227,13 +239,14 @@ class ProductInventoryWidget extends StatelessWidget {
   final String productName;
   final String productSubSubCategory;
   final double productPrice;
-  final String imageURL;
+  final List<dynamic> imageURL;
   final int productQuantity;
   final String quantityUnit;
   final String sellerId;
   final String productDescription;
   // final String priceType;
   final SubCategoryEnum subCategoryEnum;
+  final bool isSecondHand;
 
   void onPressedDelete(BuildContext context, String productId) {
     BlocProvider.of<SellBloc>(context).add(DeleteProductRequested(
@@ -246,12 +259,13 @@ class ProductInventoryWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 20.0, right: 20, top: 10),
       child: Material(
-        elevation: 1,
-        borderRadius: BorderRadius.circular(15),
+        elevation: 0.5,
+        borderRadius: BorderRadius.circular(5),
         child: Container(
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              border: Border.all(width: 1, color: MyTheme.medium_grey)),
+              borderRadius: BorderRadius.circular(5),
+              border: Border.all(
+                  width: 1, color: MyTheme.medium_grey.withOpacity(0.5))),
           height: 140,
           width: MediaQuery.of(context).size.width,
           child: Padding(
@@ -266,8 +280,8 @@ class ProductInventoryWidget extends StatelessWidget {
                     child: Text(productName,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
+                          fontSize: 19,
+                          fontWeight: FontWeight.w600,
                         )),
                   ),
                 ),
@@ -283,9 +297,9 @@ class ProductInventoryWidget extends StatelessWidget {
                         child: Container(
                             padding: EdgeInsets.all(7),
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(5),
                               child: Image.network(
-                                imageURL,
+                                imageURL[0],
                                 fit: BoxFit.cover,
                               ),
                             )),
@@ -308,7 +322,7 @@ class ProductInventoryWidget extends StatelessWidget {
                                       productSubSubCategory,
                                       style: TextStyle(
                                           fontSize: 15,
-                                          fontWeight: FontWeight.w600),
+                                          fontWeight: FontWeight.w500),
                                     ),
                                     Text(
                                       "Stock: $productQuantity x $quantityUnit",
@@ -349,6 +363,8 @@ class ProductInventoryWidget extends StatelessWidget {
                                                           subCategoryEnum,
                                                       alreadyExistingProductNames: [],
                                                       isProductEditScreen: true,
+                                                      isSecondHand:
+                                                          isSecondHand,
                                                       sellProduct: SellProduct(
                                                         id: productId,
                                                         productName:
@@ -367,6 +383,8 @@ class ProductInventoryWidget extends StatelessWidget {
                                                             productSubSubCategory,
                                                         imageURL: imageURL,
                                                         sellerId: sellerId,
+                                                        isSecondHand:
+                                                            isSecondHand,
                                                       ),
                                                     )));
                                       },

@@ -1,5 +1,6 @@
-import 'dart:typed_data';
+import 'package:active_ecommerce_flutter/utils/enums.dart';
 import 'package:equatable/equatable.dart';
+import 'package:image_picker/image_picker.dart';
 
 abstract class SellEvent extends Equatable {
   const SellEvent();
@@ -18,7 +19,9 @@ class AddProductRequested extends SellEvent {
   final String category;
   final String subCategory;
   final String subSubCategory;
-  final Uint8List image;
+  final List<XFile> imageList;
+  final bool isSecondHand;
+  final ProductType productType;
 
   const AddProductRequested({
     required this.productName,
@@ -30,7 +33,9 @@ class AddProductRequested extends SellEvent {
     required this.category,
     required this.subCategory,
     required this.subSubCategory,
-    required this.image,
+    required this.imageList,
+    required this.isSecondHand,
+    required this.productType,
   });
 
   @override
@@ -43,7 +48,7 @@ class AddProductRequested extends SellEvent {
         category,
         subCategory,
         subSubCategory,
-        image,
+        imageList,
       ];
 }
 
@@ -90,9 +95,11 @@ class EditProductRequested extends SellEvent {
 
 class ProductsForSubCategoryRequested extends SellEvent {
   final String subCategory;
+  final bool isSecondHand;
 
   const ProductsForSubCategoryRequested({
     required this.subCategory,
+    required this.isSecondHand,
   });
 
   @override

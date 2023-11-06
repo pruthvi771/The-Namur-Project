@@ -1,13 +1,11 @@
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_expanded_tile/flutter_expanded_tile.dart';
-import 'package:flutter_html/flutter_html.dart';
 
 class ExpandedTileWidget extends StatelessWidget {
   final ExpandedTileController _controller;
   final String title;
   final Widget _children;
-  final Widget? _imageIcon;
   // final EdgeInsets? _contentPadding;
 
   ExpandedTileWidget({
@@ -19,18 +17,11 @@ class ExpandedTileWidget extends StatelessWidget {
     EdgeInsets? contentPadding,
   })  : _controller = controller,
         _children = children,
-        _imageIcon = imageIcon,
         // _contentPadding = contentPadding,
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Widget trailingWidget = _imageIcon ??
-        Image.asset(
-          'assets/dropdown.png',
-          height: 25,
-        );
-
     // final contentPaddingWidget = _contentPadding ??
     //     EdgeInsets.symmetric(horizontal: 15, vertical: 8);
 

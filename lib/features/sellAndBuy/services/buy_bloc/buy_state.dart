@@ -1,4 +1,3 @@
-import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
 import 'package:equatable/equatable.dart';
 
@@ -37,14 +36,3 @@ final class BuyError extends BuyState {
   @override
   List<Object> get props => [message];
 }
-
-// class SellerDataReceived extends BuyState {
-//   final BuyerData sellerData;
-
-//   const SellerDataReceived({
-//     required this.sellerData,
-//   });
-
-//   @override
-//   List<Object> get props => [sellerData];
-// }

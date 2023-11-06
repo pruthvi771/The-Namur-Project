@@ -9,8 +9,9 @@ class SellProduct {
   final String category;
   final String subCategory;
   final String subSubCategory;
-  final String imageURL;
+  final List<dynamic> imageURL;
   final String sellerId;
+  final bool isSecondHand;
 
   SellProduct({
     required this.id,
@@ -24,5 +25,6 @@ class SellProduct {
     required this.subSubCategory,
     required this.imageURL,
     required this.sellerId,
+    required this.isSecondHand,
   });
 }

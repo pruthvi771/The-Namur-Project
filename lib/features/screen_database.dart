@@ -1,4 +1,5 @@
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/machine_rent_form.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/parent_screen.dart';
 import 'package:active_ecommerce_flutter/screens/Payment_info/payment_info_screen.dart';
 import 'package:active_ecommerce_flutter/screens/auction_products.dart';
@@ -88,6 +89,16 @@ class _ScreenDatabaseState extends State<ScreenDatabase> {
           parentEnum: ParentEnum.animal,
         )
       ],
+      // [
+      //   'Machine Rent Form',
+      //   MachineRentForm(
+      //     imageURL: [
+      //       'https://www.deere.co.in/assets/images/region-1/products/tractors/d-series-tractors/john-deere-india-d-series-tractors.jpg'
+      //     ],
+      //     machineName: 'John Deere 5310',
+      //     machinePrice: 1000,
+      //   )
+      // ],
       ['Product Inventory', ProductInventory()],
       ['More Detail', MoreDetail()],
       ['Product Post', ProductPost()],
@@ -108,7 +119,7 @@ class _ScreenDatabaseState extends State<ScreenDatabase> {
       ['Wishlist', Wishlist()],
       ['wholesale products', WholeSaleProducts()],
       ['wallet', Wallet()],
-      ['video description', VideoDescription()],
+      ['video description (DO NOT ENTER)', VideoDescription()],
       ['top selling products', TopSellingProducts()],
       ['todays deal products', TodaysDealProducts()],
       ['splash', Splash()],

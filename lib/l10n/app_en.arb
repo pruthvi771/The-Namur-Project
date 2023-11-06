@@ -640,5 +640,10 @@
   "your_categories_ucf": "Your Categories",
   "your_delivery_location": "Your delivery location . . .",
   "your_ordered_all_lower": "you ordered",
-  "youtube_ucf": "Youtube"
+  "youtube_ucf": "Youtube",
+  "enter_full_code": "Enter full code",
+  "otp_sent_to_phone": "OTP sent to your phone number",
+  "rent_a_machine" : "Rent A Machine",
+  "book" : "Book",
+  "no_image_found" : "No Image Found"
 }

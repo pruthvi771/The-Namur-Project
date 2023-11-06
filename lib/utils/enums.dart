@@ -1,6 +1,12 @@
 import 'package:active_ecommerce_flutter/features/profile/address_list.dart'
     as addressList;
 
+enum ProductType {
+  newProduct,
+  secondHand,
+  // onRent,
+}
+
 enum ProductQuantity {
   units,
   wkg,
@@ -40,8 +46,18 @@ var categoryListForParentEnum = {
     CategoryEnum.crops,
   ],
   ParentEnum.machine: [
-    CategoryEnum.electronics,
     CategoryEnum.jcb,
+    CategoryEnum.electronics,
+    CategoryEnum.equipments,
+  ],
+  ParentEnum.land: [
+    CategoryEnum.animals,
+    CategoryEnum.birds,
+    CategoryEnum.vegetables,
+    CategoryEnum.fruits,
+    CategoryEnum.crops,
+    CategoryEnum.jcb,
+    CategoryEnum.electronics,
     CategoryEnum.equipments,
   ],
 };
@@ -71,6 +87,19 @@ var subCategoryListsForCategory = {
     SubCategoryEnum.barley,
     SubCategoryEnum.bengalGram,
     SubCategoryEnum.castor,
+  ],
+  CategoryEnum.electronics: [
+    SubCategoryEnum.mobile,
+    SubCategoryEnum.laptop,
+    SubCategoryEnum.tv,
+  ],
+  CategoryEnum.jcb: [
+    SubCategoryEnum.jcb,
+  ],
+  CategoryEnum.equipments: [
+    SubCategoryEnum.tractor,
+    SubCategoryEnum.rotavator,
+    SubCategoryEnum.cultivator,
   ],
 };
 
@@ -234,6 +263,19 @@ enum SubCategoryEnum {
   // MISCELLANEOUS
   egg,
   chicken,
+
+  // ELECTRONICS
+  mobile,
+  laptop,
+  tv,
+
+  // JCB
+  jcb,
+
+  // EQUIPMENTS
+  tractor,
+  rotavator,
+  cultivator,
 }
 
 var nameForSubCategoryEnum = {
@@ -352,6 +394,13 @@ var nameForSubCategoryEnum = {
   SubCategoryEnum.marigold: "Marigold",
   SubCategoryEnum.egg: "Egg",
   SubCategoryEnum.chicken: "Chicken",
+  SubCategoryEnum.mobile: "Mobile",
+  SubCategoryEnum.laptop: "Laptop",
+  SubCategoryEnum.tv: "TV",
+  SubCategoryEnum.jcb: "JCB",
+  SubCategoryEnum.tractor: "Tractor",
+  SubCategoryEnum.rotavator: "Rotavator",
+  SubCategoryEnum.cultivator: "Cultivator",
 };
 
 // CategoryEnum.animals: [
@@ -447,5 +496,31 @@ var SubSubCategoryList = {
     'Grapes Black',
     'Grapes Green',
     'Grapes Red',
+  ],
+  // SubCategoryEnum.laptop: [
+  //   'Laptop',
+  //   'Laptop Black',
+  //   'Laptop White',
+  // ],
+  // SubCategoryEnum.tv: [
+  //   'TV',
+  //   'TV Black',
+  //   'TV White',
+  // ],
+  SubCategoryEnum.jcb: [
+    'On Rent',
+    'Sell',
+  ],
+  SubCategoryEnum.tractor: [
+    'On Rent',
+    'Sell',
+  ],
+  SubCategoryEnum.rotavator: [
+    'On Rent',
+    'Sell',
+  ],
+  SubCategoryEnum.cultivator: [
+    'On Rent',
+    'Sell',
   ],
 };
