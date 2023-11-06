@@ -10,6 +10,7 @@ import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_state.dart';
 import 'package:active_ecommerce_flutter/features/profile/utils.dart';
 import 'package:active_ecommerce_flutter/presenter/home_presenter.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 // import 'package:active_ecommerce_flutter/screens/setting/setting.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
@@ -140,7 +141,6 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
             key: homeData.scaffoldKey,
             drawer: const MainDrawer(),
             backgroundColor: Colors.transparent,
-            //   appBar: buildCustomAppBar(context),
             body: buildBodyChildren(_profileSection),
           ),
         ],
@@ -234,8 +234,8 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                 "assets/default_profile2.png",
                                 fit: BoxFit.cover,
                               )
-                            : Image.network(
-                                buyerUserData.photoURL!,
+                            : CachedNetworkImage(
+                                imageUrl: buyerUserData.photoURL!,
                                 fit: BoxFit.cover,
                               ),
                       ),

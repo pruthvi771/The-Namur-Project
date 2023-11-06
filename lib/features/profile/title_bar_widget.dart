@@ -13,6 +13,7 @@ import 'package:active_ecommerce_flutter/features/profile/screens/profile.dart';
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_event.dart';
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_state.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -147,8 +148,8 @@ class _TitleBarState extends State<TitleBar> {
                                               "assets/default_profile2.png",
                                               fit: BoxFit.cover,
                                             )
-                                          : Image.network(
-                                              buyerUserData.photoURL!,
+                                          : CachedNetworkImage(
+                                              imageUrl: buyerUserData.photoURL!,
                                               fit: BoxFit.cover,
                                             ),
                                     ),

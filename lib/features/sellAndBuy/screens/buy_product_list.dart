@@ -3,6 +3,7 @@ import 'package:active_ecommerce_flutter/features/sellAndBuy/models/subSubCatego
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/machine_rent_form.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/product_details_screen.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
@@ -392,8 +393,8 @@ class _BuyProductListState extends State<BuyProductList> {
                             )
                           : ClipRRect(
                               borderRadius: BorderRadius.circular(5),
-                              child: Image.network(
-                                imageURL[0],
+                              child: CachedNetworkImage(
+                                imageUrl: imageURL[0],
                                 fit: BoxFit.cover,
                               ),
                             )),

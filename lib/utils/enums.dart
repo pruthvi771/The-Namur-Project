@@ -39,6 +39,7 @@ var categoryListForParentEnum = {
   ParentEnum.animal: [
     CategoryEnum.animals,
     CategoryEnum.birds,
+    CategoryEnum.supplies,
   ],
   ParentEnum.food: [
     CategoryEnum.vegetables,
@@ -72,6 +73,11 @@ var subCategoryListsForCategory = {
     SubCategoryEnum.parrot,
     SubCategoryEnum.pigeon,
     SubCategoryEnum.sparrow,
+  ],
+  CategoryEnum.supplies: [
+    SubCategoryEnum.barley,
+    SubCategoryEnum.bengalGram,
+    SubCategoryEnum.castor,
   ],
   CategoryEnum.vegetables: [
     SubCategoryEnum.beans,
@@ -115,6 +121,7 @@ CategoryEnum? findCategoryForSubCategory(SubCategoryEnum subCategory) {
 enum CategoryEnum {
   animals,
   birds,
+  supplies,
   crops,
   vegetables,
   fruits,
@@ -132,6 +139,7 @@ var nameForCategoryEnum = {
   CategoryEnum.electronics: "Electronics",
   CategoryEnum.jcb: "JCB",
   CategoryEnum.equipments: "Equipments",
+  CategoryEnum.supplies: "Supplies",
 };
 
 enum SubCategoryEnum {

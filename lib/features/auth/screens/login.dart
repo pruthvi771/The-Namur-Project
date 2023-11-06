@@ -1,3 +1,4 @@
+import 'package:active_ecommerce_flutter/features/auth/screens/add_phone.dart';
 import 'package:active_ecommerce_flutter/features/auth/screens/otp.dart';
 // import 'package:active_ecommerce_flutter/screens/password_otp.dart';
 import 'package:active_ecommerce_flutter/features/auth/screens/registration.dart';
@@ -192,6 +193,13 @@ class _LoginState extends State<Login> {
           firestoreRepository: _firestoreRepository),
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) async {
+          if (state is NeedToAddPhoneNumberState) {
+            await checkLocationPermission();
+            Navigator.pushAndRemoveUntil(context,
+                MaterialPageRoute(builder: (context) {
+              return AddPhone();
+            }), (newRoute) => false);
+          }
           if (state is Authenticated) {
             // ToastComponent.showDialog(AppLocalizations.of(context)!
             //                               .if_you_are_finding_any_problem_while_logging_in,

@@ -54,8 +54,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<GoogleSignInRequested>((event, emit) async {
       emit(Loading());
       try {
-        await authRepository.loginWithGoogle();
-        emit(Authenticated());
+        bool isNewAccount = await authRepository.loginWithGoogle();
+        if (isNewAccount) {
+          emit(NeedToAddPhoneNumberState());
+        } else {
+          emit(Authenticated());
+        }
       } catch (e) {
         emit(AuthError(e.toString()));
         emit(UnAuthenticated());
