@@ -99,6 +99,13 @@ class SellBloc extends Bloc<SellEvent, SellState> {
           // userId: authRepository.currentUser!.userId,
         );
 
+        if (event.areImagesUpdated) {
+          await sellRepository.deleteProductImagesByProductId(
+              productId: event.productId);
+          await sellRepository.saveProductImages(
+              imageList: event.imageList!, docId: event.productId);
+        }
+
         emit(ProductAddEditDeleteSuccessfully());
       } catch (e) {
         // emit(SellAddProductErrorState(message: e.toString()));

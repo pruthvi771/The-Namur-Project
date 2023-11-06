@@ -5,6 +5,7 @@ import 'package:active_ecommerce_flutter/features/sellAndBuy/services/sell_bloc/
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/sell_bloc/sell_event.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -74,6 +75,7 @@ class _ProductPostState extends State<ProductPost> {
       imageURL = widget.sellProduct!.imageURL;
       _selectedItem = widget.sellProduct!.subSubCategory;
       selectedQuantityUnit = widget.sellProduct!.quantityUnit;
+      imagesOnFirebase = widget.sellProduct!.imageURL;
       // perPiecePrice = widget.sellProduct!.priceType == "Per piece";
     }
   }
@@ -97,30 +99,6 @@ class _ProductPostState extends State<ProductPost> {
 
   final ImagePicker imagePicker = ImagePicker();
 
-  // selectImage() async {
-  //   List<Uint8List> img = await pickImage(ImageSource.gallery);
-  //   print('image uploaded');
-  //   _image = img;
-  //   setState(() {});
-  //   await _displayPickImageDialog(context,
-  //       (double? maxWidth, double? maxHeight, int? quality) async {
-  //     try {
-  //       final List<XFile> pickedFileList = await _picker.pickMultiImage(
-  //         maxWidth: maxWidth,
-  //         maxHeight: maxHeight,
-  //         imageQuality: quality,
-  //       );
-  //       setState(() {
-  //         _mediaFileList = pickedFileList;
-  //       });
-  //     } catch (e) {
-  //       setState(() {
-  //         _pickImageError = e;
-  //       });
-  //     }
-  //   });
-  // }
-
   selectImages() async {
     final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
     if (selectedImages != null || selectedImages!.isNotEmpty) {
@@ -129,29 +107,7 @@ class _ProductPostState extends State<ProductPost> {
     }
   }
 
-  // Center(
-  //       child: CarouselSlider(
-  //         options: CarouselOptions(
-  //           enlargeCenterPage: true,
-  //           // enableInfiniteScroll: true,
-  //           autoPlay: false,
-  //         ),
-  //         items: imageList.map((e) => ClipRRect(
-  //           borderRadius : BorderRadius.circular(8),
-  //           child: Stack(
-  //             fit: StackFit.expand,
-  //             children: [
-  //               Image.asset(
-  //                 e,
-  //                 width: 500,
-  //                 height: 1500,
-  //                 fit: BoxFit.cover,
-  //               )
-  //             ]
-  //           )
-  //         )).toList(),
-  //       ),
-  //     ),
+  List imagesOnFirebase = [];
 
   onPressedPost(BuildContext buildContext) async {
     // print('login clicked');
@@ -332,6 +288,12 @@ class _ProductPostState extends State<ProductPost> {
         category: productCategory,
         subCategory: productSubCategory,
         subSubCategory: productSubSubCategory,
+        areImagesUpdated: _mediaFileList != null
+            ? _mediaFileList!.isNotEmpty
+                ? true
+                : false
+            : false,
+        imageList: _mediaFileList,
         // image: _image!,
       ),
     );
@@ -658,7 +620,106 @@ class _ProductPostState extends State<ProductPost> {
 
         // add image
         widget.isProductEditScreen
-            ? Container()
+            ? Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Container(
+                    height: 200,
+                    padding: EdgeInsets.all(10),
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                        border: Border.all(width: 1, color: MyTheme.light_grey),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: _mediaFileList != null
+                        ? _mediaFileList!.isNotEmpty
+                            ? InkWell(
+                                onTap: () {
+                                  selectImages();
+                                },
+                                child: Center(
+                                  child: CarouselSlider(
+                                    options: CarouselOptions(
+                                      enlargeCenterPage: true,
+                                      enableInfiniteScroll: false,
+                                      autoPlay: false,
+                                    ),
+                                    items:
+                                        _mediaFileList!.map((XFile imageFile) {
+                                      return Builder(
+                                        builder: (BuildContext context) {
+                                          return Image.file(
+                                              File(imageFile.path));
+                                        },
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              )
+                            : Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.add,
+                                        color: MyTheme.primary_color,
+                                      ),
+                                      Text(
+                                        "Add Featured Image",
+                                        style: TextStyle(
+                                            color: MyTheme.primary_color,
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    "Supported formats are JPG and PNG",
+                                    style: TextStyle(
+                                      color: MyTheme.dark_grey,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  Divider(),
+                                  InkWell(
+                                    onTap: () {
+                                      selectImages();
+                                    },
+                                    child: Container(
+                                      height: 110,
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Image.asset(
+                                        "assets/imgplaceholder.png",
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                        : InkWell(
+                            onTap: () {
+                              selectImages();
+                            },
+                            child: Center(
+                              child: CarouselSlider(
+                                options: CarouselOptions(
+                                  enlargeCenterPage: true,
+                                  enableInfiniteScroll: false,
+                                  autoPlay: false,
+                                ),
+                                items: imagesOnFirebase.map((imageURL) {
+                                  return Builder(
+                                    builder: (BuildContext context) {
+                                      // return Image.network(imageURL as String);
+                                      return CachedNetworkImage(
+                                          imageUrl: imageURL as String);
+                                    },
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          )))
             : Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Container(
@@ -682,20 +743,6 @@ class _ProductPostState extends State<ProductPost> {
                                     enableInfiniteScroll: false,
                                     autoPlay: false,
                                   ),
-                                  // items: _mediaFileList!
-                                  //     .map((e) => ClipRRect(
-                                  //         borderRadius: BorderRadius.circular(8),
-                                  //         child: Stack(
-                                  //             fit: StackFit.expand,
-                                  //             children: [
-                                  //               Image.memory(
-                                  //                 e,
-                                  //                 width: 500,
-                                  //                 height: 1500,
-                                  //                 fit: BoxFit.cover,
-                                  //               )
-                                  //             ])))
-                                  //     .toList(),
                                   items: _mediaFileList!.map((XFile imageFile) {
                                     return Builder(
                                       builder: (BuildContext context) {

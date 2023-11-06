@@ -63,6 +63,8 @@ class EditProductRequested extends SellEvent {
   final String category;
   final String subCategory;
   final String subSubCategory;
+  final bool areImagesUpdated;
+  final List<XFile>? imageList;
   // final Uint8List image;
 
   const EditProductRequested({
@@ -75,6 +77,8 @@ class EditProductRequested extends SellEvent {
     required this.category,
     required this.subCategory,
     required this.subSubCategory,
+    required this.areImagesUpdated,
+    this.imageList,
     // required this.image,
   });
 

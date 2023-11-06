@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:active_ecommerce_flutter/custom/box_decorations.dart';
 import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
+import 'package:active_ecommerce_flutter/features/auth/screens/add_phone.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/screen_database.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/parent_screen.dart';
@@ -192,7 +193,7 @@ class _CategoryListState extends State<CategoryList> {
                         //       Navigator.push(
                         //           context,
                         //           MaterialPageRoute(
-                        //               builder: (context) => ScreenDatabase()));
+                        //               builder: (context) => AddPhone()));
                         //     },
                         //     child: Text('Screen database')),
 

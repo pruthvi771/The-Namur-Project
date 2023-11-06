@@ -5,12 +5,16 @@ import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_event.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_state.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_repository.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProductDetails extends StatefulWidget {
   final SellProduct sellProduct;
@@ -42,6 +46,27 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   int _current = 0;
   final CarouselController _controller = CarouselController();
+
+  void openWhatsAppChat(String phoneNumber) async {
+    String formattedPhoneNumber = phoneNumber.replaceAll(RegExp(r'[^\d]'), '');
+    print(formattedPhoneNumber);
+    String whatsappUrl = "https://wa.me/$formattedPhoneNumber";
+    final Uri _url = Uri.parse(whatsappUrl);
+
+    try {
+      if (await canLaunchUrl(_url)) {
+        await launchUrl(
+          _url,
+          mode: LaunchMode.externalApplication,
+        );
+      } else {
+        throw 'Could not launch WhatsApp';
+      }
+    } catch (e) {
+      print(e);
+      // Handle exceptions, if any
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +107,8 @@ class _ProductDetailsState extends State<ProductDetails> {
         SizedBox(
           height: 10,
         ),
+
+        // product name
         Padding(
           padding:
               const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 15),
@@ -96,6 +123,7 @@ class _ProductDetailsState extends State<ProductDetails> {
           ),
         ),
 
+        // product images
         Container(
           height: 300,
           // color: Colors.red[100],
@@ -108,8 +136,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                       borderRadius: BorderRadius.all(
                         Radius.circular(5),
                       ),
-                      child: Image.network(
-                        fileURL,
+                      child: CachedNetworkImage(
+                        imageUrl: fileURL,
                         fit: BoxFit.contain,
                         width: MediaQuery.of(context).size.width,
                       ),
@@ -137,6 +165,7 @@ class _ProductDetailsState extends State<ProductDetails> {
           height: 10,
         ),
 
+        // product image indicator
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: widget.sellProduct.imageURL.asMap().entries.map((entry) {
@@ -423,8 +452,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                               borderRadius: BorderRadius.all(
                                 Radius.circular(10),
                               ),
-                              child: Image.network(
-                                snapshot.data!.photoURL!,
+                              child: CachedNetworkImage(
+                                imageUrl: snapshot.data!.photoURL!,
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -439,7 +468,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                         children: [
                           Text(
                             "Seller",
-                            // "aksbfkjafknangg englkng lkegnang kegne",
                             style: TextStyle(fontSize: 15),
                           ),
                           Text(
@@ -450,6 +478,16 @@ class _ProductDetailsState extends State<ProductDetails> {
                           ),
                         ],
                       ),
+                    ),
+                    IconButton(
+                      icon: FaIcon(
+                        FontAwesomeIcons.whatsapp,
+                        color: Colors.green,
+                        size: 40,
+                      ),
+                      onPressed: () {
+                        openWhatsAppChat(snapshot.data!.phoneNumber!);
+                      },
                     ),
                   ],
                 ),

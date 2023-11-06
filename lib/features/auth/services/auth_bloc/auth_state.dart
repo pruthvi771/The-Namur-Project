@@ -30,6 +30,11 @@ class Authenticated extends AuthState {
   List<Object?> get props => [];
 }
 
+class NeedToAddPhoneNumberState extends AuthState {
+  @override
+  List<Object?> get props => [];
+}
+
 class UnAuthenticated extends AuthState {
   @override
   List<Object?> get props => [];

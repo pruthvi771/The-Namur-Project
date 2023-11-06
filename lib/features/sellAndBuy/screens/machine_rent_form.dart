@@ -143,7 +143,6 @@ class _MachineRentFormState extends State<MachineRentForm> {
                           EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       child: CarouselSlider(
                         options: CarouselOptions(
-                          viewportFraction: 1,
                           height: double.infinity,
                           aspectRatio: 1 / 1.5,
                           enlargeCenterPage: true,

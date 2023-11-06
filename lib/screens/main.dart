@@ -1,7 +1,11 @@
 import 'package:active_ecommerce_flutter/custom/common_functions.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:active_ecommerce_flutter/features/profile/enum.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart'
     as hiveModels;
+import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/cart.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/buy_repository.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/presenter/bottom_appbar_index.dart';
@@ -13,6 +17,7 @@ import 'package:active_ecommerce_flutter/screens/category_list.dart';
 // import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
 // import 'package:active_ecommerce_flutter/features/profile/screens/profile.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -43,6 +48,9 @@ class _MainState extends State<Main> {
   CartCounter counter = CartCounter();
 
   var _children = [];
+
+  final AuthRepository authRepository = AuthRepository();
+  var currentUser;
 
   fetchAll() {
     getCartCount();
@@ -79,23 +87,36 @@ class _MainState extends State<Main> {
         is_base_category: true,
       ),
       MyAccount(),
-      Cart(
-        has_bottomnav: true,
-        from_navigation: true,
-        counter: counter,
-      ),
+      // Cart(
+      //   has_bottomnav: true,
+      //   from_navigation: true,
+      //   counter: counter,
+      // ),
+      CartScreen(),
       Address(
           //   is_base_category: true,
           ),
     ];
+    _getSellerData = getSellerDataFuture();
     fetchAll();
     // TODO: implement initState
     //re appear statusbar in case it was not there in the previous page
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);
     // checkLocationPermission();
+    currentUser = authRepository.currentUser!;
     super.initState();
   }
+
+  late Future<BuyerData> _getSellerData;
+
+  Future<BuyerData> getSellerDataFuture() async {
+    BuyerData user =
+        await BuyRepository().getSellerData(userId: currentUser.userId);
+    return user;
+  }
+
+  bool isExitDialogShowing = false;
 
   @override
   Widget build(BuildContext context) {
@@ -109,13 +130,125 @@ class _MainState extends State<Main> {
           });
           return false;
         } else {
-          CommonFunctions(context).appExitDialog();
+          if (!isExitDialogShowing) {
+            isExitDialogShowing = true;
+            CommonFunctions(context).appExitDialog();
+            Future.delayed(Duration(seconds: 1), () {
+              isExitDialogShowing = false;
+            });
+          }
         }
         return widget.go_back;
       },
       child: Directionality(
         textDirection:
             app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
+        // child: FutureBuilder(
+        //     future: _getSellerData,
+        //     builder: (context, snapshot) {
+        //       if (snapshot.hasData) {
+        //         return Scaffold(
+        //           extendBody: true,
+        //           // body: _children[_currentIndex],
+        //           body: Text(snapshot.data!.phoneNumber!),
+        //           bottomNavigationBar: SizedBox(
+        //             height: 70,
+        //             child: BottomNavigationBar(
+        //               type: BottomNavigationBarType.fixed,
+        //               onTap: onTapped,
+        //               currentIndex: _currentIndex,
+        //               backgroundColor: Colors.white.withOpacity(0.95),
+        //               unselectedItemColor: Color.fromRGBO(168, 175, 179, 1),
+        //               selectedItemColor: MyTheme.primary_color,
+        //               selectedLabelStyle: TextStyle(
+        //                   fontWeight: FontWeight.w700,
+        //                   color: MyTheme.primary_color,
+        //                   fontSize: 12),
+        //               unselectedLabelStyle: TextStyle(
+        //                   fontWeight: FontWeight.w400,
+        //                   color: Color.fromRGBO(168, 175, 179, 1),
+        //                   fontSize: 12),
+        //               items: [
+        //                 BottomNavigationBarItem(
+        //                     icon: Padding(
+        //                       padding: const EdgeInsets.only(bottom: 8.0),
+        //                       child: Image.asset(
+        //                         "assets/home.png",
+        //                         color: _currentIndex == 0
+        //                             ? MyTheme.primary_color
+        //                             : Color.fromRGBO(153, 153, 153, 1),
+        //                         height: 16,
+        //                       ),
+        //                     ),
+        //                     label: AppLocalizations.of(context)!.home_ucf),
+        //                 BottomNavigationBarItem(
+        //                   icon: Padding(
+        //                     padding: const EdgeInsets.only(bottom: 8.0),
+        //                     child: Image.asset(
+        //                       "assets/profile.png",
+        //                       color: _currentIndex == 1
+        //                           ? MyTheme.primary_color
+        //                           : Color.fromRGBO(153, 153, 153, 1),
+        //                       height: 16,
+        //                     ),
+        //                   ),
+        //                   label: AppLocalizations.of(context)!.profile_ucf,
+        //                 ),
+        //                 BottomNavigationBarItem(
+        //                     icon: Padding(
+        //                       padding: const EdgeInsets.only(bottom: 8.0),
+        //                       child: badges.Badge(
+        //                         badgeStyle: badges.BadgeStyle(
+        //                           shape: badges.BadgeShape.circle,
+        //                           badgeColor: MyTheme.primary_color,
+        //                           borderRadius: BorderRadius.circular(10),
+        //                           padding: EdgeInsets.all(5),
+        //                         ),
+        //                         badgeAnimation: badges.BadgeAnimation.slide(
+        //                           toAnimate: false,
+        //                         ),
+        //                         child: Image.asset(
+        //                           "assets/cart.png",
+        //                           color: _currentIndex == 2
+        //                               ? MyTheme.primary_color
+        //                               : Color.fromRGBO(153, 153, 153, 1),
+        //                           height: 16,
+        //                         ),
+        //                         badgeContent: Consumer<CartCounter>(
+        //                           builder: (context, cart, child) {
+        //                             return Text(
+        //                               "${cart.cartCounter}",
+        //                               style: TextStyle(
+        //                                   fontSize: 10, color: Colors.white),
+        //                             );
+        //                           },
+        //                         ),
+        //                       ),
+        //                     ),
+        //                     label: AppLocalizations.of(context)!.cart_ucf),
+        //                 BottomNavigationBarItem(
+        //                     icon: Padding(
+        //                       padding: const EdgeInsets.only(bottom: 8.0),
+        //                       child: Image.asset(
+        //                         "assets/location.png",
+        //                         color: _currentIndex == 3
+        //                             ? MyTheme.primary_color
+        //                             : Color.fromRGBO(153, 153, 153, 1),
+        //                         height: 16,
+        //                       ),
+        //                     ),
+        //                     label: AppLocalizations.of(context)!.address_ucf),
+        //               ],
+        //             ),
+        //           ),
+        //         );
+        //       }
+        //       return Scaffold(
+        //         body: Center(
+        //           child: CircularProgressIndicator(),
+        //         ),
+        //       );
+        //     }),
         child: Scaffold(
           extendBody: true,
           body: _children[_currentIndex],

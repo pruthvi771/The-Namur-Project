@@ -185,6 +185,28 @@ class SellRepository {
     }
   }
 
+  Future<void> deleteProductImagesByProductId(
+      {required String productId}) async {
+    try {
+      var storage = FirebaseStorage.instance;
+      var productImagesRef = storage.ref().child('product_images/$productId');
+
+      var productsList = await productImagesRef.listAll();
+
+      // Delete each image in the folder
+      await Future.forEach(productsList.items, (Reference imageRef) async {
+        await imageRef.delete();
+      });
+
+      await _firestore.collection('products').doc(productId).update({
+        'imageURL': [],
+      });
+    } catch (error) {
+      print(error);
+      throw Exception('Failed to delete product images. Please try again.');
+    }
+  }
+
   Future<String?> addMachineBuying({
     required String productName,
     required String productDescription,
