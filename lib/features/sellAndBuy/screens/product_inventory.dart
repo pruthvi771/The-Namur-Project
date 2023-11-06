@@ -6,6 +6,7 @@ import 'package:active_ecommerce_flutter/features/sellAndBuy/services/sell_bloc/
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/product_post.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -298,8 +299,8 @@ class ProductInventoryWidget extends StatelessWidget {
                             padding: EdgeInsets.all(7),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(5),
-                              child: Image.network(
-                                imageURL[0],
+                              child: CachedNetworkImage(
+                                imageUrl: imageURL[0],
                                 fit: BoxFit.cover,
                               ),
                             )),

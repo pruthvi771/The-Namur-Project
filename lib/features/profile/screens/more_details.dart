@@ -7,6 +7,7 @@ import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/edit_profile.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/land_screen.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -217,8 +218,9 @@ class _MoreDetailsState extends State<MoreDetails> {
                                         : ClipOval(
                                             child: AspectRatio(
                                               aspectRatio: 1 / 1,
-                                              child: Image.network(
-                                                buyerUserData.photoURL!,
+                                              child: CachedNetworkImage(
+                                                imageUrl:
+                                                    buyerUserData.photoURL!,
                                                 fit: BoxFit.cover,
                                               ),
                                             ),

@@ -115,7 +115,7 @@ class AuthRepository {
   //   }
   // }
 
-  Future<void> loginWithGoogle() async {
+  Future<bool> loginWithGoogle() async {
     try {
       final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
 
@@ -133,7 +133,10 @@ class AuthRepository {
           .doc(userCredential.user!.uid)
           .get();
 
+      bool toReturn = false;
+
       if (!userSnapshot.exists) {
+        toReturn = true;
         firestoreRepository.addUserToBuyerSellerCollections(
             userId: userCredential.user!.uid,
             name: userCredential.user!.displayName!,
@@ -143,9 +146,11 @@ class AuthRepository {
         firestoreRepository.createEmptyHiveDataInstance(
             userId: userCredential.user!.uid);
       } else {
+        toReturn = false;
         await firestoreRepository.syncFirestoreDataWithHive(
             userId: userCredential.user!.uid);
       }
+      return toReturn;
 
       // final user = currentUser;
       // return user != null ? user : throw UserNotFoundAuthException();
