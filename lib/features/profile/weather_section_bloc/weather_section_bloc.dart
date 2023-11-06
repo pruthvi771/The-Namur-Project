@@ -8,10 +8,22 @@ class WeatherSectionBloc
   WeatherSectionBloc() : super(WeatherSectionDataNotReceived()) {
     on<WeatherSectionDataRequested>((event, emit) async {
       emit(LoadingSection());
-      final currentData = await WeatherRepository().fetchCurrent();
-      // await Future.delayed(Duration(seconds: 3));
-      emit(WeatherSectionDataReceived(responseData: currentData));
-      // });
+      try {
+        var currentData = [];
+        currentData = await WeatherRepository().fetchCurrent();
+        if (currentData[0] == null) {
+          emit(LocationDataNotFoundinHive());
+          return;
+        }
+        // await Future.delayed(Duration(seconds: 3));
+        emit(WeatherSectionDataReceived(responseData: currentData as dynamic));
+        // });
+      } catch (e) {
+        // print(e);
+        final errorMessage = e.toString().replaceAll('Exception:', '');
+        print('error message: $errorMessage');
+        emit(Error(e.toString()));
+      }
     });
   }
 }

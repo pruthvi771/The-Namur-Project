@@ -1,4 +1,5 @@
 // part of 'weather_bloc.dart';
+import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
@@ -12,6 +13,18 @@ abstract class HiveEvent extends Equatable {
 
 class HiveDataRequested extends HiveEvent {
   HiveDataRequested();
+}
+
+class HiveLocationDataRequested extends HiveEvent {
+  HiveLocationDataRequested();
+}
+
+class SyncHiveToFirestoreRequested extends HiveEvent {
+  ProfileData profileData;
+
+  SyncHiveToFirestoreRequested({
+    required this.profileData,
+  });
 }
 
 class HiveAppendAddress extends HiveEvent {

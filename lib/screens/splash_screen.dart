@@ -12,6 +12,7 @@ import 'package:active_ecommerce_flutter/screens/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 
@@ -94,16 +95,31 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            CircleAvatar(
-              backgroundColor: Colors.white,
-              child: Hero(
-                tag: "backgroundImageInSplash",
-                child: Container(
-                  child: Image.asset("assets/splash.png"),
-                ),
+            Hero(
+              tag: "backgroundImageInSplash",
+              // child: Ima(
+              //   // height: MediaQuery.of(context).size.height / 4.5,
+              //   width: MediaQuery.of(context).size.width / 1,
+              //   // child: Image.asset("assets/splash.png"),
+              //   child: Image.asset("assets/pp.png"),
+              // ),
+              child: Image.asset(
+                "assets/pp2.png",
+                width: MediaQuery.of(context).size.width / 2.4,
+                // filterQuality: FilterQuality.high,
               ),
-              radius: 300.11,
             ),
+            SizedBox(
+              height: 5,
+            ),
+            Hero(
+              tag: "backgroundImageInSplash",
+              child: Image.asset(
+                "assets/Namur_logo_text.png",
+                width: MediaQuery.of(context).size.width / 2.6,
+              ),
+            ),
+
             /* Positioned.fill(
               top: DeviceInfo(context).height!/2-72,
               child: Column(
@@ -189,13 +205,13 @@ class _SplashScreenState extends State<SplashScreen> {
     access_token.load().whenComplete(() {
       AuthHelper().fetch_and_set();
     });
-    AddonsHelper().setAddonsData();
-    BusinessSettingHelper().setBusinessSettingData();
+    // AddonsHelper().setAddonsData();
+    // BusinessSettingHelper().setBusinessSettingData();
     await app_language.load();
     await app_mobile_language.load();
     await app_language_rtl.load();
     await system_currency.load();
-    Provider.of<CurrencyPresenter>(context, listen: false).fetchListData();
+    // Provider.of<CurrencyPresenter>(context, listen: false).fetchListData();
 
     // print("new splash screen ${app_mobile_language.$}");
     // print("new splash screen app_language_rtl ${app_language_rtl.$}");

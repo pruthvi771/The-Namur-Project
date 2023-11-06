@@ -1,16 +1,11 @@
-import 'package:active_ecommerce_flutter/drawer/drawer.dart';
-import 'package:active_ecommerce_flutter/features/profile/expanded_tile_widget.dart';
-import 'package:active_ecommerce_flutter/features/profile/screens/land_screen.dart';
+import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_html/flutter_html.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import '../../../custom/device_info.dart';
-
-import 'package:flutter_expanded_tile/flutter_expanded_tile.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 
 // import '../seller_platform/seller_platform.dart';
 
@@ -22,12 +17,49 @@ class Friends extends StatefulWidget {
 }
 
 class _FriendsState extends State<Friends> {
-  final _controller1 = ExpandedTileController();
-  final _controller2 = new ExpandedTileController();
-  final _controller3 = new ExpandedTileController();
-  final _controller35 = new ExpandedTileController();
-  final _controller4 = new ExpandedTileController();
-  final _controller5 = new ExpandedTileController();
+  // final _controller1 = ExpandedTileController();
+  // final _controller2 = new ExpandedTileController();
+  // final _controller3 = new ExpandedTileController();
+  // final _controller35 = new ExpandedTileController();
+  // final _controller4 = new ExpandedTileController();
+  // final _controller5 = new ExpandedTileController();
+
+  Future<List<Object?>> getNumberOfFriends() async {
+    var dataBox = Hive.box<ProfileData>('profileDataBox3');
+
+    var savedData = dataBox.get('profile');
+
+    if (savedData!.address[0].pincode.isEmpty) {
+      throw Exception('Failed to load data');
+    }
+
+    int count = 0;
+    String villageName = savedData.address[0].village;
+    String pincode = savedData.address[0].pincode;
+
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
+        .instance
+        .collection('buyer')
+        .where(FieldPath.documentId, isNotEqualTo: null)
+        .where('profileData', isNotEqualTo: null)
+        .get();
+
+    List<DocumentSnapshot<Map<String, dynamic>>> documents = querySnapshot.docs;
+
+    for (var document in documents) {
+      Map<String, dynamic> data = document.data()!;
+      if (data['profileData']['address'].isNotEmpty) {
+        Map<String, dynamic> data = document.data()!;
+        if (data['profileData']['address'][0]['pincode'] ==
+            savedData.address[0].pincode) {
+          count++;
+          print('count incremented');
+        }
+      }
+    }
+
+    return [villageName, pincode, count - 1];
+  }
 
   String title = "KYC";
   final double progress = 0.80;
@@ -102,33 +134,55 @@ class _FriendsState extends State<Friends> {
                         ),
                       ),
                       Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('10 friends & neighbours',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 13.0,
-                                    color: Colors.black)),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text('20 Groups',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 13.0,
-                                    color: Colors.black)),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text('Society: Pitlali 577511',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 13.0,
-                                    color: Colors.black)),
-                          ],
-                        ),
+                        child: FutureBuilder(
+                            future: getNumberOfFriends(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                        '${snapshot.data![2]} friends & neighbours',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 13.0,
+                                            color: Colors.black)),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text('0 Groups',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 13.0,
+                                            color: Colors.black)),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                        'Society: ${snapshot.data![0]} ${snapshot.data![1]}',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 13.0,
+                                            color: Colors.black)),
+                                  ],
+                                );
+                              }
+                              if (snapshot.hasError) {
+                                return Text(
+                                  'Add Address To See This',
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 15,
+                                      color: Colors.red),
+                                );
+                              }
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }),
                       )
                     ],
                   ),

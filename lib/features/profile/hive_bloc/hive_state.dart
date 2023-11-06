@@ -14,14 +14,16 @@ final class HiveDataReceived extends HiveState {
   List<Object?> get props => [profileData];
 }
 
-// final CurrentWeatherResponse responseData;
+final class HiveLocationDataReceived extends HiveState {
+  final List<String> locationData;
 
-// WeatherSectionDataReceived({
-//   required this.responseData,
-// });
+  HiveLocationDataReceived({
+    required this.locationData,
+  });
 
-// @override
-// List<Object?> get props => [responseData];
+  @override
+  List<Object?> get props => [locationData];
+}
 
 final class HiveDataNotReceived extends HiveState {
   @override

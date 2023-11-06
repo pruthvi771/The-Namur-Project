@@ -1,12 +1,14 @@
-import 'package:active_ecommerce_flutter/features/profile/expanded_tile_widget.dart';
+import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
+import 'package:active_ecommerce_flutter/features/profile/screens/edit_profile.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:hive/hive.dart';
 import '../../../custom/device_info.dart';
 
 import 'package:flutter_expanded_tile/flutter_expanded_tile.dart';
-import 'package:percent_indicator/percent_indicator.dart';
+
+import 'package:active_ecommerce_flutter/features/profile/address_list.dart'
+    as addressList;
 
 // import '../seller_platform/seller_platform.dart';
 
@@ -19,214 +21,357 @@ class LandScreen extends StatefulWidget {
 
 class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
   // final _controller1 = ExpandedTileController();
-  final _controller2 = new ExpandedTileController();
+  final _areaController = new ExpandedTileController(isExpanded: true);
+  final _cropController = new ExpandedTileController(isExpanded: true);
+  final _landController = new ExpandedTileController(isExpanded: true);
 
   String title = "KYC";
   final double progress = 0.80;
+  late ProfileData? profileData;
+
+  final imageForCrop = addressList.imageForCrop;
+  final imageForEquipment = addressList.imageForEquipment;
+
+  Future<ProfileData> fetchDataFromHive() async {
+    var dataBox = await Hive.openBox<ProfileData>('profileDataBox3');
+    return dataBox.get('profile') as ProfileData;
+  }
 
   @override
   Widget build(BuildContext context) {
-    TabController tabController = TabController(length: 3, vsync: this);
-
     return Container(
       color: Colors.white,
       height: DeviceInfo(context).height,
-      child: DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          appBar: buildCustomAppBar(context),
-          body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
-            child: Column(
-              children: [
-                Card(
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12.0),
-                      border: Border.all(
-                        color: MyTheme.field_color,
+      child: FutureBuilder(
+          future: fetchDataFromHive(),
+          builder: (context, snapshot) {
+            profileData = snapshot.data;
+            TabController tabController =
+                TabController(length: profileData!.land.length, vsync: this);
+            print(profileData!.land.length);
+            if (profileData!.land.length == 0)
+              return Scaffold(
+                backgroundColor: Colors.transparent,
+                appBar: buildCustomAppBar(context),
+                body: Container(
+                  height: double.infinity,
+                  width: double.infinity,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'No Land Data Found',
+                        style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: .5,
+                          fontFamily: 'Poppins',
+                        ),
                       ),
-                      // color: MyTheme.field_color,
-                    ),
-                    child: TabBar(
-                      indicator: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12.0),
-                        // color: MyTheme.green,
-                        color: Color(0xff4C7B10),
+                      SizedBox(
+                        height: 15,
                       ),
-                      controller: tabController,
-                      isScrollable: true,
-                      labelPadding: EdgeInsets.symmetric(horizontal: 25),
-                      tabs: [
-                        Tab(
-                          child: Text(
-                            '1. Yare Hola',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: .5,
-                              color: Color.fromARGB(255, 212, 212, 212),
-                            ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: MyTheme.accent_color,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                        Tab(
-                          child: Text(
-                            '2. Bale Tota',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: .5,
-                              color: Color.fromARGB(255, 212, 212, 212),
-                            ),
+                        child: Text(
+                          'Add Land Data',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: .5,
+                            fontFamily: 'Poppins',
                           ),
                         ),
-                        Tab(
-                          child: Text(
-                            '3. Koplu Gadde',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: .5,
-                              color: Color.fromARGB(255, 212, 212, 212),
-                              // color: Color.fromARGB(255, 234, 234, 234),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                        onPressed: () {
+                          Navigator.pushReplacement(context,
+                              MaterialPageRoute(builder: (context) {
+                            return EditProfileScreen();
+                          }));
+                        },
+                      ),
+                    ],
                   ),
                 ),
-                Expanded(
-                  child: TabBarView(
-                    controller: tabController,
-                    children: [
-                      Column(
-                        children: [
-                          SizedBox(
-                            height: 10,
+              );
+            return DefaultTabController(
+              length: profileData!.land.length,
+              child: Scaffold(
+                backgroundColor: Colors.transparent,
+                appBar: buildCustomAppBar(context),
+                body: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: Container(
+                          height: 50,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12.0),
+                            border: Border.all(
+                              color: MyTheme.field_color,
+                            ),
                           ),
-                          LandExpandedTile(
-                            controller2: _controller2,
-                            title: title,
-                            content: Container(
-                              padding: EdgeInsets.only(top: 8),
-                              height: 150,
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 60,
-                                    child: Container(
-                                      child: Image.asset(
-                                        'assets/girl.png',
-                                        fit: BoxFit.cover,
-                                      ),
+                          child: TabBar(
+                            indicator: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12.0),
+                              color: Color(0xff4C7B10),
+                            ),
+                            labelColor: Colors.white,
+                            unselectedLabelColor: Colors.black,
+                            controller: tabController,
+                            isScrollable: true,
+                            labelPadding: EdgeInsets.symmetric(horizontal: 25),
+                            tabs: List.generate(
+                              profileData!.land.length,
+                              (index) {
+                                var item = profileData!.land[index];
+                                return Tab(
+                                  child: Text(
+                                    item.village,
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w800,
+                                      letterSpacing: .5,
                                     ),
                                   ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Expanded(
-                                    flex: 40,
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 6.0),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: MyTheme.green_lighter,
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                        ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: TabBarView(
+                        controller: tabController,
+                        children: List.generate(
+                          profileData!.land.length,
+                          (index) {
+                            var item = profileData!.land[index];
+                            print('crops: ${item.crops.length}');
+                            print('machines: ${item.equipments.length}');
+                            return SingleChildScrollView(
+                              padding: EdgeInsets.only(bottom: 20),
+                              physics: BouncingScrollPhysics(),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    LandExpandedTile(
+                                      controller2: _areaController,
+                                      title: 'Land Area, Size',
+                                      content: Container(
                                         padding: EdgeInsets.symmetric(
-                                            horizontal: 8, vertical: 20),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
+                                            horizontal: 3, vertical: 8),
+                                        height: 150,
+                                        child: Row(
                                           children: [
-                                            Text(
-                                              'Size: 19 acres',
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w500,
-                                                  letterSpacing: .5,
-                                                  fontFamily: 'Poppins'),
+                                            Expanded(
+                                              flex: 3,
+                                              child: Container(
+                                                height: double.infinity,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(12)),
+                                                  child: Image.asset(
+                                                    'assets/farmland_medium.jpeg',
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                              ),
                                             ),
-                                            Text(
-                                              'Sy No: 200, 201',
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w500,
-                                                  letterSpacing: .5,
-                                                  fontFamily: 'Poppins'),
+                                            SizedBox(
+                                              width: 10,
                                             ),
-                                            Text(
-                                              'Groundnut: 2 Ton',
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w500,
-                                                  letterSpacing: .5,
-                                                  fontFamily: 'Poppins'),
-                                            ),
-                                            Text(
-                                              'Onion: 5 Ton',
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w500,
-                                                  letterSpacing: .5,
-                                                  fontFamily: 'Poppins'),
-                                            ),
-                                            Text(
-                                              'Papaya: 1 ton',
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w500,
-                                                  letterSpacing: .5,
-                                                  fontFamily: 'Poppins'),
-                                            ),
+                                            Expanded(
+                                              flex: 2,
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  color: MyTheme.green_lighter,
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 16,
+                                                    vertical: 20),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: [
+                                                    Text(
+                                                      'Size (in acres)',
+                                                      style: TextStyle(
+                                                          fontSize: 12,
+                                                          color: Colors.black54,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          letterSpacing: .5,
+                                                          fontFamily:
+                                                              'Poppins'),
+                                                    ),
+                                                    Text(
+                                                      '${item.area.toInt()}',
+                                                      style: TextStyle(
+                                                          fontSize: 17,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          letterSpacing: .5,
+                                                          fontFamily:
+                                                              'Poppins'),
+                                                    ),
+                                                    Text(
+                                                      'Sy No.',
+                                                      style: TextStyle(
+                                                          fontSize: 13,
+                                                          color: Colors.black54,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          letterSpacing: .5,
+                                                          fontFamily:
+                                                              'Poppins'),
+                                                    ),
+                                                    Text(
+                                                      item.syno,
+                                                      style: TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          letterSpacing: .5,
+                                                          fontFamily:
+                                                              'Poppins'),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            )
                                           ],
                                         ),
                                       ),
                                     ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                          LandExpandedTile(
-                            controller2: _controller2,
-                            title: title,
-                            content: Container(
-                                padding: EdgeInsets.only(top: 8),
-                                height: 150,
-                                child: ListView(
-                                  scrollDirection: Axis.horizontal,
-                                  children: [
-                                    Text('tab1'),
-                                    Text('tab1'),
-                                    Text('tab1'),
-                                    Text('tab1'),
+                                    SizedBox(
+                                      height: 15,
+                                    ),
+                                    LandExpandedTile(
+                                        controller2: _cropController,
+                                        title: 'Crops Detail',
+                                        content: (item.crops.length != 0)
+                                            ? Container(
+                                                // padding: const EdgeInsets.symmetric(
+                                                //     horizontal: 12),
+                                                height: 150,
+                                                child: ListView(
+                                                  physics:
+                                                      BouncingScrollPhysics(),
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  children: List.generate(
+                                                    item.crops.length,
+                                                    (index) {
+                                                      var crop =
+                                                          item.crops[index];
+                                                      return CropWidget(
+                                                        title: crop.name,
+                                                        image: imageForCrop[
+                                                            crop.name]!,
+                                                        yieldOfCrop:
+                                                            crop.yieldOfCrop,
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                              )
+                                            : Container(
+                                                height: 50,
+                                                child: Center(
+                                                  child: Text(
+                                                    'No Crop Data Found',
+                                                    style: TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      letterSpacing: .5,
+                                                      fontFamily: 'Poppins',
+                                                    ),
+                                                  ),
+                                                ),
+                                              )),
+                                    SizedBox(
+                                      height: 15,
+                                    ),
+                                    LandExpandedTile(
+                                      controller2: _landController,
+                                      title: 'Machines and Equipments',
+                                      content: (item.equipments.length != 0)
+                                          ? Container(
+                                              // padding: const EdgeInsets.symmetric(
+                                              //     horizontal: 12),
+                                              height: 140,
+                                              child: ListView(
+                                                physics:
+                                                    BouncingScrollPhysics(),
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                children: List.generate(
+                                                  item.equipments.length,
+                                                  (index) {
+                                                    var equipment =
+                                                        item.equipments[index];
+                                                    return EquipmentWidget(
+                                                      title: equipment,
+                                                      image: imageForEquipment[
+                                                          equipment]!,
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            )
+                                          : Container(
+                                              height: 50,
+                                              child: Center(
+                                                child: Text(
+                                                  'No Equipment Data found',
+                                                  style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w600,
+                                                    letterSpacing: .5,
+                                                    fontFamily: 'Poppins',
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                    ),
                                   ],
-                                )),
-                          ),
-                        ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                       ),
-                      Center(child: Text('tab2')),
-                      Center(child: Text('tab3')),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-        ),
-      ),
+              ),
+            );
+          }),
     );
   }
 
@@ -329,14 +474,117 @@ class LandExpandedTile extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        trailing: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Image.asset(
-            'assets/dropdown.png',
-            height: 15,
-          ),
-        ),
+        // trailing: Padding(
+        //   padding: const EdgeInsets.all(8.0),
+        //   child: Image.asset(
+        //     'assets/dropdown.png',
+        //     height: 15,
+        //   ),
+        // ),
         content: content,
+      ),
+    );
+  }
+}
+
+class CropWidget extends StatelessWidget {
+  const CropWidget({
+    super.key,
+    required this.image,
+    required this.title,
+    required this.yieldOfCrop,
+  });
+
+  final String image;
+  final String title;
+  final double yieldOfCrop;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 150,
+      width: 90,
+      margin: EdgeInsets.only(left: 5, right: 5, top: 10, bottom: 5),
+      padding: const EdgeInsets.all(6),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Colors.black12,
+          width: 3,
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Image.asset(
+              image,
+              fit: BoxFit.fitWidth,
+            ),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Text(title,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                letterSpacing: .5,
+                fontFamily: 'Poppins',
+              )),
+          Text('${yieldOfCrop.toInt().toString()} ton'),
+        ],
+      ),
+    );
+  }
+}
+
+class EquipmentWidget extends StatelessWidget {
+  const EquipmentWidget({
+    super.key,
+    required this.image,
+    required this.title,
+  });
+
+  final String image;
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 120,
+      width: 90,
+      margin: EdgeInsets.only(left: 5, right: 5, top: 10, bottom: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Colors.black12,
+          width: 3,
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Image.asset(
+              image,
+              fit: BoxFit.fitWidth,
+            ),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Text(title,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                letterSpacing: .5,
+                fontFamily: 'Poppins',
+              )),
+        ],
       ),
     );
   }

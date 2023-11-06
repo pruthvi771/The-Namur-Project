@@ -1,4 +1,7 @@
 import 'package:active_ecommerce_flutter/custom/common_functions.dart';
+import 'package:active_ecommerce_flutter/features/profile/enum.dart';
+import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart'
+    as hiveModels;
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/presenter/bottom_appbar_index.dart';
@@ -13,8 +16,12 @@ import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hive/hive.dart';
+import 'package:permission_handler/permission_handler.dart'
+    as permissionHandler;
 import 'package:provider/provider.dart';
 // import 'package:route_transitions/route_transitions.dart';
+import 'package:location/location.dart';
 
 import 'my_account/my_account.dart';
 
@@ -86,6 +93,7 @@ class _MainState extends State<Main> {
     //re appear statusbar in case it was not there in the previous page
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);
+    // checkLocationPermission();
     super.initState();
   }
 

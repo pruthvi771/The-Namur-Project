@@ -6,7 +6,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../custom/device_info.dart';
 import '../../my_theme.dart';
 
-const List<String> productList = <String>['Product Category', 'Two', 'Three', 'Four'];
+const List<String> productList = <String>[
+  'Product Category',
+  'Two',
+  'Three',
+  'Four'
+];
 
 class ProductPost extends StatefulWidget {
   const ProductPost({Key? key}) : super(key: key);
@@ -16,7 +21,6 @@ class ProductPost extends StatefulWidget {
 }
 
 class _ProductPostState extends State<ProductPost> {
-
   TextEditingController _nameController = TextEditingController();
   TextEditingController _additionalController = TextEditingController();
   TextEditingController _commentsController = TextEditingController();
@@ -28,9 +32,7 @@ class _ProductPostState extends State<ProductPost> {
 
   bool _switchValue = false;
 
-
-   String? _selectedItem;
-
+  String? _selectedItem;
 
   List<String> _dropdownItems = [
     'Option 1',
@@ -39,120 +41,83 @@ class _ProductPostState extends State<ProductPost> {
     'Option 4',
   ];
 
+  String priceType = "Per piece";
+  bool perPiecePrice = true;
+
   @override
   Widget build(BuildContext context) {
-    return  Container(
-      color: Colors.white,
-      height: DeviceInfo(context).height,
-      child: Stack(
-        children: [
-          Scaffold(
-            // key: homeData.scaffoldKey,
-            // drawer: const MainDrawer(),
-            backgroundColor: Colors.transparent,
-            appBar: buildCustomAppBar(context),
-            body: buildBody(),
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(AppLocalizations.of(context)!.product_post_ucf,
+            style: TextStyle(
+                color: MyTheme.white,
+                fontWeight: FontWeight.w500,
+                letterSpacing: .5,
+                fontFamily: 'Poppins')),
+        centerTitle: true,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xff107B28), Color(0xff4C7B10)]),
+          ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              Icons.keyboard_arrow_left,
+              size: 35,
+              color: MyTheme.white,
+            ),
+          ),
+          SizedBox(
+            width: 10,
           ),
         ],
       ),
+      body: bodycontent(),
     );
   }
 
-  RefreshIndicator buildBody() {
-    return RefreshIndicator(
-      color: MyTheme.white,
-      backgroundColor: MyTheme.primary_color,
-      onRefresh: _onPageRefresh,
-      displacement: 10,
-      child: bodycontent(),
-    );
-  }
-
-  PreferredSize buildCustomAppBar(context) {
-    return PreferredSize(
-      preferredSize: Size(DeviceInfo(context).width!, 80),
-      child: Container(
-        height: 92,
-        decoration: BoxDecoration(
-            gradient:LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors:[Color(0xff107B28),Color(0xff4C7B10)]
-            )),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20.0,right: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(width: 30,),
-
-                Center(
-                  child: Text(
-                      AppLocalizations.of(context)!
-                          .product_post_ucf,
-                      style: TextStyle(
-                          color: MyTheme.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: .5,
-                          fontFamily: 'Poppins')),
-                ),
-
-                Container(
-                  margin: EdgeInsets.only(right: 0),
-                  height: 30,
-                  child:  Container(
-                    child: InkWell(
-                      //padding: EdgeInsets.zero,
-                      onTap: (){
-                        Navigator.pop(context);
-                      } ,child:Icon(Icons.keyboard_arrow_left,size: 35,color: MyTheme.white,), ),
-                  ),
-                ),
-
-
-              ],
+  bodycontent() {
+    return ListView(
+      physics: BouncingScrollPhysics(),
+      children: [
+        // product name
+        Padding(
+          padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+          child: Container(
+            decoration: BoxDecoration(
+                color: MyTheme.field_color,
+                borderRadius: BorderRadius.circular(10)),
+            child: TextFormField(
+              controller: _nameController,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(left: 15),
+                hintText: "Product Name",
+                hintStyle: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: 'Poppins'),
+              ),
             ),
           ),
         ),
-      ),
-    );
-  }
 
-  bodycontent(){
-
-    return Stack(
-      children: [
-        ListView(
-          children: [
-
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0,left: 20.0,right: 20.0),
-              child: Container(
-                decoration: BoxDecoration(color: MyTheme.field_color,
-                borderRadius: BorderRadius.circular(15)),
-                 child: TextFormField(
-                   controller: _nameController,
-                   decoration: InputDecoration(
-                     border: InputBorder.none,
-                     contentPadding: EdgeInsets.only(left: 15) ,
-                   hintText: "Product Name",
-                   hintStyle: TextStyle(color: Colors.black,fontWeight: FontWeight.w400,
-                   fontFamily: 'Poppins'),
-                   ),
-                 ),
-              ),
-            ),
-
-
-
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0,left: 20.0,right: 20.0),
-              child: Container(
-                decoration: BoxDecoration(color: MyTheme.field_color,
-                    borderRadius: BorderRadius.circular(15)),
-                child:  DropdownButton<String>(
+        // product category
+        Padding(
+            padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+            child: Container(
+                decoration: BoxDecoration(
+                    color: MyTheme.field_color,
+                    borderRadius: BorderRadius.circular(10)),
+                child: DropdownButton<String>(
                   icon: SizedBox.shrink(),
                   underline: Container(
                     // Remove the underline
@@ -165,7 +130,8 @@ class _ProductPostState extends State<ProductPost> {
                       _selectedItem = newValue!;
                     });
                   },
-                  items: _dropdownItems.map<DropdownMenuItem<String>>((String value) {
+                  items: _dropdownItems
+                      .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
@@ -174,206 +140,282 @@ class _ProductPostState extends State<ProductPost> {
                   hint: Row(
                     children: [
                       SizedBox(
-                        width: MediaQuery.of(context).size.width/1.3, // Adjust the width to your desired value
+                        width: MediaQuery.of(context).size.width /
+                            1.3, // Adjust the width to your desired value
                         child: Padding(
                           padding: const EdgeInsets.only(left: 15.0),
-                          child: Text('Product Category',
-                            style: TextStyle(color: Colors.black,fontWeight: FontWeight.w400,
-                                fontFamily: 'Poppins'),),
+                          child: Text(
+                            'Product Category',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'Poppins'),
+                          ),
                         ),
                       ),
-                     Icon(
+                      Icon(
                         Icons.arrow_drop_down,
                         size: 24,
                       ),
                     ],
                   ),
-                )
-                )
-              ),
+                ))),
 
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0,left: 20.0,right: 20.0),
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: 50,
-                decoration: BoxDecoration(color: MyTheme.field_color,
-                    borderRadius: BorderRadius.circular(5)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(17.0),
-                      child: Text("Product Price",style: TextStyle(
-                        fontSize:17,fontFamily: 'Poppins',
-                        fontWeight: FontWeight.w400
-                      ),),
+        // product price
+        Padding(
+          padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+          child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: 50,
+              decoration: BoxDecoration(
+                  color: MyTheme.field_color,
+                  borderRadius: BorderRadius.circular(10)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Text(
+                      "Product Price",
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w400),
                     ),
-                    Row(
-                      children: [
-                        RichText(
-                          text: TextSpan(
-                            text: "Per Pis / ",style: TextStyle(
-                              fontSize:15,fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w400,
-                            color: Colors.black
-                          ),
-                          children: [
-                            TextSpan(
-                              text: "Per kg",
-                                  style: TextStyle(color: MyTheme.primary_color,
-                                  fontSize: 15)
-                            )
-                          ]),
-                        ),
-                        VerticalDivider(
-                          thickness: 1,
-                        ),
-                        RichText(
-                          text: TextSpan(
-                              text: "10/",style: TextStyle(
-                              fontSize:17,fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w400,
-                              color: Colors.black
-                          ),
-                              children: [
-                                TextSpan(
-                                    text: "Rs",
-                                    style: TextStyle(color: Colors.black,
-                                        fontSize: 15)
-                                )
-                              ]),
-                        ),
-                        SizedBox(width: 5,)
-                      ],
-                    ),
-
-                  ],
-                )
-              ),
-            ),
-
-
-            // additional description
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0,left: 20.0,right: 20.0),
-              child: Container(
-                height: 130,
-                decoration: BoxDecoration(color: MyTheme.field_color,
-                    borderRadius: BorderRadius.circular(15)),
-                child: TextFormField(
-                  controller: _additionalController,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.only(left: 15) ,
-                    hintText: "Additional Description",
-                    hintStyle: TextStyle(color: Colors.black,fontWeight: FontWeight.w400,
-                        fontFamily: 'Poppins'),
                   ),
-                ),
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0,left: 20.0,right: 20.0),
-              child: Container(
-                height: 130,
-                decoration: BoxDecoration(color: MyTheme.field_color,
-                    borderRadius: BorderRadius.circular(15)),
-                child: TextFormField(
-                  controller: _commentsController,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.only(left: 15) ,
-                    hintText: "Comments",
-                    hintStyle: TextStyle(color: Colors.black,fontWeight: FontWeight.w400,
-                        fontFamily: 'Poppins'),
-                  ),
-                ),
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Container(
-               height: 230,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  border: Border.all(width: 1,
-                  color: MyTheme.light_grey),
-                  borderRadius: BorderRadius.circular(10)
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      child: Column(
-                        children: [
-                          SizedBox(height: 10),
-                          Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.add,
-                                  color: MyTheme.primary_color,),
-                                Text("Add Featured Image",
+                  Row(
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                            text: "Per Pis / ",
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black),
+                            children: [
+                              TextSpan(
+                                  text: "Per kg",
                                   style: TextStyle(
-                                    color: MyTheme.primary_color,
-                                    fontSize: 20,
-                                  ),),
-                              ],
+                                      color: MyTheme.primary_color,
+                                      fontSize: 15))
+                            ]),
+                      ),
+                      VerticalDivider(
+                        thickness: 1,
+                      ),
+                      RichText(
+                        text: TextSpan(
+                            text: "10/",
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black),
+                            children: [
+                              TextSpan(
+                                  text: "Rs",
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 15))
+                            ]),
+                      ),
+                      SizedBox(
+                        width: 5,
+                      )
+                    ],
+                  ),
+                ],
+              )),
+        ),
+
+        Padding(
+          padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+          child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: 50,
+              decoration: BoxDecoration(
+                  color: MyTheme.field_color,
+                  borderRadius: BorderRadius.circular(10)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: _nameController,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.only(left: 15),
+                        hintText: "Price",
+                        hintStyle: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Poppins'),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(right: 10),
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              perPiecePrice = true;
+                            });
+                          },
+                          child: Text(
+                            "Per piece / ",
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.w400,
+                              color: perPiecePrice
+                                  ? MyTheme.primary_color
+                                  : Colors.black,
                             ),
                           ),
-
-                          SizedBox(height:5),
-
-                          Text("Supported Format Are Jpg And Png",
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              perPiecePrice = false;
+                            });
+                          },
+                          child: Text(
+                            "Per kg",
                             style: TextStyle(
-                              color: MyTheme.dark_grey,
-                              fontSize:15,
-                            ),),
+                              color: perPiecePrice
+                                  ? Colors.black
+                                  : MyTheme.primary_color,
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.w400,
+                              fontSize: 15,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              )),
+        ),
 
-                          SizedBox(height: 10),
+        // additional description
+        Padding(
+          padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+          child: Container(
+            height: 130,
+            decoration: BoxDecoration(
+                color: MyTheme.field_color,
+                borderRadius: BorderRadius.circular(10)),
+            child: TextFormField(
+              controller: _additionalController,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(left: 15),
+                hintText: "Additional Description",
+                hintStyle: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: 'Poppins'),
+              ),
+            ),
+          ),
+        ),
 
-                            Divider(),
+        //comments
+        Padding(
+          padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+          child: Container(
+            height: 130,
+            decoration: BoxDecoration(
+                color: MyTheme.field_color,
+                borderRadius: BorderRadius.circular(10)),
+            child: TextFormField(
+              controller: _commentsController,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(left: 15),
+                hintText: "Comments",
+                hintStyle: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: 'Poppins'),
+              ),
+            ),
+          ),
+        ),
 
-                           Container(
-                             height: 145,
-                             width: MediaQuery.of(context).size.width,
-                             child: Image.asset("assets/imgplaceholder.png",
-                             fit: BoxFit.cover,),
-                           ),
-                        ],
-                      ) ,
+        // add image
+        Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Container(
+            height: 200,
+            padding: EdgeInsets.all(10),
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+                border: Border.all(width: 1, color: MyTheme.light_grey),
+                borderRadius: BorderRadius.circular(10)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.add,
+                      color: MyTheme.primary_color,
+                    ),
+                    Text(
+                      "Add Featured Image",
+                      style: TextStyle(
+                          color: MyTheme.primary_color,
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
-              ),
-            ),
-            SizedBox(
-              height: 50,
-            )
-          ],
-        ),
-        Positioned(
-          bottom: 0,
-          child: InkWell(
-            onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductInventory()));
-            },
-            child: Container(
-              height: 50,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(color: MyTheme.primary_color,
-              borderRadius: BorderRadius.only(bottomRight: Radius.circular(15),bottomLeft: Radius.circular(15))),
-              child: Center(
-                child: Text("Preview",
+                Text(
+                  "Supported formats are JPG and PNG",
                   style: TextStyle(
-                     color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500
-                  ),),
-              ),
+                    color: MyTheme.dark_grey,
+                    fontSize: 14,
+                  ),
+                ),
+                Divider(),
+                Container(
+                  height: 110,
+                  width: MediaQuery.of(context).size.width,
+                  child: Image.asset(
+                    "assets/imgplaceholder.png",
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        // Preview button
+        Container(
+          height: 60,
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ProductInventory()));
+            },
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(MyTheme.primary_color),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0))),
+            ),
+            child: Text(
+              "Preview",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500),
             ),
           ),
         )
