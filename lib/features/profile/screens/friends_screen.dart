@@ -1,5 +1,3 @@
-import 'package:active_ecommerce_flutter/dummy_data/products.dart';
-import 'package:active_ecommerce_flutter/dummy_data/single_product.dart';
 import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
 import 'package:active_ecommerce_flutter/features/auth/models/seller_group_item.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
@@ -131,6 +129,7 @@ class _FriendsState extends State<Friends> {
   // String selectedGroupSubCategory = "";
 
   // bool loading = true;
+  int indexForSellers = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -152,8 +151,8 @@ class _FriendsState extends State<Friends> {
                   padding: EdgeInsets.all(8),
                   physics: BouncingScrollPhysics(),
                   children: [
-                    Text(sellerData.name),
-                    Text(sellerData.products.length.toString()),
+                    // Text(sellerData.name),
+                    // Text(sellerData.products.length.toString()),
 
                     // Top Bar
                     Padding(
@@ -290,7 +289,7 @@ class _FriendsState extends State<Friends> {
                         child: Text('Groups',
                             style: TextStyle(
                               color: Colors.black,
-                              fontSize: 15,
+                              fontSize: 16,
                               fontWeight: FontWeight.w500,
                               letterSpacing: .5,
                               fontFamily: 'Poppins',
@@ -305,38 +304,159 @@ class _FriendsState extends State<Friends> {
                         builder: (context, snapshot) {
                           if (snapshot.hasData && snapshot.data != null) {
                             var categoryList = snapshot.data;
-                            _getOtherSellersFuture =
-                                getOtherSellers(subCategory: categoryList![0]);
-                            return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 12),
-                              child: Container(
-                                height: 100,
-                                child: ListView.builder(
-                                  physics: BouncingScrollPhysics(),
-                                  itemCount: categoryList.length,
-                                  scrollDirection: Axis.horizontal,
-                                  itemBuilder: (context, index) {
-                                    return InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          selectedGroupIndex = index;
-                                          _getOtherSellersFuture =
-                                              getOtherSellers(
-                                                  subCategory:
-                                                      categoryList[index]);
-                                        });
+                            _getOtherSellersFuture = getOtherSellers(
+                                subCategory: categoryList![indexForSellers]);
+                            return Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12),
+                                  child: Container(
+                                    height: 100,
+                                    child: ListView.builder(
+                                      physics: BouncingScrollPhysics(),
+                                      itemCount: categoryList.length,
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (context, index) {
+                                        return InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              selectedGroupIndex = index;
+                                              indexForSellers = index;
+                                            });
+                                          },
+                                          child: GroupWidget(
+                                            image: "assets/onion.png",
+                                            isSelected:
+                                                selectedGroupIndex == index
+                                                    ? true
+                                                    : false,
+                                          ),
+                                        );
                                       },
-                                      child: GroupWidget(
-                                        image: "assets/onion.png",
-                                        isSelected: selectedGroupIndex == index
-                                            ? true
-                                            : false,
-                                      ),
-                                    );
-                                  },
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text('People in your Area',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          letterSpacing: .5,
+                                          fontFamily: 'Poppins',
+                                          decoration: TextDecoration.underline,
+                                        )),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                FutureBuilder(
+                                    future: _getOtherSellersFuture,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return Container(
+                                          height: 200,
+                                          child: Center(
+                                              child: CircularProgressIndicator(
+                                            color: MyTheme.primary_color,
+                                          )),
+                                        );
+                                      }
+                                      if (snapshot.hasData &&
+                                          snapshot.data != null) {
+                                        return Column(
+                                          children: [
+                                            // Text(snapshot.data!.length
+                                            //     .toString()),
+                                            MasonryGridView.count(
+                                              crossAxisCount: 4,
+                                              mainAxisSpacing: 4,
+                                              crossAxisSpacing: 4,
+                                              itemCount: snapshot.data!.length,
+                                              shrinkWrap: true,
+                                              padding: EdgeInsets.all(4),
+                                              physics:
+                                                  NeverScrollableScrollPhysics(),
+                                              scrollDirection: Axis.vertical,
+                                              itemBuilder: (context, index) {
+                                                //
+                                                return ClipOval(
+                                                  child: InkWell(
+                                                    onTap: () =>
+                                                        print('tapped $index'),
+                                                    child: Container(
+                                                      // height: 50,
+                                                      // width: 50,
+                                                      child: Stack(
+                                                        children: [
+                                                          AspectRatio(
+                                                            aspectRatio: 1 / 1,
+                                                            // child: Image.asset(
+                                                            //   (index % 3 == 0)
+                                                            //       ? 'assets/Ellipse2.png'
+                                                            //       : 'assets/Ellipse3.png',
+                                                            //   fit: BoxFit.fill,
+                                                            // ),
+                                                            child:
+                                                                CachedNetworkImage(
+                                                              imageUrl: snapshot
+                                                                  .data![index]
+                                                                  .imageURL,
+                                                              fit: BoxFit.cover,
+                                                            ),
+                                                          ),
+                                                          // (index % 3 == 0)
+                                                          //     ? Positioned(
+                                                          //         bottom: 10,
+                                                          //         left: 50,
+                                                          //         child:
+                                                          //             ClipRRect(
+                                                          //           child:
+                                                          //               CircleAvatar(
+                                                          //             radius:
+                                                          //                 10,
+                                                          //             backgroundColor:
+                                                          //                 MyTheme
+                                                          //                     .green,
+                                                          //             child:
+                                                          //                 Icon(
+                                                          //               Icons
+                                                          //                   .check,
+                                                          //               size:
+                                                          //                   15.0,
+                                                          //               color: Colors
+                                                          //                   .white,
+                                                          //             ),
+                                                          //           ),
+                                                          //         ),
+                                                          //       )
+                                                          //     : SizedBox
+                                                          //         .shrink()
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      }
+                                      return Container(
+                                        height: 200,
+                                        child: Center(
+                                            child: CircularProgressIndicator(
+                                          color: MyTheme.primary_color,
+                                        )),
+                                      );
+                                    }),
+                              ],
                             );
                           }
                           return SizedBox();
@@ -345,103 +465,6 @@ class _FriendsState extends State<Friends> {
                     SizedBox(
                       height: 10,
                     ),
-
-                    Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text('People in your Area',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                              letterSpacing: .5,
-                              fontFamily: 'Poppins',
-                              decoration: TextDecoration.underline,
-                            )),
-                      ),
-                    ),
-                    FutureBuilder(
-                        future: _getOtherSellersFuture,
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Container(
-                              height: 200,
-                              child: Center(
-                                  child: CircularProgressIndicator(
-                                color: MyTheme.primary_color,
-                              )),
-                            );
-                          }
-                          if (snapshot.hasData && snapshot.data != null) {
-                            return Column(
-                              children: [
-                                Text(snapshot.data!.length.toString()),
-                                // MasonryGridView.count(
-                                //   crossAxisCount: 4,
-                                //   mainAxisSpacing: 4,
-                                //   crossAxisSpacing: 4,
-                                //   itemCount: 50,
-                                //   shrinkWrap: true,
-                                //   padding: EdgeInsets.only(top: 8),
-                                //   physics: NeverScrollableScrollPhysics(),
-                                //   scrollDirection: Axis.vertical,
-                                //   itemBuilder: (context, index) {
-                                //     //
-                                //     return ClipOval(
-                                //       child: InkWell(
-                                //         onTap: () => print('tapped $index'),
-                                //         child: Container(
-                                //           // height: 50,
-                                //           // width: 50,
-                                //           child: Stack(
-                                //             children: [
-                                //               AspectRatio(
-                                //                 aspectRatio: 1 / 1,
-                                //                 child: Image.asset(
-                                //                   (index % 3 == 0)
-                                //                       ? 'assets/Ellipse2.png'
-                                //                       : 'assets/Ellipse3.png',
-                                //                   fit: BoxFit.fill,
-                                //                 ),
-                                //               ),
-                                //               (index % 3 == 0)
-                                //                   ? Positioned(
-                                //                       bottom: 10,
-                                //                       left: 50,
-                                //                       child: ClipRRect(
-                                //                         child: CircleAvatar(
-                                //                           radius: 10,
-                                //                           backgroundColor:
-                                //                               MyTheme.green,
-                                //                           child: Icon(
-                                //                             Icons.check,
-                                //                             size: 15.0,
-                                //                             color: Colors.white,
-                                //                           ),
-                                //                         ),
-                                //                       ),
-                                //                     )
-                                //                   : SizedBox.shrink()
-                                //             ],
-                                //           ),
-                                //         ),
-                                //       ),
-                                //     );
-                                //   },
-                                // ),
-                              ],
-                            );
-                          }
-                          return Container(
-                            height: 200,
-                            child: Center(
-                                child: CircularProgressIndicator(
-                              color: MyTheme.primary_color,
-                            )),
-                          );
-                        }),
                   ],
                 );
               }
