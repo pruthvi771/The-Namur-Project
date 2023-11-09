@@ -16,8 +16,8 @@ class SellBloc extends Bloc<SellEvent, SellState> {
     });
 
     on<AddProductRequested>((event, emit) async {
-      var currentUser = authRepository.currentUser!;
       emit(ProductAddEditDeleteLoading());
+      var currentUser = authRepository.currentUser!;
 
       try {
         var docId = await sellRepository.addProductBuying(
@@ -73,7 +73,10 @@ class SellBloc extends Bloc<SellEvent, SellState> {
     on<DeleteProductRequested>((event, emit) async {
       try {
         emit(ProductAddEditDeleteLoading());
+        var currentUser = authRepository.currentUser!;
         await sellRepository.deleteProduct(productId: event.productId);
+        await sellRepository.removeProductFromSellerDocument(
+            productId: event.productId, sellerId: currentUser.userId);
         emit(ProductAddEditDeleteSuccessfully());
       } catch (e) {
         // emit(SellAddProductErrorState(message: e.toString()));

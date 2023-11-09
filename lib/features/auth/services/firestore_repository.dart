@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:typed_data';
+import 'package:active_ecommerce_flutter/features/auth/models/seller_group_item.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -33,15 +34,15 @@ class FirestoreRepository {
         'name': name,
         'email': email,
         'phone number': phoneNumber ?? '',
-        'location_id': '',
-        'Products_Buy': '',
-        'adhaar_id': '',
-        'adhaar_id_verified': false,
-        'GST': '',
-        'GST_verified': false,
-        'PAN': '',
-        'PAN_verified': false,
-        'profile_complete': false,
+        // 'location_id': '',
+        // 'Products_Buy': '',
+        // 'adhaar_id': '',
+        // 'adhaar_id_verified': false,
+        // 'GST': '',
+        // 'GST_verified': false,
+        // 'PAN': '',
+        // 'PAN_verified': false,
+        // 'profile_complete': false,
         'photoURL': photoURL ?? '',
         'products': [],
         'secondHandProducts': [],
@@ -66,6 +67,87 @@ class FirestoreRepository {
     } catch (_) {
       print(_);
       throw Exception('Something went wrong. Please try again.');
+    }
+  }
+
+  Future<SellerDataForFriendsScreen> getSellerData({
+    required String userId,
+  }) async {
+    try {
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('seller')
+          .doc(userId)
+          .get();
+      return SellerDataForFriendsScreen.fromJson(
+          userSnapshot.data() as Map<String, dynamic>);
+    } catch (_) {
+      print(_);
+      throw Exception('Something went wrong. Please try again.');
+    }
+  }
+
+  Future<String?> getSubCategoryName({required String productId}) async {
+    try {
+      DocumentSnapshot<Map<String, dynamic>> productDoc =
+          await FirebaseFirestore.instance
+              .collection('products')
+              .doc(productId)
+              .get();
+
+      // Check if the document exists
+      if (productDoc.exists) {
+        return productDoc.data()?['subCategory'];
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching product sub category: $e');
+      return null;
+    }
+  }
+
+  Future<List<SellerGroupItem>?> getOtherSellersForSubCategory(
+      {required String subCategory}) async {
+    try {
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await FirebaseFirestore.instance
+              .collection('products')
+              .where(FieldPath.documentId, isNotEqualTo: null)
+              .where('subCategory', isEqualTo: subCategory)
+              .get();
+
+      List<DocumentSnapshot<Map<String, dynamic>>> documents =
+          querySnapshot.docs;
+
+      // print(documents);
+
+      List sellerIDs = [];
+      List<SellerGroupItem> sellerDetails = [];
+
+      for (var document in documents) {
+        Map<String, dynamic> data = document.data()!;
+        if (!sellerIDs.contains(data['sellerId'])) {
+          sellerIDs.add(data['sellerId']);
+        }
+      }
+
+      print(sellerIDs);
+
+      for (var sellerId in sellerIDs) {
+        DocumentSnapshot<Map<String, dynamic>> productDoc =
+            await FirebaseFirestore.instance
+                .collection('seller')
+                .doc(sellerId)
+                .get();
+        sellerDetails.add(SellerGroupItem(
+            name: productDoc.data()!['name'],
+            imageURL: productDoc.data()!['photoURL'],
+            sellerId: sellerId));
+      }
+      return sellerDetails;
+    } catch (e) {
+      print('Error fetching product sub category: $e');
+      return null;
     }
   }
 

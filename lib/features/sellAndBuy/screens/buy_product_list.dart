@@ -1,4 +1,3 @@
-import 'package:active_ecommerce_flutter/dummy_data/single_product.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/subSubCategory_filter_item.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/machine_rent_form.dart';
@@ -109,6 +108,11 @@ class _BuyProductListState extends State<BuyProductList> {
                   .where('isSecondHand', isEqualTo: widget.isSecondHand)
                   .snapshots(),
               builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
                 if (snapshot.hasData) {
                   var products = snapshot.data!.docs.map((doc) {
                     var data = doc.data();

@@ -75,7 +75,7 @@ class _AddPhoneState extends State<AddPhone> {
             .collection('buyer')
             .doc(userId)
             .update({
-          'phoneNumber': newPhone2,
+          'phone number': newPhone2,
         });
         Navigator.pushAndRemoveUntil(context,
             MaterialPageRoute(builder: (context) {

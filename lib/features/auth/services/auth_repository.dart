@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
 import 'package:active_ecommerce_flutter/features/auth/models/postoffice_response_model.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
-import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:hive/hive.dart';
 

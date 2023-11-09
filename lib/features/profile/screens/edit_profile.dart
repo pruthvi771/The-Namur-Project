@@ -1326,7 +1326,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                               cropDropdownValue,
                                               _yieldController.text,
                                             );
-                                            setState(() {});
+                                            setState(() {
+                                              cropDropdownValue = null;
+                                            });
                                           },
                                         ),
                                       ],

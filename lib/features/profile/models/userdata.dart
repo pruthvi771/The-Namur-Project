@@ -38,6 +38,38 @@ class BuyerData {
   }
 }
 
+class SellerDataForFriendsScreen {
+  final String name;
+  final String email;
+  final List products;
+  final String? photoURL;
+
+  SellerDataForFriendsScreen({
+    required this.name,
+    required this.email,
+    required this.products,
+    this.photoURL,
+  });
+
+  factory SellerDataForFriendsScreen.fromJson(Map<String, dynamic> json) {
+    return SellerDataForFriendsScreen(
+      name: json['name'] ?? '',
+      email: json['email'] ?? '',
+      photoURL: json['photoURL'] ?? '',
+      products: json['products'] ?? [],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'email': email,
+      'products': products,
+      'photoURL': photoURL,
+    };
+  }
+}
+
 class User {
   final String name;
   final String email;

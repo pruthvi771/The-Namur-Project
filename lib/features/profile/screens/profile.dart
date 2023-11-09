@@ -567,7 +567,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                       )),
                 ),
                 Center(
-                  child: Text('Profile',
+                  child: Text('My Account',
                       style: TextStyle(
                           color: MyTheme.white,
                           fontSize: 20,

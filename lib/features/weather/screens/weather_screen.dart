@@ -648,6 +648,7 @@ class CurrentWeatherWidget extends StatelessWidget {
                 color: MyTheme.light_grey,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(left: 20, right: 5),
@@ -676,20 +677,27 @@ class CurrentWeatherWidget extends StatelessWidget {
                     ),
                     Padding(
                         padding: const EdgeInsets.only(
-                            right: 20, top: 15, bottom: 20, left: 5),
+                            right: 20, top: 0, bottom: 0, left: 5),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              currentDesc,
-                              // 'Sunny patchy weather', // 'Sunny patchy weather
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                                color: Colors.grey[800],
+                            Container(
+                              width: MediaQuery.of(context).size.width - 211,
+                              child: Text(
+                                currentDesc,
+                                maxLines: 2,
+                                // 'Sunny patchy weather', // 'Sunny patchy weather
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Colors.grey[800],
+                                ),
                               ),
+                            ),
+                            SizedBox(
+                              height: 4,
                             ),
                             Text(
                               'Humidity: ${currentHumidity}',

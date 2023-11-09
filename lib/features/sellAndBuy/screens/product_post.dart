@@ -99,10 +99,15 @@ class _ProductPostState extends State<ProductPost> {
 
   final ImagePicker imagePicker = ImagePicker();
 
+  void printError(String text) {
+    print('\x1B[31m$text\x1B[0m');
+  }
+
   selectImages() async {
     final List<XFile>? selectedImages = await imagePicker.pickMultiImage();
     if (selectedImages != null || selectedImages!.isNotEmpty) {
       _mediaFileList = selectedImages;
+      printError(_mediaFileList.toString());
       setState(() {});
     }
   }

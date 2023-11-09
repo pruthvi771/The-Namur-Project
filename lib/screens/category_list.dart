@@ -344,12 +344,14 @@ class _CategoryListState extends State<CategoryList> {
                                                                       .primary_color,
                                                             ),
                                                             onPressed: () {
-                                                              Navigator.push(
+                                                              Navigator.pushAndRemoveUntil(
                                                                   context,
                                                                   MaterialPageRoute(
                                                                       builder:
                                                                           (context) =>
-                                                                              EditProfileScreen()));
+                                                                              EditProfileScreen()),
+                                                                  (route) =>
+                                                                      false);
                                                             },
                                                             child: Text(
                                                                 'Complete Profile')),

@@ -1,4 +1,3 @@
-import 'package:active_ecommerce_flutter/features/profile/enum.dart';
 import 'package:hive/hive.dart';
 
 part 'models.g.dart'; // Hive Part File
