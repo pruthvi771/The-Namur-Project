@@ -26,6 +26,7 @@ class Friends extends StatefulWidget {
 class _FriendsState extends State<Friends> {
   @override
   void initState() {
+    currentUser = AuthRepository().currentUser!;
     _sellerUserDataFuture = _getSellerUserData();
     _getSubCategoryListFuture = getSubCategoryList(productIDs: null);
     _getOtherSellersFuture = getOtherSellers(subCategory: null);
@@ -71,6 +72,8 @@ class _FriendsState extends State<Friends> {
 
   String title = "KYC";
   final double progress = 0.80;
+
+  late final AuthUser currentUser;
 
   FirestoreRepository firestoreRepository = FirestoreRepository();
 
@@ -290,20 +293,21 @@ class _FriendsState extends State<Friends> {
                             var categoryList = snapshot.data;
                             if (categoryList == null || categoryList.isEmpty) {
                               return Container(
-                                  height: 200,
-                                  // color: Colors.red,
-                                  padding: EdgeInsets.symmetric(horizontal: 20),
-                                  child: Align(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        'Add products to see this screen.',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                          height: 1.4,
-                                        ),
-                                      )));
+                                height: 200,
+                                // color: Colors.red,
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                child: Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      'Add products to see this screen.',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        height: 1.4,
+                                      ),
+                                    )),
+                              );
                             }
                             _getOtherSellersFuture = getOtherSellers(
                                 subCategory: categoryList[indexForSellers]);
@@ -325,11 +329,12 @@ class _FriendsState extends State<Friends> {
                                         )),
                                   ),
                                 ),
+
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 12),
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 0),
                                   child: Container(
-                                    height: 100,
+                                    height: 115,
                                     child: ListView.builder(
                                       physics: BouncingScrollPhysics(),
                                       itemCount: categoryList.length,
@@ -343,6 +348,7 @@ class _FriendsState extends State<Friends> {
                                             });
                                           },
                                           child: GroupWidget(
+                                            name: categoryList[index],
                                             image: "assets/onion.png",
                                             isSelected:
                                                 selectedGroupIndex == index
@@ -354,6 +360,8 @@ class _FriendsState extends State<Friends> {
                                     ),
                                   ),
                                 ),
+
+                                // People in your area text
                                 Padding(
                                   padding: EdgeInsets.all(8),
                                   child: Align(
@@ -369,9 +377,12 @@ class _FriendsState extends State<Friends> {
                                         )),
                                   ),
                                 ),
+
                                 SizedBox(
                                   height: 10,
                                 ),
+
+                                // showing sellers
                                 FutureBuilder(
                                     future: _getOtherSellersFuture,
                                     builder: (context, snapshot) {
@@ -387,83 +398,105 @@ class _FriendsState extends State<Friends> {
                                       }
                                       if (snapshot.hasData &&
                                           snapshot.data != null) {
-                                        return Column(
-                                          children: [
-                                            // Text(snapshot.data!.length
-                                            //     .toString()),
-                                            MasonryGridView.count(
-                                              crossAxisCount: 4,
-                                              mainAxisSpacing: 4,
-                                              crossAxisSpacing: 4,
-                                              itemCount: snapshot.data!.length,
-                                              shrinkWrap: true,
-                                              padding: EdgeInsets.all(4),
-                                              physics:
-                                                  NeverScrollableScrollPhysics(),
-                                              scrollDirection: Axis.vertical,
-                                              itemBuilder: (context, index) {
-                                                //
-                                                return ClipOval(
-                                                  child: InkWell(
-                                                    onTap: () =>
-                                                        print('tapped $index'),
-                                                    child: Container(
-                                                      // height: 50,
-                                                      // width: 50,
-                                                      child: Stack(
-                                                        children: [
-                                                          AspectRatio(
-                                                            aspectRatio: 1 / 1,
-                                                            // child: Image.asset(
-                                                            //   (index % 3 == 0)
-                                                            //       ? 'assets/Ellipse2.png'
-                                                            //       : 'assets/Ellipse3.png',
-                                                            //   fit: BoxFit.fill,
-                                                            // ),
-                                                            child:
-                                                                CachedNetworkImage(
-                                                              imageUrl: snapshot
-                                                                  .data![index]
-                                                                  .imageURL,
-                                                              fit: BoxFit.cover,
+                                        List<SellerGroupItem> sellersList =
+                                            snapshot.data!;
+                                        sellersList.removeWhere((item) =>
+                                            item.sellerId ==
+                                            currentUser.userId);
+                                        return sellersList.isEmpty
+                                            ? Container(
+                                                height: 200,
+                                                // color: Colors.red,
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 20),
+                                                child: Align(
+                                                    alignment: Alignment.center,
+                                                    child: Text(
+                                                      'There are no people \nin this group',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        height: 1.4,
+                                                      ),
+                                                    )))
+                                            : MasonryGridView.count(
+                                                crossAxisCount: 4,
+                                                mainAxisSpacing: 4,
+                                                crossAxisSpacing: 4,
+                                                itemCount:
+                                                    snapshot.data!.length,
+                                                shrinkWrap: true,
+                                                padding: EdgeInsets.all(4),
+                                                physics:
+                                                    NeverScrollableScrollPhysics(),
+                                                scrollDirection: Axis.vertical,
+                                                itemBuilder: (context, index) {
+                                                  //
+                                                  return ClipOval(
+                                                    child: InkWell(
+                                                      onTap: () => print(
+                                                          'tapped $index'),
+                                                      child: Container(
+                                                        // height: 50,
+                                                        // width: 50,
+                                                        child: Stack(
+                                                          children: [
+                                                            AspectRatio(
+                                                              aspectRatio:
+                                                                  1 / 1,
+                                                              // child: Image.asset(
+                                                              //   (index % 3 == 0)
+                                                              //       ? 'assets/Ellipse2.png'
+                                                              //       : 'assets/Ellipse3.png',
+                                                              //   fit: BoxFit.fill,
+                                                              // ),
+                                                              child:
+                                                                  CachedNetworkImage(
+                                                                imageUrl:
+                                                                    sellersList[
+                                                                            index]
+                                                                        .imageURL,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
                                                             ),
-                                                          ),
-                                                          // (index % 3 == 0)
-                                                          //     ? Positioned(
-                                                          //         bottom: 10,
-                                                          //         left: 50,
-                                                          //         child:
-                                                          //             ClipRRect(
-                                                          //           child:
-                                                          //               CircleAvatar(
-                                                          //             radius:
-                                                          //                 10,
-                                                          //             backgroundColor:
-                                                          //                 MyTheme
-                                                          //                     .green,
-                                                          //             child:
-                                                          //                 Icon(
-                                                          //               Icons
-                                                          //                   .check,
-                                                          //               size:
-                                                          //                   15.0,
-                                                          //               color: Colors
-                                                          //                   .white,
-                                                          //             ),
-                                                          //           ),
-                                                          //         ),
-                                                          //       )
-                                                          //     : SizedBox
-                                                          //         .shrink()
-                                                        ],
+                                                            // (index % 3 == 0)
+                                                            //     ? Positioned(
+                                                            //         bottom: 10,
+                                                            //         left: 50,
+                                                            //         child:
+                                                            //             ClipRRect(
+                                                            //           child:
+                                                            //               CircleAvatar(
+                                                            //             radius:
+                                                            //                 10,
+                                                            //             backgroundColor:
+                                                            //                 MyTheme
+                                                            //                     .green,
+                                                            //             child:
+                                                            //                 Icon(
+                                                            //               Icons
+                                                            //                   .check,
+                                                            //               size:
+                                                            //                   15.0,
+                                                            //               color: Colors
+                                                            //                   .white,
+                                                            //             ),
+                                                            //           ),
+                                                            //         ),
+                                                            //       )
+                                                            //     : SizedBox
+                                                            //         .shrink()
+                                                          ],
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          ],
-                                        );
+                                                  );
+                                                },
+                                              );
                                       }
                                       return Container(
                                         height: 200,
@@ -553,10 +586,12 @@ class _FriendsState extends State<Friends> {
 class GroupWidget extends StatelessWidget {
   const GroupWidget({
     super.key,
+    required this.name,
     required this.image,
     required this.isSelected,
   });
 
+  final String name;
   final String image;
   final bool isSelected;
 
@@ -565,26 +600,41 @@ class GroupWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(6),
       child: Container(
-        padding: EdgeInsets.all(2),
+        // height: 100,
+        padding: EdgeInsets.all(5),
         decoration: BoxDecoration(
+          // color: Colors.red[200],
           border: isSelected
               ? Border.all(
-                  color: Colors.black, // You can set the border color here
+                  color: Colors.black
+                      .withOpacity(0.1), // You can set the border color here
                   width: 3.0, // You can set the border width here
                 )
               : null,
           borderRadius: BorderRadius.circular(10.0),
         ),
-        child: AspectRatio(
-          aspectRatio: 1 / 1,
-          // child: CachedNetworkImage(
-          //   imageUrl: image,
-          //   fit: BoxFit.cover,
-          // ),
-          child: Image.asset(
-            image,
-            fit: BoxFit.cover,
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Expanded(
+              // aspectRatio: 1 / 1,
+              // child: CachedNetworkImage(
+              //   imageUrl: image,
+              //   fit: BoxFit.cover,
+              // ),
+              child: Image.asset(
+                image,
+                fit: BoxFit.cover,
+              ),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Text(
+              name,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
       ),
     );
