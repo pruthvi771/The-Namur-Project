@@ -136,6 +136,21 @@ class SellRepository {
     }
   }
 
+  Future<void> removeProductFromSellerDocument(
+      {required String productId, required String sellerId}) async {
+    CollectionReference sellerCollection =
+        FirebaseFirestore.instance.collection('seller');
+
+    try {
+      await sellerCollection.doc(sellerId).update({
+        'products': FieldValue.arrayRemove([productId]),
+        'secondHandProducts': FieldValue.arrayRemove([productId])
+      });
+    } catch (e) {
+      print('Error updating seller document for adding product: $e');
+    }
+  }
+
   Future<List<String>?> uploadImagesToFirebaseStorage({
     required List<XFile> imageFiles,
     required String docId,
