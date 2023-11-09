@@ -108,6 +108,11 @@ class _BuyProductListState extends State<BuyProductList> {
                   .where('isSecondHand', isEqualTo: widget.isSecondHand)
                   .snapshots(),
               builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
                 if (snapshot.hasData) {
                   var products = snapshot.data!.docs.map((doc) {
                     var data = doc.data();
