@@ -46,10 +46,6 @@ class _BuyProductListState extends State<BuyProductList> {
 
   @override
   void initState() {
-    // BlocProvider.of<BuyBloc>(context).add(BuyProductsForSubCategoryRequested(
-    //   subCategory: nameForSubCategoryEnum[widget.subCategoryEnum]!,
-    // ));
-    // subSubCategoryList = ;
     productsStream = allProductStreamQuery();
     _futureForUpdatingStream =
         futureForUpdatingStream(productsStream: productsStream);
@@ -192,6 +188,7 @@ class _BuyProductListState extends State<BuyProductList> {
   //                       onPressed: () {
   //                         setState(() {
   //                           randomText = 'mello';
+  //                           productsStream = allProductStreamQueryGoat();
   //                         });
   //                       },
   //                       child: Text('Apply'),
@@ -213,159 +210,268 @@ class _BuyProductListState extends State<BuyProductList> {
   //   );
   // }
 
-  void _showModalBottomSheet(BuildContext context) {
+  void _showModalBottomSheet(
+      {required BuildContext context,
+      required List subSubCategoryList,
+      required List locationList}) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return Container(
-              height: 400,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            color: Colors.grey[200],
-                            child: _buildLeftPanel(setState),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: _buildRightPanel(setState),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    height: 60,
-                    color: Colors.white,
-                    child: Row(
-                      children: [
-                        Expanded(child: SizedBox()),
-                        Container(
-                          width: 100,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              print('starting');
-                              productsStream = allProductStreamQueryGoat();
-                              _futureForUpdatingStream =
-                                  futureForUpdatingStream(
-                                      productsStream: productsStream);
-                              print('ending');
-                              setState(() {});
-                            },
-                            child: Text('Apply'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: MyTheme.accent_color,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(6),
+        return Container(
+          height: 400,
+          child: Column(
+            children: [
+              Expanded(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        color: Colors.white,
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 50,
+                              color: Colors.grey[200],
+                              child: Center(
+                                child: Text(
+                                  'Locations',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
                             ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            FilterListItem(title: 'kfs akjfnajkg akfnknhga'),
+                            FilterListItem(),
+                            FilterListItem(),
+                            FilterListItem(),
+                            FilterListItem(),
+                            FilterListItem(),
+                          ],
+                        ),
+                      ),
+                    ),
+                    VerticalDivider(
+                      color: Colors.grey, // Choose the color of the divider
+                      thickness: 1.0, // Choose the thickness of the divider
+                    ),
+                    Expanded(
+                      child: Container(
+                        color: Colors.white,
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 50,
+                              color: Colors.grey[200],
+                              child: Center(
+                                child: Text(
+                                  'Category',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            FilterListItem(title: 'kfs akjfnajkg akfnknhga'),
+                            FilterListItem(),
+                            FilterListItem(),
+                            FilterListItem(),
+                            FilterListItem(),
+                            FilterListItem(),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                height: 60,
+                color: Colors.grey[200],
+                child: Row(
+                  children: [
+                    Expanded(child: SizedBox()),
+                    Container(
+                      width: 100,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            randomText = 'mello';
+                            productsStream = allProductStreamQueryGoat();
+                          });
+                        },
+                        child: Text('Apply'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: MyTheme.accent_color,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6),
                           ),
                         ),
-                      ],
+                      ),
                     ),
-                  )
-                ],
-              ),
-            );
-          },
+                  ],
+                ),
+              )
+            ],
+          ),
         );
       },
     );
   }
 
-  Widget _buildLeftPanel(StateSetter setState) {
-    return ListView(
-      children: [
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              if (!fitlerLocationTabOpen) {
-                fitlerLocationTabOpen = true;
-              }
-            });
-          },
-          child: Container(
-            height: 50,
-            color: fitlerLocationTabOpen ? Colors.white : Colors.grey[300],
-            child: Center(
-              child: Text(
-                'Location',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-        ),
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              if (fitlerLocationTabOpen) {
-                fitlerLocationTabOpen = false;
-              }
-            });
-          },
-          child: Container(
-            height: 50,
-            color: fitlerLocationTabOpen ? Colors.grey[300] : Colors.white,
-            child: Center(
-              child: Text(
-                'Category',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  // void _showModalBottomSheet(BuildContext context) {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return Container(
+  //         height: 400,
+  //         child: Column(
+  //           children: [
+  //             Expanded(
+  //               child: Row(
+  //                 children: [
+  //                   Expanded(
+  //                     flex: 1,
+  //                     child: Container(
+  //                       color: Colors.grey[200],
+  //                       child: _buildLeftPanel(context),
+  //                     ),
+  //                   ),
+  //                   Expanded(
+  //                     flex: 2,
+  //                     child: _buildRightPanel(context),
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //             Container(
+  //               padding: EdgeInsets.symmetric(horizontal: 15),
+  //               height: 60,
+  //               color: Colors.white,
+  //               child: Row(
+  //                 children: [
+  //                   Expanded(child: SizedBox()),
+  //                   Container(
+  //                     width: 100,
+  //                     child: ElevatedButton(
+  //                       onPressed: () {
+  //                         print('starting');
+  //                         setState(() {
+  //                           randomText = 'mello';
+  //                           productsStream = allProductStreamQueryGoat();
+  //                         });
+  //                         print('ending');
+  //                         Navigator.pop(context); // Close the bottom sheet
+  //                       },
+  //                       child: Text('Apply'),
+  //                       style: ElevatedButton.styleFrom(
+  //                         backgroundColor: MyTheme.accent_color,
+  //                         shape: RoundedRectangleBorder(
+  //                           borderRadius: BorderRadius.circular(6),
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //             )
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
-  Widget _buildRightPanel(StateSetter setState) {
-    return fitlerLocationTabOpen
-        ? Container(
-            padding: EdgeInsets.only(left: 10),
-            child: ListView(
-              children: [
-                SizedBox(
-                  height: 25,
-                ),
-                FilterListItem(),
-                FilterListItem(),
-                FilterListItem(),
-                FilterListItem(),
-                FilterListItem(),
-                FilterListItem(),
-              ],
-            ),
-          )
-        : Container(
-            padding: EdgeInsets.only(left: 10),
-            child: ListView(
-              children: [
-                SizedBox(
-                  height: 25,
-                ),
-                FilterListItem(title: 'mello'),
-                FilterListItem(title: 'mello'),
-                FilterListItem(title: 'mello'),
-                FilterListItem(title: 'mello'),
-                FilterListItem(title: 'mello'),
-                FilterListItem(title: 'mello'),
-              ],
-            ),
-          );
-  }
+  // Widget _buildLeftPanel(BuildContext context) {
+  //   return ListView(
+  //     children: [
+  //       GestureDetector(
+  //         onTap: () {
+  //           // Handle Location tap
+  //           print('Location tapped');
+  //         },
+  //         child: Container(
+  //           height: 50,
+  //           color: Colors.grey[300],
+  //           child: Center(
+  //             child: Text(
+  //               'Location',
+  //               style: TextStyle(
+  //                 fontSize: 15,
+  //                 fontWeight: FontWeight.bold,
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //       GestureDetector(
+  //         onTap: () {
+  //           // Handle Category tap
+  //           print('Category tapped');
+  //         },
+  //         child: Container(
+  //           height: 50,
+  //           color: Colors.white,
+  //           child: Center(
+  //             child: Text(
+  //               'Category',
+  //               style: TextStyle(
+  //                 fontSize: 15,
+  //                 fontWeight: FontWeight.bold,
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
+
+  // Widget _buildRightPanel(BuildContext context) {
+  //   bool fitlerLocationTabOpen = true; // Local state
+
+  //   return fitlerLocationTabOpen
+  //       ? Container(
+  //           padding: EdgeInsets.only(left: 10),
+  //           child: ListView(
+  //             children: [
+  //               SizedBox(
+  //                 height: 25,
+  //               ),
+  //               FilterListItem(),
+  //               FilterListItem(),
+  //               FilterListItem(),
+  //               FilterListItem(),
+  //               FilterListItem(),
+  //               FilterListItem(),
+  //             ],
+  //           ),
+  //         )
+  //       : Container(
+  //           padding: EdgeInsets.only(left: 10),
+  //           child: ListView(
+  //             children: [
+  //               SizedBox(
+  //                 height: 25,
+  //               ),
+  //               FilterListItem(title: 'mello'),
+  //               FilterListItem(title: 'mello'),
+  //               FilterListItem(title: 'mello'),
+  //               FilterListItem(title: 'mello'),
+  //               FilterListItem(title: 'mello'),
+  //               FilterListItem(title: 'mello'),
+  //             ],
+  //           ),
+  //         );
+  // }
 
   Container FilterListItem({String title = 'Hell0'}) {
     return Container(
@@ -381,10 +487,13 @@ class _BuyProductListState extends State<BuyProductList> {
           SizedBox(
             width: 10,
           ),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 16,
+          Expanded(
+            child: Text(
+              title,
+              maxLines: 2,
+              style: TextStyle(
+                fontSize: 16,
+              ),
             ),
           ),
         ],
@@ -480,122 +589,17 @@ class _BuyProductListState extends State<BuyProductList> {
                               ),
                             ),
                           )
-                        // : Column(
-                        //     children: [
-                        //       Container(
-                        //         color: Colors.grey[100],
-                        //         height: 50,
-                        //         child: Row(
-                        //           children: [
-                        //             Container(
-                        //               // width: 40,
-                        //               padding: EdgeInsets.symmetric(
-                        //                   horizontal: 10, vertical: 7.5),
-                        //               child: ElevatedButton(
-                        //                 onPressed: () {
-                        //                   setState(() {
-                        //                     selectAllCategories();
-                        //                     isALL = isALLSelected();
-                        //                   });
-                        //                 },
-                        //                 child: Text(
-                        //                   'All',
-                        //                   style: TextStyle(color: Colors.black),
-                        //                 ),
-                        //                 style: ButtonStyle(
-                        //                     elevation:
-                        //                         MaterialStateProperty.all(0),
-                        //                     backgroundColor: isALL
-                        //                         ? MaterialStatePropertyAll(
-                        //                             Colors.green[300])
-                        //                         : MaterialStatePropertyAll(
-                        //                             Colors.green[100])),
-                        //               ),
-                        //             ),
-                        //             Expanded(
-                        //               child: ListView.builder(
-                        //                 physics: BouncingScrollPhysics(),
-                        //                 itemCount: subSubCategoryList.length,
-                        //                 scrollDirection: Axis.horizontal,
-                        //                 itemBuilder: (context, index) {
-                        //                   return InkWell(
-                        //                     onTap: () {
-                        //                       setState(() {
-                        //                         selectedSubSubcategories[index]
-                        //                                 .isSelected =
-                        //                             !selectedSubSubcategories[
-                        //                                     index]
-                        //                                 .isSelected;
-                        //                         isALL = isALLSelected();
-                        //                       });
-                        //                     },
-                        //                     child: Padding(
-                        //                       padding:
-                        //                           const EdgeInsets.all(8.0),
-                        //                       child: Container(
-                        //                         decoration: BoxDecoration(
-                        //                             color:
-                        //                                 selectedSubSubcategories[
-                        //                                             index]
-                        //                                         .isSelected
-                        //                                     ? Colors.green[100]
-                        //                                     : Colors.white,
-                        //                             borderRadius:
-                        //                                 BorderRadius.circular(
-                        //                                     5),
-                        //                             border: Border.all(
-                        //                                 width: 1,
-                        //                                 color:
-                        //                                     selectedSubSubcategories[
-                        //                                                 index]
-                        //                                             .isSelected
-                        //                                         ? Colors.green
-                        //                                         : Colors.grey)),
-                        //                         child: Padding(
-                        //                           padding: const EdgeInsets
-                        //                               .symmetric(
-                        //                               horizontal: 10,
-                        //                               vertical: 8),
-                        //                           child: Text(
-                        //                             selectedSubSubcategories[
-                        //                                     index]
-                        //                                 .subSubCategoryName,
-                        //                           ),
-                        //                         ),
-                        //                       ),
-                        //                     ),
-                        //                   );
-                        //                 },
-                        //               ),
-                        //             ),
-                        //           ],
-                        //         ),
-                        //       ),
-                        // selectedSubSubcategories
-                        //         .every((item) => !item.isSelected)
-                        //     ? Container(
-                        //         height: 400,
-                        //         child: Center(
-                        //           child: Text(
-                        //             'Please select at least one sub category.',
-                        //             style: TextStyle(
-                        //               fontSize: 16,
-                        //               fontWeight: FontWeight.w600,
-                        //             ),
-                        //           ),
-                        //         ),
-                        //       )
                         : Column(
                             children: [
                               Text(randomText),
                               Container(
-                                // color: Colors.red,
                                 height: 50,
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 10, vertical: 8),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
+                                    // sort by
                                     Container(
                                       height: 33,
                                       padding: const EdgeInsets.symmetric(
@@ -603,12 +607,8 @@ class _BuyProductListState extends State<BuyProductList> {
                                       decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(500),
-                                          // border: Border.all(
-                                          //   color: Colors.grey,
-                                          // ),
                                           color: Colors.grey[200]),
                                       child: DropdownButton<String>(
-                                        // isExpanded: true,
                                         hint: Text(
                                           'Sort By',
                                           style: TextStyle(
@@ -620,12 +620,10 @@ class _BuyProductListState extends State<BuyProductList> {
                                         icon: Icon(Icons.arrow_drop_down),
                                         iconSize: 24,
                                         elevation: 16,
-                                        underline:
-                                            SizedBox(), // Remove the underline
+                                        underline: SizedBox(),
                                         style: TextStyle(
                                           fontSize: 14,
-                                          color: Colors
-                                              .black, // You can customize the text color here
+                                          color: Colors.black,
                                         ),
                                         onChanged: (String? newValue) {
                                           setState(() {
@@ -644,9 +642,11 @@ class _BuyProductListState extends State<BuyProductList> {
                                         }).toList(),
                                       ),
                                     ),
+
                                     SizedBox(
                                       width: 10,
                                     ),
+
                                     GestureDetector(
                                       onTap: () {
                                         _showModalBottomSheet(context);
@@ -730,16 +730,17 @@ class _BuyProductListState extends State<BuyProductList> {
                                                                 ));
                                                           } else {
                                                             Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          ProductDetails(
-                                                                    sellProduct:
-                                                                        products[
-                                                                            index],
-                                                                  ),
-                                                                ));
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        ProductDetails(
+                                                                  sellProduct:
+                                                                      products[
+                                                                          index],
+                                                                ),
+                                                              ),
+                                                            );
                                                           }
                                                         },
                                                         child: BuyProductTile(
