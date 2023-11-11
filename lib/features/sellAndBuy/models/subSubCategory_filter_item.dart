@@ -1,9 +1,9 @@
-class SubSubCategoryFilterItem {
-  final String subSubCategoryName;
+class FilterItem {
+  final String name;
   bool isSelected;
 
-  SubSubCategoryFilterItem({
-    required this.subSubCategoryName,
+  FilterItem({
+    required this.name,
     required this.isSelected,
   });
 }

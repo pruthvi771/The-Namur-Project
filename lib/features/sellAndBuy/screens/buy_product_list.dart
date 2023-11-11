@@ -1,3 +1,4 @@
+import 'package:active_ecommerce_flutter/data_model/check_response.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/subSubCategory_filter_item.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/machine_rent_form.dart';
@@ -26,8 +27,8 @@ class BuyProductList extends StatefulWidget {
 
 class _BuyProductListState extends State<BuyProductList> {
   String? sortByDropdownValue;
-  late List<String> subSubCategoryList;
-  late List<SubSubCategoryFilterItem> selectedSubSubcategories;
+  // late List<String> subSubCategoryList;
+  // late List<SubSubCategoryFilterItem> selectedSubSubcategories;
   bool isALL = true;
   bool fitlerLocationTabOpen = true;
 
@@ -39,6 +40,9 @@ class _BuyProductListState extends State<BuyProductList> {
 
   late Future<Stream> _futureForUpdatingStream;
 
+  List<FilterItem> subSubCategoryList = [];
+  List<FilterItem> locationsList = [];
+
   Future<Stream> futureForUpdatingStream(
       {required Stream productsStream}) async {
     return productsStream;
@@ -49,40 +53,40 @@ class _BuyProductListState extends State<BuyProductList> {
     productsStream = allProductStreamQuery();
     _futureForUpdatingStream =
         futureForUpdatingStream(productsStream: productsStream);
-    subSubCategoryList = List.from(SubSubCategoryList[widget.subCategoryEnum]!);
-    selectedSubSubcategories = subSubCategoryList
-        .map((subSubCategory) => SubSubCategoryFilterItem(
-              subSubCategoryName: subSubCategory,
-              isSelected: true,
-            ))
-        .toList();
+    // subSubCategoryList = List.from(SubSubCategoryList[widget.subCategoryEnum]!);
+    // selectedSubSubcategories = subSubCategoryList
+    //     .map((subSubCategory) => SubSubCategoryFilterItem(
+    //           subSubCategoryName: subSubCategory,
+    //           isSelected: true,
+    //         ))
+    //     .toList();
     super.initState();
   }
 
-  void selectAllCategories() {
-    setState(() {
-      selectedSubSubcategories = selectedSubSubcategories.map((subSubCategory) {
-        return SubSubCategoryFilterItem(
-            subSubCategoryName: subSubCategory.subSubCategoryName,
-            isSelected: true);
-      }).toList();
-    });
-  }
+  // void selectAllCategories() {
+  //   setState(() {
+  //     selectedSubSubcategories = selectedSubSubcategories.map((subSubCategory) {
+  //       return SubSubCategoryFilterItem(
+  //           subSubCategoryName: subSubCategory.subSubCategoryName,
+  //           isSelected: true);
+  //     }).toList();
+  //   });
+  // }
 
-  bool isALLSelected() {
-    if (selectedSubSubcategories
-        .every((subSubCategory) => subSubCategory.isSelected == true)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+  // bool isALLSelected() {
+  //   if (selectedSubSubcategories
+  //       .every((subSubCategory) => subSubCategory.isSelected == true)) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
 
-  bool containsSelected({required String subSubCategoryName}) {
-    return selectedSubSubcategories.any((subSubCategory) =>
-        subSubCategory.subSubCategoryName == subSubCategoryName &&
-        subSubCategory.isSelected == true);
-  }
+  // bool containsSelected({required String subSubCategoryName}) {
+  //   return selectedSubSubcategories.any((subSubCategory) =>
+  //       subSubCategory.subSubCategoryName == subSubCategoryName &&
+  //       subSubCategory.isSelected == true);
+  // }
 
   // void _showModalBottomSheet(BuildContext context) {
   //   showModalBottomSheet(
@@ -212,7 +216,7 @@ class _BuyProductListState extends State<BuyProductList> {
 
   void _showModalBottomSheet(
       {required BuildContext context,
-      required List subSubCategoryList,
+      required List<FilterItem> subSubCategoryList,
       required List locationList}) {
     showModalBottomSheet(
       context: context,
@@ -245,12 +249,14 @@ class _BuyProductListState extends State<BuyProductList> {
                             SizedBox(
                               height: 20,
                             ),
-                            FilterListItem(title: 'kfs akjfnajkg akfnknhga'),
-                            FilterListItem(),
-                            FilterListItem(),
-                            FilterListItem(),
-                            FilterListItem(),
-                            FilterListItem(),
+                            ListView.builder(
+                                itemCount: locationList.length,
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                scrollDirection: Axis.vertical,
+                                itemBuilder: (context, index) {
+                                  return Text(locationList[index]);
+                                }),
                           ],
                         ),
                       ),
@@ -279,12 +285,24 @@ class _BuyProductListState extends State<BuyProductList> {
                             SizedBox(
                               height: 20,
                             ),
-                            FilterListItem(title: 'kfs akjfnajkg akfnknhga'),
-                            FilterListItem(),
-                            FilterListItem(),
-                            FilterListItem(),
-                            FilterListItem(),
-                            FilterListItem(),
+                            ListView.builder(
+                                itemCount: subSubCategoryList.length,
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                scrollDirection: Axis.vertical,
+                                itemBuilder: (context, index) {
+                                  // return Text(subSubCategoryList[index].name);
+                                  return FilterListItem(
+                                      title: subSubCategoryList[index].name,
+                                      value:
+                                          subSubCategoryList[index].isSelected,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          subSubCategoryList[index].isSelected =
+                                              value!;
+                                        });
+                                      });
+                                }),
                           ],
                         ),
                       ),
@@ -473,19 +491,17 @@ class _BuyProductListState extends State<BuyProductList> {
   //         );
   // }
 
-  Container FilterListItem({String title = 'Hell0'}) {
+  Container FilterListItem(
+      {required String title,
+      required bool value,
+      required void Function(bool?)? onChanged}) {
     return Container(
       padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
       child: Row(
         children: [
-          GestureDetector(
-            onTap: () {
-              print('tapped');
-            },
-            child: Icon(Icons.check_box),
-          ),
-          SizedBox(
-            width: 10,
+          Checkbox(
+            value: value,
+            onChanged: onChanged,
           ),
           Expanded(
             child: Text(
@@ -557,6 +573,8 @@ class _BuyProductListState extends State<BuyProductList> {
                 if (snapshot.hasData) {
                   var products = snapshot.data!.docs.map((doc) {
                     var data = doc.data() as Map;
+                    subSubCategoryList.add(FilterItem(
+                        name: data['subSubCategory'], isSelected: true));
                     return SellProduct(
                       id: doc.id,
                       productName: data['name'],
@@ -647,9 +665,21 @@ class _BuyProductListState extends State<BuyProductList> {
                                       width: 10,
                                     ),
 
+                                    // ElevatedButton(
+                                    //     onPressed: () {
+                                    //       setState(() {
+                                    //         randomText = 'hello mello';
+                                    //       });
+                                    //     },
+                                    //     child: Text('hello mello')),
+
                                     GestureDetector(
                                       onTap: () {
-                                        _showModalBottomSheet(context);
+                                        _showModalBottomSheet(
+                                            context: context,
+                                            subSubCategoryList:
+                                                subSubCategoryList,
+                                            locationList: ['delhi', 'mumbai']);
                                       },
                                       child: Container(
                                         child: Chip(
@@ -662,7 +692,14 @@ class _BuyProductListState extends State<BuyProductList> {
                                             size: 15,
                                           ),
                                           onDeleted: () {
-                                            _showModalBottomSheet(context);
+                                            _showModalBottomSheet(
+                                                context: context,
+                                                subSubCategoryList:
+                                                    subSubCategoryList,
+                                                locationList: [
+                                                  'delhi',
+                                                  'mumbai'
+                                                ]);
                                           },
                                         ),
                                       ),
