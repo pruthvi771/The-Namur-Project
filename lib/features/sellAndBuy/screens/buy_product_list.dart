@@ -1,7 +1,10 @@
 import 'package:active_ecommerce_flutter/data_model/check_response.dart';
+import 'package:active_ecommerce_flutter/features/profile/screens/friends_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/subSubCategory_filter_item.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/filter_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/machine_rent_form.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/parent_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/product_details_screen.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -36,8 +39,6 @@ class _BuyProductListState extends State<BuyProductList> {
   List<String> selectedLocations = [];
   late Stream<QuerySnapshot> productsStream;
 
-  String randomText = 'hello';
-
   late Future<Stream> _futureForUpdatingStream;
 
   List<FilterItem> subSubCategoryList = [];
@@ -61,460 +62,6 @@ class _BuyProductListState extends State<BuyProductList> {
     //         ))
     //     .toList();
     super.initState();
-  }
-
-  // void selectAllCategories() {
-  //   setState(() {
-  //     selectedSubSubcategories = selectedSubSubcategories.map((subSubCategory) {
-  //       return SubSubCategoryFilterItem(
-  //           subSubCategoryName: subSubCategory.subSubCategoryName,
-  //           isSelected: true);
-  //     }).toList();
-  //   });
-  // }
-
-  // bool isALLSelected() {
-  //   if (selectedSubSubcategories
-  //       .every((subSubCategory) => subSubCategory.isSelected == true)) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
-
-  // bool containsSelected({required String subSubCategoryName}) {
-  //   return selectedSubSubcategories.any((subSubCategory) =>
-  //       subSubCategory.subSubCategoryName == subSubCategoryName &&
-  //       subSubCategory.isSelected == true);
-  // }
-
-  // void _showModalBottomSheet(BuildContext context) {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return Container(
-  //         height: 400,
-  //         child: Column(
-  //           children: [
-  //             Expanded(
-  //               child: Row(
-  //                 children: [
-  //                   Expanded(
-  //                     flex: 1,
-  //                     child: Container(
-  //                       color: Colors.grey[200],
-  //                       child: ListView(
-  //                         children: [
-  //                           GestureDetector(
-  //                             onTap: () {
-  //                               setState(() {
-  //                                 fitlerLocationTabOpen = false;
-  //                               });
-  //                             },
-  //                             child: Container(
-  //                               height: 50,
-  //                               color: Colors.white,
-  //                               child: Center(
-  //                                 child: Text(
-  //                                   'Location',
-  //                                   style: TextStyle(
-  //                                       fontSize: 15,
-  //                                       fontWeight: FontWeight.bold),
-  //                                 ),
-  //                               ),
-  //                             ),
-  //                           ),
-  //                           Container(
-  //                             height: 50,
-  //                             color: Colors.grey[100],
-  //                             child: Center(
-  //                               child: Text(
-  //                                 'Category',
-  //                                 style: TextStyle(
-  //                                     fontSize: 15,
-  //                                     fontWeight: FontWeight.bold),
-  //                               ),
-  //                             ),
-  //                           ),
-  //                         ],
-  //                       ),
-  //                     ),
-  //                   ),
-  //                   Expanded(
-  //                     flex: 2,
-  //                     child: fitlerLocationTabOpen
-  //                         ? Container(
-  //                             padding: EdgeInsets.only(left: 10),
-  //                             child: ListView(
-  //                               children: [
-  //                                 SizedBox(
-  //                                   height: 25,
-  //                                 ),
-  //                                 FilterListItem(),
-  //                                 FilterListItem(),
-  //                                 FilterListItem(),
-  //                                 FilterListItem(),
-  //                                 FilterListItem(),
-  //                                 FilterListItem(),
-  //                               ],
-  //                             ),
-  //                           )
-  //                         : Container(
-  //                             padding: EdgeInsets.only(left: 10),
-  //                             child: ListView(
-  //                               children: [
-  //                                 SizedBox(
-  //                                   height: 25,
-  //                                 ),
-  //                                 FilterListItem(title: 'mello'),
-  //                                 FilterListItem(title: 'mello'),
-  //                                 FilterListItem(title: 'mello'),
-  //                                 FilterListItem(title: 'mello'),
-  //                                 FilterListItem(title: 'mello'),
-  //                                 FilterListItem(title: 'mello'),
-  //                               ],
-  //                             ),
-  //                           ),
-  //                   ),
-  //                 ],
-  //               ),
-  //             ),
-  //             Container(
-  //               padding: EdgeInsets.symmetric(horizontal: 15),
-  //               height: 60,
-  //               color: Colors.white,
-  //               child: Row(
-  //                 children: [
-  //                   Expanded(child: SizedBox()),
-  //                   Container(
-  //                     width: 100,
-  //                     child: ElevatedButton(
-  //                       onPressed: () {
-  //                         setState(() {
-  //                           randomText = 'mello';
-  //                           productsStream = allProductStreamQueryGoat();
-  //                         });
-  //                       },
-  //                       child: Text('Apply'),
-  //                       style: ElevatedButton.styleFrom(
-  //                         backgroundColor: MyTheme.accent_color,
-  //                         shape: RoundedRectangleBorder(
-  //                           borderRadius: BorderRadius.circular(6),
-  //                         ),
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ],
-  //               ),
-  //             )
-  //           ],
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
-  void _showModalBottomSheet(
-      {required BuildContext context,
-      required List<FilterItem> subSubCategoryList,
-      required List locationList}) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          height: 400,
-          child: Column(
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        color: Colors.white,
-                        child: Column(
-                          children: [
-                            Container(
-                              height: 50,
-                              color: Colors.grey[200],
-                              child: Center(
-                                child: Text(
-                                  'Locations',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            ListView.builder(
-                                itemCount: locationList.length,
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                scrollDirection: Axis.vertical,
-                                itemBuilder: (context, index) {
-                                  return Text(locationList[index]);
-                                }),
-                          ],
-                        ),
-                      ),
-                    ),
-                    VerticalDivider(
-                      color: Colors.grey, // Choose the color of the divider
-                      thickness: 1.0, // Choose the thickness of the divider
-                    ),
-                    Expanded(
-                      child: Container(
-                        color: Colors.white,
-                        child: Column(
-                          children: [
-                            Container(
-                              height: 50,
-                              color: Colors.grey[200],
-                              child: Center(
-                                child: Text(
-                                  'Category',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            ListView.builder(
-                                itemCount: subSubCategoryList.length,
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                scrollDirection: Axis.vertical,
-                                itemBuilder: (context, index) {
-                                  // return Text(subSubCategoryList[index].name);
-                                  return FilterListItem(
-                                      title: subSubCategoryList[index].name,
-                                      value:
-                                          subSubCategoryList[index].isSelected,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          subSubCategoryList[index].isSelected =
-                                              value!;
-                                        });
-                                      });
-                                }),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 15),
-                height: 60,
-                color: Colors.grey[200],
-                child: Row(
-                  children: [
-                    Expanded(child: SizedBox()),
-                    Container(
-                      width: 100,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            randomText = 'mello';
-                            productsStream = allProductStreamQueryGoat();
-                          });
-                        },
-                        child: Text('Apply'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: MyTheme.accent_color,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  // void _showModalBottomSheet(BuildContext context) {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return Container(
-  //         height: 400,
-  //         child: Column(
-  //           children: [
-  //             Expanded(
-  //               child: Row(
-  //                 children: [
-  //                   Expanded(
-  //                     flex: 1,
-  //                     child: Container(
-  //                       color: Colors.grey[200],
-  //                       child: _buildLeftPanel(context),
-  //                     ),
-  //                   ),
-  //                   Expanded(
-  //                     flex: 2,
-  //                     child: _buildRightPanel(context),
-  //                   ),
-  //                 ],
-  //               ),
-  //             ),
-  //             Container(
-  //               padding: EdgeInsets.symmetric(horizontal: 15),
-  //               height: 60,
-  //               color: Colors.white,
-  //               child: Row(
-  //                 children: [
-  //                   Expanded(child: SizedBox()),
-  //                   Container(
-  //                     width: 100,
-  //                     child: ElevatedButton(
-  //                       onPressed: () {
-  //                         print('starting');
-  //                         setState(() {
-  //                           randomText = 'mello';
-  //                           productsStream = allProductStreamQueryGoat();
-  //                         });
-  //                         print('ending');
-  //                         Navigator.pop(context); // Close the bottom sheet
-  //                       },
-  //                       child: Text('Apply'),
-  //                       style: ElevatedButton.styleFrom(
-  //                         backgroundColor: MyTheme.accent_color,
-  //                         shape: RoundedRectangleBorder(
-  //                           borderRadius: BorderRadius.circular(6),
-  //                         ),
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ],
-  //               ),
-  //             )
-  //           ],
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
-  // Widget _buildLeftPanel(BuildContext context) {
-  //   return ListView(
-  //     children: [
-  //       GestureDetector(
-  //         onTap: () {
-  //           // Handle Location tap
-  //           print('Location tapped');
-  //         },
-  //         child: Container(
-  //           height: 50,
-  //           color: Colors.grey[300],
-  //           child: Center(
-  //             child: Text(
-  //               'Location',
-  //               style: TextStyle(
-  //                 fontSize: 15,
-  //                 fontWeight: FontWeight.bold,
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-  //       ),
-  //       GestureDetector(
-  //         onTap: () {
-  //           // Handle Category tap
-  //           print('Category tapped');
-  //         },
-  //         child: Container(
-  //           height: 50,
-  //           color: Colors.white,
-  //           child: Center(
-  //             child: Text(
-  //               'Category',
-  //               style: TextStyle(
-  //                 fontSize: 15,
-  //                 fontWeight: FontWeight.bold,
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
-
-  // Widget _buildRightPanel(BuildContext context) {
-  //   bool fitlerLocationTabOpen = true; // Local state
-
-  //   return fitlerLocationTabOpen
-  //       ? Container(
-  //           padding: EdgeInsets.only(left: 10),
-  //           child: ListView(
-  //             children: [
-  //               SizedBox(
-  //                 height: 25,
-  //               ),
-  //               FilterListItem(),
-  //               FilterListItem(),
-  //               FilterListItem(),
-  //               FilterListItem(),
-  //               FilterListItem(),
-  //               FilterListItem(),
-  //             ],
-  //           ),
-  //         )
-  //       : Container(
-  //           padding: EdgeInsets.only(left: 10),
-  //           child: ListView(
-  //             children: [
-  //               SizedBox(
-  //                 height: 25,
-  //               ),
-  //               FilterListItem(title: 'mello'),
-  //               FilterListItem(title: 'mello'),
-  //               FilterListItem(title: 'mello'),
-  //               FilterListItem(title: 'mello'),
-  //               FilterListItem(title: 'mello'),
-  //               FilterListItem(title: 'mello'),
-  //             ],
-  //           ),
-  //         );
-  // }
-
-  Container FilterListItem(
-      {required String title,
-      required bool value,
-      required void Function(bool?)? onChanged}) {
-    return Container(
-      padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
-      child: Row(
-        children: [
-          Checkbox(
-            value: value,
-            onChanged: onChanged,
-          ),
-          Expanded(
-            child: Text(
-              title,
-              maxLines: 2,
-              style: TextStyle(
-                fontSize: 16,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
   Stream<QuerySnapshot> allProductStreamQuery() {
@@ -609,7 +156,6 @@ class _BuyProductListState extends State<BuyProductList> {
                           )
                         : Column(
                             children: [
-                              Text(randomText),
                               Container(
                                 height: 50,
                                 padding: const EdgeInsets.symmetric(
@@ -617,53 +163,49 @@ class _BuyProductListState extends State<BuyProductList> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    // sort by
-                                    Container(
-                                      height: 33,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 12.0),
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(500),
-                                          color: Colors.grey[200]),
-                                      child: DropdownButton<String>(
-                                        hint: Text(
-                                          'Sort By',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 13,
-                                          ),
-                                        ),
-                                        value: sortByDropdownValue,
-                                        icon: Icon(Icons.arrow_drop_down),
-                                        iconSize: 24,
-                                        elevation: 16,
-                                        underline: SizedBox(),
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.black,
-                                        ),
-                                        onChanged: (String? newValue) {
-                                          setState(() {
-                                            sortByDropdownValue = newValue!;
-                                          });
-                                        },
-                                        items: [
-                                          'Price (Low to high)',
-                                          'Price (High to Low)'
-                                        ].map<DropdownMenuItem<String>>(
-                                            (String value) {
-                                          return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(value),
-                                          );
-                                        }).toList(),
-                                      ),
-                                    ),
-
-                                    SizedBox(
-                                      width: 10,
-                                    ),
+                                    // // sort by
+                                    // Container(
+                                    //   height: 33,
+                                    //   padding: const EdgeInsets.symmetric(
+                                    //       horizontal: 12.0),
+                                    //   decoration: BoxDecoration(
+                                    //       borderRadius:
+                                    //           BorderRadius.circular(500),
+                                    //       color: Colors.grey[200]),
+                                    //   child: DropdownButton<String>(
+                                    //     hint: Text(
+                                    //       'Sort By',
+                                    //       style: TextStyle(
+                                    //         color: Colors.black,
+                                    //         fontSize: 13,
+                                    //       ),
+                                    //     ),
+                                    //     value: sortByDropdownValue,
+                                    //     icon: Icon(Icons.arrow_drop_down),
+                                    //     iconSize: 24,
+                                    //     elevation: 16,
+                                    //     underline: SizedBox(),
+                                    //     style: TextStyle(
+                                    //       fontSize: 14,
+                                    //       color: Colors.black,
+                                    //     ),
+                                    //     onChanged: (String? newValue) {
+                                    //       setState(() {
+                                    //         sortByDropdownValue = newValue!;
+                                    //       });
+                                    //     },
+                                    //     items: [
+                                    //       'Price (Low to high)',
+                                    //       'Price (High to Low)'
+                                    //     ].map<DropdownMenuItem<String>>(
+                                    //         (String value) {
+                                    //       return DropdownMenuItem<String>(
+                                    //         value: value,
+                                    //         child: Text(value),
+                                    //       );
+                                    //     }).toList(),
+                                    //   ),
+                                    // ),
 
                                     // ElevatedButton(
                                     //     onPressed: () {
@@ -675,31 +217,50 @@ class _BuyProductListState extends State<BuyProductList> {
 
                                     GestureDetector(
                                       onTap: () {
-                                        _showModalBottomSheet(
-                                            context: context,
-                                            subSubCategoryList:
-                                                subSubCategoryList,
-                                            locationList: ['delhi', 'mumbai']);
+                                        Navigator.of(context).push(
+                                          PageRouteBuilder(
+                                            pageBuilder: (context, animation,
+                                                secondaryAnimation) {
+                                              return FilterScreen();
+                                            },
+                                            transitionsBuilder: (context,
+                                                animation,
+                                                secondaryAnimation,
+                                                child) {
+                                              const begin = Offset(0.0, 1.0);
+                                              const end = Offset.zero;
+                                              const curve = Curves.easeInOut;
+                                              var tween = Tween(
+                                                      begin: begin, end: end)
+                                                  .chain(
+                                                      CurveTween(curve: curve));
+                                              var offsetAnimation =
+                                                  animation.drive(tween);
+
+                                              return SlideTransition(
+                                                position: offsetAnimation,
+                                                child: child,
+                                              );
+                                            },
+                                          ),
+                                        );
                                       },
                                       child: Container(
                                         child: Chip(
                                           backgroundColor: Colors.grey[200],
                                           labelPadding: EdgeInsets.symmetric(
                                               horizontal: 10, vertical: 0),
-                                          label: Text('Filter'),
+                                          label: Text('Show Filter'),
                                           deleteIcon: FaIcon(
                                             FontAwesomeIcons.sliders,
                                             size: 15,
                                           ),
                                           onDeleted: () {
-                                            _showModalBottomSheet(
-                                                context: context,
-                                                subSubCategoryList:
-                                                    subSubCategoryList,
-                                                locationList: [
-                                                  'delhi',
-                                                  'mumbai'
-                                                ]);
+                                            // _showModalBottomSheet(
+                                            //     context: context,
+                                            //     subSubCategoryList:
+                                            //         subSubCategoryList,
+                                            //     locationList: locationsList);
                                           },
                                         ),
                                       ),
@@ -738,6 +299,12 @@ class _BuyProductListState extends State<BuyProductList> {
                                                               .data()
                                                           as Map<String,
                                                               dynamic>?;
+                                                  locationsList.add(FilterItem(
+                                                      name: sellerData![
+                                                                  'profileData']
+                                                              ['address'][0]
+                                                          ['village'],
+                                                      isSelected: true));
                                                   return Column(
                                                     children: [
                                                       InkWell(
