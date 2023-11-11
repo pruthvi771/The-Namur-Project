@@ -25,12 +25,34 @@ class BuyProductList extends StatefulWidget {
 }
 
 class _BuyProductListState extends State<BuyProductList> {
+  String? sortByDropdownValue;
+  late List<String> subSubCategoryList;
+  late List<SubSubCategoryFilterItem> selectedSubSubcategories;
+  bool isALL = true;
+  bool fitlerLocationTabOpen = true;
+
+  List<String> selectedCategories = [];
+  List<String> selectedLocations = [];
+  late Stream<QuerySnapshot> productsStream;
+
+  String randomText = 'hello';
+
+  late Future<Stream> _futureForUpdatingStream;
+
+  Future<Stream> futureForUpdatingStream(
+      {required Stream productsStream}) async {
+    return productsStream;
+  }
+
   @override
   void initState() {
     // BlocProvider.of<BuyBloc>(context).add(BuyProductsForSubCategoryRequested(
     //   subCategory: nameForSubCategoryEnum[widget.subCategoryEnum]!,
     // ));
     // subSubCategoryList = ;
+    productsStream = allProductStreamQuery();
+    _futureForUpdatingStream =
+        futureForUpdatingStream(productsStream: productsStream);
     subSubCategoryList = List.from(SubSubCategoryList[widget.subCategoryEnum]!);
     selectedSubSubcategories = subSubCategoryList
         .map((subSubCategory) => SubSubCategoryFilterItem(
@@ -40,10 +62,6 @@ class _BuyProductListState extends State<BuyProductList> {
         .toList();
     super.initState();
   }
-
-  late List<String> subSubCategoryList;
-
-  late List<SubSubCategoryFilterItem> selectedSubSubcategories;
 
   void selectAllCategories() {
     setState(() {
@@ -70,7 +88,326 @@ class _BuyProductListState extends State<BuyProductList> {
         subSubCategory.isSelected == true);
   }
 
-  bool isALL = true;
+  // void _showModalBottomSheet(BuildContext context) {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return Container(
+  //         height: 400,
+  //         child: Column(
+  //           children: [
+  //             Expanded(
+  //               child: Row(
+  //                 children: [
+  //                   Expanded(
+  //                     flex: 1,
+  //                     child: Container(
+  //                       color: Colors.grey[200],
+  //                       child: ListView(
+  //                         children: [
+  //                           GestureDetector(
+  //                             onTap: () {
+  //                               setState(() {
+  //                                 fitlerLocationTabOpen = false;
+  //                               });
+  //                             },
+  //                             child: Container(
+  //                               height: 50,
+  //                               color: Colors.white,
+  //                               child: Center(
+  //                                 child: Text(
+  //                                   'Location',
+  //                                   style: TextStyle(
+  //                                       fontSize: 15,
+  //                                       fontWeight: FontWeight.bold),
+  //                                 ),
+  //                               ),
+  //                             ),
+  //                           ),
+  //                           Container(
+  //                             height: 50,
+  //                             color: Colors.grey[100],
+  //                             child: Center(
+  //                               child: Text(
+  //                                 'Category',
+  //                                 style: TextStyle(
+  //                                     fontSize: 15,
+  //                                     fontWeight: FontWeight.bold),
+  //                               ),
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   Expanded(
+  //                     flex: 2,
+  //                     child: fitlerLocationTabOpen
+  //                         ? Container(
+  //                             padding: EdgeInsets.only(left: 10),
+  //                             child: ListView(
+  //                               children: [
+  //                                 SizedBox(
+  //                                   height: 25,
+  //                                 ),
+  //                                 FilterListItem(),
+  //                                 FilterListItem(),
+  //                                 FilterListItem(),
+  //                                 FilterListItem(),
+  //                                 FilterListItem(),
+  //                                 FilterListItem(),
+  //                               ],
+  //                             ),
+  //                           )
+  //                         : Container(
+  //                             padding: EdgeInsets.only(left: 10),
+  //                             child: ListView(
+  //                               children: [
+  //                                 SizedBox(
+  //                                   height: 25,
+  //                                 ),
+  //                                 FilterListItem(title: 'mello'),
+  //                                 FilterListItem(title: 'mello'),
+  //                                 FilterListItem(title: 'mello'),
+  //                                 FilterListItem(title: 'mello'),
+  //                                 FilterListItem(title: 'mello'),
+  //                                 FilterListItem(title: 'mello'),
+  //                               ],
+  //                             ),
+  //                           ),
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //             Container(
+  //               padding: EdgeInsets.symmetric(horizontal: 15),
+  //               height: 60,
+  //               color: Colors.white,
+  //               child: Row(
+  //                 children: [
+  //                   Expanded(child: SizedBox()),
+  //                   Container(
+  //                     width: 100,
+  //                     child: ElevatedButton(
+  //                       onPressed: () {
+  //                         setState(() {
+  //                           randomText = 'mello';
+  //                         });
+  //                       },
+  //                       child: Text('Apply'),
+  //                       style: ElevatedButton.styleFrom(
+  //                         backgroundColor: MyTheme.accent_color,
+  //                         shape: RoundedRectangleBorder(
+  //                           borderRadius: BorderRadius.circular(6),
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //             )
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
+
+  void _showModalBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Container(
+              height: 400,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Container(
+                            color: Colors.grey[200],
+                            child: _buildLeftPanel(setState),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: _buildRightPanel(setState),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 15),
+                    height: 60,
+                    color: Colors.white,
+                    child: Row(
+                      children: [
+                        Expanded(child: SizedBox()),
+                        Container(
+                          width: 100,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              print('starting');
+                              productsStream = allProductStreamQueryGoat();
+                              _futureForUpdatingStream =
+                                  futureForUpdatingStream(
+                                      productsStream: productsStream);
+                              print('ending');
+                              setState(() {});
+                            },
+                            child: Text('Apply'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: MyTheme.accent_color,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildLeftPanel(StateSetter setState) {
+    return ListView(
+      children: [
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              if (!fitlerLocationTabOpen) {
+                fitlerLocationTabOpen = true;
+              }
+            });
+          },
+          child: Container(
+            height: 50,
+            color: fitlerLocationTabOpen ? Colors.white : Colors.grey[300],
+            child: Center(
+              child: Text(
+                'Location',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              if (fitlerLocationTabOpen) {
+                fitlerLocationTabOpen = false;
+              }
+            });
+          },
+          child: Container(
+            height: 50,
+            color: fitlerLocationTabOpen ? Colors.grey[300] : Colors.white,
+            child: Center(
+              child: Text(
+                'Category',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRightPanel(StateSetter setState) {
+    return fitlerLocationTabOpen
+        ? Container(
+            padding: EdgeInsets.only(left: 10),
+            child: ListView(
+              children: [
+                SizedBox(
+                  height: 25,
+                ),
+                FilterListItem(),
+                FilterListItem(),
+                FilterListItem(),
+                FilterListItem(),
+                FilterListItem(),
+                FilterListItem(),
+              ],
+            ),
+          )
+        : Container(
+            padding: EdgeInsets.only(left: 10),
+            child: ListView(
+              children: [
+                SizedBox(
+                  height: 25,
+                ),
+                FilterListItem(title: 'mello'),
+                FilterListItem(title: 'mello'),
+                FilterListItem(title: 'mello'),
+                FilterListItem(title: 'mello'),
+                FilterListItem(title: 'mello'),
+                FilterListItem(title: 'mello'),
+              ],
+            ),
+          );
+  }
+
+  Container FilterListItem({String title = 'Hell0'}) {
+    return Container(
+      padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () {
+              print('tapped');
+            },
+            child: Icon(Icons.check_box),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Stream<QuerySnapshot> allProductStreamQuery() {
+    return FirebaseFirestore.instance
+        .collection('products')
+        .where('subCategory',
+            isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
+        .where('isSecondHand', isEqualTo: widget.isSecondHand)
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> allProductStreamQueryGoat() {
+    return FirebaseFirestore.instance
+        .collection('products')
+        .where('subCategory', isEqualTo: 'Goats')
+        .where('isSecondHand', isEqualTo: widget.isSecondHand)
+        .snapshots();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,12 +438,7 @@ class _BuyProductListState extends State<BuyProductList> {
           ),
           // body: bodycontent()),
           body: StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('products')
-                  .where('subCategory',
-                      isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
-                  .where('isSecondHand', isEqualTo: widget.isSecondHand)
-                  .snapshots(),
+              stream: productsStream,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
@@ -115,7 +447,7 @@ class _BuyProductListState extends State<BuyProductList> {
                 }
                 if (snapshot.hasData) {
                   var products = snapshot.data!.docs.map((doc) {
-                    var data = doc.data();
+                    var data = doc.data() as Map;
                     return SellProduct(
                       id: doc.id,
                       productName: data['name'],
@@ -148,232 +480,314 @@ class _BuyProductListState extends State<BuyProductList> {
                               ),
                             ),
                           )
+                        // : Column(
+                        //     children: [
+                        //       Container(
+                        //         color: Colors.grey[100],
+                        //         height: 50,
+                        //         child: Row(
+                        //           children: [
+                        //             Container(
+                        //               // width: 40,
+                        //               padding: EdgeInsets.symmetric(
+                        //                   horizontal: 10, vertical: 7.5),
+                        //               child: ElevatedButton(
+                        //                 onPressed: () {
+                        //                   setState(() {
+                        //                     selectAllCategories();
+                        //                     isALL = isALLSelected();
+                        //                   });
+                        //                 },
+                        //                 child: Text(
+                        //                   'All',
+                        //                   style: TextStyle(color: Colors.black),
+                        //                 ),
+                        //                 style: ButtonStyle(
+                        //                     elevation:
+                        //                         MaterialStateProperty.all(0),
+                        //                     backgroundColor: isALL
+                        //                         ? MaterialStatePropertyAll(
+                        //                             Colors.green[300])
+                        //                         : MaterialStatePropertyAll(
+                        //                             Colors.green[100])),
+                        //               ),
+                        //             ),
+                        //             Expanded(
+                        //               child: ListView.builder(
+                        //                 physics: BouncingScrollPhysics(),
+                        //                 itemCount: subSubCategoryList.length,
+                        //                 scrollDirection: Axis.horizontal,
+                        //                 itemBuilder: (context, index) {
+                        //                   return InkWell(
+                        //                     onTap: () {
+                        //                       setState(() {
+                        //                         selectedSubSubcategories[index]
+                        //                                 .isSelected =
+                        //                             !selectedSubSubcategories[
+                        //                                     index]
+                        //                                 .isSelected;
+                        //                         isALL = isALLSelected();
+                        //                       });
+                        //                     },
+                        //                     child: Padding(
+                        //                       padding:
+                        //                           const EdgeInsets.all(8.0),
+                        //                       child: Container(
+                        //                         decoration: BoxDecoration(
+                        //                             color:
+                        //                                 selectedSubSubcategories[
+                        //                                             index]
+                        //                                         .isSelected
+                        //                                     ? Colors.green[100]
+                        //                                     : Colors.white,
+                        //                             borderRadius:
+                        //                                 BorderRadius.circular(
+                        //                                     5),
+                        //                             border: Border.all(
+                        //                                 width: 1,
+                        //                                 color:
+                        //                                     selectedSubSubcategories[
+                        //                                                 index]
+                        //                                             .isSelected
+                        //                                         ? Colors.green
+                        //                                         : Colors.grey)),
+                        //                         child: Padding(
+                        //                           padding: const EdgeInsets
+                        //                               .symmetric(
+                        //                               horizontal: 10,
+                        //                               vertical: 8),
+                        //                           child: Text(
+                        //                             selectedSubSubcategories[
+                        //                                     index]
+                        //                                 .subSubCategoryName,
+                        //                           ),
+                        //                         ),
+                        //                       ),
+                        //                     ),
+                        //                   );
+                        //                 },
+                        //               ),
+                        //             ),
+                        //           ],
+                        //         ),
+                        //       ),
+                        // selectedSubSubcategories
+                        //         .every((item) => !item.isSelected)
+                        //     ? Container(
+                        //         height: 400,
+                        //         child: Center(
+                        //           child: Text(
+                        //             'Please select at least one sub category.',
+                        //             style: TextStyle(
+                        //               fontSize: 16,
+                        //               fontWeight: FontWeight.w600,
+                        //             ),
+                        //           ),
+                        //         ),
+                        //       )
                         : Column(
                             children: [
+                              Text(randomText),
                               Container(
-                                color: Colors.grey[100],
+                                // color: Colors.red,
                                 height: 50,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 8),
                                 child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Container(
-                                      // width: 40,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 7.5),
-                                      child: ElevatedButton(
-                                        onPressed: () {
+                                      height: 33,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12.0),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(500),
+                                          // border: Border.all(
+                                          //   color: Colors.grey,
+                                          // ),
+                                          color: Colors.grey[200]),
+                                      child: DropdownButton<String>(
+                                        // isExpanded: true,
+                                        hint: Text(
+                                          'Sort By',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                        value: sortByDropdownValue,
+                                        icon: Icon(Icons.arrow_drop_down),
+                                        iconSize: 24,
+                                        elevation: 16,
+                                        underline:
+                                            SizedBox(), // Remove the underline
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors
+                                              .black, // You can customize the text color here
+                                        ),
+                                        onChanged: (String? newValue) {
                                           setState(() {
-                                            selectAllCategories();
-                                            isALL = isALLSelected();
+                                            sortByDropdownValue = newValue!;
                                           });
                                         },
-                                        child: Text(
-                                          'All',
-                                          style: TextStyle(color: Colors.black),
-                                        ),
-                                        style: ButtonStyle(
-                                            elevation:
-                                                MaterialStateProperty.all(0),
-                                            backgroundColor: isALL
-                                                ? MaterialStatePropertyAll(
-                                                    Colors.green[300])
-                                                : MaterialStatePropertyAll(
-                                                    Colors.green[100])),
+                                        items: [
+                                          'Price (Low to high)',
+                                          'Price (High to Low)'
+                                        ].map<DropdownMenuItem<String>>(
+                                            (String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value),
+                                          );
+                                        }).toList(),
                                       ),
                                     ),
-                                    Expanded(
-                                      child: ListView.builder(
-                                        physics: BouncingScrollPhysics(),
-                                        itemCount: subSubCategoryList.length,
-                                        scrollDirection: Axis.horizontal,
-                                        itemBuilder: (context, index) {
-                                          return InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                selectedSubSubcategories[index]
-                                                        .isSelected =
-                                                    !selectedSubSubcategories[
-                                                            index]
-                                                        .isSelected;
-                                                isALL = isALLSelected();
-                                              });
-                                            },
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                    color:
-                                                        selectedSubSubcategories[
-                                                                    index]
-                                                                .isSelected
-                                                            ? Colors.green[100]
-                                                            : Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
-                                                    border: Border.all(
-                                                        width: 1,
-                                                        color:
-                                                            selectedSubSubcategories[
-                                                                        index]
-                                                                    .isSelected
-                                                                ? Colors.green
-                                                                : Colors.grey)),
-                                                child: Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                      horizontal: 10,
-                                                      vertical: 8),
-                                                  child: Text(
-                                                    selectedSubSubcategories[
-                                                            index]
-                                                        .subSubCategoryName,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          );
-                                        },
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        _showModalBottomSheet(context);
+                                      },
+                                      child: Container(
+                                        child: Chip(
+                                          backgroundColor: Colors.grey[200],
+                                          labelPadding: EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 0),
+                                          label: Text('Filter'),
+                                          deleteIcon: FaIcon(
+                                            FontAwesomeIcons.sliders,
+                                            size: 15,
+                                          ),
+                                          onDeleted: () {
+                                            _showModalBottomSheet(context);
+                                          },
+                                        ),
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                              selectedSubSubcategories
-                                      .every((item) => !item.isSelected)
-                                  ? Container(
-                                      height: 400,
-                                      child: Center(
-                                        child: Text(
-                                          'Please select at least one sub category.',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : Expanded(
-                                      child: ListView(
-                                        physics: BouncingScrollPhysics(),
-                                        children: [
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          ListView.builder(
-                                              itemCount: products.length,
-                                              shrinkWrap: true,
-                                              physics:
-                                                  NeverScrollableScrollPhysics(),
-                                              scrollDirection: Axis.vertical,
-                                              itemBuilder: (context, index) {
-                                                return containsSelected(
-                                                        subSubCategoryName:
-                                                            products[index]
-                                                                .subSubCategory)
-                                                    ? StreamBuilder<
-                                                            DocumentSnapshot>(
-                                                        stream:
-                                                            FirebaseFirestore
-                                                                .instance
-                                                                .collection(
-                                                                    'buyer')
-                                                                .doc(products[
-                                                                        index]
-                                                                    .sellerId)
-                                                                .snapshots(),
-                                                        builder: (context,
-                                                            sellerSnapshot) {
-                                                          if (sellerSnapshot
-                                                                  .hasData &&
-                                                              sellerSnapshot
-                                                                  .data!
-                                                                  .exists &&
-                                                              sellerSnapshot
-                                                                      .data !=
-                                                                  null) {
-                                                            var sellerData =
-                                                                sellerSnapshot
-                                                                        .data!
-                                                                        .data()
-                                                                    as Map<
-                                                                        String,
-                                                                        dynamic>?;
-                                                            return Column(
-                                                              children: [
-                                                                InkWell(
-                                                                  onTap: () {
-                                                                    if (products[index]
-                                                                            .subSubCategory ==
-                                                                        'On Rent') {
-                                                                      Navigator.push(
-                                                                          context,
-                                                                          MaterialPageRoute(
-                                                                            builder: (context) =>
-                                                                                MachineRentForm(
-                                                                              imageURL: products[index].imageURL,
-                                                                              machineName: products[index].productName,
-                                                                              machinePrice: products[index].productPrice,
-                                                                              machineDescription: products[index].productDescription,
-                                                                            ),
-                                                                          ));
-                                                                    } else {
-                                                                      Navigator.push(
-                                                                          context,
-                                                                          MaterialPageRoute(
-                                                                            builder: (context) =>
-                                                                                ProductDetails(
-                                                                              sellProduct: products[index],
-                                                                            ),
-                                                                          ));
-                                                                    }
-                                                                  },
-                                                                  child:
-                                                                      BuyProductTile(
-                                                                    context:
-                                                                        context,
-                                                                    name: products[
-                                                                            index]
-                                                                        .productName,
+                              Expanded(
+                                child: ListView(
+                                  physics: BouncingScrollPhysics(),
+                                  children: [
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    ListView.builder(
+                                        itemCount: products.length,
+                                        shrinkWrap: true,
+                                        physics: NeverScrollableScrollPhysics(),
+                                        scrollDirection: Axis.vertical,
+                                        itemBuilder: (context, index) {
+                                          return StreamBuilder<
+                                                  DocumentSnapshot>(
+                                              stream: FirebaseFirestore.instance
+                                                  .collection('buyer')
+                                                  .doc(products[index].sellerId)
+                                                  .snapshots(),
+                                              builder:
+                                                  (context, sellerSnapshot) {
+                                                if (sellerSnapshot.hasData &&
+                                                    sellerSnapshot
+                                                        .data!.exists &&
+                                                    sellerSnapshot.data !=
+                                                        null) {
+                                                  var sellerData =
+                                                      sellerSnapshot.data!
+                                                              .data()
+                                                          as Map<String,
+                                                              dynamic>?;
+                                                  return Column(
+                                                    children: [
+                                                      InkWell(
+                                                        onTap: () {
+                                                          if (products[index]
+                                                                  .subSubCategory ==
+                                                              'On Rent') {
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          MachineRentForm(
                                                                     imageURL: products[
                                                                             index]
                                                                         .imageURL,
-                                                                    price: products[
-                                                                            index]
-                                                                        .productPrice,
-                                                                    quantityUnit:
+                                                                    machineName:
                                                                         products[index]
-                                                                            .quantityUnit,
-                                                                    // description:
-                                                                    //     products[index]
-                                                                    //         .productDescription,
-                                                                    subSubCategory:
+                                                                            .productName,
+                                                                    machinePrice:
                                                                         products[index]
-                                                                            .subSubCategory,
-                                                                    village: sellerData!['profileData']['address'][0]
-                                                                            [
-                                                                            'village'] ??
-                                                                        '---',
-                                                                    district: sellerData['profileData']['address'][0]
-                                                                            [
-                                                                            'district'] ??
-                                                                        '---',
+                                                                            .productPrice,
+                                                                    machineDescription:
+                                                                        products[index]
+                                                                            .productDescription,
                                                                   ),
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 8,
-                                                                ),
-                                                              ],
-                                                            );
+                                                                ));
+                                                          } else {
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          ProductDetails(
+                                                                    sellProduct:
+                                                                        products[
+                                                                            index],
+                                                                  ),
+                                                                ));
                                                           }
-                                                          return SizedBox
-                                                              .shrink();
-                                                        })
-                                                    : Container();
-                                              }),
-                                        ],
-                                      ),
-                                    ),
+                                                        },
+                                                        child: BuyProductTile(
+                                                          context: context,
+                                                          name: products[index]
+                                                              .productName,
+                                                          imageURL:
+                                                              products[index]
+                                                                  .imageURL,
+                                                          price: products[index]
+                                                              .productPrice,
+                                                          quantityUnit:
+                                                              products[index]
+                                                                  .quantityUnit,
+                                                          // description:
+                                                          //     products[index]
+                                                          //         .productDescription,
+                                                          subSubCategory:
+                                                              products[index]
+                                                                  .subSubCategory,
+                                                          village: sellerData![
+                                                                          'profileData']
+                                                                      [
+                                                                      'address']
+                                                                  [
+                                                                  0]['village'] ??
+                                                              '---',
+                                                          district: sellerData[
+                                                                          'profileData']
+                                                                      [
+                                                                      'address'][0]
+                                                                  [
+                                                                  'district'] ??
+                                                              '---',
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 8,
+                                                      ),
+                                                    ],
+                                                  );
+                                                }
+                                                return SizedBox.shrink();
+                                              });
+                                        }),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                   );
@@ -536,6 +950,47 @@ class _BuyProductListState extends State<BuyProductList> {
           ),
         ),
       ),
+    );
+  }
+
+  Column DropdownButtonWidget(
+      // String title,
+      List<DropdownMenuItem<String>>? itemList,
+      String dropdownValue,
+      Function(String) onChanged) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        InputDecorator(
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+            filled: true,
+            fillColor: MyTheme.light_grey,
+            contentPadding: EdgeInsets.only(left: 20, right: 10),
+          ),
+          child: DropdownButton<String>(
+            isExpanded: true,
+            value: dropdownValue,
+            icon: Icon(Icons.arrow_drop_down),
+            iconSize: 24,
+            elevation: 16,
+            underline: SizedBox(),
+            style: TextStyle(
+              fontSize: 15,
+              color: Colors.black,
+            ),
+            onChanged: (String? value) {
+              onChanged(value!);
+            },
+            items: itemList,
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        )
+      ],
     );
   }
 }
