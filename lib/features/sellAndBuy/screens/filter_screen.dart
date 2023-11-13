@@ -1,18 +1,10 @@
-import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
-import 'package:active_ecommerce_flutter/features/auth/models/seller_group_item.dart';
-import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
-import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
-import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
-import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/subSubCategory_filter_item.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/buy_product_list.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
-import 'package:active_ecommerce_flutter/screens/category_list.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:active_ecommerce_flutter/utils/enums.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:hive/hive.dart';
 import '../../../custom/device_info.dart';
 
 // import '../seller_platform/seller_platform.dart';
@@ -23,8 +15,26 @@ enum FilterSection {
   sellerLocations,
 }
 
+enum SortType {
+  ascending,
+  descending,
+}
+
 class FilterScreen extends StatefulWidget {
-  const FilterScreen({Key? key}) : super(key: key);
+  final SubCategoryEnum subCategoryEnum;
+  final bool isSecondHand;
+  final List<FilterItem> subSubCategoryList;
+  final List<FilterItem> locationsList;
+  final SortType? sortType;
+
+  const FilterScreen({
+    Key? key,
+    required this.subCategoryEnum,
+    required this.isSecondHand,
+    required this.subSubCategoryList,
+    required this.locationsList,
+    required this.sortType,
+  }) : super(key: key);
 
   @override
   State<FilterScreen> createState() => _FilterScreenState();
@@ -33,11 +43,36 @@ class FilterScreen extends StatefulWidget {
 class _FilterScreenState extends State<FilterScreen> {
   FilterSection sectionOpened = FilterSection.price;
 
-  List<FilterItem> subSubCategoryList = [];
-  List<FilterItem> locationsList = [];
+  late List<FilterItem> subSubCategoryList;
+  late List<FilterItem> locationsList;
+
+  // List<FilterItem> subSubCategoryList = [
+  //   FilterItem(name: 'Black Cows', isSelected: true),
+  //   FilterItem(name: 'White Cows', isSelected: true),
+  //   FilterItem(name: 'Brown Cows', isSelected: true),
+  // ];
+  // List<FilterItem> locationsList = [
+  //   FilterItem(name: 'Dhaka', isSelected: true),
+  //   FilterItem(name: 'Chittagong', isSelected: true),
+  //   FilterItem(name: 'Rajshahi', isSelected: true),
+  //   FilterItem(name: 'Khulna', isSelected: true),
+  //   FilterItem(name: 'Barishal', isSelected: true),
+  //   FilterItem(name: 'Sylhet', isSelected: true),
+  //   FilterItem(name: 'Rangpur', isSelected: true),
+  //   FilterItem(name: 'Mymensingh', isSelected: true),
+  // ];
+
+  SortType? sortType;
 
   @override
   void initState() {
+    subSubCategoryList = widget.subSubCategoryList.map((e) {
+      return FilterItem(name: e.name, isSelected: e.isSelected);
+    }).toList();
+    locationsList = widget.locationsList.map((e) {
+      return FilterItem(name: e.name, isSelected: e.isSelected);
+    }).toList();
+    sortType = widget.sortType;
     super.initState();
   }
 
@@ -61,7 +96,6 @@ class _FilterScreenState extends State<FilterScreen> {
           ),
           title: Text(
             'Filters',
-            // "new ",
             style: TextStyle(
                 color: MyTheme.white,
                 fontWeight: FontWeight.w500,
@@ -178,13 +212,203 @@ class _FilterScreenState extends State<FilterScreen> {
                   Expanded(
                       flex: 3,
                       child: sectionOpened == FilterSection.price
-                          ? Container(color: Colors.white, child: Text('price'))
+                          ? Container(
+                              color: Colors.white,
+                              child: ListView(
+                                children: [
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          if (sortType == SortType.ascending) {
+                                            sortType = null;
+                                          } else {
+                                            sortType = SortType.ascending;
+                                          }
+                                        });
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.all(8.0),
+                                        height: 35,
+                                        decoration: BoxDecoration(
+                                            color: sortType != null
+                                                ? sortType == SortType.ascending
+                                                    ? const Color.fromARGB(
+                                                        198, 216, 255, 199)
+                                                    : Colors.blueGrey[50]
+                                                : Colors.blueGrey[50],
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            border: Border.all(
+                                                color: Colors.black)),
+                                        child: Center(
+                                            child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            'Price (Low to high)',
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                color: sortType != null
+                                                    ? sortType ==
+                                                            SortType.ascending
+                                                        ? MyTheme.primary_color
+                                                        : Colors.black
+                                                    : Colors.black,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        )),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          if (sortType == SortType.descending) {
+                                            sortType = null;
+                                          } else {
+                                            sortType = SortType.descending;
+                                          }
+                                        });
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.all(8.0),
+                                        height: 35,
+                                        decoration: BoxDecoration(
+                                            color: sortType != null
+                                                ? sortType ==
+                                                        SortType.descending
+                                                    ? const Color.fromARGB(
+                                                        198, 216, 255, 199)
+                                                    : Colors.blueGrey[50]
+                                                : Colors.blueGrey[50],
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            border: Border.all(
+                                                color: Colors.black)),
+                                        child: Center(
+                                            child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            'Price (High to low)',
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                color: sortType != null
+                                                    ? sortType ==
+                                                            SortType.descending
+                                                        ? MyTheme.primary_color
+                                                        : Colors.black
+                                                    : Colors.black,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        )),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )
                           : sectionOpened == FilterSection.categories
                               ? Container(
-                                  color: Colors.white,
-                                  child: Text('categories'))
+                                  height: double.infinity,
+                                  // color: Colors.red[300],
+                                  padding: EdgeInsets.only(
+                                      left: 8, right: 8, top: 20),
+                                  child: ListView.builder(
+                                      itemCount: subSubCategoryList.length,
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      scrollDirection: Axis.vertical,
+                                      itemBuilder: (context, index) {
+                                        return Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            color: Colors.grey[50],
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 8, vertical: 0),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  subSubCategoryList[index]
+                                                      .name,
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                                Checkbox(
+                                                    activeColor:
+                                                        MyTheme.primary_color,
+                                                    value: subSubCategoryList[
+                                                            index]
+                                                        .isSelected,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        subSubCategoryList[
+                                                                    index]
+                                                                .isSelected =
+                                                            value!;
+                                                      });
+                                                    }),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      }))
                               : Container(
-                                  color: Colors.white, child: Text('location')))
+                                  height: double.infinity,
+                                  // color: Colors.red[300],
+                                  padding: EdgeInsets.only(
+                                      left: 8, right: 8, top: 20),
+                                  child: ListView.builder(
+                                      itemCount: locationsList.length,
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      scrollDirection: Axis.vertical,
+                                      itemBuilder: (context, index) {
+                                        return Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            color: Colors.grey[50],
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 8, vertical: 0),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  locationsList[index].name,
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                                Checkbox(
+                                                    activeColor:
+                                                        MyTheme.primary_color,
+                                                    value: locationsList[index]
+                                                        .isSelected,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        locationsList[index]
+                                                                .isSelected =
+                                                            value!;
+                                                      });
+                                                    }),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      })))
                 ],
               ),
             ),
@@ -204,7 +428,36 @@ class _FilterScreenState extends State<FilterScreen> {
                     // width: 100,
                     height: 40,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).pushReplacement(
+                          PageRouteBuilder(
+                            pageBuilder:
+                                (context, animation, secondaryAnimation) {
+                              return BuyProductList(
+                                subCategoryEnum: widget.subCategoryEnum,
+                                isSecondHand: widget.isSecondHand,
+                                subSubCategoryList: subSubCategoryList,
+                                locationsList: locationsList,
+                                sortType: sortType,
+                              );
+                            },
+                            transitionsBuilder: (context, animation,
+                                secondaryAnimation, child) {
+                              const begin = Offset(0.0, -1.0);
+                              const end = Offset.zero;
+                              const curve = Curves.easeInOut;
+                              var tween = Tween(begin: begin, end: end)
+                                  .chain(CurveTween(curve: curve));
+                              var offsetAnimation = animation.drive(tween);
+
+                              return SlideTransition(
+                                position: offsetAnimation,
+                                child: child,
+                              );
+                            },
+                          ),
+                        );
+                      },
                       child: Text('Show Results'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: MyTheme.accent_color,
