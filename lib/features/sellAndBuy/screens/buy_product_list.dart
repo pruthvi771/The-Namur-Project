@@ -152,7 +152,8 @@ class _BuyProductListState extends State<BuyProductList> {
         .where('subCategory',
             isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
         .where('isSecondHand', isEqualTo: widget.isSecondHand)
-        .where('subSubCategory', whereIn: subSubCategoryList)
+        .where('subSubCategory',
+            whereIn: subSubCategoryList.length != 0 ? subSubCategoryList : [''])
         .orderBy('price', descending: sortType == SortType.descending)
         .snapshots();
   }
@@ -201,7 +202,7 @@ class _BuyProductListState extends State<BuyProductList> {
           );
         },
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(0.0, 1.0);
+          const begin = Offset(0.0, 0.0);
           const end = Offset.zero;
           const curve = Curves.easeInOut;
           var tween =
@@ -242,7 +243,7 @@ class _BuyProductListState extends State<BuyProductList> {
             app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
         child: Scaffold(
           appBar: AppBar(
-            automaticallyImplyLeading: false,
+            // automaticallyImplyLeading: false,
             // elevation: 0,
             flexibleSpace: Container(
               decoration: const BoxDecoration(
@@ -376,41 +377,6 @@ class _BuyProductListState extends State<BuyProductList> {
                                                 subSubCategoryList,
                                             theLocationsList: locationsList,
                                             theSortType: sortType);
-                                        // Navigator.of(context).push(
-                                        //   PageRouteBuilder(
-                                        //     pageBuilder: (context, animation,
-                                        //         secondaryAnimation) {
-                                        //       return FilterScreen(
-                                        //         subCategoryEnum:
-                                        //             widget.subCategoryEnum,
-                                        //         isSecondHand:
-                                        //             widget.isSecondHand,
-                                        //         subSubCategoryList:
-                                        //             subSubCategoryList,
-                                        //         locationsList: locationsList,
-                                        //         sortType: sortType,
-                                        //       );
-                                        //     },
-                                        //     transitionsBuilder: (context,
-                                        //         animation,
-                                        //         secondaryAnimation,
-                                        //         child) {
-                                        //       const begin = Offset(0.0, 1.0);
-                                        //       const end = Offset.zero;
-                                        //       const curve = Curves.easeInOut;
-                                        //       var tween = Tween(
-                                        //               begin: begin, end: end)
-                                        //           .chain(
-                                        //               CurveTween(curve: curve));
-                                        //       var offsetAnimation =
-                                        //           animation.drive(tween);
-                                        //       return SlideTransition(
-                                        //         position: offsetAnimation,
-                                        //         child: child,
-                                        //       );
-                                        //     },
-                                        //   ),
-                                        // );
                                       },
                                       child: Container(
                                         child: Chip(
@@ -456,7 +422,7 @@ class _BuyProductListState extends State<BuyProductList> {
                                           return StreamBuilder<
                                                   DocumentSnapshot>(
                                               stream: FirebaseFirestore.instance
-                                                  .collection('buyer')
+                                                  .collection(collectionName)
                                                   .doc(products[index].sellerId)
                                                   .snapshots(),
                                               builder:
@@ -472,193 +438,38 @@ class _BuyProductListState extends State<BuyProductList> {
                                                           as Map<String,
                                                               dynamic>?;
 
-                                                  if (!containsItem(
-                                                      locationsList,
+                                                  var villageName =
                                                       sellerData!['profileData']
                                                               ['address'][0]
-                                                          ['village'])) {
-                                                    locationsList.add(FilterItem(
-                                                        name: sellerData![
-                                                                    'profileData']
-                                                                ['address'][0]
-                                                            ['village'],
-                                                        isSelected: true));
+                                                          ['village'];
+
+                                                  if (!containsItem(
+                                                    locationsList,
+                                                    villageName,
+                                                  )) {
+                                                    locationsList.add(
+                                                      FilterItem(
+                                                          name: villageName,
+                                                          isSelected: true),
+                                                    );
                                                   }
                                                   if (locationFilter) {
                                                     if (containsItemAsSelected(
-                                                        locationsList,
-                                                        sellerData!['profileData']
-                                                                ['address'][0]
-                                                            ['village'])) {
-                                                      return Column(
-                                                        children: [
-                                                          InkWell(
-                                                            onTap: () {
-                                                              if (products[
-                                                                          index]
-                                                                      .subSubCategory ==
-                                                                  'On Rent') {
-                                                                Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                      builder:
-                                                                          (context) =>
-                                                                              MachineRentForm(
-                                                                        imageURL:
-                                                                            products[index].imageURL,
-                                                                        machineName:
-                                                                            products[index].productName,
-                                                                        machinePrice:
-                                                                            products[index].productPrice,
-                                                                        machineDescription:
-                                                                            products[index].productDescription,
-                                                                      ),
-                                                                    ));
-                                                              } else {
-                                                                Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            ProductDetails(
-                                                                      sellProduct:
-                                                                          products[
-                                                                              index],
-                                                                    ),
-                                                                  ),
-                                                                );
-                                                              }
-                                                            },
-                                                            child:
-                                                                BuyProductTile(
-                                                              context: context,
-                                                              name: products[
-                                                                      index]
-                                                                  .productName,
-                                                              imageURL:
-                                                                  products[
-                                                                          index]
-                                                                      .imageURL,
-                                                              price: products[
-                                                                      index]
-                                                                  .productPrice,
-                                                              quantityUnit:
-                                                                  products[
-                                                                          index]
-                                                                      .quantityUnit,
-                                                              // description:
-                                                              //     products[index]
-                                                              //         .productDescription,
-                                                              subSubCategory:
-                                                                  products[
-                                                                          index]
-                                                                      .subSubCategory,
-                                                              village: sellerData![
-                                                                              'profileData']
-                                                                          [
-                                                                          'address'][0]
-                                                                      [
-                                                                      'village'] ??
-                                                                  '---',
-                                                              district: sellerData[
-                                                                              'profileData']
-                                                                          [
-                                                                          'address'][0]
-                                                                      [
-                                                                      'district'] ??
-                                                                  '---',
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            height: 8,
-                                                          ),
-                                                        ],
-                                                      );
+                                                      locationsList,
+                                                      villageName,
+                                                    )) {
+                                                      return ProductCard(
+                                                          products,
+                                                          index,
+                                                          context,
+                                                          sellerData);
                                                     }
                                                   } else {
-                                                    return Column(
-                                                      children: [
-                                                        InkWell(
-                                                          onTap: () {
-                                                            if (products[index]
-                                                                    .subSubCategory ==
-                                                                'On Rent') {
-                                                              Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            MachineRentForm(
-                                                                      imageURL:
-                                                                          products[index]
-                                                                              .imageURL,
-                                                                      machineName:
-                                                                          products[index]
-                                                                              .productName,
-                                                                      machinePrice:
-                                                                          products[index]
-                                                                              .productPrice,
-                                                                      machineDescription:
-                                                                          products[index]
-                                                                              .productDescription,
-                                                                    ),
-                                                                  ));
-                                                            } else {
-                                                              Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          ProductDetails(
-                                                                    sellProduct:
-                                                                        products[
-                                                                            index],
-                                                                  ),
-                                                                ),
-                                                              );
-                                                            }
-                                                          },
-                                                          child: BuyProductTile(
-                                                            context: context,
-                                                            name: products[
-                                                                    index]
-                                                                .productName,
-                                                            imageURL:
-                                                                products[index]
-                                                                    .imageURL,
-                                                            price: products[
-                                                                    index]
-                                                                .productPrice,
-                                                            quantityUnit:
-                                                                products[index]
-                                                                    .quantityUnit,
-                                                            // description:
-                                                            //     products[index]
-                                                            //         .productDescription,
-                                                            subSubCategory:
-                                                                products[index]
-                                                                    .subSubCategory,
-                                                            village: sellerData![
-                                                                            'profileData']
-                                                                        [
-                                                                        'address'][0]
-                                                                    [
-                                                                    'village'] ??
-                                                                '---',
-                                                            district: sellerData[
-                                                                            'profileData']
-                                                                        [
-                                                                        'address'][0]
-                                                                    [
-                                                                    'district'] ??
-                                                                '---',
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 8,
-                                                        ),
-                                                      ],
-                                                    );
+                                                    return ProductCard(
+                                                        products,
+                                                        index,
+                                                        context,
+                                                        sellerData);
                                                   }
                                                 }
                                                 return SizedBox.shrink();
@@ -679,6 +490,57 @@ class _BuyProductListState extends State<BuyProductList> {
                 );
               }),
         ));
+  }
+
+  Column ProductCard(List<SellProduct> products, int index,
+      BuildContext context, Map<String, dynamic> sellerData) {
+    return Column(
+      children: [
+        InkWell(
+          onTap: () {
+            if (products[index].subSubCategory == 'On Rent') {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MachineRentForm(
+                      imageURL: products[index].imageURL,
+                      machineName: products[index].productName,
+                      machinePrice: products[index].productPrice,
+                      machineDescription: products[index].productDescription,
+                    ),
+                  ));
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProductDetails(
+                    sellProduct: products[index],
+                  ),
+                ),
+              );
+            }
+          },
+          child: BuyProductTile(
+            context: context,
+            name: products[index].productName,
+            imageURL: products[index].imageURL,
+            price: products[index].productPrice,
+            quantityUnit: products[index].quantityUnit,
+            // description:
+            //     products[index]
+            //         .productDescription,
+            subSubCategory: products[index].subSubCategory,
+            village:
+                sellerData!['profileData']['address'][0]['village'] ?? '---',
+            district:
+                sellerData['profileData']['address'][0]['district'] ?? '---',
+          ),
+        ),
+        SizedBox(
+          height: 8,
+        ),
+      ],
+    );
   }
 
   Padding BuyProductTile({

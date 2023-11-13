@@ -1,9 +1,11 @@
+import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/subSubCategory_filter_item.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/buy_product_list.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:toast/toast.dart';
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../custom/device_info.dart';
 
@@ -74,6 +76,17 @@ class _FilterScreenState extends State<FilterScreen> {
     }).toList();
     sortType = widget.sortType;
     super.initState();
+  }
+
+  bool containsAtLeastOneSelected({required List<FilterItem> list}) {
+    bool containsAtLeastOneSelected = false;
+    for (var item in list) {
+      if (item.isSelected) {
+        containsAtLeastOneSelected = true;
+        break;
+      }
+    }
+    return containsAtLeastOneSelected;
   }
 
   @override
@@ -429,7 +442,27 @@ class _FilterScreenState extends State<FilterScreen> {
                     height: 40,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.of(context).pushReplacement(
+                        if (!containsAtLeastOneSelected(
+                            list: subSubCategoryList)) {
+                          ToastComponent.showDialog(
+                              'Select at least one category',
+                              gravity: Toast.center,
+                              duration: Toast.lengthLong);
+                          return;
+                        } else if (!containsAtLeastOneSelected(
+                            list: locationsList)) {
+                          ToastComponent.showDialog(
+                              'Select at least one location',
+                              gravity: Toast.center,
+                              duration: Toast.lengthLong);
+                          return;
+                        }
+                        // pop until BuyProductList
+
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+
+                        Navigator.of(context).push(
                           PageRouteBuilder(
                             pageBuilder:
                                 (context, animation, secondaryAnimation) {
@@ -443,7 +476,7 @@ class _FilterScreenState extends State<FilterScreen> {
                             },
                             transitionsBuilder: (context, animation,
                                 secondaryAnimation, child) {
-                              const begin = Offset(0.0, -1.0);
+                              const begin = Offset(0.0, 0.0);
                               const end = Offset.zero;
                               const curve = Curves.easeInOut;
                               var tween = Tween(begin: begin, end: end)
