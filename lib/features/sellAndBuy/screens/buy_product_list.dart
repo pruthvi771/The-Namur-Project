@@ -1,6 +1,10 @@
+import 'package:active_ecommerce_flutter/data_model/check_response.dart';
+import 'package:active_ecommerce_flutter/features/profile/screens/friends_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/subSubCategory_filter_item.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/filter_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/machine_rent_form.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/parent_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/product_details_screen.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -11,13 +15,22 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+enum FilterType { subSubCategory, location }
+
 class BuyProductList extends StatefulWidget {
   final SubCategoryEnum subCategoryEnum;
   final bool isSecondHand;
+  final List<FilterItem>? subSubCategoryList;
+  final List<FilterItem>? locationsList;
+  final SortType? sortType;
+
   BuyProductList({
     Key? key,
     required this.subCategoryEnum,
     required this.isSecondHand,
+    this.locationsList,
+    this.subSubCategoryList,
+    this.sortType,
   }) : super(key: key);
 
   @override
@@ -25,52 +38,203 @@ class BuyProductList extends StatefulWidget {
 }
 
 class _BuyProductListState extends State<BuyProductList> {
+  String? sortByDropdownValue;
+  bool isALL = true;
+  bool fitlerLocationTabOpen = true;
+
+  List<String> selectedCategories = [];
+  List<String> selectedLocations = [];
+  late Stream<QuerySnapshot> productsStream;
+
+  late List<FilterItem> subSubCategoryList;
+  late List<FilterItem> locationsList;
+  late SortType? sortType;
+  final String collectionName = 'buyer';
+  late final bool locationFilter;
+
   @override
   void initState() {
-    // BlocProvider.of<BuyBloc>(context).add(BuyProductsForSubCategoryRequested(
-    //   subCategory: nameForSubCategoryEnum[widget.subCategoryEnum]!,
-    // ));
-    // subSubCategoryList = ;
-    subSubCategoryList = List.from(SubSubCategoryList[widget.subCategoryEnum]!);
-    selectedSubSubcategories = subSubCategoryList
-        .map((subSubCategory) => SubSubCategoryFilterItem(
-              subSubCategoryName: subSubCategory,
-              isSelected: true,
-            ))
-        .toList();
+    subSubCategoryList =
+        widget.subSubCategoryList != null ? widget.subSubCategoryList! : [];
+    locationsList = widget.locationsList != null ? widget.locationsList! : [];
+    sortType = widget.sortType != null ? widget.sortType! : null;
+
+    try {
+      print(subSubCategoryList[0].name);
+      print(subSubCategoryList[0].isSelected);
+      print(subSubCategoryList[1].name);
+      print(subSubCategoryList[1].isSelected);
+    } catch (e) {}
+
+    if (sortType != null && subSubCategoryList.length == 0) {
+      productsStream = allProductSortedStreamQuery(sortType: sortType!);
+    } else if (subSubCategoryList.length != 0 && sortType == null) {
+      productsStream = productFilteredStreamQuery(
+        theSubSubCategoryList: subSubCategoryList,
+      );
+    } else if (subSubCategoryList.length != 0 && sortType != null) {
+      productsStream = productFilteredAndSortedStreamQuery(
+          sortType: sortType!, theSubSubCategoryList: subSubCategoryList);
+    } else {
+      productsStream = allProductStreamQuery();
+    }
+
+    if (locationsList != null && locationsList.length != 0) {
+      locationFilter = true;
+    } else {
+      locationFilter = false;
+    }
     super.initState();
   }
 
-  late List<String> subSubCategoryList;
-
-  late List<SubSubCategoryFilterItem> selectedSubSubcategories;
-
-  void selectAllCategories() {
-    setState(() {
-      selectedSubSubcategories = selectedSubSubcategories.map((subSubCategory) {
-        return SubSubCategoryFilterItem(
-            subSubCategoryName: subSubCategory.subSubCategoryName,
-            isSelected: true);
-      }).toList();
-    });
+  Stream<QuerySnapshot> allProductStreamQuery() {
+    return FirebaseFirestore.instance
+        .collection('products')
+        .where('subCategory',
+            isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
+        .where('isSecondHand', isEqualTo: widget.isSecondHand)
+        .snapshots();
   }
 
-  bool isALLSelected() {
-    if (selectedSubSubcategories
-        .every((subSubCategory) => subSubCategory.isSelected == true)) {
-      return true;
-    } else {
-      return false;
+  // Stream<QuerySnapshot> allProductStreamQueryGoat() {
+  //   return FirebaseFirestore.instance
+  //       .collection('products')
+  //       .where('subCategory', isEqualTo: 'Goats')
+  //       .where('isSecondHand', isEqualTo: widget.isSecondHand)
+  //       .snapshots();
+  // }
+
+  Stream<QuerySnapshot> allProductSortedStreamQuery(
+      {required SortType sortType}) {
+    String orderByField = 'price';
+
+    return FirebaseFirestore.instance
+        .collection('products')
+        .where('subCategory',
+            isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
+        .where('isSecondHand', isEqualTo: widget.isSecondHand)
+        .orderBy(orderByField, descending: sortType == SortType.descending)
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> productFilteredStreamQuery({
+    List<FilterItem>? theSubSubCategoryList,
+  }) {
+    List<String> subSubCategoryList = [];
+    for (var item in theSubSubCategoryList!) {
+      if (item.isSelected) {
+        subSubCategoryList.add(item.name);
+      }
     }
+
+    return FirebaseFirestore.instance
+        .collection('products')
+        .where('subCategory',
+            isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
+        .where('isSecondHand', isEqualTo: widget.isSecondHand)
+        .where('subSubCategory', whereIn: subSubCategoryList)
+        .snapshots();
   }
 
-  bool containsSelected({required String subSubCategoryName}) {
-    return selectedSubSubcategories.any((subSubCategory) =>
-        subSubCategory.subSubCategoryName == subSubCategoryName &&
-        subSubCategory.isSelected == true);
+  Stream<QuerySnapshot> productFilteredAndSortedStreamQuery({
+    required SortType sortType,
+    List<FilterItem>? theSubSubCategoryList,
+  }) {
+    List<String> subSubCategoryList = [];
+    for (var item in theSubSubCategoryList!) {
+      if (item.isSelected) {
+        subSubCategoryList.add(item.name);
+      }
+    }
+
+    return FirebaseFirestore.instance
+        .collection('products')
+        .where('subCategory',
+            isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
+        .where('isSecondHand', isEqualTo: widget.isSecondHand)
+        .where('subSubCategory',
+            whereIn: subSubCategoryList.length != 0 ? subSubCategoryList : [''])
+        .orderBy('price', descending: sortType == SortType.descending)
+        .snapshots();
   }
 
-  bool isALL = true;
+  // Stream<QuerySnapshot> allSellersStreamQuery({required String sellerId}) {
+  //   return FirebaseFirestore.instance
+  //       .collection(collectionName)
+  //       .where(FieldPath.documentId, isEqualTo: sellerId)
+  //       .snapshots();
+  // }
+
+  // Stream<QuerySnapshot> filteredSellersStreamQuery({
+  //   required String sellerId,
+  //   List<FilterItem>? theLocationList,
+  // }) {
+  //   List<String> locationList = [];
+  //   for (var item in theLocationList!) {
+  //     if (item.isSelected) {
+  //       locationList.add(item.name);
+  //     }
+  //   }
+  //   return FirebaseFirestore.instance
+  //       .collection(collectionName)
+  //       .where(FieldPath.documentId, isEqualTo: sellerId)
+  //       .where('profileData.address.0.village', isNotEqualTo: null)
+  //       .snapshots();
+  // }
+
+  void goToFilterScreen({
+    required BuildContext context,
+    required SubCategoryEnum subCategoryEnum,
+    required bool isSecondHand,
+    required List<FilterItem> theSubSubCategoryList,
+    required List<FilterItem> theLocationsList,
+    required SortType? theSortType,
+  }) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return FilterScreen(
+            subCategoryEnum: subCategoryEnum,
+            isSecondHand: isSecondHand,
+            subSubCategoryList: theSubSubCategoryList,
+            locationsList: theLocationsList,
+            sortType: theSortType,
+          );
+        },
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(0.0, 0.0);
+          const end = Offset.zero;
+          const curve = Curves.easeInOut;
+          var tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          var offsetAnimation = animation.drive(tween);
+
+          return SlideTransition(
+            position: offsetAnimation,
+            child: child,
+          );
+        },
+      ),
+    );
+  }
+
+  containsItem(List<FilterItem> list, String name) {
+    for (var item in list) {
+      if (item.name == name) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  containsItemAsSelected(List<FilterItem> list, String name) {
+    for (var item in list) {
+      if (item.name == name && item.isSelected) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +243,7 @@ class _BuyProductListState extends State<BuyProductList> {
             app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
         child: Scaffold(
           appBar: AppBar(
-            automaticallyImplyLeading: false,
+            // automaticallyImplyLeading: false,
             // elevation: 0,
             flexibleSpace: Container(
               decoration: const BoxDecoration(
@@ -99,14 +263,8 @@ class _BuyProductListState extends State<BuyProductList> {
             ),
             centerTitle: true,
           ),
-          // body: bodycontent()),
           body: StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('products')
-                  .where('subCategory',
-                      isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
-                  .where('isSecondHand', isEqualTo: widget.isSecondHand)
-                  .snapshots(),
+              stream: productsStream,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
@@ -115,7 +273,12 @@ class _BuyProductListState extends State<BuyProductList> {
                 }
                 if (snapshot.hasData) {
                   var products = snapshot.data!.docs.map((doc) {
-                    var data = doc.data();
+                    var data = doc.data() as Map;
+                    if (!containsItem(
+                        subSubCategoryList, data['subSubCategory'])) {
+                      subSubCategoryList.add(FilterItem(
+                          name: data['subSubCategory'], isSelected: true));
+                    }
                     return SellProduct(
                       id: doc.id,
                       productName: data['name'],
@@ -123,7 +286,6 @@ class _BuyProductListState extends State<BuyProductList> {
                       productPrice: data['price'],
                       productQuantity: data['quantity'],
                       quantityUnit: data['quantityUnit'],
-                      // priceType: data['priceType'],
                       category: data['category'],
                       subCategory: data['subCategory'],
                       subSubCategory: data['subSubCategory'],
@@ -135,6 +297,7 @@ class _BuyProductListState extends State<BuyProductList> {
 
                   return Container(
                     child: products.length == 0
+                        // short circuiting
                         ? Center(
                             child: Padding(
                               padding: const EdgeInsets.all(20),
@@ -150,230 +313,171 @@ class _BuyProductListState extends State<BuyProductList> {
                           )
                         : Column(
                             children: [
+                              // filtering menu
                               Container(
-                                color: Colors.grey[100],
                                 height: 50,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 8),
                                 child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Container(
-                                      // width: 40,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 7.5),
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            selectAllCategories();
-                                            isALL = isALLSelected();
-                                          });
-                                        },
-                                        child: Text(
-                                          'All',
-                                          style: TextStyle(color: Colors.black),
+                                    // // sort by
+                                    // Container(
+                                    //   height: 33,
+                                    //   padding: const EdgeInsets.symmetric(
+                                    //       horizontal: 12.0),
+                                    //   decoration: BoxDecoration(
+                                    //       borderRadius:
+                                    //           BorderRadius.circular(500),
+                                    //       color: Colors.grey[200]),
+                                    //   child: DropdownButton<String>(
+                                    //     hint: Text(
+                                    //       'Sort By',
+                                    //       style: TextStyle(
+                                    //         color: Colors.black,
+                                    //         fontSize: 13,
+                                    //       ),
+                                    //     ),
+                                    //     value: sortByDropdownValue,
+                                    //     icon: Icon(Icons.arrow_drop_down),
+                                    //     iconSize: 24,
+                                    //     elevation: 16,
+                                    //     underline: SizedBox(),
+                                    //     style: TextStyle(
+                                    //       fontSize: 14,
+                                    //       color: Colors.black,
+                                    //     ),
+                                    //     onChanged: (String? newValue) {
+                                    //       setState(() {
+                                    //         sortByDropdownValue = newValue!;
+                                    //       });
+                                    //     },
+                                    //     items: [
+                                    //       'Price (Low to high)',
+                                    //       'Price (High to Low)'
+                                    //     ].map<DropdownMenuItem<String>>(
+                                    //         (String value) {
+                                    //       return DropdownMenuItem<String>(
+                                    //         value: value,
+                                    //         child: Text(value),
+                                    //       );
+                                    //     }).toList(),
+                                    //   ),
+                                    // ),
+
+                                    // filter by
+                                    GestureDetector(
+                                      onTap: () {
+                                        goToFilterScreen(
+                                            context: context,
+                                            subCategoryEnum:
+                                                widget.subCategoryEnum,
+                                            isSecondHand: widget.isSecondHand,
+                                            theSubSubCategoryList:
+                                                subSubCategoryList,
+                                            theLocationsList: locationsList,
+                                            theSortType: sortType);
+                                      },
+                                      child: Container(
+                                        child: Chip(
+                                          backgroundColor: Colors.grey[200],
+                                          labelPadding: EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 0),
+                                          label: Text('Show Filter'),
+                                          deleteIcon: FaIcon(
+                                            FontAwesomeIcons.sliders,
+                                            size: 15,
+                                          ),
+                                          onDeleted: () {
+                                            goToFilterScreen(
+                                              context: context,
+                                              subCategoryEnum:
+                                                  widget.subCategoryEnum,
+                                              isSecondHand: widget.isSecondHand,
+                                              theSubSubCategoryList:
+                                                  subSubCategoryList,
+                                              theLocationsList: locationsList,
+                                              theSortType: sortType,
+                                            );
+                                          },
                                         ),
-                                        style: ButtonStyle(
-                                            elevation:
-                                                MaterialStateProperty.all(0),
-                                            backgroundColor: isALL
-                                                ? MaterialStatePropertyAll(
-                                                    Colors.green[300])
-                                                : MaterialStatePropertyAll(
-                                                    Colors.green[100])),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: ListView.builder(
-                                        physics: BouncingScrollPhysics(),
-                                        itemCount: subSubCategoryList.length,
-                                        scrollDirection: Axis.horizontal,
-                                        itemBuilder: (context, index) {
-                                          return InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                selectedSubSubcategories[index]
-                                                        .isSelected =
-                                                    !selectedSubSubcategories[
-                                                            index]
-                                                        .isSelected;
-                                                isALL = isALLSelected();
-                                              });
-                                            },
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                    color:
-                                                        selectedSubSubcategories[
-                                                                    index]
-                                                                .isSelected
-                                                            ? Colors.green[100]
-                                                            : Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
-                                                    border: Border.all(
-                                                        width: 1,
-                                                        color:
-                                                            selectedSubSubcategories[
-                                                                        index]
-                                                                    .isSelected
-                                                                ? Colors.green
-                                                                : Colors.grey)),
-                                                child: Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                      horizontal: 10,
-                                                      vertical: 8),
-                                                  child: Text(
-                                                    selectedSubSubcategories[
-                                                            index]
-                                                        .subSubCategoryName,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          );
-                                        },
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                              selectedSubSubcategories
-                                      .every((item) => !item.isSelected)
-                                  ? Container(
-                                      height: 400,
-                                      child: Center(
-                                        child: Text(
-                                          'Please select at least one sub category.',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : Expanded(
-                                      child: ListView(
-                                        physics: BouncingScrollPhysics(),
-                                        children: [
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          ListView.builder(
-                                              itemCount: products.length,
-                                              shrinkWrap: true,
-                                              physics:
-                                                  NeverScrollableScrollPhysics(),
-                                              scrollDirection: Axis.vertical,
-                                              itemBuilder: (context, index) {
-                                                return containsSelected(
-                                                        subSubCategoryName:
-                                                            products[index]
-                                                                .subSubCategory)
-                                                    ? StreamBuilder<
-                                                            DocumentSnapshot>(
-                                                        stream:
-                                                            FirebaseFirestore
-                                                                .instance
-                                                                .collection(
-                                                                    'buyer')
-                                                                .doc(products[
-                                                                        index]
-                                                                    .sellerId)
-                                                                .snapshots(),
-                                                        builder: (context,
-                                                            sellerSnapshot) {
-                                                          if (sellerSnapshot
-                                                                  .hasData &&
-                                                              sellerSnapshot
-                                                                  .data!
-                                                                  .exists &&
-                                                              sellerSnapshot
-                                                                      .data !=
-                                                                  null) {
-                                                            var sellerData =
-                                                                sellerSnapshot
-                                                                        .data!
-                                                                        .data()
-                                                                    as Map<
-                                                                        String,
-                                                                        dynamic>?;
-                                                            return Column(
-                                                              children: [
-                                                                InkWell(
-                                                                  onTap: () {
-                                                                    if (products[index]
-                                                                            .subSubCategory ==
-                                                                        'On Rent') {
-                                                                      Navigator.push(
-                                                                          context,
-                                                                          MaterialPageRoute(
-                                                                            builder: (context) =>
-                                                                                MachineRentForm(
-                                                                              imageURL: products[index].imageURL,
-                                                                              machineName: products[index].productName,
-                                                                              machinePrice: products[index].productPrice,
-                                                                              machineDescription: products[index].productDescription,
-                                                                            ),
-                                                                          ));
-                                                                    } else {
-                                                                      Navigator.push(
-                                                                          context,
-                                                                          MaterialPageRoute(
-                                                                            builder: (context) =>
-                                                                                ProductDetails(
-                                                                              sellProduct: products[index],
-                                                                            ),
-                                                                          ));
-                                                                    }
-                                                                  },
-                                                                  child:
-                                                                      BuyProductTile(
-                                                                    context:
-                                                                        context,
-                                                                    name: products[
-                                                                            index]
-                                                                        .productName,
-                                                                    imageURL: products[
-                                                                            index]
-                                                                        .imageURL,
-                                                                    price: products[
-                                                                            index]
-                                                                        .productPrice,
-                                                                    quantityUnit:
-                                                                        products[index]
-                                                                            .quantityUnit,
-                                                                    // description:
-                                                                    //     products[index]
-                                                                    //         .productDescription,
-                                                                    subSubCategory:
-                                                                        products[index]
-                                                                            .subSubCategory,
-                                                                    village: sellerData!['profileData']['address'][0]
-                                                                            [
-                                                                            'village'] ??
-                                                                        '---',
-                                                                    district: sellerData['profileData']['address'][0]
-                                                                            [
-                                                                            'district'] ??
-                                                                        '---',
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 8,
-                                                                ),
-                                                              ],
-                                                            );
-                                                          }
-                                                          return SizedBox
-                                                              .shrink();
-                                                        })
-                                                    : Container();
-                                              }),
-                                        ],
-                                      ),
+                              Expanded(
+                                child: ListView(
+                                  physics: BouncingScrollPhysics(),
+                                  children: [
+                                    SizedBox(
+                                      height: 5,
                                     ),
+                                    ListView.builder(
+                                        itemCount: products.length,
+                                        shrinkWrap: true,
+                                        physics: NeverScrollableScrollPhysics(),
+                                        scrollDirection: Axis.vertical,
+                                        itemBuilder: (context, index) {
+                                          return StreamBuilder<
+                                                  DocumentSnapshot>(
+                                              stream: FirebaseFirestore.instance
+                                                  .collection(collectionName)
+                                                  .doc(products[index].sellerId)
+                                                  .snapshots(),
+                                              builder:
+                                                  (context, sellerSnapshot) {
+                                                if (sellerSnapshot.hasData &&
+                                                    sellerSnapshot
+                                                        .data!.exists &&
+                                                    sellerSnapshot.data !=
+                                                        null) {
+                                                  var sellerData =
+                                                      sellerSnapshot.data!
+                                                              .data()
+                                                          as Map<String,
+                                                              dynamic>?;
+
+                                                  var villageName =
+                                                      sellerData!['profileData']
+                                                              ['address'][0]
+                                                          ['village'];
+
+                                                  if (!containsItem(
+                                                    locationsList,
+                                                    villageName,
+                                                  )) {
+                                                    locationsList.add(
+                                                      FilterItem(
+                                                          name: villageName,
+                                                          isSelected: true),
+                                                    );
+                                                  }
+                                                  if (locationFilter) {
+                                                    if (containsItemAsSelected(
+                                                      locationsList,
+                                                      villageName,
+                                                    )) {
+                                                      return ProductCard(
+                                                          products,
+                                                          index,
+                                                          context,
+                                                          sellerData);
+                                                    }
+                                                  } else {
+                                                    return ProductCard(
+                                                        products,
+                                                        index,
+                                                        context,
+                                                        sellerData);
+                                                  }
+                                                }
+                                                return SizedBox.shrink();
+                                              });
+                                        }),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
                   );
@@ -386,6 +490,57 @@ class _BuyProductListState extends State<BuyProductList> {
                 );
               }),
         ));
+  }
+
+  Column ProductCard(List<SellProduct> products, int index,
+      BuildContext context, Map<String, dynamic> sellerData) {
+    return Column(
+      children: [
+        InkWell(
+          onTap: () {
+            if (products[index].subSubCategory == 'On Rent') {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MachineRentForm(
+                      imageURL: products[index].imageURL,
+                      machineName: products[index].productName,
+                      machinePrice: products[index].productPrice,
+                      machineDescription: products[index].productDescription,
+                    ),
+                  ));
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProductDetails(
+                    sellProduct: products[index],
+                  ),
+                ),
+              );
+            }
+          },
+          child: BuyProductTile(
+            context: context,
+            name: products[index].productName,
+            imageURL: products[index].imageURL,
+            price: products[index].productPrice,
+            quantityUnit: products[index].quantityUnit,
+            // description:
+            //     products[index]
+            //         .productDescription,
+            subSubCategory: products[index].subSubCategory,
+            village:
+                sellerData!['profileData']['address'][0]['village'] ?? '---',
+            district:
+                sellerData['profileData']['address'][0]['district'] ?? '---',
+          ),
+        ),
+        SizedBox(
+          height: 8,
+        ),
+      ],
+    );
   }
 
   Padding BuyProductTile({
@@ -536,6 +691,47 @@ class _BuyProductListState extends State<BuyProductList> {
           ),
         ),
       ),
+    );
+  }
+
+  Column DropdownButtonWidget(
+      // String title,
+      List<DropdownMenuItem<String>>? itemList,
+      String dropdownValue,
+      Function(String) onChanged) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        InputDecorator(
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+            filled: true,
+            fillColor: MyTheme.light_grey,
+            contentPadding: EdgeInsets.only(left: 20, right: 10),
+          ),
+          child: DropdownButton<String>(
+            isExpanded: true,
+            value: dropdownValue,
+            icon: Icon(Icons.arrow_drop_down),
+            iconSize: 24,
+            elevation: 16,
+            underline: SizedBox(),
+            style: TextStyle(
+              fontSize: 15,
+              color: Colors.black,
+            ),
+            onChanged: (String? value) {
+              onChanged(value!);
+            },
+            items: itemList,
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        )
+      ],
     );
   }
 }

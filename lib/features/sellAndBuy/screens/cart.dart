@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_event.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_state.dart';
@@ -110,6 +112,7 @@ class _CartScreenState extends State<CartScreen> {
                           } else {
                             var productsInCart =
                                 cartSnapshot.data!['products'] ?? [];
+                            print(productsInCart);
 
                             if (productsInCart.isEmpty) {
                               return Column(
@@ -135,82 +138,159 @@ class _CartScreenState extends State<CartScreen> {
                                     product['productId'].toString())
                                 .toList();
 
-                            // Fetch products from the products collection based on productIds
-                            var productsStream = productsCollection
-                                .where(FieldPath.documentId,
-                                    whereIn: productIds)
-                                .snapshots();
+                            // print(productIds.removeLast());
+                            // print(productIds);
 
-                            return StreamBuilder(
-                              stream: productsStream,
-                              builder: (context, productSnapshot) {
-                                if (productSnapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return CircularProgressIndicator();
-                                } else if (productSnapshot.hasError) {
-                                  return Text(
-                                      'Error: ${productSnapshot.error}');
-                                } else if (!productSnapshot.hasData ||
-                                    productSnapshot.data!.docs.isEmpty) {
-                                  return Text('No products available');
-                                } else {
-                                  var productsData = productSnapshot.data!.docs;
+                            // // Fetch products from the products collection based on productIds
+                            // var productsStream = productsCollection
+                            //     .where(FieldPath.documentId,
+                            //         whereIn: productIds)
+                            //     .snapshots();
 
-                                  return ListView.builder(
-                                    physics: BouncingScrollPhysics(),
-                                    itemCount: productsData.length,
-                                    itemBuilder: (context, index) {
-                                      var productDocument = productsData[index];
-                                      var productData = productDocument.data()
-                                          as Map<String, dynamic>;
+                            return Expanded(
+                              child: ListView.builder(
+                                  itemCount: productIds.length,
+                                  itemBuilder: ((context, index) {
+                                    return StreamBuilder(
+                                      stream: productsCollection
+                                          .where(FieldPath.documentId,
+                                              isEqualTo: productIds[index])
+                                          .snapshots(),
+                                      builder: (context, productSnapshot) {
+                                        if (productSnapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return CircularProgressIndicator();
+                                        } else if (productSnapshot.hasError) {
+                                          return Text(
+                                              'Error: ${productSnapshot.error}');
+                                        } else if (!productSnapshot.hasData ||
+                                            productSnapshot
+                                                .data!.docs.isEmpty) {
+                                          return Text('No products available');
+                                        } else {
+                                          var productsData =
+                                              productSnapshot.data!.docs;
+                                          // print(jsonDecode(
+                                          //     jsonEncode(productsData.toString())));
+                                          for (var product in productsData) {
+                                            print(product.data());
+                                          }
 
-                                      var productInCart =
-                                          productsInCart.firstWhere(
-                                              (product) =>
-                                                  product['productId'] ==
-                                                  productDocument.id,
-                                              orElse: () => null);
+                                          var productDocument = productsData[0];
 
-                                      if (productInCart != null) {
-                                        int quantity =
-                                            productInCart['quantity'];
-                                        String productName =
-                                            productData['name'];
-                                        List productImageUrl =
-                                            productData['imageURL'];
-                                        double productPrice =
-                                            productData['price'];
-                                        var productId = productDocument.id;
-                                        // setState(() {
-                                        //   totalAmount +=
-                                        //       productPrice * quantity;
-                                        // });
+                                                     var productData =
+                                                  productDocument.data()
+                                                      as Map<String, dynamic>;
 
-                                        return Column(
-                                          children: [
-                                            CartItem(
-                                              context: context,
-                                              name: productName,
-                                              imageURL: productImageUrl,
-                                              price: productPrice,
-                                              quantityUnit:
-                                                  productData['quantityUnit'],
-                                              description:
-                                                  productData['description'],
-                                              subSubCategory:
-                                                  productData['subSubCategory'],
-                                              productId: productId,
-                                              quantity: quantity,
-                                            ),
-                                          ],
-                                        );
-                                      } else {
-                                        return Text('Product not found');
-                                      }
-                                    },
-                                  );
-                                }
-                              },
+                                              var productInCart =
+                                                  productsInCart.firstWhere(
+                                                      (product) =>
+                                                          product[
+                                                              'productId'] ==
+                                                          productDocument.id,
+                                                      orElse: () => null);
+
+                                              if (productInCart != null) {
+                                                int quantity =
+                                                    productInCart['quantity'];
+                                                String productName =
+                                                    productData['name'];
+                                                List productImageUrl =
+                                                    productData['imageURL'];
+                                                double productPrice =
+                                                    productData['price'];
+                                                var productId =
+                                                    productDocument.id;
+
+                                                return Column(
+                                                  children: [
+                                                    CartItem(
+                                                      context: context,
+                                                      name: productName,
+                                                      imageURL: productImageUrl,
+                                                      price: productPrice,
+                                                      quantityUnit: productData[
+                                                          'quantityUnit'],
+                                                      description: productData[
+                                                          'description'],
+                                                      subSubCategory:
+                                                          productData[
+                                                              'subSubCategory'],
+                                                      productId: productId,
+                                                      quantity: quantity,
+                                                    ),
+                                                  ],
+                                                );
+                                              }
+                                            return Container();
+
+
+
+                                          // return ListView.builder(
+                                          //   physics: BouncingScrollPhysics(),
+                                          //   itemCount: productsData.length,
+                                          //   itemBuilder: (context, index) {
+                                          //     var productDocument =
+                                          //         productsData[index];
+                                          //     var productData =
+                                          //         productDocument.data()
+                                          //             as Map<String, dynamic>;
+
+                                          //     var productInCart =
+                                          //         productsInCart.firstWhere(
+                                          //             (product) =>
+                                          //                 product[
+                                          //                     'productId'] ==
+                                          //                 productDocument.id,
+                                          //             orElse: () => null);
+
+                                          //     if (productInCart != null) {
+                                          //       int quantity =
+                                          //           productInCart['quantity'];
+                                          //       String productName =
+                                          //           productData['name'];
+                                          //       List productImageUrl =
+                                          //           productData['imageURL'];
+                                          //       double productPrice =
+                                          //           productData['price'];
+                                          //       var productId =
+                                          //           productDocument.id;
+                                          //       // setState(() {
+                                          //       //   totalAmount +=
+                                          //       //       productPrice * quantity;
+                                          //       // });
+
+                                          //       return Column(
+                                          //         children: [
+                                          //           CartItem(
+                                          //             context: context,
+                                          //             name: productName,
+                                          //             imageURL: productImageUrl,
+                                          //             price: productPrice,
+                                          //             quantityUnit: productData[
+                                          //                 'quantityUnit'],
+                                          //             description: productData[
+                                          //                 'description'],
+                                          //             subSubCategory:
+                                          //                 productData[
+                                          //                     'subSubCategory'],
+                                          //             productId: productId,
+                                          //             quantity: quantity,
+                                          //           ),
+                                          //         ],
+                                          //       );
+                                              // } else {
+                                              //   return Text(
+                                              //       'Product not found');
+                                              // }
+                                            }
+                                            
+                                            });
+                                          );
+                                        }
+                                      },
+                                    );
+                                  })),
                             );
                           }
                         },
