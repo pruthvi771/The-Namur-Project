@@ -206,13 +206,11 @@ class _CartScreenState extends State<CartScreen> {
                                             children: [
                                               StreamBuilder(
                                                   stream: cartCollection
-                                                      .where(
-                                                          FieldPath.documentId,
+                                                      .where(FieldPath.documentId,
                                                           isEqualTo:
                                                               currentUser.uid)
                                                       .snapshots(),
-                                                  builder:
-                                                      (context, cartSnapshot) {
+                                                  builder: (context, cartSnapshot) {
                                                     // if (productSnapshot
                                                     //         .connectionState ==
                                                     //     ConnectionState.waiting) {
@@ -233,8 +231,7 @@ class _CartScreenState extends State<CartScreen> {
                                                     // }
                                                     if (cartSnapshot.hasData) {
                                                       var currentQuantity = cartSnapshot
-                                                          .data!
-                                                          .docs[0]['products']
+                                                          .data!.docs[0]['products']
                                                           .firstWhere((product) =>
                                                               product[
                                                                   'productId'] ==
@@ -242,145 +239,21 @@ class _CartScreenState extends State<CartScreen> {
                                                       return CartItem(
                                                         context: context,
                                                         name: productName,
-                                                        imageURL:
-                                                            productImageUrl,
+                                                        imageURL: productImageUrl,
                                                         price: productPrice,
-                                                        quantityUnit:
-                                                            productData[
-                                                                'quantityUnit'],
-                                                        description:
-                                                            productData[
-                                                                'description'],
-                                                        subSubCategory:
-                                                            productData[
-                                                                'subSubCategory'],
+                                                        quantityUnit: productData[
+                                                            'quantityUnit'],
+                                                        description: productData[
+                                                            'description'],
+                                                        subSubCategory: productData[
+                                                            'subSubCategory'],
                                                         productId: productId,
-                                                        quantity:
-                                                            currentQuantity,
+                                                        quantity: currentQuantity,
                                                       );
                                                     } else {
                                                       return Text('No data');
                                                     }
                                                   }),
-                                              Align(
-                                                alignment:
-                                                    Alignment.bottomCenter,
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.transparent,
-                                                  ),
-                                                  height: 200,
-                                                  //color: Colors.white,
-                                                  child: Padding(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        horizontal: 24.0,
-                                                        vertical: 4),
-                                                    child: Column(
-                                                      children: [
-                                                        // total amount
-                                                        SizedBox(height: 10),
-                                                        Container(
-                                                          height: 40,
-                                                          width:
-                                                              double.infinity,
-                                                          decoration: BoxDecoration(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          6.0),
-                                                              color: MyTheme
-                                                                  .green_light),
-                                                          child: Row(
-                                                            children: [
-                                                              Padding(
-                                                                padding: const EdgeInsets
-                                                                    .symmetric(
-                                                                    horizontal:
-                                                                        20.0),
-                                                                child: Text(
-                                                                  AppLocalizations.of(
-                                                                          context)!
-                                                                      .total_amount_ucf,
-                                                                  style: TextStyle(
-                                                                      color: MyTheme
-                                                                          .dark_font_grey,
-                                                                      fontSize:
-                                                                          13,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w700),
-                                                                ),
-                                                              ),
-                                                              Spacer(),
-                                                              Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .only(
-                                                                        right:
-                                                                            16.0),
-                                                                child: Text(
-                                                                    '₹ $totalAmount',
-                                                                    style: TextStyle(
-                                                                        color: MyTheme
-                                                                            .primary_color,
-                                                                        fontSize:
-                                                                            14,
-                                                                        fontWeight:
-                                                                            FontWeight.w600)),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        Container(
-                                                          height: 50,
-                                                          margin:
-                                                              EdgeInsets.only(
-                                                                  top: 10),
-                                                          width: (MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width -
-                                                              100),
-                                                          decoration: BoxDecoration(
-                                                              color:
-                                                                  Colors.white,
-                                                              borderRadius: BorderRadius
-                                                                  .all(Radius
-                                                                      .circular(
-                                                                          10.0))),
-                                                          child: ElevatedButton(
-                                                            style: ButtonStyle(
-                                                              elevation:
-                                                                  MaterialStateProperty
-                                                                      .all<double>(
-                                                                          0),
-                                                              backgroundColor:
-                                                                  MaterialStatePropertyAll<
-                                                                          Color>(
-                                                                      MyTheme
-                                                                          .primary_color),
-                                                            ),
-                                                            child: Text(
-                                                              AppLocalizations.of(
-                                                                      context)!
-                                                                  .proceed_to_shipping_ucf,
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize: 15,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w700),
-                                                            ),
-                                                            onPressed: () {},
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              )
                                             ],
                                           );
                                         }
