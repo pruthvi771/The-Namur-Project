@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_event.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_state.dart';
@@ -31,6 +33,8 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  Map<String, Map<String, int>> productMap = {};
+
   @override
   void initState() {
     // TODO: implement initState
@@ -53,6 +57,15 @@ class _CartScreenState extends State<CartScreen> {
       FirebaseFirestore.instance.collection('products');
 
   double totalAmount = 0;
+
+  Future _getCartData() async {
+    DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+        .collection('cart')
+        .doc(currentUser.uid)
+        .get();
+
+    return userSnapshot;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,8 +97,8 @@ class _CartScreenState extends State<CartScreen> {
                 Column(
                   children: [
                     Expanded(
-                      child: StreamBuilder(
-                        stream: cartCollection.doc(currentUser.uid).snapshots(),
+                      child: FutureBuilder(
+                        future: _getCartData(),
                         builder: (context, cartSnapshot) {
                           if (cartSnapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -138,160 +151,113 @@ class _CartScreenState extends State<CartScreen> {
                                     product['productId'].toString())
                                 .toList();
 
-                            // print(productIds.removeLast());
-                            // print(productIds);
-
-                            // // Fetch products from the products collection based on productIds
-                            // var productsStream = productsCollection
-                            //     .where(FieldPath.documentId,
-                            //         whereIn: productIds)
-                            //     .snapshots();
-
                             return Expanded(
-                              child: ListView.builder(
-                                  itemCount: productIds.length,
-                                  itemBuilder: ((context, index) {
-                                    return StreamBuilder(
-                                      stream: productsCollection
-                                          .where(FieldPath.documentId,
-                                              isEqualTo: productIds[index])
-                                          .snapshots(),
-                                      builder: (context, productSnapshot) {
-                                        if (productSnapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return CircularProgressIndicator();
-                                        } else if (productSnapshot.hasError) {
-                                          return Text(
-                                              'Error: ${productSnapshot.error}');
-                                        } else if (!productSnapshot.hasData ||
-                                            productSnapshot
-                                                .data!.docs.isEmpty) {
-                                          return Text('No products available');
-                                        } else {
-                                          var productsData =
-                                              productSnapshot.data!.docs;
-                                          // print(jsonDecode(
-                                          //     jsonEncode(productsData.toString())));
-                                          for (var product in productsData) {
-                                            print(product.data());
-                                          }
+                                child: ListView.builder(
+                              itemCount: productIds.length,
+                              itemBuilder: ((context, index) {
+                                return StreamBuilder(
+                                    stream: productsCollection
+                                        .where(FieldPath.documentId,
+                                            isEqualTo: productIds[index])
+                                        .snapshots(),
+                                    builder: (context, productSnapshot) {
+                                      if (productSnapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return CircularProgressIndicator();
+                                      } else if (productSnapshot.hasError) {
+                                        return Text(
+                                            'Error: ${productSnapshot.error}');
+                                      } else if (!productSnapshot.hasData ||
+                                          productSnapshot.data!.docs.isEmpty) {
+                                        return Text('No products available');
+                                      } else {
+                                        var productsData =
+                                            productSnapshot.data!.docs;
+                                        var productDocument = productsData[0];
 
-                                          var productDocument = productsData[0];
+                                        var productData = productDocument.data()
+                                            as Map<String, dynamic>;
 
-                                                     var productData =
-                                                  productDocument.data()
-                                                      as Map<String, dynamic>;
+                                        var productInCart =
+                                            productsInCart.firstWhere(
+                                                (product) =>
+                                                    product['productId'] ==
+                                                    productDocument.id,
+                                                orElse: () => null);
 
-                                              var productInCart =
-                                                  productsInCart.firstWhere(
-                                                      (product) =>
+                                        if (productInCart != null) {
+                                          int quantity =
+                                              productInCart['quantity'];
+                                          String productName =
+                                              productData['name'];
+                                          List productImageUrl =
+                                              productData['imageURL'];
+                                          double productPrice =
+                                              productData['price'];
+                                          var productId = productDocument.id;
+
+                                          totalAmount +=
+                                              productPrice * quantity;
+                                          print(productPrice);
+                                          print(quantity);
+                                          print(totalAmount);
+
+                                          return StreamBuilder(
+                                              stream: cartCollection
+                                                  .where(FieldPath.documentId,
+                                                      isEqualTo:
+                                                          currentUser.uid)
+                                                  .snapshots(),
+                                              builder: (context, cartSnapshot) {
+                                                // if (productSnapshot
+                                                //         .connectionState ==
+                                                //     ConnectionState.waiting) {
+                                                //   return CartItem(
+                                                //     context: context,
+                                                //     name: productName,
+                                                //     imageURL: productImageUrl,
+                                                //     price: productPrice,
+                                                //     quantityUnit: productData[
+                                                //         'quantityUnit'],
+                                                //     description: productData[
+                                                //         'description'],
+                                                //     subSubCategory: productData[
+                                                //         'subSubCategory'],
+                                                //     productId: productId,
+                                                //     quantity: 00,
+                                                //   );
+                                                // }
+                                                if (cartSnapshot.hasData) {
+                                                  var currentQuantity = cartSnapshot
+                                                      .data!.docs[0]['products']
+                                                      .firstWhere((product) =>
                                                           product[
                                                               'productId'] ==
-                                                          productDocument.id,
-                                                      orElse: () => null);
-
-                                              if (productInCart != null) {
-                                                int quantity =
-                                                    productInCart['quantity'];
-                                                String productName =
-                                                    productData['name'];
-                                                List productImageUrl =
-                                                    productData['imageURL'];
-                                                double productPrice =
-                                                    productData['price'];
-                                                var productId =
-                                                    productDocument.id;
-
-                                                return Column(
-                                                  children: [
-                                                    CartItem(
-                                                      context: context,
-                                                      name: productName,
-                                                      imageURL: productImageUrl,
-                                                      price: productPrice,
-                                                      quantityUnit: productData[
-                                                          'quantityUnit'],
-                                                      description: productData[
-                                                          'description'],
-                                                      subSubCategory:
-                                                          productData[
-                                                              'subSubCategory'],
-                                                      productId: productId,
-                                                      quantity: quantity,
-                                                    ),
-                                                  ],
-                                                );
-                                              }
-                                            return Container();
-
-
-
-                                          // return ListView.builder(
-                                          //   physics: BouncingScrollPhysics(),
-                                          //   itemCount: productsData.length,
-                                          //   itemBuilder: (context, index) {
-                                          //     var productDocument =
-                                          //         productsData[index];
-                                          //     var productData =
-                                          //         productDocument.data()
-                                          //             as Map<String, dynamic>;
-
-                                          //     var productInCart =
-                                          //         productsInCart.firstWhere(
-                                          //             (product) =>
-                                          //                 product[
-                                          //                     'productId'] ==
-                                          //                 productDocument.id,
-                                          //             orElse: () => null);
-
-                                          //     if (productInCart != null) {
-                                          //       int quantity =
-                                          //           productInCart['quantity'];
-                                          //       String productName =
-                                          //           productData['name'];
-                                          //       List productImageUrl =
-                                          //           productData['imageURL'];
-                                          //       double productPrice =
-                                          //           productData['price'];
-                                          //       var productId =
-                                          //           productDocument.id;
-                                          //       // setState(() {
-                                          //       //   totalAmount +=
-                                          //       //       productPrice * quantity;
-                                          //       // });
-
-                                          //       return Column(
-                                          //         children: [
-                                          //           CartItem(
-                                          //             context: context,
-                                          //             name: productName,
-                                          //             imageURL: productImageUrl,
-                                          //             price: productPrice,
-                                          //             quantityUnit: productData[
-                                          //                 'quantityUnit'],
-                                          //             description: productData[
-                                          //                 'description'],
-                                          //             subSubCategory:
-                                          //                 productData[
-                                          //                     'subSubCategory'],
-                                          //             productId: productId,
-                                          //             quantity: quantity,
-                                          //           ),
-                                          //         ],
-                                          //       );
-                                              // } else {
-                                              //   return Text(
-                                              //       'Product not found');
-                                              // }
-                                            }
-                                            
-                                            });
-                                          );
+                                                          productId)['quantity'];
+                                                  return CartItem(
+                                                    context: context,
+                                                    name: productName,
+                                                    imageURL: productImageUrl,
+                                                    price: productPrice,
+                                                    quantityUnit: productData[
+                                                        'quantityUnit'],
+                                                    description: productData[
+                                                        'description'],
+                                                    subSubCategory: productData[
+                                                        'subSubCategory'],
+                                                    productId: productId,
+                                                    quantity: currentQuantity,
+                                                  );
+                                                } else {
+                                                  return Text('No data');
+                                                }
+                                              });
                                         }
-                                      },
-                                    );
-                                  })),
-                            );
+                                        return SizedBox.shrink();
+                                      }
+                                    });
+                              }),
+                            ));
                           }
                         },
                       ),
