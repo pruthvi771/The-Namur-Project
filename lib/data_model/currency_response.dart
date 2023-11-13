@@ -54,7 +54,7 @@ class CurrencyInfo {
     name: json["name"],
     code: json["code"],
     symbol: json["symbol"],
-    exchangeRate: json["exchange_rate"].toString()??null,
+    exchangeRate: json["exchange_rate"].toString(),
     isDefault: json["is_default"],
   );
 

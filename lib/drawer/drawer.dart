@@ -13,15 +13,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:active_ecommerce_flutter/screens/main.dart';
-import 'package:active_ecommerce_flutter/features/profile/screens/profile.dart';
 import 'package:active_ecommerce_flutter/screens/order_list.dart';
-import 'package:active_ecommerce_flutter/screens/wishlist.dart';
 
 import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
 import 'package:active_ecommerce_flutter/screens/messenger_list.dart';
 import 'package:active_ecommerce_flutter/screens/wallet.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
-import 'package:active_ecommerce_flutter/app_config.dart';
+
 import 'package:active_ecommerce_flutter/helpers/auth_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -30,9 +28,8 @@ import 'package:toast/toast.dart';
 
 import '../custom/toast_component.dart';
 import '../screens/Payment_info/payment_info_screen.dart';
-import '../screens/description/description.dart';
+
 import '../screens/option/option.dart';
-import '../screens/payment_method_screen/razorpay_screen.dart';
 
 class MainDrawer extends StatefulWidget {
   const MainDrawer({
@@ -76,6 +73,7 @@ class _MainDrawerState extends State<MainDrawer> {
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
+                // ignore: unnecessary_null_comparison
                 user != null
                     ? ListTile(
                         // leading: CircleAvatar(
