@@ -42,7 +42,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../repositories/auth_repository.dart';
 // import '../../features/auth/services/auth_service.text';
-import '../notification/notification_screen.dart';
+import '../../features/notification/notification_screen.dart';
 
 class MyAccount extends StatefulWidget {
   MyAccount({Key? key, this.show_back_button = false}) : super(key: key);
