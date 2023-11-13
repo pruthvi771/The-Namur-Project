@@ -196,66 +196,56 @@ class _CartScreenState extends State<CartScreen> {
                                               productData['price'];
                                           var productId = productDocument.id;
 
-                                          totalAmount +=
-                                              productPrice * quantity;
-                                          print(productPrice);
-                                          print(quantity);
-                                          print(totalAmount);
-
-                                          return Column(
-                                            children: [
-                                              StreamBuilder(
-                                                  stream: cartCollection
-                                                      .where(FieldPath.documentId,
-                                                          isEqualTo:
-                                                              currentUser.uid)
-                                                      .snapshots(),
-                                                  builder: (context, cartSnapshot) {
-                                                    // if (productSnapshot
-                                                    //         .connectionState ==
-                                                    //     ConnectionState.waiting) {
-                                                    //   return CartItem(
-                                                    //     context: context,
-                                                    //     name: productName,
-                                                    //     imageURL: productImageUrl,
-                                                    //     price: productPrice,
-                                                    //     quantityUnit: productData[
-                                                    //         'quantityUnit'],
-                                                    //     description: productData[
-                                                    //         'description'],
-                                                    //     subSubCategory: productData[
-                                                    //         'subSubCategory'],
-                                                    //     productId: productId,
-                                                    //     quantity: 00,
-                                                    //   );
-                                                    // }
-                                                    if (cartSnapshot.hasData) {
-                                                      var currentQuantity = cartSnapshot
-                                                          .data!.docs[0]['products']
-                                                          .firstWhere((product) =>
-                                                              product[
-                                                                  'productId'] ==
-                                                              productId)['quantity'];
-                                                      return CartItem(
-                                                        context: context,
-                                                        name: productName,
-                                                        imageURL: productImageUrl,
-                                                        price: productPrice,
-                                                        quantityUnit: productData[
-                                                            'quantityUnit'],
-                                                        description: productData[
-                                                            'description'],
-                                                        subSubCategory: productData[
-                                                            'subSubCategory'],
-                                                        productId: productId,
-                                                        quantity: currentQuantity,
-                                                      );
-                                                    } else {
-                                                      return Text('No data');
-                                                    }
-                                                  }),
-                                            ],
-                                          );
+                                          return StreamBuilder(
+                                              stream: cartCollection
+                                                  .where(FieldPath.documentId,
+                                                      isEqualTo:
+                                                          currentUser.uid)
+                                                  .snapshots(),
+                                              builder: (context, cartSnapshot) {
+                                                // if (productSnapshot
+                                                //         .connectionState ==
+                                                //     ConnectionState.waiting) {
+                                                //   return CartItem(
+                                                //     context: context,
+                                                //     name: productName,
+                                                //     imageURL: productImageUrl,
+                                                //     price: productPrice,
+                                                //     quantityUnit: productData[
+                                                //         'quantityUnit'],
+                                                //     description: productData[
+                                                //         'description'],
+                                                //     subSubCategory: productData[
+                                                //         'subSubCategory'],
+                                                //     productId: productId,
+                                                //     quantity: 00,
+                                                //   );
+                                                // }
+                                                if (cartSnapshot.hasData) {
+                                                  var currentQuantity = cartSnapshot
+                                                      .data!.docs[0]['products']
+                                                      .firstWhere((product) =>
+                                                          product[
+                                                              'productId'] ==
+                                                          productId)['quantity'];
+                                                  return CartItem(
+                                                    context: context,
+                                                    name: productName,
+                                                    imageURL: productImageUrl,
+                                                    price: productPrice,
+                                                    quantityUnit: productData[
+                                                        'quantityUnit'],
+                                                    description: productData[
+                                                        'description'],
+                                                    subSubCategory: productData[
+                                                        'subSubCategory'],
+                                                    productId: productId,
+                                                    quantity: currentQuantity,
+                                                  );
+                                                } else {
+                                                  return Text('No data');
+                                                }
+                                              });
                                         }
                                         return SizedBox.shrink();
                                       }
