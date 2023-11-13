@@ -51,6 +51,7 @@ class _BuyProductListState extends State<BuyProductList> {
   late SortType? sortType;
   final String collectionName = 'buyer';
   late final bool locationFilter;
+  int text = 0;
 
   @override
   void initState() {
@@ -58,6 +59,7 @@ class _BuyProductListState extends State<BuyProductList> {
         widget.subSubCategoryList != null ? widget.subSubCategoryList! : [];
     locationsList = widget.locationsList != null ? widget.locationsList! : [];
     sortType = widget.sortType != null ? widget.sortType! : null;
+    // getCountFuture = getCount(count: null);
 
     try {
       print(subSubCategoryList[0].name);
@@ -95,14 +97,6 @@ class _BuyProductListState extends State<BuyProductList> {
         .where('isSecondHand', isEqualTo: widget.isSecondHand)
         .snapshots();
   }
-
-  // Stream<QuerySnapshot> allProductStreamQueryGoat() {
-  //   return FirebaseFirestore.instance
-  //       .collection('products')
-  //       .where('subCategory', isEqualTo: 'Goats')
-  //       .where('isSecondHand', isEqualTo: widget.isSecondHand)
-  //       .snapshots();
-  // }
 
   Stream<QuerySnapshot> allProductSortedStreamQuery(
       {required SortType sortType}) {
@@ -158,30 +152,6 @@ class _BuyProductListState extends State<BuyProductList> {
         .snapshots();
   }
 
-  // Stream<QuerySnapshot> allSellersStreamQuery({required String sellerId}) {
-  //   return FirebaseFirestore.instance
-  //       .collection(collectionName)
-  //       .where(FieldPath.documentId, isEqualTo: sellerId)
-  //       .snapshots();
-  // }
-
-  // Stream<QuerySnapshot> filteredSellersStreamQuery({
-  //   required String sellerId,
-  //   List<FilterItem>? theLocationList,
-  // }) {
-  //   List<String> locationList = [];
-  //   for (var item in theLocationList!) {
-  //     if (item.isSelected) {
-  //       locationList.add(item.name);
-  //     }
-  //   }
-  //   return FirebaseFirestore.instance
-  //       .collection(collectionName)
-  //       .where(FieldPath.documentId, isEqualTo: sellerId)
-  //       .where('profileData.address.0.village', isNotEqualTo: null)
-  //       .snapshots();
-  // }
-
   void goToFilterScreen({
     required BuildContext context,
     required SubCategoryEnum subCategoryEnum,
@@ -235,6 +205,17 @@ class _BuyProductListState extends State<BuyProductList> {
     }
     return false;
   }
+
+  // late Future<int?> getCountFuture;
+
+  // Future<int?> getCount({
+  //   required int? count,
+  // }) async {
+  //   if (count == null) {
+  //     return null;
+  //   }
+  //   return count;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -321,50 +302,6 @@ class _BuyProductListState extends State<BuyProductList> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    // // sort by
-                                    // Container(
-                                    //   height: 33,
-                                    //   padding: const EdgeInsets.symmetric(
-                                    //       horizontal: 12.0),
-                                    //   decoration: BoxDecoration(
-                                    //       borderRadius:
-                                    //           BorderRadius.circular(500),
-                                    //       color: Colors.grey[200]),
-                                    //   child: DropdownButton<String>(
-                                    //     hint: Text(
-                                    //       'Sort By',
-                                    //       style: TextStyle(
-                                    //         color: Colors.black,
-                                    //         fontSize: 13,
-                                    //       ),
-                                    //     ),
-                                    //     value: sortByDropdownValue,
-                                    //     icon: Icon(Icons.arrow_drop_down),
-                                    //     iconSize: 24,
-                                    //     elevation: 16,
-                                    //     underline: SizedBox(),
-                                    //     style: TextStyle(
-                                    //       fontSize: 14,
-                                    //       color: Colors.black,
-                                    //     ),
-                                    //     onChanged: (String? newValue) {
-                                    //       setState(() {
-                                    //         sortByDropdownValue = newValue!;
-                                    //       });
-                                    //     },
-                                    //     items: [
-                                    //       'Price (Low to high)',
-                                    //       'Price (High to Low)'
-                                    //     ].map<DropdownMenuItem<String>>(
-                                    //         (String value) {
-                                    //       return DropdownMenuItem<String>(
-                                    //         value: value,
-                                    //         child: Text(value),
-                                    //       );
-                                    //     }).toList(),
-                                    //   ),
-                                    // ),
-
                                     // filter by
                                     GestureDetector(
                                       onTap: () {
@@ -458,6 +395,9 @@ class _BuyProductListState extends State<BuyProductList> {
                                                       locationsList,
                                                       villageName,
                                                     )) {
+                                                      // text = text + 1;
+                                                      // getCountFuture =
+                                                      //     getCount(count: text);
                                                       return ProductCard(
                                                           products,
                                                           index,
@@ -465,6 +405,9 @@ class _BuyProductListState extends State<BuyProductList> {
                                                           sellerData);
                                                     }
                                                   } else {
+                                                    // text = text + 1;
+                                                    // getCountFuture =
+                                                    //     getCount(count: text);
                                                     return ProductCard(
                                                         products,
                                                         index,
@@ -478,6 +421,19 @@ class _BuyProductListState extends State<BuyProductList> {
                                   ],
                                 ),
                               ),
+                              // FutureBuilder(
+                              //     future: getCountFuture,
+                              //     builder: (context, snapshot) {
+                              //       if (snapshot.hasData &&
+                              //           snapshot.data != null) {
+                              //         return Container(
+                              //           child: Text(snapshot.data.toString()),
+                              //         );
+                              //       }
+                              //       return Container(
+                              //         child: Text('empty'),
+                              //       );
+                              //     }),
                             ],
                           ),
                   );

@@ -52,11 +52,6 @@ var categoryListForParentEnum = {
     CategoryEnum.equipments,
   ],
   ParentEnum.land: [
-    CategoryEnum.animals,
-    CategoryEnum.birds,
-    CategoryEnum.vegetables,
-    CategoryEnum.fruits,
-    CategoryEnum.crops,
     CategoryEnum.jcb,
     CategoryEnum.electronics,
     CategoryEnum.equipments,
@@ -68,11 +63,16 @@ var subCategoryListsForCategory = {
     SubCategoryEnum.cows,
     SubCategoryEnum.goats,
     SubCategoryEnum.buffaloes,
+    SubCategoryEnum.sheep,
+    SubCategoryEnum.bull,
+    SubCategoryEnum.pig,
   ],
   CategoryEnum.birds: [
     SubCategoryEnum.parrot,
     SubCategoryEnum.pigeon,
     SubCategoryEnum.sparrow,
+    SubCategoryEnum.duck,
+    SubCategoryEnum.turkey,
   ],
   CategoryEnum.supplies: [
     SubCategoryEnum.barley,
@@ -83,16 +83,25 @@ var subCategoryListsForCategory = {
     SubCategoryEnum.beans,
     SubCategoryEnum.beetroot,
     SubCategoryEnum.bitterground,
+    SubCategoryEnum.bottleground,
+    SubCategoryEnum.brinjal,
+    SubCategoryEnum.brocolli,
   ],
   CategoryEnum.fruits: [
     SubCategoryEnum.banana,
     SubCategoryEnum.gauva,
     SubCategoryEnum.grapes,
+    SubCategoryEnum.jackfruit,
+    SubCategoryEnum.mango,
+    SubCategoryEnum.muskmelon,
   ],
   CategoryEnum.crops: [
     SubCategoryEnum.barley,
     SubCategoryEnum.bengalGram,
     SubCategoryEnum.castor,
+    SubCategoryEnum.cotton,
+    SubCategoryEnum.groundnut,
+    SubCategoryEnum.jute,
   ],
   CategoryEnum.electronics: [
     SubCategoryEnum.mobile,
@@ -147,11 +156,17 @@ enum SubCategoryEnum {
   cows,
   goats,
   buffaloes,
+  sheep,
+  bull,
+  pig,
 
   // birds
   parrot,
   pigeon,
   sparrow,
+  // chicken,
+  duck,
+  turkey,
 
   //CROPS
   barley,
@@ -290,9 +305,14 @@ var nameForSubCategoryEnum = {
   SubCategoryEnum.cows: "Cows",
   SubCategoryEnum.goats: "Goats",
   SubCategoryEnum.buffaloes: "Buffaloes",
+  SubCategoryEnum.sheep: "Sheep",
+  SubCategoryEnum.bull: "Bull",
+  SubCategoryEnum.pig: "Pig",
   SubCategoryEnum.parrot: "Parrot",
   SubCategoryEnum.pigeon: "Pigeon",
   SubCategoryEnum.sparrow: "Sparrow",
+  SubCategoryEnum.duck: "Duck",
+  SubCategoryEnum.turkey: "Turkey",
   SubCategoryEnum.barley: "Barley",
   SubCategoryEnum.bengalGram: "Bengal Gram",
   SubCategoryEnum.castor: "Castor",
@@ -455,6 +475,17 @@ var SubSubCategoryList = {
     'Black Buffaloes',
     'White Buffaloes',
   ],
+  SubCategoryEnum.sheep: [
+    'Sheep',
+    'Black Sheep',
+    'White Sheep',
+  ],
+  SubCategoryEnum.bull: [
+    'Bull',
+  ],
+  SubCategoryEnum.pig: [
+    'Pig',
+  ],
   SubCategoryEnum.parrot: [
     'Parrot',
     'Green Parrot',
@@ -466,6 +497,12 @@ var SubSubCategoryList = {
   SubCategoryEnum.sparrow: [
     'Sparrow',
     'White Sparrow',
+  ],
+  SubCategoryEnum.duck: [
+    'Duck',
+  ],
+  SubCategoryEnum.turkey: [
+    'Turkey',
   ],
   SubCategoryEnum.beans: [
     'Beans',
@@ -479,6 +516,15 @@ var SubSubCategoryList = {
   SubCategoryEnum.bitterground: [
     'Bitterground',
     'Green Bitterground',
+  ],
+  SubCategoryEnum.bottleground: [
+    'Bottleground',
+  ],
+  SubCategoryEnum.brinjal: [
+    'Brinjal',
+  ],
+  SubCategoryEnum.brocolli: [
+    'Brocolli',
   ],
   SubCategoryEnum.barley: [
     'Barley',
