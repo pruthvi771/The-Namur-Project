@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/checkout_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_event.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_state.dart';
@@ -39,6 +40,7 @@ class _CartScreenState extends State<CartScreen> {
   void initState() {
     // TODO: implement initState
     currentUser = _firebaseAuth.currentUser!;
+    totalAmountFuture = _getTotalAmount();
     super.initState();
   }
 
@@ -67,67 +69,105 @@ class _CartScreenState extends State<CartScreen> {
     return userSnapshot;
   }
 
+  late Future<double?> totalAmountFuture;
+
+  Future<double?> _getTotalAmount() async {
+    final cartDoc = await FirebaseFirestore.instance
+        .collection('cart')
+        .doc(currentUser.uid)
+        .get();
+
+    if (!cartDoc.exists) {
+      print('Cart not found for user: ${currentUser.uid}');
+      return null;
+    }
+
+    final List<Map<String, dynamic>> products =
+        List<Map<String, dynamic>>.from(cartDoc.data()?['products']);
+
+    // Step 3: Fetch product details (including prices) for each product ID
+    double totalAmount = 0;
+
+    for (final product in products) {
+      final productId = product['productId'] as String;
+      final quantity = product['quantity'] as int;
+
+      final productDoc = await FirebaseFirestore.instance
+          .collection('products')
+          .doc(productId)
+          .get();
+
+      if (productDoc.exists) {
+        final price = productDoc.data()?['price'] as double;
+        final productTotal = price * quantity;
+        totalAmount += productTotal;
+
+        print(
+            'Product ID: $productId, Quantity: $quantity, Price: $price, Total: $productTotal');
+      } else {
+        print('Product not found for ID: $productId');
+      }
+    }
+
+    // Step 4: Calculate the total amount
+    print('Total Amount: $totalAmount');
+
+    return totalAmount;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Directionality(
         textDirection:
             app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
-        child: Scaffold(
-            drawer: const MainDrawer(),
-            backgroundColor: Colors.white,
-            appBar: AppBar(
-              flexibleSpace: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [Color(0xff107B28), Color(0xff4C7B10)]),
+        child: BlocListener<CartBloc, CartState>(
+          listener: (context, state) {
+            if (state is CartInitial) {
+              print('cart initial');
+            }
+            if (state is CartUpdated) {
+              print('cart updated');
+              setState(() {
+                totalAmountFuture = _getTotalAmount();
+              });
+            }
+            // TODO: implement listener
+          },
+          child: Scaffold(
+              drawer: const MainDrawer(),
+              backgroundColor: Colors.white,
+              appBar: AppBar(
+                flexibleSpace: Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Color(0xff107B28), Color(0xff4C7B10)]),
+                  ),
                 ),
+                title: Text(AppLocalizations.of(context)!.shopping_cart_ucf,
+                    style: TextStyle(
+                        color: MyTheme.white,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: .5,
+                        fontFamily: 'Poppins')),
+                centerTitle: true,
               ),
-              title: Text(AppLocalizations.of(context)!.shopping_cart_ucf,
-                  style: TextStyle(
-                      color: MyTheme.white,
-                      fontWeight: FontWeight.w500,
-                      letterSpacing: .5,
-                      fontFamily: 'Poppins')),
-              centerTitle: true,
-            ),
-            body: Stack(
-              children: [
-                Column(
-                  children: [
-                    Expanded(
-                      child: FutureBuilder(
-                        future: _getCartData(),
-                        builder: (context, cartSnapshot) {
-                          if (cartSnapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return CircularProgressIndicator();
-                          } else if (cartSnapshot.hasError) {
-                            return Text('Error: ${cartSnapshot.error}');
-                          } else if (!cartSnapshot.hasData ||
-                              !cartSnapshot.data!.exists) {
-                            return Column(
-                              children: [
-                                SizedBox(height: 200),
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    'Cart is empty',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w900,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            );
-                          } else {
-                            var productsInCart =
-                                cartSnapshot.data!['products'] ?? [];
-                            print(productsInCart);
-
-                            if (productsInCart.isEmpty) {
+              body: Stack(
+                children: [
+                  Column(
+                    children: [
+                      Expanded(
+                        child: FutureBuilder(
+                          future: _getCartData(),
+                          builder: (context, cartSnapshot) {
+                            if (cartSnapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(child: CircularProgressIndicator());
+                            } else if (cartSnapshot.hasError) {
+                              return Text('Error: ${cartSnapshot.error}');
+                            } else if (!cartSnapshot.hasData ||
+                                !cartSnapshot.data!.exists) {
                               return Column(
                                 children: [
                                   SizedBox(height: 200),
@@ -143,204 +183,252 @@ class _CartScreenState extends State<CartScreen> {
                                   ),
                                 ],
                               );
-                            }
+                            } else {
+                              var productsInCart =
+                                  cartSnapshot.data!['products'] ?? [];
+                              // print(productsInCart);
 
-                            // Extract product IDs from the cart
-                            List productIds = productsInCart
-                                .map((product) =>
-                                    product['productId'].toString())
-                                .toList();
+                              if (productsInCart.isEmpty) {
+                                return Column(
+                                  children: [
+                                    SizedBox(height: 200),
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        'Cart is empty',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w900,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }
 
-                            return Expanded(
-                                child: ListView.builder(
-                              itemCount: productIds.length,
-                              itemBuilder: ((context, index) {
-                                return StreamBuilder(
-                                    stream: productsCollection
-                                        .where(FieldPath.documentId,
-                                            isEqualTo: productIds[index])
-                                        .snapshots(),
-                                    builder: (context, productSnapshot) {
-                                      if (productSnapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return CircularProgressIndicator();
-                                      } else if (productSnapshot.hasError) {
-                                        return Text(
-                                            'Error: ${productSnapshot.error}');
-                                      } else if (!productSnapshot.hasData ||
-                                          productSnapshot.data!.docs.isEmpty) {
-                                        return Text('No products available');
-                                      } else {
-                                        var productsData =
-                                            productSnapshot.data!.docs;
-                                        var productDocument = productsData[0];
+                              // Extract product IDs from the cart
+                              List productIds = productsInCart
+                                  .map((product) =>
+                                      product['productId'].toString())
+                                  .toList();
 
-                                        var productData = productDocument.data()
-                                            as Map<String, dynamic>;
+                              return ListView.builder(
+                                itemCount: productIds.length,
+                                itemBuilder: ((context, index) {
+                                  return StreamBuilder(
+                                      stream: productsCollection
+                                          .where(FieldPath.documentId,
+                                              isEqualTo: productIds[index])
+                                          .snapshots(),
+                                      builder: (context, productSnapshot) {
+                                        if (productSnapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return Center(
+                                              child:
+                                                  CircularProgressIndicator());
+                                        } else if (productSnapshot.hasError) {
+                                          return Text(
+                                              'Error: ${productSnapshot.error}');
+                                        } else if (!productSnapshot.hasData ||
+                                            productSnapshot
+                                                .data!.docs.isEmpty) {
+                                          return Text('No products available');
+                                        } else {
+                                          var productsData =
+                                              productSnapshot.data!.docs;
+                                          var productDocument = productsData[0];
 
-                                        var productInCart =
-                                            productsInCart.firstWhere(
-                                                (product) =>
-                                                    product['productId'] ==
-                                                    productDocument.id,
-                                                orElse: () => null);
+                                          var productData = productDocument
+                                              .data() as Map<String, dynamic>;
 
-                                        if (productInCart != null) {
-                                          int quantity =
-                                              productInCart['quantity'];
-                                          String productName =
-                                              productData['name'];
-                                          List productImageUrl =
-                                              productData['imageURL'];
-                                          double productPrice =
-                                              productData['price'];
-                                          var productId = productDocument.id;
+                                          var productInCart =
+                                              productsInCart.firstWhere(
+                                                  (product) =>
+                                                      product['productId'] ==
+                                                      productDocument.id,
+                                                  orElse: () => null);
 
-                                          return StreamBuilder(
-                                              stream: cartCollection
-                                                  .where(FieldPath.documentId,
-                                                      isEqualTo:
-                                                          currentUser.uid)
-                                                  .snapshots(),
-                                              builder: (context, cartSnapshot) {
-                                                // if (productSnapshot
-                                                //         .connectionState ==
-                                                //     ConnectionState.waiting) {
-                                                //   return CartItem(
-                                                //     context: context,
-                                                //     name: productName,
-                                                //     imageURL: productImageUrl,
-                                                //     price: productPrice,
-                                                //     quantityUnit: productData[
-                                                //         'quantityUnit'],
-                                                //     description: productData[
-                                                //         'description'],
-                                                //     subSubCategory: productData[
-                                                //         'subSubCategory'],
-                                                //     productId: productId,
-                                                //     quantity: 00,
-                                                //   );
-                                                // }
-                                                if (cartSnapshot.hasData) {
-                                                  var currentQuantity = cartSnapshot
-                                                      .data!.docs[0]['products']
-                                                      .firstWhere((product) =>
-                                                          product[
-                                                              'productId'] ==
-                                                          productId)['quantity'];
-                                                  return CartItem(
-                                                    context: context,
-                                                    name: productName,
-                                                    imageURL: productImageUrl,
-                                                    price: productPrice,
-                                                    quantityUnit: productData[
-                                                        'quantityUnit'],
-                                                    description: productData[
-                                                        'description'],
-                                                    subSubCategory: productData[
-                                                        'subSubCategory'],
-                                                    productId: productId,
-                                                    quantity: currentQuantity,
-                                                  );
-                                                } else {
-                                                  return Text('No data');
-                                                }
-                                              });
+                                          if (productInCart != null) {
+                                            int quantity =
+                                                productInCart['quantity'];
+                                            String productName =
+                                                productData['name'];
+                                            List productImageUrl =
+                                                productData['imageURL'];
+                                            double productPrice =
+                                                productData['price'];
+                                            var productId = productDocument.id;
+
+                                            return StreamBuilder(
+                                                stream: cartCollection
+                                                    .where(FieldPath.documentId,
+                                                        isEqualTo:
+                                                            currentUser.uid)
+                                                    .snapshots(),
+                                                builder:
+                                                    (context, cartSnapshot) {
+                                                  // if (productSnapshot
+                                                  //         .connectionState ==
+                                                  //     ConnectionState.waiting) {
+                                                  //   return CartItem(
+                                                  //     context: context,
+                                                  //     name: productName,
+                                                  //     imageURL: productImageUrl,
+                                                  //     price: productPrice,
+                                                  //     quantityUnit: productData[
+                                                  //         'quantityUnit'],
+                                                  //     description: productData[
+                                                  //         'description'],
+                                                  //     subSubCategory: productData[
+                                                  //         'subSubCategory'],
+                                                  //     productId: productId,
+                                                  //     quantity: 00,
+                                                  //   );
+                                                  // }
+                                                  if (cartSnapshot.hasData) {
+                                                    var currentQuantity = cartSnapshot
+                                                        .data!
+                                                        .docs[0]['products']
+                                                        .firstWhere((product) =>
+                                                            product[
+                                                                'productId'] ==
+                                                            productId)['quantity'];
+                                                    return CartItem(
+                                                      context: context,
+                                                      name: productName,
+                                                      imageURL: productImageUrl,
+                                                      price: productPrice,
+                                                      quantityUnit: productData[
+                                                          'quantityUnit'],
+                                                      description: productData[
+                                                          'description'],
+                                                      subSubCategory:
+                                                          productData[
+                                                              'subSubCategory'],
+                                                      productId: productId,
+                                                      quantity: currentQuantity,
+                                                    );
+                                                  } else {
+                                                    return Text('No data');
+                                                  }
+                                                });
+                                          }
+                                          return SizedBox.shrink();
                                         }
-                                        return SizedBox.shrink();
-                                      }
-                                    });
-                              }),
-                            ));
-                          }
-                        },
+                                      });
+                                }),
+                              );
+                            }
+                          },
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 200,
-                    ),
-                  ],
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                    ),
-                    height: 200,
-                    //color: Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24.0, vertical: 4),
-                      child: Column(
-                        children: [
-                          // total amount
-                          SizedBox(height: 10),
-                          Container(
-                            height: 40,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(6.0),
-                                color: MyTheme.green_light),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0),
-                                  child: Text(
-                                    AppLocalizations.of(context)!
-                                        .total_amount_ucf,
-                                    style: TextStyle(
-                                        color: MyTheme.dark_font_grey,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w700),
-                                  ),
-                                ),
-                                Spacer(),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 16.0),
-                                  child: Text('₹ $totalAmount',
-                                      style: TextStyle(
-                                          color: MyTheme.primary_color,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600)),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            height: 50,
-                            margin: EdgeInsets.only(top: 10),
-                            width: (MediaQuery.of(context).size.width - 100),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0))),
-                            child: ElevatedButton(
-                              style: ButtonStyle(
-                                elevation: MaterialStateProperty.all<double>(0),
-                                backgroundColor:
-                                    MaterialStatePropertyAll<Color>(
-                                        MyTheme.primary_color),
-                              ),
-                              child: Text(
-                                AppLocalizations.of(context)!
-                                    .proceed_to_shipping_ucf,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                              onPressed: () {},
-                            ),
-                          )
-                        ],
+                      SizedBox(
+                        height: 200,
                       ),
-                    ),
+                    ],
                   ),
-                )
-              ],
-            )));
+                  FutureBuilder(
+                      future: totalAmountFuture,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData && snapshot.data != null) {
+                          return Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.transparent,
+                              ),
+                              height: 200,
+                              //color: Colors.white,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 24.0, vertical: 4),
+                                child: Column(
+                                  children: [
+                                    // total amount
+                                    SizedBox(height: 10),
+                                    Container(
+                                      height: 40,
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(6.0),
+                                          color: MyTheme.green_light),
+                                      child: Row(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 20.0),
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .total_amount_ucf,
+                                              style: TextStyle(
+                                                  color: MyTheme.dark_font_grey,
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w700),
+                                            ),
+                                          ),
+                                          Spacer(),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 16.0),
+                                            child: Text('₹ ${snapshot.data}',
+                                                style: TextStyle(
+                                                    color:
+                                                        MyTheme.primary_color,
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w600)),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
+                                      height: 50,
+                                      margin: EdgeInsets.only(top: 10),
+                                      width:
+                                          (MediaQuery.of(context).size.width -
+                                              100),
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10.0))),
+                                      child: ElevatedButton(
+                                        style: ButtonStyle(
+                                          elevation:
+                                              MaterialStateProperty.all<double>(
+                                                  0),
+                                          backgroundColor:
+                                              MaterialStatePropertyAll<Color>(
+                                                  MyTheme.primary_color),
+                                        ),
+                                        child: Text(
+                                          AppLocalizations.of(context)!
+                                              .proceed_to_shipping_ucf,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      CheckoutScreen()));
+                                        },
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                        return SizedBox.shrink();
+                      })
+                ],
+              )),
+        ));
   }
 }
 

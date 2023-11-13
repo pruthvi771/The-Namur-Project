@@ -54,6 +54,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
             productId: event.productId,
           );
           emit(CartInitial());
+          emit(CartUpdated());
           return;
         } else {
           CartProduct? cartProduct = await cartRepository.updateCartQuantity(
@@ -63,8 +64,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           );
           if (cartProduct != null) {
             emit(AddToCartSuccessful(quantity: cartProduct.quantity));
+            emit(CartUpdated());
           } else {
             emit(CartInitial());
+            emit(CartUpdated());
           }
         }
       } catch (e) {
