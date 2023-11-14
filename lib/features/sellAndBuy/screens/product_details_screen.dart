@@ -240,6 +240,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                   BlocBuilder<CartBloc, CartState>(
                     builder: (context, state) {
                       if (state is CartLoading)
+                        // circular progress indicator
                         return ElevatedButton(
                           onPressed: () {},
                           style: ElevatedButton.styleFrom(
@@ -265,12 +266,93 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 height: 35,
                                 decoration: BoxDecoration(
                                   border: Border.all(
+                                    color: MyTheme.primary_color,
+                                    width: 2.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: TextButton(
+                                  onPressed: () {
+                                    BlocProvider.of<CartBloc>(context).add(
+                                      UpdateCartQuantityRequested(
+                                        productId: widget.sellProduct.id,
+                                        currentQuantity: state.quantity,
+                                        type: UpdateCartQuantityType.decrement,
+                                      ),
+                                    );
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    padding: EdgeInsets.all(0),
+                                    elevation: 0,
+                                  ),
+                                  child: Icon(
+                                    Icons.remove,
+                                    color: MyTheme.primary_color,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 12),
+                                child: Text(
+                                  state.quantity.toString(),
+                                  style: TextStyle(
+                                      color: Colors.grey[700],
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w700,
+                                      letterSpacing: .5,
+                                      fontFamily: 'Poppins'),
+                                ),
+                              ),
+                              Container(
+                                width: 35,
+                                height: 35,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
                                     color:
                                         MyTheme.primary_color, // Border color
                                     width: 2.0, // Border width
                                   ),
                                   borderRadius: BorderRadius.circular(
                                       8.0), // Border radius
+                                ),
+                                child: TextButton(
+                                  onPressed: () {
+                                    BlocProvider.of<CartBloc>(context).add(
+                                      UpdateCartQuantityRequested(
+                                        productId: widget.sellProduct.id,
+                                        currentQuantity: state.quantity,
+                                        type: UpdateCartQuantityType.increment,
+                                      ),
+                                    );
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    padding: EdgeInsets.all(0),
+                                    elevation: 0,
+                                  ),
+                                  child: Icon(
+                                    Icons.add,
+                                    color: MyTheme.primary_color,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      if (state is CartUpdated)
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 5, bottom: 5),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 35,
+                                height: 35,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: MyTheme.primary_color,
+                                    width: 2.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
                                 ),
                                 child: TextButton(
                                   onPressed: () {

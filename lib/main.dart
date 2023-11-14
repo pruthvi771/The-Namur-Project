@@ -10,12 +10,15 @@ import 'package:active_ecommerce_flutter/features/sellAndBuy/services/buy_bloc/b
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/buy_repository.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_repository.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/checkout_bloc/checkout_bloc.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/checkout_repository.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/sell_bloc/sell_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/sell_repository.dart';
 import 'package:active_ecommerce_flutter/features/weather/bloc/weather_bloc.dart';
 import 'package:active_ecommerce_flutter/presenter/cart_counter.dart';
 import 'package:active_ecommerce_flutter/presenter/currency_presenter.dart';
 import 'package:active_ecommerce_flutter/providers/locale_provider.dart';
+import 'package:active_ecommerce_flutter/repositories/order_repository.dart';
 import 'package:active_ecommerce_flutter/screens/address.dart';
 import 'package:active_ecommerce_flutter/screens/cart.dart';
 import 'package:active_ecommerce_flutter/screens/category_list.dart';
@@ -158,11 +161,18 @@ class _MyAppState extends State<MyApp> {
     SellRepository sellRepository = SellRepository();
     BuyRepository buyRepository = BuyRepository();
     CartRepository cartRepository = CartRepository();
+    CheckoutRepository checkoutRepository = CheckoutRepository();
 
     return MultiBlocProvider(
         providers: [
           BlocProvider<WeatherBloc>(
             create: (context) => WeatherBloc(),
+          ),
+          BlocProvider<CheckoutBloc>(
+            create: (context) => CheckoutBloc(
+              checkoutRepository: checkoutRepository,
+              cartRepository: cartRepository,
+            ),
           ),
           BlocProvider(
             create: (context) => WeatherSectionBloc(),

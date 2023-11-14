@@ -80,7 +80,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     print(cartDoc.docs.length);
     print(cartDoc.docs[0].data());
 
-    return totalAmount;
+    return 1.0;
   }
 
   @override

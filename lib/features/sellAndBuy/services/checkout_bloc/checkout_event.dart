@@ -9,8 +9,9 @@ abstract class CheckoutEvent extends Equatable {
 }
 
 class CheckoutRequested extends CheckoutEvent {
-  const CheckoutRequested();
+  final String userID;
+  const CheckoutRequested({required this.userID});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [userID];
 }

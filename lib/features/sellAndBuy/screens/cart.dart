@@ -7,6 +7,9 @@ import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_event.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_state.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_repository.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/checkout_bloc/checkout_bloc.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/checkout_bloc/checkout_event.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/checkout_bloc/checkout_state.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -40,7 +43,8 @@ class _CartScreenState extends State<CartScreen> {
   void initState() {
     // TODO: implement initState
     currentUser = _firebaseAuth.currentUser!;
-    totalAmountFuture = _getTotalAmount();
+    // totalAmountFuture = _getTotalAmount();
+    initialGetCartData = _getCartData(nullData: false);
     super.initState();
   }
 
@@ -60,7 +64,12 @@ class _CartScreenState extends State<CartScreen> {
 
   double totalAmount = 0;
 
-  Future _getCartData() async {
+  late Future initialGetCartData;
+
+  Future _getCartData({required bool nullData}) async {
+    if (nullData) {
+      return 0;
+    }
     DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
         .collection('cart')
         .doc(currentUser.uid)
@@ -69,16 +78,248 @@ class _CartScreenState extends State<CartScreen> {
     return userSnapshot;
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection:
+          app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
+      child: BlocListener<CartBloc, CartState>(
+        listener: (context, state) {
+          if (state is CartProductDeleted) {
+            setState(() {
+              initialGetCartData = _getCartData(nullData: false);
+            });
+          }
+        },
+        child: Scaffold(
+          // drawer: const MainDrawer(),
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            flexibleSpace: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(0xff107B28), Color(0xff4C7B10)]),
+              ),
+            ),
+            title: Text(
+              AppLocalizations.of(context)!.shopping_cart_ucf,
+              style: TextStyle(
+                color: MyTheme.white,
+                fontWeight: FontWeight.w500,
+                letterSpacing: .5,
+                fontFamily: 'Poppins',
+              ),
+            ),
+            centerTitle: true,
+          ),
+          body: Stack(children: [
+            Column(
+              children: [
+                Expanded(
+                  child: FutureBuilder(
+                    future: initialGetCartData,
+                    builder: (context, cartSnapshot) {
+                      if (cartSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (cartSnapshot.hasError) {
+                        return Text('Error: ${cartSnapshot.error}');
+                      } else if (cartSnapshot.hasData &&
+                          cartSnapshot.data == 0) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (!cartSnapshot.hasData ||
+                          !cartSnapshot.data!.exists) {
+                        return Column(
+                          children: [
+                            SizedBox(height: 200),
+                            Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                'Cart is empty',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      } else {
+                        var productsInCart =
+                            cartSnapshot.data!['products'] ?? [];
+                        // print(productsInCart);
+
+                        if (productsInCart.isEmpty) {
+                          return Column(
+                            children: [
+                              SizedBox(height: 200),
+                              Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  'Cart is empty',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w900,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+
+                        // Extract product IDs from the cart
+                        List productIds = productsInCart
+                            .map((product) => product['productId'].toString())
+                            .toList();
+
+                        return ListView.builder(
+                          itemCount: productIds.length,
+                          itemBuilder: ((context, index) {
+                            return StreamBuilder(
+                                stream: productsCollection
+                                    .where(FieldPath.documentId,
+                                        isEqualTo: productIds[index])
+                                    .snapshots(),
+                                builder: (context, productSnapshot) {
+                                  if (productSnapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Center(
+                                        child: CircularProgressIndicator());
+                                  } else if (productSnapshot.hasError) {
+                                    return Text(
+                                        'Error: ${productSnapshot.error}');
+                                  } else if (!productSnapshot.hasData ||
+                                      productSnapshot.data!.docs.isEmpty) {
+                                    return Text('No products available');
+                                  } else {
+                                    var productsData =
+                                        productSnapshot.data!.docs;
+                                    var productDocument = productsData[0];
+
+                                    var productData = productDocument.data()
+                                        as Map<String, dynamic>;
+
+                                    var productInCart =
+                                        productsInCart.firstWhere(
+                                            (product) =>
+                                                product['productId'] ==
+                                                productDocument.id,
+                                            orElse: () => null);
+
+                                    if (productInCart != null) {
+                                      int quantity = productInCart['quantity'];
+                                      String productName = productData['name'];
+                                      List productImageUrl =
+                                          productData['imageURL'];
+                                      double productPrice =
+                                          productData['price'];
+                                      var productId = productDocument.id;
+
+                                      return StreamBuilder(
+                                          stream: cartCollection
+                                              .where(FieldPath.documentId,
+                                                  isEqualTo: currentUser.uid)
+                                              .snapshots(),
+                                          builder: (context, cartSnapshot) {
+                                            if (cartSnapshot.hasData) {
+                                              var currentProduct = cartSnapshot
+                                                  .data!.docs[0]['products'];
+
+                                              var currentQuantity =
+                                                  currentProduct.firstWhere(
+                                                      (product) =>
+                                                          product[
+                                                              'productId'] ==
+                                                          productId)['quantity'];
+
+                                              return CartItem(
+                                                context: context,
+                                                name: productName,
+                                                imageURL: productImageUrl,
+                                                price: productPrice,
+                                                quantityUnit:
+                                                    productData['quantityUnit'],
+                                                description:
+                                                    productData['description'],
+                                                subSubCategory: productData[
+                                                    'subSubCategory'],
+                                                productId: productId,
+                                                quantity: currentQuantity,
+                                                onTap: () {
+                                                  if (currentQuantity == 1) {
+                                                    setState(() {
+                                                      initialGetCartData =
+                                                          _getCartData(
+                                                              nullData: true);
+                                                    });
+                                                  }
+                                                },
+                                              );
+                                            } else {
+                                              return SizedBox.shrink();
+                                            }
+                                          });
+                                    }
+                                    return SizedBox.shrink();
+                                  }
+                                });
+                          }),
+                        );
+                      }
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: 140,
+                ),
+              ],
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: CheckoutWidget(
+                currentUser: currentUser,
+              ),
+            ),
+          ]),
+        ),
+      ),
+    );
+  }
+}
+// CheckoutWidget(
+//   currentUser: currentUser,
+// )
+
+class CheckoutWidget extends StatefulWidget {
+  const CheckoutWidget({
+    super.key,
+    required this.currentUser,
+  });
+
+  final User currentUser;
+
+  @override
+  State<CheckoutWidget> createState() => _CheckoutWidgetState();
+}
+
+class _CheckoutWidgetState extends State<CheckoutWidget> {
+  void initState() {
+    totalAmountFuture = _getTotalAmount();
+    super.initState();
+  }
+
   late Future<double?> totalAmountFuture;
 
   Future<double?> _getTotalAmount() async {
     final cartDoc = await FirebaseFirestore.instance
         .collection('cart')
-        .doc(currentUser.uid)
+        .doc(widget.currentUser.uid)
         .get();
 
     if (!cartDoc.exists) {
-      print('Cart not found for user: ${currentUser.uid}');
+      print('Cart not found for user: ${widget.currentUser.uid}');
       return null;
     }
 
@@ -102,8 +343,8 @@ class _CartScreenState extends State<CartScreen> {
         final productTotal = price * quantity;
         totalAmount += productTotal;
 
-        print(
-            'Product ID: $productId, Quantity: $quantity, Price: $price, Total: $productTotal');
+        // print(
+        //     'Product ID: $productId, Quantity: $quantity, Price: $price, Total: $productTotal');
       } else {
         print('Product not found for ID: $productId');
       }
@@ -117,318 +358,142 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-        textDirection:
-            app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
-        child: BlocListener<CartBloc, CartState>(
-          listener: (context, state) {
-            if (state is CartInitial) {
-              print('cart initial');
-            }
-            if (state is CartUpdated) {
-              print('cart updated');
-              setState(() {
-                totalAmountFuture = _getTotalAmount();
-              });
-            }
-            // TODO: implement listener
-          },
-          child: Scaffold(
-              drawer: const MainDrawer(),
-              backgroundColor: Colors.white,
-              appBar: AppBar(
-                flexibleSpace: Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [Color(0xff107B28), Color(0xff4C7B10)]),
-                  ),
+    return BlocListener<CartBloc, CartState>(
+      listener: (context, state) {
+        if (state is CartUpdated) {
+          setState(() {
+            totalAmountFuture = _getTotalAmount();
+          });
+        }
+      },
+      child: FutureBuilder(
+          future: totalAmountFuture,
+          builder: (context, snapshot) {
+            if (snapshot.hasData && snapshot.data != null) {
+              return Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
                 ),
-                title: Text(AppLocalizations.of(context)!.shopping_cart_ucf,
-                    style: TextStyle(
-                        color: MyTheme.white,
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: .5,
-                        fontFamily: 'Poppins')),
-                centerTitle: true,
-              ),
-              body: Stack(
-                children: [
-                  Column(
+                height: 185,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24.0, vertical: 4),
+                  child: Column(
                     children: [
-                      Expanded(
-                        child: FutureBuilder(
-                          future: _getCartData(),
-                          builder: (context, cartSnapshot) {
-                            if (cartSnapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return Center(child: CircularProgressIndicator());
-                            } else if (cartSnapshot.hasError) {
-                              return Text('Error: ${cartSnapshot.error}');
-                            } else if (!cartSnapshot.hasData ||
-                                !cartSnapshot.data!.exists) {
-                              return Column(
-                                children: [
-                                  SizedBox(height: 200),
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      'Cart is empty',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w900,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            } else {
-                              var productsInCart =
-                                  cartSnapshot.data!['products'] ?? [];
-                              // print(productsInCart);
-
-                              if (productsInCart.isEmpty) {
-                                return Column(
-                                  children: [
-                                    SizedBox(height: 200),
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        'Cart is empty',
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w900,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              }
-
-                              // Extract product IDs from the cart
-                              List productIds = productsInCart
-                                  .map((product) =>
-                                      product['productId'].toString())
-                                  .toList();
-
-                              return ListView.builder(
-                                itemCount: productIds.length,
-                                itemBuilder: ((context, index) {
-                                  return StreamBuilder(
-                                      stream: productsCollection
-                                          .where(FieldPath.documentId,
-                                              isEqualTo: productIds[index])
-                                          .snapshots(),
-                                      builder: (context, productSnapshot) {
-                                        if (productSnapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return Center(
-                                              child:
-                                                  CircularProgressIndicator());
-                                        } else if (productSnapshot.hasError) {
-                                          return Text(
-                                              'Error: ${productSnapshot.error}');
-                                        } else if (!productSnapshot.hasData ||
-                                            productSnapshot
-                                                .data!.docs.isEmpty) {
-                                          return Text('No products available');
-                                        } else {
-                                          var productsData =
-                                              productSnapshot.data!.docs;
-                                          var productDocument = productsData[0];
-
-                                          var productData = productDocument
-                                              .data() as Map<String, dynamic>;
-
-                                          var productInCart =
-                                              productsInCart.firstWhere(
-                                                  (product) =>
-                                                      product['productId'] ==
-                                                      productDocument.id,
-                                                  orElse: () => null);
-
-                                          if (productInCart != null) {
-                                            int quantity =
-                                                productInCart['quantity'];
-                                            String productName =
-                                                productData['name'];
-                                            List productImageUrl =
-                                                productData['imageURL'];
-                                            double productPrice =
-                                                productData['price'];
-                                            var productId = productDocument.id;
-
-                                            return StreamBuilder(
-                                                stream: cartCollection
-                                                    .where(FieldPath.documentId,
-                                                        isEqualTo:
-                                                            currentUser.uid)
-                                                    .snapshots(),
-                                                builder:
-                                                    (context, cartSnapshot) {
-                                                  // if (productSnapshot
-                                                  //         .connectionState ==
-                                                  //     ConnectionState.waiting) {
-                                                  //   return CartItem(
-                                                  //     context: context,
-                                                  //     name: productName,
-                                                  //     imageURL: productImageUrl,
-                                                  //     price: productPrice,
-                                                  //     quantityUnit: productData[
-                                                  //         'quantityUnit'],
-                                                  //     description: productData[
-                                                  //         'description'],
-                                                  //     subSubCategory: productData[
-                                                  //         'subSubCategory'],
-                                                  //     productId: productId,
-                                                  //     quantity: 00,
-                                                  //   );
-                                                  // }
-                                                  if (cartSnapshot.hasData) {
-                                                    var currentQuantity = cartSnapshot
-                                                        .data!
-                                                        .docs[0]['products']
-                                                        .firstWhere((product) =>
-                                                            product[
-                                                                'productId'] ==
-                                                            productId)['quantity'];
-                                                    return CartItem(
-                                                      context: context,
-                                                      name: productName,
-                                                      imageURL: productImageUrl,
-                                                      price: productPrice,
-                                                      quantityUnit: productData[
-                                                          'quantityUnit'],
-                                                      description: productData[
-                                                          'description'],
-                                                      subSubCategory:
-                                                          productData[
-                                                              'subSubCategory'],
-                                                      productId: productId,
-                                                      quantity: currentQuantity,
-                                                    );
-                                                  } else {
-                                                    return Text('No data');
-                                                  }
-                                                });
-                                          }
-                                          return SizedBox.shrink();
-                                        }
-                                      });
-                                }),
-                              );
-                            }
-                          },
-                        ),
-                      ),
-                      SizedBox(
-                        height: 200,
-                      ),
-                    ],
-                  ),
-                  FutureBuilder(
-                      future: totalAmountFuture,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData && snapshot.data != null) {
-                          return Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.transparent,
-                              ),
-                              height: 200,
-                              //color: Colors.white,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 24.0, vertical: 4),
-                                child: Column(
-                                  children: [
-                                    // total amount
-                                    SizedBox(height: 10),
-                                    Container(
-                                      height: 40,
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(6.0),
-                                          color: MyTheme.green_light),
-                                      child: Row(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 20.0),
-                                            child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .total_amount_ucf,
-                                              style: TextStyle(
-                                                  color: MyTheme.dark_font_grey,
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.w700),
-                                            ),
-                                          ),
-                                          Spacer(),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 16.0),
-                                            child: Text('₹ ${snapshot.data}',
-                                                style: TextStyle(
-                                                    color:
-                                                        MyTheme.primary_color,
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w600)),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 50,
-                                      margin: EdgeInsets.only(top: 10),
-                                      width:
-                                          (MediaQuery.of(context).size.width -
-                                              100),
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10.0))),
-                                      child: ElevatedButton(
-                                        style: ButtonStyle(
-                                          elevation:
-                                              MaterialStateProperty.all<double>(
-                                                  0),
-                                          backgroundColor:
-                                              MaterialStatePropertyAll<Color>(
-                                                  MyTheme.primary_color),
-                                        ),
-                                        child: Text(
-                                          AppLocalizations.of(context)!
-                                              .proceed_to_shipping_ucf,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w700),
-                                        ),
-                                        onPressed: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      CheckoutScreen()));
-                                        },
-                                      ),
-                                    )
-                                  ],
-                                ),
+                      // total amount
+                      SizedBox(height: 5),
+                      Container(
+                        height: 40,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(6.0),
+                            color: MyTheme.green_light),
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Text(
+                                AppLocalizations.of(context)!.total_amount_ucf,
+                                style: TextStyle(
+                                    color: MyTheme.dark_font_grey,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700),
                               ),
                             ),
-                          );
-                        }
-                        return SizedBox.shrink();
-                      })
-                ],
-              )),
-        ));
+                            Spacer(),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 16.0),
+                              child: Text('₹ ${snapshot.data}',
+                                  style: TextStyle(
+                                      color: MyTheme.primary_color,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600)),
+                            ),
+                          ],
+                        ),
+                      ),
+                      BlocListener<CheckoutBloc, CheckoutState>(
+                        listener: (context, state) {
+                          if (state is CheckoutCompleted) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => CheckoutScreen()),
+                            );
+                          }
+                        },
+                        child: BlocBuilder<CheckoutBloc, CheckoutState>(
+                          builder: (context, state) {
+                            if (state is CheckoutLoading) {
+                              return Container(
+                                height: 50,
+                                margin: EdgeInsets.only(top: 10),
+                                width:
+                                    (MediaQuery.of(context).size.width - 100),
+                                decoration: BoxDecoration(
+                                    // color: Colors.white,
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0))),
+                                child: ElevatedButton(
+                                  style: ButtonStyle(
+                                    elevation:
+                                        MaterialStateProperty.all<double>(0),
+                                    backgroundColor:
+                                        MaterialStatePropertyAll<Color>(
+                                            MyTheme.primary_color),
+                                  ),
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  onPressed: () {},
+                                ),
+                              );
+                            }
+                            return Container(
+                              height: 50,
+                              margin: EdgeInsets.only(top: 10),
+                              width: (MediaQuery.of(context).size.width - 100),
+                              decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0))),
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                  elevation:
+                                      MaterialStateProperty.all<double>(0),
+                                  backgroundColor:
+                                      MaterialStatePropertyAll<Color>(
+                                          MyTheme.primary_color),
+                                ),
+                                child: Text(
+                                  AppLocalizations.of(context)!
+                                      .proceed_to_shipping_ucf,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                                onPressed: () {
+                                  BlocProvider.of<CheckoutBloc>(context).add(
+                                    CheckoutRequested(
+                                        userID: widget.currentUser.uid),
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              );
+            }
+            return SizedBox.shrink();
+          }),
+    );
   }
 }
 
@@ -444,6 +509,7 @@ class CartItem extends StatefulWidget {
     required this.subSubCategory,
     required this.productId,
     required this.quantity,
+    required this.onTap,
   });
 
   final BuildContext context;
@@ -455,6 +521,7 @@ class CartItem extends StatefulWidget {
   final String subSubCategory;
   final String productId;
   final int quantity;
+  final void Function() onTap;
 
   @override
   State<CartItem> createState() => _CartItemState();
@@ -590,6 +657,7 @@ class _CartItemState extends State<CartItem> {
                                 ),
                                 child: TextButton(
                                   onPressed: () {
+                                    widget.onTap();
                                     BlocProvider.of<CartBloc>(context).add(
                                       UpdateCartQuantityRequested(
                                         productId: widget.productId,

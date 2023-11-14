@@ -1,26 +1,51 @@
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_repository.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/checkout_bloc/checkout_event.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/checkout_bloc/checkout_state.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/checkout_repository.dart';
 import 'package:bloc/bloc.dart';
 
 class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
-  CheckoutBloc() : super(CheckoutInitial()) {
+  final CheckoutRepository checkoutRepository;
+  final CartRepository cartRepository;
+
+  CheckoutBloc({
+    required this.checkoutRepository,
+    required this.cartRepository,
+  }) : super(CheckoutInitial()) {
     on<CheckoutEvent>((event, emit) {
       // TODO: implement event handler
     });
 
-    // on<AddToCartRequested>((event, emit) async {
-    //   try {
-    //     emit(CartLoading());
-    //     await cartRepository.addToCart(
-    //       productId: event.productId,
-    //       quantity: 1,
-    //     );
-    //     emit(AddToCartSuccessful(quantity: 1));
-    //   } catch (e) {
-    //     // emit(SellAddProductErrorState(message: e.toString()));
-    //     print('error happened in AddToCartRequested');
-    //     print(e.toString());
-    //   }
-    // });
+    on<CheckoutRequested>((event, emit) async {
+      try {
+        emit(CheckoutLoading());
+        var userCartDocument = await checkoutRepository.getCartDocumenyByUserId(
+            userID: event.userID);
+        print(userCartDocument);
+        await Future.delayed(Duration(seconds: 2));
+        List<OrderItem> orderItems = [];
+        for (var product in userCartDocument!['products']) {
+          var userCartDocument =
+              await checkoutRepository.getProductDocumenyByProductId(
+            productID: product['productId'],
+          );
+          print(userCartDocument);
+          orderItems.add(
+            OrderItem(
+              productID: product['productId'],
+              quantity: product['quantity'],
+              price: userCartDocument!['price'],
+              sellerID: userCartDocument['sellerId'],
+            ),
+          );
+        }
+        await checkoutRepository.createOrder(event.userID, orderItems);
+        await cartRepository.clearCart();
+        emit(CheckoutCompleted());
+      } catch (e) {
+        print('error happened in AddToCartRequested');
+        print(e.toString());
+      }
+    });
   }
 }
