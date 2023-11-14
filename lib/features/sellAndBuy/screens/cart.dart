@@ -1,7 +1,3 @@
-import 'dart:convert';
-
-import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
-import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/checkout_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_event.dart';
@@ -13,21 +9,11 @@ import 'package:active_ecommerce_flutter/features/sellAndBuy/services/checkout_b
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
-import 'package:active_ecommerce_flutter/drawer/drawer.dart';
-import 'package:flutter/widgets.dart';
-import 'package:active_ecommerce_flutter/repositories/cart_repository.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
-import 'package:active_ecommerce_flutter/helpers/shimmer_helper.dart';
-import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
-import 'package:provider/provider.dart';
-import 'package:toast/toast.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:active_ecommerce_flutter/custom/common_functions.dart';
 
 class CartScreen extends StatefulWidget {
   CartScreen({Key? key}) : super(key: key);
@@ -54,7 +40,6 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
   late final currentUser;
 
   final CollectionReference cartCollection =
@@ -288,9 +273,6 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 }
-// CheckoutWidget(
-//   currentUser: currentUser,
-// )
 
 class CheckoutWidget extends StatefulWidget {
   const CheckoutWidget({
@@ -326,7 +308,6 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
     final List<Map<String, dynamic>> products =
         List<Map<String, dynamic>>.from(cartDoc.data()?['products']);
 
-    // Step 3: Fetch product details (including prices) for each product ID
     double totalAmount = 0;
 
     for (final product in products) {
@@ -342,9 +323,6 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
         final price = productDoc.data()?['price'] as double;
         final productTotal = price * quantity;
         totalAmount += productTotal;
-
-        // print(
-        //     'Product ID: $productId, Quantity: $quantity, Price: $price, Total: $productTotal');
       } else {
         print('Product not found for ID: $productId');
       }
@@ -365,74 +343,106 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
             totalAmountFuture = _getTotalAmount();
           });
         }
+        if (state is CartProductDeleted) {
+          setState(() {
+            totalAmountFuture = _getTotalAmount();
+          });
+        }
       },
       child: FutureBuilder(
           future: totalAmountFuture,
           builder: (context, snapshot) {
             if (snapshot.hasData && snapshot.data != null) {
-              return Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                ),
-                height: 185,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24.0, vertical: 4),
-                  child: Column(
-                    children: [
-                      // total amount
-                      SizedBox(height: 5),
-                      Container(
-                        height: 40,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(6.0),
-                            color: MyTheme.green_light),
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20.0),
-                              child: Text(
-                                AppLocalizations.of(context)!.total_amount_ucf,
-                                style: TextStyle(
-                                    color: MyTheme.dark_font_grey,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                            Spacer(),
-                            Padding(
-                              padding: const EdgeInsets.only(right: 16.0),
-                              child: Text('₹ ${snapshot.data}',
+              if (snapshot.data != 0) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                  ),
+                  height: 185,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24.0, vertical: 4),
+                    child: Column(
+                      children: [
+                        // total amount
+                        SizedBox(height: 5),
+                        Container(
+                          height: 40,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6.0),
+                              color: MyTheme.green_light),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0),
+                                child: Text(
+                                  AppLocalizations.of(context)!
+                                      .total_amount_ucf,
                                   style: TextStyle(
-                                      color: MyTheme.primary_color,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600)),
-                            ),
-                          ],
+                                      color: MyTheme.dark_font_grey,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                              Spacer(),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 16.0),
+                                child: Text('₹ ${snapshot.data}',
+                                    style: TextStyle(
+                                        color: MyTheme.primary_color,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600)),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      BlocListener<CheckoutBloc, CheckoutState>(
-                        listener: (context, state) {
-                          if (state is CheckoutCompleted) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => CheckoutScreen()),
-                            );
-                          }
-                        },
-                        child: BlocBuilder<CheckoutBloc, CheckoutState>(
-                          builder: (context, state) {
-                            if (state is CheckoutLoading) {
+                        BlocListener<CheckoutBloc, CheckoutState>(
+                          listener: (context, state) {
+                            if (state is CheckoutCompleted) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CheckoutScreen()),
+                              );
+                            }
+                          },
+                          child: BlocBuilder<CheckoutBloc, CheckoutState>(
+                            builder: (context, state) {
+                              if (state is CheckoutLoading) {
+                                return Container(
+                                  height: 50,
+                                  margin: EdgeInsets.only(top: 10),
+                                  width:
+                                      (MediaQuery.of(context).size.width - 100),
+                                  decoration: BoxDecoration(
+                                      // color: Colors.white,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0))),
+                                  child: ElevatedButton(
+                                    style: ButtonStyle(
+                                      elevation:
+                                          MaterialStateProperty.all<double>(0),
+                                      backgroundColor:
+                                          MaterialStatePropertyAll<Color>(
+                                              MyTheme.primary_color),
+                                    ),
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    onPressed: () {},
+                                  ),
+                                );
+                              }
                               return Container(
                                 height: 50,
                                 margin: EdgeInsets.only(top: 10),
                                 width:
                                     (MediaQuery.of(context).size.width - 100),
                                 decoration: BoxDecoration(
-                                    // color: Colors.white,
                                     borderRadius: BorderRadius.all(
                                         Radius.circular(10.0))),
                                 child: ElevatedButton(
@@ -443,53 +453,32 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                                         MaterialStatePropertyAll<Color>(
                                             MyTheme.primary_color),
                                   ),
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                      color: Colors.white,
-                                    ),
+                                  child: Text(
+                                    AppLocalizations.of(context)!
+                                        .proceed_to_shipping_ucf,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w700),
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    BlocProvider.of<CheckoutBloc>(context).add(
+                                      CheckoutRequested(
+                                          userID: widget.currentUser.uid),
+                                    );
+                                  },
                                 ),
                               );
-                            }
-                            return Container(
-                              height: 50,
-                              margin: EdgeInsets.only(top: 10),
-                              width: (MediaQuery.of(context).size.width - 100),
-                              decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0))),
-                              child: ElevatedButton(
-                                style: ButtonStyle(
-                                  elevation:
-                                      MaterialStateProperty.all<double>(0),
-                                  backgroundColor:
-                                      MaterialStatePropertyAll<Color>(
-                                          MyTheme.primary_color),
-                                ),
-                                child: Text(
-                                  AppLocalizations.of(context)!
-                                      .proceed_to_shipping_ucf,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                                onPressed: () {
-                                  BlocProvider.of<CheckoutBloc>(context).add(
-                                    CheckoutRequested(
-                                        userID: widget.currentUser.uid),
-                                  );
-                                },
-                              ),
-                            );
-                          },
-                        ),
-                      )
-                    ],
+                            },
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              );
+                );
+              } else {
+                return SizedBox.shrink();
+              }
             }
             return SizedBox.shrink();
           }),
