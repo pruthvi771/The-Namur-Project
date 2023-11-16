@@ -7,6 +7,7 @@ import 'package:active_ecommerce_flutter/features/auth/screens/add_phone.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/screen_database.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/parent_screen.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/seller_orderlist.dart';
 import 'package:active_ecommerce_flutter/helpers/shimmer_helper.dart';
 import 'package:active_ecommerce_flutter/presenter/bottom_appbar_index.dart';
 import 'package:active_ecommerce_flutter/screens/calender/calender.dart';
@@ -188,14 +189,14 @@ class _CategoryListState extends State<CategoryList> {
                         // TitleBar(),
 
                         // screen database button
-                        // TextButton(
-                        //     onPressed: () {
-                        //       Navigator.push(
-                        //           context,
-                        //           MaterialPageRoute(
-                        //               builder: (context) => AddPhone()));
-                        //     },
-                        //     child: Text('Screen database')),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => SellerOrderList()));
+                            },
+                            child: Text('Seller Dashboard')),
 
                         SizedBox(height: 15),
 

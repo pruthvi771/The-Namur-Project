@@ -17,10 +17,13 @@ final class CheckoutLoading extends CheckoutState {
 }
 
 final class CheckoutCompleted extends CheckoutState {
-  const CheckoutCompleted();
+  final String orderId;
+  const CheckoutCompleted({
+    required this.orderId,
+  });
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [orderId];
 }
 
 final class CheckoutError extends CheckoutState {

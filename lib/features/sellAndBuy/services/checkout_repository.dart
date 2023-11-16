@@ -1,3 +1,4 @@
+import 'package:active_ecommerce_flutter/features/sellAndBuy/models/order_item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -87,7 +88,7 @@ class CheckoutRepository {
     }
   }
 
-  Future<void> createOrder(String userID, List<OrderItem> items) async {
+  Future<String?> createOrder(String userID, List<OrderItem> items) async {
     try {
       // extracting all seller IDs into a list
       List<String> sellerIDs = items.map((item) => item.sellerID).toList();
@@ -99,10 +100,12 @@ class CheckoutRepository {
           'orderDate': FieldValue.serverTimestamp(),
           'totalAmount': calculateTotalAmount(items),
           'items': items.map((item) => item.toMap()).toList(),
+          'status': 'Confirmed',
         },
       );
 
       print('Order created successfully! Order ID: ${orderDocRef.id}');
+      return orderDocRef.id;
     } catch (e) {
       print('Error creating order: $e');
     }
@@ -110,28 +113,5 @@ class CheckoutRepository {
 
   double calculateTotalAmount(List<OrderItem> items) {
     return items.fold(0, (sum, item) => sum + (item.price * item.quantity));
-  }
-}
-
-class OrderItem {
-  final String productID;
-  final double price;
-  final int quantity;
-  final String sellerID; // Optional
-
-  OrderItem({
-    required this.productID,
-    required this.price,
-    required this.quantity,
-    required this.sellerID,
-  });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'productID': productID,
-      'price': price,
-      'quantity': quantity,
-      'sellerID': sellerID,
-    };
   }
 }

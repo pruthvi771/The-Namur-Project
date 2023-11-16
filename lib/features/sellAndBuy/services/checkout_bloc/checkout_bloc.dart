@@ -1,3 +1,4 @@
+import 'package:active_ecommerce_flutter/features/sellAndBuy/models/order_item.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_repository.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/checkout_bloc/checkout_event.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/checkout_bloc/checkout_state.dart';
@@ -39,9 +40,10 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
             ),
           );
         }
-        await checkoutRepository.createOrder(event.userID, orderItems);
+        String? orderID =
+            await checkoutRepository.createOrder(event.userID, orderItems);
         await cartRepository.clearCart();
-        emit(CheckoutCompleted());
+        emit(CheckoutCompleted(orderId: orderID!));
       } catch (e) {
         print('error happened in AddToCartRequested');
         print(e.toString());

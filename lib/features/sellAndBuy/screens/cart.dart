@@ -129,6 +129,18 @@ class _CartScreenState extends State<CartScreen> {
                                 ),
                               ),
                             ),
+                            TextButton(
+                                onPressed: () {
+                                  // Navigator.pop(context);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => CheckoutScreen(
+                                              orderID: '12345',
+                                            )),
+                                  );
+                                },
+                                child: Text('Checkout')),
                           ],
                         );
                       } else {
@@ -265,6 +277,11 @@ class _CartScreenState extends State<CartScreen> {
               alignment: Alignment.bottomCenter,
               child: CheckoutWidget(
                 currentUser: currentUser,
+                onTap: () {
+                  setState(() {
+                    initialGetCartData = _getCartData(nullData: false);
+                  });
+                },
               ),
             ),
           ]),
@@ -278,9 +295,11 @@ class CheckoutWidget extends StatefulWidget {
   const CheckoutWidget({
     super.key,
     required this.currentUser,
+    required this.onTap,
   });
 
   final User currentUser;
+  final Function() onTap;
 
   @override
   State<CheckoutWidget> createState() => _CheckoutWidgetState();
@@ -338,6 +357,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
   Widget build(BuildContext context) {
     return BlocListener<CartBloc, CartState>(
       listener: (context, state) {
+        // if (state is )
         if (state is CartUpdated) {
           setState(() {
             totalAmountFuture = _getTotalAmount();
@@ -352,6 +372,9 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
       child: FutureBuilder(
           future: totalAmountFuture,
           builder: (context, snapshot) {
+            // if (snapshot.connectionState == ConnectionState.waiting) {
+            //   return SizedBox.shrink();
+            // }
             if (snapshot.hasData && snapshot.data != null) {
               if (snapshot.data != 0) {
                 return Container(
@@ -404,8 +427,12 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => CheckoutScreen()),
+                                    builder: (context) => CheckoutScreen(
+                                          orderID: state.orderId,
+                                        )),
                               );
+                              totalAmountFuture = _getTotalAmount();
+                              widget.onTap();
                             }
                           },
                           child: BlocBuilder<CheckoutBloc, CheckoutState>(
