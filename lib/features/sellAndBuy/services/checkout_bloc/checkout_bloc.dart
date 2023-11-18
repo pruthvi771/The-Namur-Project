@@ -17,6 +17,10 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
       // TODO: implement event handler
     });
 
+    on<CheckoutInitialEventRequested>((event, emit) {
+      emit(CheckoutInitial());
+    });
+
     on<CheckoutRequested>((event, emit) async {
       try {
         emit(CheckoutLoading());
@@ -31,6 +35,23 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
             productID: product['productId'],
           );
           print(userCartDocument);
+          var response = await checkoutRepository.reduceProductQuantity(
+              productId: product['productId'],
+              quantityToReduce: product['quantity']);
+
+          if (response[0] == ReduceQuantityResponseEnum.NotEnoughQuantity) {
+            emit(
+              NotEnoughQuantityError(
+                productName: userCartDocument!['name'],
+                availableQuantity: response[1],
+              ),
+            );
+            return;
+          } else if (response[0] == ReduceQuantityResponseEnum.Error) {
+            emit(CheckoutError(
+                message: 'Something went wrong. Please try again.'));
+            return;
+          }
           orderItems.add(
             OrderItem(
               productID: product['productId'],

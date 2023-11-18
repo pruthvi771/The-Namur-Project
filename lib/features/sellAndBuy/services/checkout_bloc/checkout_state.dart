@@ -26,6 +26,18 @@ final class CheckoutCompleted extends CheckoutState {
   List<Object> get props => [orderId];
 }
 
+final class NotEnoughQuantityError extends CheckoutState {
+  final String productName;
+  final int availableQuantity;
+  const NotEnoughQuantityError({
+    required this.productName,
+    required this.availableQuantity,
+  });
+
+  @override
+  List<Object> get props => [productName, availableQuantity];
+}
+
 final class CheckoutError extends CheckoutState {
   final String message;
 

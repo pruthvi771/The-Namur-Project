@@ -172,7 +172,7 @@ class _BuyProductListState extends State<BuyProductList> {
           );
         },
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(0.0, 0.0);
+          const begin = Offset(0.0, 1.0);
           const end = Offset.zero;
           const curve = Curves.easeInOut;
           var tween =
@@ -224,7 +224,7 @@ class _BuyProductListState extends State<BuyProductList> {
             app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
         child: Scaffold(
           appBar: AppBar(
-            // automaticallyImplyLeading: false,
+            automaticallyImplyLeading: false,
             // elevation: 0,
             flexibleSpace: Container(
               decoration: const BoxDecoration(
@@ -243,6 +243,21 @@ class _BuyProductListState extends State<BuyProductList> {
                   fontFamily: 'Poppins'),
             ),
             centerTitle: true,
+            actions: [
+              IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: Icon(
+                  Icons.keyboard_arrow_left,
+                  size: 35,
+                  color: MyTheme.white,
+                ),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+            ],
           ),
           body: StreamBuilder(
               stream: productsStream,

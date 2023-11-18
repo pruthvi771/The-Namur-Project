@@ -1,4 +1,3 @@
-import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_repository.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class CheckoutEvent extends Equatable {
@@ -14,4 +13,11 @@ class CheckoutRequested extends CheckoutEvent {
 
   @override
   List<Object> get props => [userID];
+}
+
+class CheckoutInitialEventRequested extends CheckoutEvent {
+  const CheckoutInitialEventRequested();
+
+  @override
+  List<Object> get props => [];
 }

@@ -2,6 +2,13 @@ import 'package:active_ecommerce_flutter/features/sellAndBuy/models/order_item.d
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+enum ReduceQuantityResponseEnum {
+  Success,
+  NotEnoughQuantity,
+  ProductNotFound,
+  Error,
+}
+
 class CheckoutRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -85,6 +92,36 @@ class CheckoutRepository {
     } catch (e) {
       print('Error fetching cart document: $e');
       return null;
+    }
+  }
+
+  Future<List> reduceProductQuantity({
+    required String productId,
+    required int quantityToReduce,
+  }) async {
+    try {
+      var productRef = _firestore.collection('products').doc(productId);
+      DocumentSnapshot productSnapshot = await productRef.get();
+
+      // if (!productSnapshot.exists) {
+      //   throw Exception('Product not found');
+      // }
+
+      int currentQuantity = (productSnapshot.data() as Map)['quantity'] ?? 0;
+      if (currentQuantity < quantityToReduce) {
+        print('not enough');
+        return [ReduceQuantityResponseEnum.NotEnoughQuantity, currentQuantity];
+      }
+
+      int newQuantity = currentQuantity - quantityToReduce;
+
+      await productRef.update({'quantity': newQuantity});
+
+      print('Quantity for $productId updated. New quantity: $newQuantity');
+      return [ReduceQuantityResponseEnum.Success, 0];
+    } catch (error) {
+      print('Error reducing quantity: $error');
+      return [ReduceQuantityResponseEnum.Error, 0];
     }
   }
 

@@ -1,3 +1,4 @@
+import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/checkout_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_event.dart';
@@ -6,6 +7,7 @@ import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_repos
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/checkout_bloc/checkout_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/checkout_bloc/checkout_event.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/checkout_bloc/checkout_state.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/checkout_repository.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,6 +16,7 @@ import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:toast/toast.dart';
 
 class CartScreen extends StatefulWidget {
   CartScreen({Key? key}) : super(key: key);
@@ -99,56 +102,33 @@ class _CartScreenState extends State<CartScreen> {
             ),
             centerTitle: true,
           ),
-          body: Stack(children: [
-            Column(
-              children: [
-                Expanded(
-                  child: FutureBuilder(
-                    future: initialGetCartData,
-                    builder: (context, cartSnapshot) {
-                      if (cartSnapshot.connectionState ==
-                          ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
-                      } else if (cartSnapshot.hasError) {
-                        return Text('Error: ${cartSnapshot.error}');
-                      } else if (cartSnapshot.hasData &&
-                          cartSnapshot.data == 0) {
-                        return Center(child: CircularProgressIndicator());
-                      } else if (!cartSnapshot.hasData ||
-                          !cartSnapshot.data!.exists) {
-                        return Column(
-                          children: [
-                            SizedBox(height: 200),
-                            Align(
-                              alignment: Alignment.center,
-                              child: Text(
-                                'Cart is empty',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w900,
-                                ),
-                              ),
-                            ),
-                            TextButton(
-                                onPressed: () {
-                                  // Navigator.pop(context);
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => CheckoutScreen(
-                                              orderID: '12345',
-                                            )),
-                                  );
-                                },
-                                child: Text('Checkout')),
-                          ],
-                        );
-                      } else {
-                        var productsInCart =
-                            cartSnapshot.data!['products'] ?? [];
-                        // print(productsInCart);
-
-                        if (productsInCart.isEmpty) {
+          body: Stack(
+            children: [
+              Column(
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      CheckoutRepository().reduceProductQuantity(
+                        productId: 'CWrkrgqV3X1rHoAy1EVr',
+                        quantityToReduce: 22,
+                      );
+                    },
+                    child: Text('mello'),
+                  ),
+                  Expanded(
+                    child: FutureBuilder(
+                      future: initialGetCartData,
+                      builder: (context, cartSnapshot) {
+                        if (cartSnapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        } else if (cartSnapshot.hasError) {
+                          return Text('Error: ${cartSnapshot.error}');
+                        } else if (cartSnapshot.hasData &&
+                            cartSnapshot.data == 0) {
+                          return Center(child: CircularProgressIndicator());
+                        } else if (!cartSnapshot.hasData ||
+                            !cartSnapshot.data!.exists) {
                           return Column(
                             children: [
                               SizedBox(height: 200),
@@ -162,129 +142,166 @@ class _CartScreenState extends State<CartScreen> {
                                   ),
                                 ),
                               ),
+                              TextButton(
+                                  onPressed: () {
+                                    // Navigator.pop(context);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => CheckoutScreen(
+                                                orderID: '12345',
+                                              )),
+                                    );
+                                  },
+                                  child: Text('Checkout')),
                             ],
                           );
-                        }
+                        } else {
+                          var productsInCart =
+                              cartSnapshot.data!['products'] ?? [];
+                          // print(productsInCart);
 
-                        // Extract product IDs from the cart
-                        List productIds = productsInCart
-                            .map((product) => product['productId'].toString())
-                            .toList();
+                          if (productsInCart.isEmpty) {
+                            return Column(
+                              children: [
+                                SizedBox(height: 200),
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    'Cart is empty',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w900,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }
 
-                        return ListView.builder(
-                          itemCount: productIds.length,
-                          itemBuilder: ((context, index) {
-                            return StreamBuilder(
-                                stream: productsCollection
-                                    .where(FieldPath.documentId,
-                                        isEqualTo: productIds[index])
-                                    .snapshots(),
-                                builder: (context, productSnapshot) {
-                                  if (productSnapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return Center(
-                                        child: CircularProgressIndicator());
-                                  } else if (productSnapshot.hasError) {
-                                    return Text(
-                                        'Error: ${productSnapshot.error}');
-                                  } else if (!productSnapshot.hasData ||
-                                      productSnapshot.data!.docs.isEmpty) {
-                                    return Text('No products available');
-                                  } else {
-                                    var productsData =
-                                        productSnapshot.data!.docs;
-                                    var productDocument = productsData[0];
+                          // Extract product IDs from the cart
+                          List productIds = productsInCart
+                              .map((product) => product['productId'].toString())
+                              .toList();
 
-                                    var productData = productDocument.data()
-                                        as Map<String, dynamic>;
+                          return ListView.builder(
+                            itemCount: productIds.length,
+                            itemBuilder: ((context, index) {
+                              return StreamBuilder(
+                                  stream: productsCollection
+                                      .where(FieldPath.documentId,
+                                          isEqualTo: productIds[index])
+                                      .snapshots(),
+                                  builder: (context, productSnapshot) {
+                                    if (productSnapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return Center(
+                                          child: CircularProgressIndicator());
+                                    } else if (productSnapshot.hasError) {
+                                      return Text(
+                                          'Error: ${productSnapshot.error}');
+                                    } else if (!productSnapshot.hasData ||
+                                        productSnapshot.data!.docs.isEmpty) {
+                                      return Text('No products available');
+                                    } else {
+                                      var productsData =
+                                          productSnapshot.data!.docs;
+                                      var productDocument = productsData[0];
 
-                                    var productInCart =
-                                        productsInCart.firstWhere(
-                                            (product) =>
-                                                product['productId'] ==
-                                                productDocument.id,
-                                            orElse: () => null);
+                                      var productData = productDocument.data()
+                                          as Map<String, dynamic>;
 
-                                    if (productInCart != null) {
-                                      int quantity = productInCart['quantity'];
-                                      String productName = productData['name'];
-                                      List productImageUrl =
-                                          productData['imageURL'];
-                                      double productPrice =
-                                          productData['price'];
-                                      var productId = productDocument.id;
+                                      var productInCart =
+                                          productsInCart.firstWhere(
+                                              (product) =>
+                                                  product['productId'] ==
+                                                  productDocument.id,
+                                              orElse: () => null);
 
-                                      return StreamBuilder(
-                                          stream: cartCollection
-                                              .where(FieldPath.documentId,
-                                                  isEqualTo: currentUser.uid)
-                                              .snapshots(),
-                                          builder: (context, cartSnapshot) {
-                                            if (cartSnapshot.hasData) {
-                                              var currentProduct = cartSnapshot
-                                                  .data!.docs[0]['products'];
+                                      if (productInCart != null) {
+                                        int quantity =
+                                            productInCart['quantity'];
+                                        String productName =
+                                            productData['name'];
+                                        List productImageUrl =
+                                            productData['imageURL'];
+                                        double productPrice =
+                                            productData['price'];
+                                        var productId = productDocument.id;
 
-                                              var currentQuantity =
-                                                  currentProduct.firstWhere(
-                                                      (product) =>
-                                                          product[
-                                                              'productId'] ==
-                                                          productId)['quantity'];
+                                        return StreamBuilder(
+                                            stream: cartCollection
+                                                .where(FieldPath.documentId,
+                                                    isEqualTo: currentUser.uid)
+                                                .snapshots(),
+                                            builder: (context, cartSnapshot) {
+                                              if (cartSnapshot.hasData) {
+                                                var currentProduct =
+                                                    cartSnapshot.data!.docs[0]
+                                                        ['products'];
 
-                                              return CartItem(
-                                                context: context,
-                                                name: productName,
-                                                imageURL: productImageUrl,
-                                                price: productPrice,
-                                                quantityUnit:
-                                                    productData['quantityUnit'],
-                                                description:
-                                                    productData['description'],
-                                                subSubCategory: productData[
-                                                    'subSubCategory'],
-                                                productId: productId,
-                                                quantity: currentQuantity,
-                                                onTap: () {
-                                                  if (currentQuantity == 1) {
-                                                    setState(() {
-                                                      initialGetCartData =
-                                                          _getCartData(
-                                                              nullData: true);
-                                                    });
-                                                  }
-                                                },
-                                              );
-                                            } else {
-                                              return SizedBox.shrink();
-                                            }
-                                          });
+                                                var currentQuantity =
+                                                    currentProduct
+                                                        .firstWhere((product) =>
+                                                            product[
+                                                                'productId'] ==
+                                                            productId)['quantity'];
+
+                                                return CartItem(
+                                                  context: context,
+                                                  name: productName,
+                                                  imageURL: productImageUrl,
+                                                  price: productPrice,
+                                                  quantityUnit: productData[
+                                                      'quantityUnit'],
+                                                  description: productData[
+                                                      'description'],
+                                                  subSubCategory: productData[
+                                                      'subSubCategory'],
+                                                  productId: productId,
+                                                  quantity: currentQuantity,
+                                                  onTap: () {
+                                                    if (currentQuantity == 1) {
+                                                      setState(() {
+                                                        initialGetCartData =
+                                                            _getCartData(
+                                                                nullData: true);
+                                                      });
+                                                    }
+                                                  },
+                                                );
+                                              } else {
+                                                return SizedBox.shrink();
+                                              }
+                                            });
+                                      }
+                                      return SizedBox.shrink();
                                     }
-                                    return SizedBox.shrink();
-                                  }
-                                });
-                          }),
-                        );
-                      }
-                    },
+                                  });
+                            }),
+                          );
+                        }
+                      },
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 140,
-                ),
-              ],
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: CheckoutWidget(
-                currentUser: currentUser,
-                onTap: () {
-                  setState(() {
-                    initialGetCartData = _getCartData(nullData: false);
-                  });
-                },
+                  SizedBox(
+                    height: 140,
+                  ),
+                ],
               ),
-            ),
-          ]),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: CheckoutWidget(
+                  currentUser: currentUser,
+                  onTap: () {
+                    setState(() {
+                      initialGetCartData = _getCartData(nullData: false);
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -433,6 +450,23 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                               );
                               totalAmountFuture = _getTotalAmount();
                               widget.onTap();
+                            }
+                            if (state is CheckoutError) {
+                              ToastComponent.showDialog(state.message,
+                                  gravity: Toast.center,
+                                  duration: Toast.lengthLong);
+                              BlocProvider.of<CheckoutBloc>(context).add(
+                                CheckoutInitialEventRequested(),
+                              );
+                            }
+                            if (state is NotEnoughQuantityError) {
+                              ToastComponent.showDialog(
+                                  'Only ${state.availableQuantity} units of ${state.productName} available',
+                                  gravity: Toast.center,
+                                  duration: Toast.lengthLong);
+                              BlocProvider.of<CheckoutBloc>(context).add(
+                                CheckoutInitialEventRequested(),
+                              );
                             }
                           },
                           child: BlocBuilder<CheckoutBloc, CheckoutState>(

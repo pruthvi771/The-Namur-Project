@@ -4,6 +4,7 @@ import 'package:active_ecommerce_flutter/custom/box_decorations.dart';
 import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/features/auth/screens/add_phone.dart';
+import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_screen.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/screen_database.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/parent_screen.dart';
@@ -388,7 +389,7 @@ class _CategoryListState extends State<CategoryList> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  Calender()));
+                                                  CalendarScreen()));
                                     },
                                     child: HexagonWidget.flat(
                                         width: 120,
