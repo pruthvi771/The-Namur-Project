@@ -2,7 +2,7 @@ import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_b
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_bloc.dart';
-import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart'
+import 'package:active_ecommerce_flutter/utils/hive_models/models.dart'
     as hiveModels;
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_bloc.dart';
@@ -18,7 +18,6 @@ import 'package:active_ecommerce_flutter/features/weather/bloc/weather_bloc.dart
 import 'package:active_ecommerce_flutter/presenter/cart_counter.dart';
 import 'package:active_ecommerce_flutter/presenter/currency_presenter.dart';
 import 'package:active_ecommerce_flutter/providers/locale_provider.dart';
-import 'package:active_ecommerce_flutter/repositories/order_repository.dart';
 import 'package:active_ecommerce_flutter/screens/address.dart';
 import 'package:active_ecommerce_flutter/screens/cart.dart';
 import 'package:active_ecommerce_flutter/screens/category_list.dart';
@@ -43,7 +42,6 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 // import 'package:active_ecommerce_flutter/screens/splash.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_value/shared_value.dart';
 // import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
@@ -117,9 +115,12 @@ main() async {
   Hive.registerAdapter(hiveModels.ProfileDataAdapter());
   Hive.registerAdapter(hiveModels.PrimaryLocationAdapter());
   Hive.registerAdapter(hiveModels.SecondaryLocationsAdapter());
+  Hive.registerAdapter(hiveModels.CropCalendarItemAdapter());
+  Hive.registerAdapter(hiveModels.CropCalendarDataAdapter());
   await Hive.openBox<hiveModels.ProfileData>('profileDataBox3');
   await Hive.openBox<hiveModels.PrimaryLocation>('primaryLocationBox');
   await Hive.openBox<hiveModels.SecondaryLocations>('secondaryLocationsBox');
+  await Hive.openBox<hiveModels.CropCalendarData>('cropCalendarDataBox');
 
   runApp(
     SharedValue.wrapApp(

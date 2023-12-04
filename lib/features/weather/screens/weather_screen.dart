@@ -1,5 +1,5 @@
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
-import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
+import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_event.dart';
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_state.dart';

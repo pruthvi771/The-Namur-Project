@@ -1,4 +1,4 @@
-import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
+import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/edit_profile.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:flutter/material.dart';

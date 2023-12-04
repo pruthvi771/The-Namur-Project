@@ -1,4 +1,4 @@
-import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
+import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';

@@ -10,7 +10,7 @@ import 'package:active_ecommerce_flutter/features/profile/enum.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_event.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_state.dart';
-import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
+import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/more_details.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';

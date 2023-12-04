@@ -1,9 +1,7 @@
 import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_screen.dart';
-import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
+import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/machine_rent_form.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
-import 'package:carousel_slider/carousel_options.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive/hive.dart';
@@ -13,21 +11,8 @@ import 'package:active_ecommerce_flutter/features/profile/address_list.dart'
 
 import 'package:time_range_picker/time_range_picker.dart';
 
-// import '../seller_platform/seller_platform.dart';
-
 class CalendarAddCrop extends StatefulWidget {
-  // final List imageURL;
-  // final String machineName;
-  // final double machinePrice;
-  // final String machineDescription;
-
-  const CalendarAddCrop({
-    Key? key,
-    // required this.imageURL,
-    // required this.machineName,
-    // required this.machinePrice,
-    // required this.machineDescription,
-  }) : super(key: key);
+  const CalendarAddCrop({Key? key}) : super(key: key);
 
   @override
   State<CalendarAddCrop> createState() => _CalendarAddCropState();

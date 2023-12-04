@@ -13,55 +13,6 @@ class CheckoutRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Future<void> addToCart({
-  //   required String productId,
-  //   required int quantity,
-  // }) async {
-  //   var currentUser = _firebaseAuth.currentUser!;
-  //   CollectionReference cartCollection =
-  //       FirebaseFirestore.instance.collection('cart');
-  //   DocumentSnapshot cartDoc = await cartCollection.doc(currentUser.uid).get();
-  //   if (cartDoc.exists) {
-  //     await cartCollection.doc(currentUser.uid).update({
-  //       'products': FieldValue.arrayUnion([
-  //         {
-  //           'productId': productId,
-  //           'quantity': quantity,
-  //         }
-  //       ]),
-  //     });
-  //   } else {
-  //     await cartCollection.doc(currentUser.uid).set({
-  //       'products': [
-  //         {
-  //           'productId': productId,
-  //           'quantity': quantity,
-  //         }
-  //       ],
-  //     });
-  //   }
-  // }
-
-  // Future<void> addUserToBuyerSellerCollections({
-  //   required String userId,
-  //   required String name,
-  //   required String email,
-  //   String? photoURL,
-  //   String? phoneNumber,
-  // }) async {
-  //   try {
-  //     // Use the add method to add a document with an auto-generated ID
-  //     await _firestore.collection('orders').add({
-  //       'field1': 'value1',
-  //       'field2': 'value2',
-  //       // Add other fields as needed
-  //     });
-  //   } catch (_) {
-  //     print(_);
-  //     throw Exception('Something went wrong. Please try again.');
-  //   }
-  // }
-
   Future<Map?> getCartDocumenyByUserId({required String userID}) async {
     try {
       DocumentSnapshot documentSnapshot =
