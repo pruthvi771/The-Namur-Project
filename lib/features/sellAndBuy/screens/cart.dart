@@ -106,15 +106,15 @@ class _CartScreenState extends State<CartScreen> {
             children: [
               Column(
                 children: [
-                  TextButton(
-                    onPressed: () {
-                      CheckoutRepository().reduceProductQuantity(
-                        productId: 'CWrkrgqV3X1rHoAy1EVr',
-                        quantityToReduce: 22,
-                      );
-                    },
-                    child: Text('mello'),
-                  ),
+                  // TextButton(
+                  //   onPressed: () {
+                  //     CheckoutRepository().reduceProductQuantity(
+                  //       productId: 'CWrkrgqV3X1rHoAy1EVr',
+                  //       quantityToReduce: 22,
+                  //     );
+                  //   },
+                  //   child: Text('mello'),
+                  // ),
                   Expanded(
                     child: FutureBuilder(
                       future: initialGetCartData,
@@ -142,18 +142,18 @@ class _CartScreenState extends State<CartScreen> {
                                   ),
                                 ),
                               ),
-                              TextButton(
-                                  onPressed: () {
-                                    // Navigator.pop(context);
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => CheckoutScreen(
-                                                orderID: '12345',
-                                              )),
-                                    );
-                                  },
-                                  child: Text('Checkout')),
+                              // TextButton(
+                              //     onPressed: () {
+                              //       // Navigator.pop(context);
+                              //       Navigator.push(
+                              //         context,
+                              //         MaterialPageRoute(
+                              //             builder: (context) => CheckoutScreen(
+                              //                   orderID: '12345',
+                              //                 )),
+                              //       );
+                              //     },
+                              //     child: Text('Checkout')),
                             ],
                           );
                         } else {
@@ -460,10 +460,17 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                               );
                             }
                             if (state is NotEnoughQuantityError) {
-                              ToastComponent.showDialog(
-                                  'Only ${state.availableQuantity} units of ${state.productName} available',
-                                  gravity: Toast.center,
-                                  duration: Toast.lengthLong);
+                              if (state.availableQuantity == 0) {
+                                ToastComponent.showDialog(
+                                    '${state.productName} is Out of Stock',
+                                    gravity: Toast.center,
+                                    duration: Toast.lengthLong);
+                              } else {
+                                ToastComponent.showDialog(
+                                    'Only ${state.availableQuantity} units of ${state.productName} available',
+                                    gravity: Toast.center,
+                                    duration: Toast.lengthLong);
+                              }
                               BlocProvider.of<CheckoutBloc>(context).add(
                                 CheckoutInitialEventRequested(),
                               );

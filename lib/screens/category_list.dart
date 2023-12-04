@@ -5,6 +5,7 @@ import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/features/auth/screens/add_phone.dart';
 import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_screen.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/my_purchases.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/screen_database.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/parent_screen.dart';
@@ -195,9 +196,10 @@ class _CategoryListState extends State<CategoryList> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => SellerOrderList()));
+                                      builder: (context) =>
+                                          PurchaseHistoryScreen()));
                             },
-                            child: Text('Seller Dashboard')),
+                            child: Text('Purchase History')),
 
                         SizedBox(height: 15),
 

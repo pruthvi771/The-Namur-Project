@@ -1,4 +1,5 @@
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/order_item.dart';
+import 'package:active_ecommerce_flutter/utils/functions.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -63,27 +64,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
 
     return orderDocument;
-  }
-
-  void openWhatsAppChat(String phoneNumber) async {
-    String formattedPhoneNumber = phoneNumber.replaceAll(RegExp(r'[^\d]'), '');
-    print(formattedPhoneNumber);
-    String whatsappUrl = "https://wa.me/$formattedPhoneNumber";
-    final Uri _url = Uri.parse(whatsappUrl);
-
-    try {
-      if (await canLaunchUrl(_url)) {
-        await launchUrl(
-          _url,
-          mode: LaunchMode.externalApplication,
-        );
-      } else {
-        throw 'Could not launch WhatsApp';
-      }
-    } catch (e) {
-      print(e);
-      // Handle exceptions, if any
-    }
   }
 
   @override
