@@ -7,7 +7,6 @@ import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_repos
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/checkout_bloc/checkout_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/checkout_bloc/checkout_event.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/checkout_bloc/checkout_state.dart';
-import 'package:active_ecommerce_flutter/features/sellAndBuy/services/checkout_repository.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -30,7 +29,6 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     currentUser = _firebaseAuth.currentUser!;
     // totalAmountFuture = _getTotalAmount();
     initialGetCartData = _getCartData(nullData: false);
@@ -106,15 +104,6 @@ class _CartScreenState extends State<CartScreen> {
             children: [
               Column(
                 children: [
-                  // TextButton(
-                  //   onPressed: () {
-                  //     CheckoutRepository().reduceProductQuantity(
-                  //       productId: 'CWrkrgqV3X1rHoAy1EVr',
-                  //       quantityToReduce: 22,
-                  //     );
-                  //   },
-                  //   child: Text('mello'),
-                  // ),
                   Expanded(
                     child: FutureBuilder(
                       future: initialGetCartData,
@@ -142,18 +131,6 @@ class _CartScreenState extends State<CartScreen> {
                                   ),
                                 ),
                               ),
-                              // TextButton(
-                              //     onPressed: () {
-                              //       // Navigator.pop(context);
-                              //       Navigator.push(
-                              //         context,
-                              //         MaterialPageRoute(
-                              //             builder: (context) => CheckoutScreen(
-                              //                   orderID: '12345',
-                              //                 )),
-                              //       );
-                              //     },
-                              //     child: Text('Checkout')),
                             ],
                           );
                         } else {
@@ -219,8 +196,6 @@ class _CartScreenState extends State<CartScreen> {
                                               orElse: () => null);
 
                                       if (productInCart != null) {
-                                        int quantity =
-                                            productInCart['quantity'];
                                         String productName =
                                             productData['name'];
                                         List productImageUrl =
@@ -693,8 +668,6 @@ class _CartItemState extends State<CartItem> {
                             ),
                           ],
                         ),
-                        // Text(widget.quantity.toString()),
-                        // Text(widget.productId),
                         Padding(
                           padding: const EdgeInsets.all(5),
                           child: Row(

@@ -9,20 +9,25 @@ import 'package:active_ecommerce_flutter/drawer/drawer.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 
-class CheckoutScreen extends StatefulWidget {
+class SellerOrderCheckupScreen extends StatefulWidget {
   final String orderID;
+  final String sellerID;
 
-  CheckoutScreen({
+  SellerOrderCheckupScreen({
     Key? key,
     required this.orderID,
+    required this.sellerID,
   }) : super(key: key);
 
   @override
-  _CheckoutScreenState createState() => _CheckoutScreenState();
+  _SellerOrderCheckupScreenState createState() =>
+      _SellerOrderCheckupScreenState();
 }
 
-class _CheckoutScreenState extends State<CheckoutScreen> {
+class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
   Map<String, Map<String, int>> productMap = {};
 
   @override
@@ -63,6 +68,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
 
     return orderDocument;
+  }
+
+  double sellerTotalAmount(List<OrderItem> orderItems) {
+    double totalAmount = 0;
+    for (var item in orderItems) {
+      if (item.sellerID == widget.sellerID) {
+        totalAmount += item.price * item.quantity;
+      }
+    }
+    return totalAmount;
   }
 
   @override
@@ -107,7 +122,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           height: 200,
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: Colors.grey,
+                              color: Colors.grey.withOpacity(0.3),
                               width: 1,
                             ),
                             borderRadius: BorderRadius.circular(7),
@@ -126,9 +141,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                       color: MyTheme.primary_color),
                                 ),
                               ),
-                              SizedBox(
-                                  // height: 2,
-                                  ),
+                              SizedBox(),
+
+                              // order code
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -150,6 +165,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                   ),
                                 ],
                               ),
+
+                              // order date
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -171,19 +188,22 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                   ),
                                 ],
                               ),
+
+                              // total amount
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Total Amount',
+                                    'Your Total',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15,
                                     ),
                                   ),
                                   Text(
-                                    '₹ ${orderDocument.totalAmount.toString()}',
+                                    // '₹ ${orderDocument.totalAmount.toString()}',
+                                    '₹ ${sellerTotalAmount(orderDocument.orderItems)}',
                                     style: TextStyle(
                                       color: Colors.green,
                                       fontWeight: FontWeight.bold,
@@ -192,6 +212,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                   ),
                                 ],
                               ),
+
+                              // order status
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -216,6 +238,69 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             ],
                           ),
                         ),
+
+                        // Buyer Info Heading
+                        Container(
+                          height: 40,
+                          width: double.infinity,
+                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(7),
+                            color: MyTheme.green_lighter,
+                          ),
+                          child: Center(
+                              child: Text(
+                            'Buyer Info',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
+                          )),
+                        ),
+
+                        SizedBox(
+                          height: 10,
+                        ),
+
+                        FutureBuilder(
+                            future: _firestore
+                                .collection('buyer')
+                                .doc(orderDocument.buyerID)
+                                .get(),
+                            builder: (context, buyerSnapshot) {
+                              if (buyerSnapshot.hasData &&
+                                  buyerSnapshot.data != null) {
+                                var buyerData = buyerSnapshot.data!.data()!;
+
+                                bool addressAvailable = buyerData['profileData']
+                                            ?['address']
+                                        .length !=
+                                    0;
+                                var address = addressAvailable
+                                    ? buyerData['profileData']['address'][0]
+                                    : 'NaN';
+
+                                return BuyerInfoCard(
+                                  context: context,
+                                  buyerImageURL: buyerData['photoURL'],
+                                  email: buyerData['email'],
+                                  buyerName: buyerData['name'],
+                                  buyerPhone: buyerData['phone number'],
+                                  district: addressAvailable
+                                      ? address['district']
+                                      : 'NaN',
+                                  taluk: addressAvailable
+                                      ? address['taluk']
+                                      : 'NaN',
+                                  village: addressAvailable
+                                      ? address['village']
+                                      : 'NaN',
+                                );
+                              }
+                              return SizedBox.shrink();
+                            }),
+
+                        // Ordered Products Heading
                         Container(
                           height: 40,
                           width: double.infinity,
@@ -233,147 +318,86 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             ),
                           )),
                         ),
-                        // Padding(
-                        //   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        //   child: Column(
-                        //     children: [
-                        //       Container(
-                        //         height: 120,
-                        //         decoration: BoxDecoration(
-                        //           borderRadius: BorderRadius.circular(7),
-                        //           color: Colors.grey[100],
-                        //         ),
-                        //         child: Row(
-                        //           children: [
-                        //             Expanded(
-                        //               flex: 2,
-                        //               child: Container(
-                        //                 height: double.infinity,
-                        //                 color: Colors.red,
-                        //                 child: CachedNetworkImage(
-                        //                   imageUrl:
-                        //                       'https://m.media-amazon.com/images/M/MV5BNzQyODYzNTAxNV5BMl5BanBnXkFtZTgwMDcxNzM2MjI@._V1_.jpg',
-                        //                   fit: BoxFit.cover,
-                        //                 ),
-                        //               ),
-                        //             ),
-                        //             Expanded(
-                        //               flex: 3,
-                        //               child: Padding(
-                        //                 padding: const EdgeInsets.all(8.0),
-                        //                 child: Column(
-                        //                   children: [
-                        //                     Text(
-                        //                       'Cow from goat',
-                        //                       style: TextStyle(
-                        //                         fontWeight: FontWeight.bold,
-                        //                         fontSize: 17,
-                        //                       ),
-                        //                     ),
-                        //                     Text(
-                        //                       '₹1562',
-                        //                       style: TextStyle(
-                        //                         fontWeight: FontWeight.bold,
-                        //                         fontSize: 17,
-                        //                       ),
-                        //                     ),
-                        //                   ],
-                        //                 ),
-                        //               ),
-                        //             )
-                        //           ],
-                        //         ),
-                        //       ),
-                        //       Container(
-                        //         height: 120,
-                        //         decoration: BoxDecoration(
-                        //           borderRadius: BorderRadius.circular(7),
-                        //           color: MyTheme.light_grey,
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
+
                         SizedBox(
                           height: 10,
                         ),
+
+                        // Product List
                         Column(
                           children: List.generate(
                             orderDocument.orderItems.length,
                             (index) {
-                              return FutureBuilder(
-                                  future: _firestore
-                                      .collection('products')
-                                      .doc(orderDocument
-                                          .orderItems[index].productID)
-                                      .get(),
-                                  builder: (context, productSnapshot) {
-                                    if (productSnapshot.hasData &&
-                                        productSnapshot.data != null) {
-                                      var productData =
-                                          productSnapshot.data!.data()!;
-                                      return FutureBuilder(
-                                          future: _firestore
-                                              .collection('buyer')
-                                              .doc(orderDocument
-                                                  .orderItems[index].sellerID)
-                                              .get(),
-                                          builder: (context, sellerSnapshot) {
-                                            if (sellerSnapshot.hasData &&
-                                                sellerSnapshot.data != null) {
-                                              var sellerData =
-                                                  sellerSnapshot.data!.data()!;
-                                              return CheckoutProductCard(
-                                                context: context,
-                                                productImageURL:
-                                                    productData['imageURL'][0],
-                                                productName:
-                                                    productData['name'],
-                                                netPrice: orderDocument
+                              return orderDocument.orderItems[index].sellerID ==
+                                      widget.sellerID
+                                  ? FutureBuilder(
+                                      future: _firestore
+                                          .collection('products')
+                                          .doc(orderDocument
+                                              .orderItems[index].productID)
+                                          .get(),
+                                      builder: (context, productSnapshot) {
+                                        if (productSnapshot.hasData &&
+                                            productSnapshot.data != null) {
+                                          var productData =
+                                              productSnapshot.data!.data()!;
+                                          return FutureBuilder(
+                                              future: _firestore
+                                                  .collection('buyer')
+                                                  .doc(orderDocument
+                                                      .orderItems[index]
+                                                      .sellerID)
+                                                  .get(),
+                                              builder:
+                                                  (context, sellerSnapshot) {
+                                                if (sellerSnapshot.hasData &&
+                                                    sellerSnapshot.data !=
+                                                        null) {
+                                                  var sellerData =
+                                                      sellerSnapshot.data!
+                                                          .data()!;
+                                                  return CheckoutProductCard(
+                                                    context: context,
+                                                    productImageURL:
+                                                        productData['imageURL']
+                                                            [0],
+                                                    productName:
+                                                        productData['name'],
+                                                    netPrice: orderDocument
+                                                            .orderItems[index]
+                                                            .price *
+                                                        orderDocument
+                                                            .orderItems[index]
+                                                            .quantity,
+                                                    unitPrice: orderDocument
                                                         .orderItems[index]
-                                                        .price *
-                                                    orderDocument
+                                                        .price,
+                                                    quantity: orderDocument
                                                         .orderItems[index]
                                                         .quantity,
-                                                unitPrice: orderDocument
-                                                    .orderItems[index].price,
-                                                quantity: orderDocument
-                                                    .orderItems[index].quantity,
-                                                quantityUnit:
-                                                    productData['quantityUnit'],
-                                                sellerImageURL:
-                                                    sellerData['photoURL'],
-                                                sellerName: sellerData['name'],
-                                                sellerPhone: sellerData[
-                                                            'phone number'] ==
-                                                        ""
-                                                    ? null
-                                                    : sellerData[
-                                                        'phone number'],
-                                              );
-                                            }
-                                            return SizedBox.shrink();
-                                          });
-                                    }
-                                    return SizedBox.shrink();
-                                  });
+                                                    quantityUnit: productData[
+                                                        'quantityUnit'],
+                                                    sellerImageURL:
+                                                        sellerData['photoURL'],
+                                                    sellerName:
+                                                        sellerData['name'],
+                                                    sellerPhone: sellerData[
+                                                                'phone number'] ==
+                                                            ""
+                                                        ? null
+                                                        : sellerData[
+                                                            'phone number'],
+                                                  );
+                                                }
+                                                return SizedBox.shrink();
+                                              });
+                                        }
+                                        return SizedBox.shrink();
+                                      })
+                                  : SizedBox();
                             },
                           ),
                         ),
-                        // CheckoutProductCard(
-                        //   context: context,
-                        //   productImageURL:
-                        //       'https://m.media-amazon.com/images/M/MV5BNzQyODYzNTAxNV5BMl5BanBnXkFtZTgwMDcxNzM2MjI@._V1_.jpg',
-                        //   productName: 'Cow from goat',
-                        //   netPrice: 1562000,
-                        //   unitPrice: 1562,
-                        //   quantity: 1,
-                        //   quantityUnit: 'KG',
-                        //   sellerImageURL:
-                        //       'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png',
-                        //   sellerName: 'Seller Name',
-                        //   sellerPhone: '+91 8800814370',
-                        // ),
                       ],
                     ),
                   );
@@ -442,7 +466,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       )),
                 ),
                 Expanded(
-                  flex: 7,
+                  flex: 6,
                   child: Padding(
                     padding: const EdgeInsets.only(top: 8, bottom: 8, left: 12),
                     child: Column(
@@ -550,12 +574,177 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                       ],
                                     ),
                                   )),
-                              sellerPhone != null
+                              // sellerPhone != null
+                              //     ? Padding(
+                              //         padding: const EdgeInsets.only(right: 10),
+                              //         child: GestureDetector(
+                              //           onTap: () {
+                              //             openWhatsAppChat(sellerPhone);
+                              //           },
+                              //           child: FaIcon(
+                              //             FontAwesomeIcons.whatsapp,
+                              //             size: 35,
+                              //             color: Color(0xFF25d366),
+                              //           ),
+                              //         ),
+                              //       )
+                              //     : Padding(
+                              //         padding: const EdgeInsets.only(right: 10),
+                              //         child: GestureDetector(
+                              //           onTap: () {},
+                              //           child: FaIcon(
+                              //             FontAwesomeIcons.whatsapp,
+                              //             size: 35,
+                              //             color: Colors.grey[300],
+                              //           ),
+                              //         ),
+                              //       ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Padding BuyerInfoCard({
+    required BuildContext context,
+    required String buyerImageURL,
+    required String buyerName,
+    required String email,
+    required String? village,
+    required String? district,
+    required String? taluk,
+    required String? buyerPhone,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 8,
+        right: 8,
+        bottom: 10,
+      ),
+      child: Material(
+        elevation: 0,
+        borderRadius: BorderRadius.circular(6),
+        child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(
+                  width: 1, color: MyTheme.medium_grey.withOpacity(0.5))),
+          height: 160,
+          width: MediaQuery.of(context).size.width,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // buyer image
+                Expanded(
+                  flex: 3,
+                  child: Container(
+                      padding: EdgeInsets.only(left: 5),
+                      height: 140,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(5),
+                        child: CachedNetworkImage(
+                          imageUrl: buyerImageURL,
+                          fit: BoxFit.cover,
+                        ),
+                      )),
+                ),
+
+                // content
+                Expanded(
+                  flex: 5,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8, bottom: 8, left: 12),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // name
+                        Text(
+                          buyerName,
+                          // 'skgknkl kgsne ksngkla lkgnlkang lkenglkg',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+
+                        Text(
+                          // buyerName,
+                          email,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+
+                        Container(
+                          // height: 30,
+                          child: Row(
+                            children: [
+                              FaIcon(
+                                FontAwesomeIcons.locationPin,
+                                size: 14,
+                                color: Colors.red,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  maxLines: 2,
+                                  '$village, $district, $taluk',
+                                  // 'village, district',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    letterSpacing: -0.7,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Container(
+                          // height: 50,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Align(
+                                  alignment: Alignment.bottomLeft,
+                                  child: Text(
+                                    buyerPhone == null
+                                        ? 'Phone Number Not Available'
+                                        : buyerPhone,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              buyerPhone != null
                                   ? Padding(
                                       padding: const EdgeInsets.only(right: 10),
                                       child: GestureDetector(
                                         onTap: () {
-                                          openWhatsAppChat(sellerPhone);
+                                          openWhatsAppChat(buyerPhone);
                                         },
                                         child: FaIcon(
                                           FontAwesomeIcons.whatsapp,

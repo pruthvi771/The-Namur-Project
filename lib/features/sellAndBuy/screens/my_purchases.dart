@@ -34,6 +34,7 @@ class _PurchaseHistoryScreenState extends State<PurchaseHistoryScreen> {
     return _firestore
         .collection('orders')
         .where('buyer', isEqualTo: buyerId)
+        // .orderBy('status', descending: true)
         .snapshots();
   }
 
@@ -74,6 +75,18 @@ class _PurchaseHistoryScreenState extends State<PurchaseHistoryScreen> {
               // if (snapshot.hasError) {
               //   return Text('Error: ${snapshot.error}');
               // }
+
+              if (!snapshot.hasData || snapshot.data == null) {
+                // Handle the case where no data is available
+                return Center(
+                    child: Text(
+                  'Error Fetching Records.',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ));
+              }
 
               List<QueryDocumentSnapshot> documents = snapshot.data!.docs;
               return documents.length == 0

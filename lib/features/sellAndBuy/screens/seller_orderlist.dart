@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/order_item.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/seller_order_checkup_screen.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -131,11 +132,11 @@ class _SellerOrderListState extends State<SellerOrderList> {
                     Expanded(
                       child: Container(
                         padding: EdgeInsets.all(10),
-                        color: MyTheme.green_lighter,
+                        // color: MyTheme.green_lighter,
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(10)),
-                            color: Colors.white,
+                            color: Colors.grey[50],
                           ),
                           child: SingleChildScrollView(
                             physics: BouncingScrollPhysics(),
@@ -189,6 +190,17 @@ class _SellerOrderListState extends State<SellerOrderList> {
                                         ),
                                         onTap: () {
                                           print(sellerOrderList[index].orderID);
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SellerOrderCheckupScreen(
+                                                      orderID:
+                                                          sellerOrderList[index]
+                                                              .orderID,
+                                                      sellerID: currentUser.uid,
+                                                    )),
+                                          );
                                         },
                                       ),
                                       DataCell(

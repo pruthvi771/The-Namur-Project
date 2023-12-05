@@ -1,10 +1,7 @@
-import 'package:active_ecommerce_flutter/data_model/check_response.dart';
-import 'package:active_ecommerce_flutter/features/profile/screens/friends_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/subSubCategory_filter_item.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/filter_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/machine_rent_form.dart';
-import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/parent_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/product_details_screen.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart';
 import 'package:cached_network_image/cached_network_image.dart';
