@@ -1,5 +1,6 @@
-import 'dart:async';
+// translation done
 
+import 'dart:async';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/order_item.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/seller_order_checkup_screen.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
@@ -66,13 +67,10 @@ class _SellerOrderListState extends State<SellerOrderList> {
     // }
   }
 
-  List<String> items = List.generate(10, (index) => 'Item $index');
-
   Future<void> _refresh() async {
     await Future.delayed(Duration(seconds: 2));
-
     setState(() {
-      items = List.generate(10, (index) => 'Refreshed Item $index');
+      sellerOrderList = _sellerOrderList();
     });
   }
 
@@ -148,22 +146,22 @@ class _SellerOrderListState extends State<SellerOrderList> {
                                 columns: <DataColumn>[
                                   DataColumn(
                                     label: Text(
-                                      'Order ID',
+                                      AppLocalizations.of(context)!.order_id,
                                     ),
                                   ),
                                   DataColumn(
                                     label: Text(
-                                      'Date',
+                                      AppLocalizations.of(context)!.date_ucf,
                                     ),
                                   ),
                                   DataColumn(
                                     label: Text(
-                                      'Status',
+                                      AppLocalizations.of(context)!.status,
                                     ),
                                   ),
                                   DataColumn(
                                     label: Text(
-                                      'Total',
+                                      AppLocalizations.of(context)!.total,
                                     ),
                                   ),
                                 ],

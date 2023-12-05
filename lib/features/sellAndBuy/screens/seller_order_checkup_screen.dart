@@ -1,3 +1,5 @@
+// translation done
+
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/order_item.dart';
 import 'package:active_ecommerce_flutter/utils/functions.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -9,8 +11,6 @@ import 'package:active_ecommerce_flutter/drawer/drawer.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 
 class SellerOrderCheckupScreen extends StatefulWidget {
   final String orderID;
@@ -134,7 +134,8 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  'Order Details',
+                                  AppLocalizations.of(context)!
+                                      .order_details_ucf,
                                   style: TextStyle(
                                       fontWeight: FontWeight.w900,
                                       fontSize: 25,
@@ -149,7 +150,8 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Order Code',
+                                    AppLocalizations.of(context)!
+                                        .order_code_ucf,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15,
@@ -172,7 +174,8 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Order Date',
+                                    AppLocalizations.of(context)!
+                                        .order_date_ucf,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15,
@@ -195,7 +198,7 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Your Total',
+                                    AppLocalizations.of(context)!.your_total,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15,
@@ -219,7 +222,7 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Order Status',
+                                    AppLocalizations.of(context)!.order_status,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15,
@@ -250,7 +253,8 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
                           ),
                           child: Center(
                               child: Text(
-                            'Buyer Info',
+                            // 'Buyer Info',
+                            AppLocalizations.of(context)!.buyer_info,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 15,
@@ -311,7 +315,7 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
                           ),
                           child: Center(
                               child: Text(
-                            'Ordered Products',
+                            AppLocalizations.of(context)!.ordered_product_ucf,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 15,
@@ -406,7 +410,8 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
                   print(snapshot.error);
                   return Center(
                     child: Text(
-                      'Could Not Fetch Order Details',
+                      AppLocalizations.of(context)!
+                          .could_not_fetch_order_details,
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
@@ -537,68 +542,44 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
                                 ),
                               ),
                               Expanded(
-                                  flex: 3,
-                                  child: Container(
-                                    height: double.infinity,
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 8),
-                                    // color: Colors.red,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Expanded(
-                                          child: Align(
-                                            alignment: Alignment.bottomLeft,
-                                            child: Text(
-                                              'Seller',
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Expanded(
+                                flex: 3,
+                                child: Container(
+                                  height: double.infinity,
+                                  padding: EdgeInsets.symmetric(horizontal: 8),
+                                  // color: Colors.red,
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: Align(
+                                          alignment: Alignment.bottomLeft,
                                           child: Text(
-                                            sellerName,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
+                                            AppLocalizations.of(context)!
+                                                .seller_ucf,
                                             style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
+                                              fontSize: 14,
                                             ),
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                  )),
-                              // sellerPhone != null
-                              //     ? Padding(
-                              //         padding: const EdgeInsets.only(right: 10),
-                              //         child: GestureDetector(
-                              //           onTap: () {
-                              //             openWhatsAppChat(sellerPhone);
-                              //           },
-                              //           child: FaIcon(
-                              //             FontAwesomeIcons.whatsapp,
-                              //             size: 35,
-                              //             color: Color(0xFF25d366),
-                              //           ),
-                              //         ),
-                              //       )
-                              //     : Padding(
-                              //         padding: const EdgeInsets.only(right: 10),
-                              //         child: GestureDetector(
-                              //           onTap: () {},
-                              //           child: FaIcon(
-                              //             FontAwesomeIcons.whatsapp,
-                              //             size: 35,
-                              //             color: Colors.grey[300],
-                              //           ),
-                              //         ),
-                              //       ),
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          sellerName,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         )
@@ -728,9 +709,7 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
                                 child: Align(
                                   alignment: Alignment.bottomLeft,
                                   child: Text(
-                                    buyerPhone == null
-                                        ? 'Phone Number Not Available'
-                                        : buyerPhone,
+                                    buyerPhone == null ? 'NaN' : buyerPhone,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
