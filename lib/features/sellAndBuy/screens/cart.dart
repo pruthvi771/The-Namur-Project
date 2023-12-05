@@ -1,3 +1,5 @@
+// translation done.
+
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/checkout_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_bloc.dart';
@@ -112,7 +114,16 @@ class _CartScreenState extends State<CartScreen> {
                             ConnectionState.waiting) {
                           return Center(child: CircularProgressIndicator());
                         } else if (cartSnapshot.hasError) {
-                          return Text('Error: ${cartSnapshot.error}');
+                          return Center(
+                            child: Text(
+                              AppLocalizations.of(context)!
+                                  .something_went_wrong,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          );
                         } else if (cartSnapshot.hasData &&
                             cartSnapshot.data == 0) {
                           return Center(child: CircularProgressIndicator());
@@ -124,7 +135,7 @@ class _CartScreenState extends State<CartScreen> {
                               Align(
                                 alignment: Alignment.center,
                                 child: Text(
-                                  'Cart is empty',
+                                  AppLocalizations.of(context)!.cart_is_empty,
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w900,
@@ -145,7 +156,7 @@ class _CartScreenState extends State<CartScreen> {
                                 Align(
                                   alignment: Alignment.center,
                                   child: Text(
-                                    'Cart is empty',
+                                    AppLocalizations.of(context)!.cart_is_empty,
                                     style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.w900,
@@ -175,11 +186,13 @@ class _CartScreenState extends State<CartScreen> {
                                       return Center(
                                           child: CircularProgressIndicator());
                                     } else if (productSnapshot.hasError) {
-                                      return Text(
-                                          'Error: ${productSnapshot.error}');
+                                      // return Text(AppLocalizations.of(context)!
+                                      //     .something_went_wrong);
+                                      return SizedBox.shrink();
                                     } else if (!productSnapshot.hasData ||
                                         productSnapshot.data!.docs.isEmpty) {
-                                      return Text('No products available');
+                                      return Text(AppLocalizations.of(context)!
+                                          .no_product_is_available);
                                     } else {
                                       var productsData =
                                           productSnapshot.data!.docs;
@@ -437,12 +450,18 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                             if (state is NotEnoughQuantityError) {
                               if (state.availableQuantity == 0) {
                                 ToastComponent.showDialog(
-                                    '${state.productName} is Out of Stock',
+                                    AppLocalizations.of(context)!
+                                        .product_is_out_of_stock(
+                                            state.productName),
                                     gravity: Toast.center,
                                     duration: Toast.lengthLong);
                               } else {
                                 ToastComponent.showDialog(
-                                    'Only ${state.availableQuantity} units of ${state.productName} available',
+                                    // 'Only ${state.availableQuantity} units of ${state.productName} available',
+                                    AppLocalizations.of(context)!
+                                        .only_some_quantity_left_for_product(
+                                            state.productName,
+                                            state.availableQuantity),
                                     gravity: Toast.center,
                                     duration: Toast.lengthLong);
                               }

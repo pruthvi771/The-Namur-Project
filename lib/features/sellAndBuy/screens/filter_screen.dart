@@ -1,15 +1,14 @@
+// translation done.
+
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/subSubCategory_filter_item.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/buy_product_list.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:toast/toast.dart';
-// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../custom/device_info.dart';
-
-// import '../seller_platform/seller_platform.dart';
 
 enum FilterSection {
   price,
@@ -108,7 +107,8 @@ class _FilterScreenState extends State<FilterScreen> {
             ),
           ),
           title: Text(
-            'Filters',
+            // 'Filters',
+            AppLocalizations.of(context)!.filter_ucf,
             style: TextStyle(
                 color: MyTheme.white,
                 fontWeight: FontWeight.w500,
@@ -121,7 +121,7 @@ class _FilterScreenState extends State<FilterScreen> {
                   Navigator.pop(context);
                 },
                 child: Text(
-                  'Close',
+                  AppLocalizations.of(context)!.close_ucf,
                   style: TextStyle(
                       color: Colors.white.withOpacity(0.8),
                       fontWeight: FontWeight.w500,
@@ -158,7 +158,7 @@ class _FilterScreenState extends State<FilterScreen> {
                               child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  'Price',
+                                  AppLocalizations.of(context)!.price_ucf,
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600),
@@ -183,7 +183,7 @@ class _FilterScreenState extends State<FilterScreen> {
                               child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  'Categories',
+                                  AppLocalizations.of(context)!.categories_ucf,
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600),
@@ -210,7 +210,8 @@ class _FilterScreenState extends State<FilterScreen> {
                               child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  'Seller\'s Location',
+                                  AppLocalizations.of(context)!
+                                      .sellers_location,
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600),
@@ -262,7 +263,9 @@ class _FilterScreenState extends State<FilterScreen> {
                                             child: Align(
                                           alignment: Alignment.centerLeft,
                                           child: Text(
-                                            'Price (Low to high)',
+                                            // 'Price (Low to high)',
+                                            AppLocalizations.of(context)!
+                                                .price_low_to_high,
                                             style: TextStyle(
                                                 fontSize: 13,
                                                 color: sortType != null
@@ -308,7 +311,8 @@ class _FilterScreenState extends State<FilterScreen> {
                                             child: Align(
                                           alignment: Alignment.centerLeft,
                                           child: Text(
-                                            'Price (High to low)',
+                                            AppLocalizations.of(context)!
+                                                .price_high_to_low,
                                             style: TextStyle(
                                                 fontSize: 13,
                                                 color: sortType != null
@@ -445,14 +449,16 @@ class _FilterScreenState extends State<FilterScreen> {
                         if (!containsAtLeastOneSelected(
                             list: subSubCategoryList)) {
                           ToastComponent.showDialog(
-                              'Select at least one category',
+                              AppLocalizations.of(context)!
+                                  .select_at_leart_one_category,
                               gravity: Toast.center,
                               duration: Toast.lengthLong);
                           return;
                         } else if (!containsAtLeastOneSelected(
                             list: locationsList)) {
                           ToastComponent.showDialog(
-                              'Select at least one location',
+                              AppLocalizations.of(context)!
+                                  .select_at_leart_one_location,
                               gravity: Toast.center,
                               duration: Toast.lengthLong);
                           return;
@@ -491,7 +497,7 @@ class _FilterScreenState extends State<FilterScreen> {
                           ),
                         );
                       },
-                      child: Text('Show Results'),
+                      child: Text(AppLocalizations.of(context)!.show_results),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: MyTheme.accent_color,
                         shape: RoundedRectangleBorder(

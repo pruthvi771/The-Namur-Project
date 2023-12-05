@@ -427,8 +427,8 @@
   "postal_code": "Postal code",
   "postal_code_ucf": "Postal Code",
   "premium_package_for_seller_ucf": "Premium Package for Seller",
-  "price_high_to_low": "Price high to low",
-  "price_low_to_high": "Price low to high",
+  "price_high_to_low": "Price (high to low)",
+  "price_low_to_high": "Price (low to high)",
   "price_n_stock_ucf": "Price & Stock",
   "price_range_ucf": "Price Range",
   "price_ucf": "Price",
@@ -674,5 +674,40 @@
 "delete_product": "Delete Product",
 "delete": "Delete",
 "cancel": "Cancel",
-"no_orders_yet" : "No Orders Yet"
+"no_orders_yet" : "No Orders Yet",
+"sellers_location":"Seller's Location",
+"show_results" : "Show Results",
+"select_at_leart_one_category" : "Select at least one category",
+"select_at_leart_one_location" : "Select at least one location",
+"something_went_wrong" : "Something went wrong",
+"product_is_out_of_stock": "{productName} is out of stock",
+"@product_is_out_of_stock" : {
+  "description": "{productName} is out of stock",
+  "placeholders": {
+    "productName": {
+      "type": "String",
+      "description": "Product name"
+    }
+  }
+},
+"only_some_quantity_left_for_product": "Only {count} units of {productName} available",
+"@only_some_quantity_left_for_product" : {
+  "description": "Only {count} units of {productName} available",
+  "placeholders": {
+    "productName": {
+      "type": "String",
+      "description": "Product name"
+    },
+    "count": {
+      "type": "int",
+      "description": "Count"
+    }
+  }
+},
+"show_filters": "Show Filters",
+"machine": "Machine",
+"planning_date": "Planning Date",
+"time": "Time",
+"land": "Land",
+"select_land": "Select Land"
 }

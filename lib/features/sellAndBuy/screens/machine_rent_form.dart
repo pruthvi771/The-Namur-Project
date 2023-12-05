@@ -1,3 +1,5 @@
+// translation done.
+
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -117,7 +119,7 @@ class _MachineRentFormState extends State<MachineRentForm> {
               height: 10,
             ),
 
-            TitleWidget(text: 'Machine'),
+            TitleWidget(text: AppLocalizations.of(context)!.machine),
 
             SizedBox(
               height: 10,
@@ -195,6 +197,7 @@ class _MachineRentFormState extends State<MachineRentForm> {
                           ),
                           Text(
                             '\₹${widget.machinePrice}/30 mins',
+                            // locale: Locale.fromSubtags(languageCode: 'en'),
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w900,
@@ -227,7 +230,7 @@ class _MachineRentFormState extends State<MachineRentForm> {
             SizedBox(
               height: 15,
             ),
-            TitleWidget(text: 'Planning Date'),
+            TitleWidget(text: AppLocalizations.of(context)!.planning_date),
 
             SizedBox(
               height: 5,
@@ -262,7 +265,7 @@ class _MachineRentFormState extends State<MachineRentForm> {
                         child: Text(
                           dateOfRenting != null
                               ? '${dateOfRenting!.day}/${dateOfRenting!.month}/${dateOfRenting!.year}'
-                              : 'Date',
+                              : AppLocalizations.of(context)!.date_ucf,
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.w800,
@@ -342,7 +345,7 @@ class _MachineRentFormState extends State<MachineRentForm> {
                         child: Text(
                           timeRangeOfRenting != null
                               ? '${rentStartTime!.hourOfPeriod}:${rentStartTime.minute == 0 ? '00' : rentStartTime.minute} ${rentStartTime.period.name} - ${rentEndTime!.hourOfPeriod}:${rentEndTime.minute == 0 ? '00' : rentEndTime.minute} ${rentEndTime.period.name}'
-                              : 'Time',
+                              : AppLocalizations.of(context)!.time,
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.w800,
@@ -370,7 +373,7 @@ class _MachineRentFormState extends State<MachineRentForm> {
               height: 15,
             ),
 
-            TitleWidget(text: 'Land'),
+            TitleWidget(text: AppLocalizations.of(context)!.land),
 
             SizedBox(
               height: 20,
@@ -384,7 +387,7 @@ class _MachineRentFormState extends State<MachineRentForm> {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: DropdownButtonWidget(
-                        hintText: 'Select Land',
+                        hintText: AppLocalizations.of(context)!.select_land,
                         itemList: List.generate(
                             snapshot.data!.length,
                             (index) => DropdownMenuItem<String>(

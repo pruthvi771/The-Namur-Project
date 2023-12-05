@@ -198,7 +198,8 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    AppLocalizations.of(context)!.your_total,
+                                    AppLocalizations.of(context)!
+                                        .total_amount_ucf,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15,

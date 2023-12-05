@@ -195,14 +195,14 @@ class _CategoryListState extends State<CategoryList> {
 
                         SizedBox(height: 15),
 
-                        TextButton(
-                            onPressed: () async {
-                              print(await FirestoreRepository()
-                                  .isGoogleSignedIn('+91 7683089932'));
-                            },
-                            child: Text('Get result')),
+                        // TextButton(
+                        //     onPressed: () async {
+                        //       print(await FirestoreRepository()
+                        //           .isGoogleSignedIn('+91 7683089932'));
+                        //     },
+                        //     child: Text('Get result')),
 
-                        SizedBox(height: 15),
+                        // SizedBox(height: 15),
 
                         //Buy Sell Button Design
                         Center(

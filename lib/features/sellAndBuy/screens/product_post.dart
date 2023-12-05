@@ -480,7 +480,7 @@ class _ProductPostState extends State<ProductPost> {
                   width: MediaQuery.of(context).size.width /
                       1.3, // Adjust the width to your desired value
                   child: Text(
-                    'Product Category',
+                    AppLocalizations.of(context)!.product_category,
                     style: TextStyle(
                         color: Colors.grey[600],
                         fontWeight: FontWeight.w400,
@@ -560,7 +560,7 @@ class _ProductPostState extends State<ProductPost> {
                             );
                           }).toList(),
                           hint: Text(
-                            'Select Unit',
+                            AppLocalizations.of(context)!.select_quantity_unit,
                             style: TextStyle(
                               color: Colors.grey[600],
                               fontWeight: FontWeight.w400,
@@ -618,7 +618,7 @@ class _ProductPostState extends State<ProductPost> {
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText:
-                                  "Price (per ${selectedQuantityUnit == "Units" ? 'unit' : selectedQuantityUnit ?? 'unit'})",
+                                  "${AppLocalizations.of(context)!.price_ucf} (per ${selectedQuantityUnit == "Units" ? 'unit' : selectedQuantityUnit ?? 'unit'})",
                               hintStyle: TextStyle(
                                 color: Colors.grey[600],
                                 fontWeight: FontWeight.w400,
@@ -635,7 +635,11 @@ class _ProductPostState extends State<ProductPost> {
 
         // additional description
         Padding(
-          padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+          padding: const EdgeInsets.only(
+            top: 20.0,
+            left: 20.0,
+            right: 20.0,
+          ),
           child: Container(
             height: 130,
             padding: EdgeInsets.only(left: 5, top: 15, right: 5),
@@ -648,8 +652,8 @@ class _ProductPostState extends State<ProductPost> {
               controller: _additionalController,
               decoration: InputDecoration(
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.only(left: 15),
-                hintText: "Additional Description",
+                contentPadding: EdgeInsets.only(left: 15, right: 15),
+                hintText: AppLocalizations.of(context)!.description_ucf,
                 hintStyle: TextStyle(
                     color: Colors.grey[600],
                     fontWeight: FontWeight.w400,

@@ -1,3 +1,5 @@
+// translation done.
+
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/subSubCategory_filter_item.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/filter_screen.dart';
@@ -332,7 +334,9 @@ class _BuyProductListState extends State<BuyProductList> {
                                           backgroundColor: Colors.grey[200],
                                           labelPadding: EdgeInsets.symmetric(
                                               horizontal: 10, vertical: 0),
-                                          label: Text('Show Filter'),
+                                          label: Text(
+                                              AppLocalizations.of(context)!
+                                                  .show_filters),
                                           deleteIcon: FaIcon(
                                             FontAwesomeIcons.sliders,
                                             size: 15,
@@ -433,25 +437,13 @@ class _BuyProductListState extends State<BuyProductList> {
                                   ],
                                 ),
                               ),
-                              // FutureBuilder(
-                              //     future: getCountFuture,
-                              //     builder: (context, snapshot) {
-                              //       if (snapshot.hasData &&
-                              //           snapshot.data != null) {
-                              //         return Container(
-                              //           child: Text(snapshot.data.toString()),
-                              //         );
-                              //       }
-                              //       return Container(
-                              //         child: Text('empty'),
-                              //       );
-                              //     }),
                             ],
                           ),
                   );
                 }
                 if (snapshot.hasError) {
-                  return Text('Something went wrong. Please try again.');
+                  // return Text('Something went wrong. Please try again.');
+                  return SizedBox.shrink();
                 }
                 return Center(
                   child: CircularProgressIndicator(),

@@ -257,7 +257,7 @@
   "no_more_shops_ucf": "No More Shops",
   "no_new_arrivals": "ما من وافدين جدد",
   "no_payment_method_is_added": "لم يتم إضافة طريقة الدفع",
-  "no_product_is_available": "No product is available",
+  "no_product_is_available": "لا يتوفر أي منتج",
   "no_recharges_yet": "لا توجد عمليات إعادة شحن حتى الآن",
   "no_related_product": "لا توجد منتجات ذات صلة",
   "no_reviews_yet_be_the_first": "لا توجد تعليقات حتى الآن. كن أول من يراجع هذا المنتج",
@@ -342,6 +342,7 @@
   "product_name_ucf": "اسم المنتج",
   "product_text": "Product",
   "product_ucf": "منتج",
+  "product_post_ucf": "نشر المنتج",
   "products_ucf": "منتجات",
   "products_you_may_also_like": "المنتجات التي قد تعجبك أيضا",
   "profile_ucf": "حساب تعريفي",
@@ -489,5 +490,20 @@
 "delete_product": "حذف المنتج",
 "delete": "حذف",
 "cancel": "إلغاء",
-"no_orders_yet": "لا توجد طلبات حتى الآن"
+"no_orders_yet": "لا توجد طلبات حتى الآن",
+"sellers_location": " موقع البائع",
+"show_results": "عرض النتائج",
+"select_at_leart_one_category": "اختر على الأقل فئة واحدة",
+"select_at_leart_one_location": "اختر على الأقل موقعًا واحدًا",
+"something_went_wrong": "حدث خطأ ما",
+"product_is_out_of_stock": "{productName} غير متوفر في المخزون",
+"only_some_quantity_left_for_product": "الكمية المتاحة لـ {productName} هي فقط {count} وحدة",
+"show_filters": "عرض الفلاتر",
+"machine": "آلة",
+"planning_date": "تاريخ التخطيط",
+"time": "الوقت",
+"land": "أرض",
+"select_land": "اختر الأرض"
+
+
 }

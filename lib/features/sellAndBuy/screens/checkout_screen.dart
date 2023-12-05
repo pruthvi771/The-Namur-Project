@@ -1,3 +1,5 @@
+// translation done.
+
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/order_item.dart';
 import 'package:active_ecommerce_flutter/utils/functions.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -119,7 +121,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  'Order Details',
+                                  AppLocalizations.of(context)!
+                                      .order_details_ucf,
                                   style: TextStyle(
                                       fontWeight: FontWeight.w900,
                                       fontSize: 25,
@@ -134,7 +137,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Order Code',
+                                    AppLocalizations.of(context)!
+                                        .order_code_ucf,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15,
@@ -155,7 +159,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Order Date',
+                                    AppLocalizations.of(context)!
+                                        .order_date_ucf,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15,
@@ -176,7 +181,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Total Amount',
+                                    AppLocalizations.of(context)!.your_total,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15,
@@ -197,7 +202,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Order Status',
+                                    AppLocalizations.of(context)!.order_status,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15,
@@ -226,74 +231,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           ),
                           child: Center(
                               child: Text(
-                            'Ordered Products',
+                            AppLocalizations.of(context)!.ordered_product_ucf,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 15,
                             ),
                           )),
                         ),
-                        // Padding(
-                        //   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        //   child: Column(
-                        //     children: [
-                        //       Container(
-                        //         height: 120,
-                        //         decoration: BoxDecoration(
-                        //           borderRadius: BorderRadius.circular(7),
-                        //           color: Colors.grey[100],
-                        //         ),
-                        //         child: Row(
-                        //           children: [
-                        //             Expanded(
-                        //               flex: 2,
-                        //               child: Container(
-                        //                 height: double.infinity,
-                        //                 color: Colors.red,
-                        //                 child: CachedNetworkImage(
-                        //                   imageUrl:
-                        //                       'https://m.media-amazon.com/images/M/MV5BNzQyODYzNTAxNV5BMl5BanBnXkFtZTgwMDcxNzM2MjI@._V1_.jpg',
-                        //                   fit: BoxFit.cover,
-                        //                 ),
-                        //               ),
-                        //             ),
-                        //             Expanded(
-                        //               flex: 3,
-                        //               child: Padding(
-                        //                 padding: const EdgeInsets.all(8.0),
-                        //                 child: Column(
-                        //                   children: [
-                        //                     Text(
-                        //                       'Cow from goat',
-                        //                       style: TextStyle(
-                        //                         fontWeight: FontWeight.bold,
-                        //                         fontSize: 17,
-                        //                       ),
-                        //                     ),
-                        //                     Text(
-                        //                       '₹1562',
-                        //                       style: TextStyle(
-                        //                         fontWeight: FontWeight.bold,
-                        //                         fontSize: 17,
-                        //                       ),
-                        //                     ),
-                        //                   ],
-                        //                 ),
-                        //               ),
-                        //             )
-                        //           ],
-                        //         ),
-                        //       ),
-                        //       Container(
-                        //         height: 120,
-                        //         decoration: BoxDecoration(
-                        //           borderRadius: BorderRadius.circular(7),
-                        //           color: MyTheme.light_grey,
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
                         SizedBox(
                           height: 10,
                         ),
@@ -360,20 +304,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             },
                           ),
                         ),
-                        // CheckoutProductCard(
-                        //   context: context,
-                        //   productImageURL:
-                        //       'https://m.media-amazon.com/images/M/MV5BNzQyODYzNTAxNV5BMl5BanBnXkFtZTgwMDcxNzM2MjI@._V1_.jpg',
-                        //   productName: 'Cow from goat',
-                        //   netPrice: 1562000,
-                        //   unitPrice: 1562,
-                        //   quantity: 1,
-                        //   quantityUnit: 'KG',
-                        //   sellerImageURL:
-                        //       'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png',
-                        //   sellerName: 'Seller Name',
-                        //   sellerPhone: '+91 8800814370',
-                        // ),
                       ],
                     ),
                   );
@@ -382,7 +312,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   print(snapshot.error);
                   return Center(
                     child: Text(
-                      'Could Not Fetch Order Details',
+                      AppLocalizations.of(context)!
+                          .could_not_fetch_order_details,
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
@@ -529,7 +460,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                           child: Align(
                                             alignment: Alignment.bottomLeft,
                                             child: Text(
-                                              'Seller',
+                                              AppLocalizations.of(context)!
+                                                  .seller_ucf,
                                               style: TextStyle(
                                                 fontSize: 14,
                                               ),

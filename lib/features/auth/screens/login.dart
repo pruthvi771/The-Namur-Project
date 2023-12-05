@@ -1,3 +1,5 @@
+// translation done.
+
 import 'package:active_ecommerce_flutter/features/auth/screens/add_phone.dart';
 import 'package:active_ecommerce_flutter/features/auth/screens/otp.dart';
 // import 'package:active_ecommerce_flutter/screens/password_otp.dart';
@@ -8,10 +10,7 @@ import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart'
     as hiveModels;
-import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/weather/weather_repository.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 // import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
@@ -32,8 +31,6 @@ import '../../../custom/btn.dart';
 import '../../../custom/toast_component.dart';
 import '../../../my_theme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-import '../../../repositories/address_repository.dart';
 import '../../../ui_elements/auth_ui.dart';
 import '../../../screens/main.dart';
 import '../services/auth_bloc/auth_event.dart';
@@ -56,8 +53,6 @@ class _LoginState extends State<Login> {
   // String? _isoCode = 'IN';
   // String? _newPhone = '';
   String? newPhone = '';
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
 
   WeatherRepository _weatherRepository = WeatherRepository();
 
@@ -87,9 +82,7 @@ class _LoginState extends State<Login> {
 
   onPressedLogin(BuildContext buildContext) async {
     // print('login clicked');
-    var email = _emailController.text.toString();
     var phone = newPhone;
-    var password = _passwordController.text.toString();
 
     // if (_login_by == 'email' && email == "") {
     //   ToastComponent.showDialog(AppLocalizations.of(context)!.enter_email,
@@ -183,7 +176,6 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    final _screen_height = MediaQuery.of(context).size.height;
     final _screen_width = MediaQuery.of(context).size.width;
     AuthRepository _authRepository = AuthRepository();
     FirestoreRepository _firestoreRepository = FirestoreRepository();
@@ -241,9 +233,6 @@ class _LoginState extends State<Login> {
               return Scaffold(
                 body: Center(
                   child: CircularProgressIndicator(),
-                  // child: Text(
-                  //   'loading',
-                  // ),
                 ),
               );
             if (state is Authenticated)
