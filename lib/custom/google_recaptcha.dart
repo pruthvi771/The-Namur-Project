@@ -156,7 +156,7 @@ console.log(window.location.hostname);
   <body>
     <div id="wrap">
 	
-	<iframe id="scaled-frame" src="${url}/google-recaptcha" allowfullscreen></iframe>
+	<iframe id="scaled-frame" src="$url/google-recaptcha" allowfullscreen></iframe>
     </div>
   </body>
 </html>

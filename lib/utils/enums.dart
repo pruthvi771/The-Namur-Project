@@ -52,11 +52,6 @@ var categoryListForParentEnum = {
     CategoryEnum.equipments,
   ],
   ParentEnum.land: [
-    CategoryEnum.animals,
-    CategoryEnum.birds,
-    CategoryEnum.vegetables,
-    CategoryEnum.fruits,
-    CategoryEnum.crops,
     CategoryEnum.jcb,
     CategoryEnum.electronics,
     CategoryEnum.equipments,
@@ -480,6 +475,17 @@ var SubSubCategoryList = {
     'Black Buffaloes',
     'White Buffaloes',
   ],
+  SubCategoryEnum.sheep: [
+    'Sheep',
+    'Black Sheep',
+    'White Sheep',
+  ],
+  SubCategoryEnum.bull: [
+    'Bull',
+  ],
+  SubCategoryEnum.pig: [
+    'Pig',
+  ],
   SubCategoryEnum.parrot: [
     'Parrot',
     'Green Parrot',
@@ -491,6 +497,12 @@ var SubSubCategoryList = {
   SubCategoryEnum.sparrow: [
     'Sparrow',
     'White Sparrow',
+  ],
+  SubCategoryEnum.duck: [
+    'Duck',
+  ],
+  SubCategoryEnum.turkey: [
+    'Turkey',
   ],
   SubCategoryEnum.beans: [
     'Beans',
@@ -504,6 +516,15 @@ var SubSubCategoryList = {
   SubCategoryEnum.bitterground: [
     'Bitterground',
     'Green Bitterground',
+  ],
+  SubCategoryEnum.bottleground: [
+    'Bottleground',
+  ],
+  SubCategoryEnum.brinjal: [
+    'Brinjal',
+  ],
+  SubCategoryEnum.brocolli: [
+    'Brocolli',
   ],
   SubCategoryEnum.barley: [
     'Barley',

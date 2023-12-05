@@ -3,10 +3,6 @@ import 'dart:convert';
 import 'package:active_ecommerce_flutter/data_model/sub_category/sub_category_model.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
-
-import '../app_config.dart';
-import '../helpers/shared_value_helper.dart';
 
 class SubCategoryController extends GetxController {
   var subcategoryList = SubCategoryModel().obs;
@@ -32,7 +28,7 @@ class SubCategoryController extends GetxController {
   @override
   void onInit() {
     GetSubCategory(0);
-    // TODO: implement onInit
+
     super.onInit();
   }
 }

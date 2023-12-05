@@ -39,6 +39,8 @@
 	<integer>5</integer>
 	<key>FacebookAppID</key>
 	<string>7089952994378730</string>
+	<key>FirebaseMessagingAutoInitEnabled</key>
+	<string>NO</string>
 	<key>FacebookClientToken</key>
 	<string>3770688046d5ad58236af7a74b75ee33</string>
 	<key>FacebookDisplayName</key>
@@ -116,5 +118,6 @@
 	<string>Camera usage</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Microphone usage</string>
+	
 </dict>
 </plist>

@@ -26,7 +26,7 @@ import 'package:active_ecommerce_flutter/screens/home.dart';
 import 'package:active_ecommerce_flutter/screens/man_machine/man_machine.dart';
 import 'package:active_ecommerce_flutter/screens/map_location.dart';
 import 'package:active_ecommerce_flutter/screens/messenger_list.dart';
-import 'package:active_ecommerce_flutter/screens/notification/notification_screen.dart';
+import 'package:active_ecommerce_flutter/features/notification/notification_screen.dart';
 import 'package:active_ecommerce_flutter/screens/option/option.dart';
 import 'package:active_ecommerce_flutter/screens/order_details.dart';
 import 'package:active_ecommerce_flutter/screens/order_list.dart';
