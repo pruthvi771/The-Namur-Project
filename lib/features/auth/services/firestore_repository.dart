@@ -19,11 +19,13 @@ class FirestoreRepository {
     required String email,
     String? photoURL,
     String? phoneNumber,
+    bool googleSignIn = false,
   }) async {
     try {
       _firestore.collection('buyer').doc(userId).set({
         'name': name,
         'email': email,
+        'authMethod': googleSignIn ? 'google' : 'phone',
         'phone number': phoneNumber ?? '',
         'location_id': '',
         'photoURL': photoURL ?? '',
@@ -33,6 +35,7 @@ class FirestoreRepository {
       _firestore.collection('seller').doc(userId).set({
         'name': name,
         'email': email,
+        'authMethod': googleSignIn ? 'google' : 'phone',
         'phone number': phoneNumber ?? '',
         // 'location_id': '',
         // 'Products_Buy': '',
@@ -344,6 +347,21 @@ class FirestoreRepository {
     } catch (e) {
       print('Error counting users with pincode: $e');
       return 0; // Return 0 in case of an error
+    }
+  }
+
+  Future<bool> isGoogleSignedIn(String phone) async {
+    try {
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await FirebaseFirestore.instance
+              .collection('buyer')
+              .where('phone number', isEqualTo: phone)
+              .get();
+
+      return querySnapshot.docs[0].data()['authMethod'] == 'google';
+    } catch (e) {
+      print('Error getting user id by phone: $e');
+      return false; // Return empty string in case of an error
     }
   }
 }

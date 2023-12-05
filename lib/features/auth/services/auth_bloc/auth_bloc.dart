@@ -75,12 +75,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         // print('YOUR NUMBER: ${event.phoneNumber}');
 
         if (registeredPhoneNumbers.contains(event.phoneNumber)) {
-          // throw Exception('Phone number already registered.');
+          bool isGoogleSignedIn =
+              await firestoreRepository.isGoogleSignedIn(event.phoneNumber);
 
-          print('PHONE NUMBER EXISTS IN THE DATABASE');
-          final verificationId = await authRepository.phoneNumberVerification(
-              phone: event.phoneNumber);
-          emit(PhoneVerificationCompleted(verificationId: verificationId));
+          if (!isGoogleSignedIn) {
+            print('PHONE NUMBER EXISTS IN THE DATABASE');
+            final verificationId = await authRepository.phoneNumberVerification(
+                phone: event.phoneNumber);
+            emit(PhoneVerificationCompleted(verificationId: verificationId));
+          } else {
+            emit(AuthError(
+                'You Used Google Auth for Sign Up. Kindly Login with Google.'));
+            emit(UnAuthenticated());
+          }
         } else {
           emit(AuthError('User Not Found. Please Register First.'));
           emit(UnAuthenticated());

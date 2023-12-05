@@ -481,6 +481,13 @@
 "add_to_stock": "إضافة إلى المخزون",
 "edit_product": "تعديل المنتج",
 "product_category": "فئة المنتج",
-"select_unit": "اختر الوحدة"
-
+"select_unit": "اختر الوحدة",
+"add_product": "إضافة منتج",
+"no_product_found": "لا يوجد منتج",
+"stock_updated": "تم تحديث المخزون",
+"are_you_sure_to_delete": "هل أنت متأكد أنك تريد حذف هذا المنتج؟ \n\nاسم المنتج:",
+"delete_product": "حذف المنتج",
+"delete": "حذف",
+"cancel": "إلغاء",
+"no_orders_yet": "لا توجد طلبات حتى الآن"
 }

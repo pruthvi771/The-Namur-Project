@@ -1,3 +1,5 @@
+// translations done.
+
 import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/buy_repository.dart';
@@ -12,7 +14,6 @@ import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -497,7 +498,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                           backgroundColor: MyTheme.primary_color, // background
                         ),
                         child: Text(
-                          "Add to cart",
+                          AppLocalizations.of(context)!.add_to_cart_ucf,
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 15,
@@ -549,7 +550,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Seller",
+                            AppLocalizations.of(context)!.seller_ucf,
                             style: TextStyle(fontSize: 15),
                           ),
                           Text(
@@ -586,7 +587,7 @@ class _ProductDetailsState extends State<ProductDetails> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Description",
+                AppLocalizations.of(context)!.description_ucf,
                 // "aksbfkjafknangg englkng lkegnang kegne",
                 style: TextStyle(
                     fontSize: 20,

@@ -1,3 +1,5 @@
+// translation done.
+
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/order_item.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/checkout_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -80,7 +82,7 @@ class _PurchaseHistoryScreenState extends State<PurchaseHistoryScreen> {
                 // Handle the case where no data is available
                 return Center(
                     child: Text(
-                  'Error Fetching Records.',
+                  AppLocalizations.of(context)!.could_not_fetch_order_details,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -92,7 +94,7 @@ class _PurchaseHistoryScreenState extends State<PurchaseHistoryScreen> {
               return documents.length == 0
                   ? Center(
                       child: Text(
-                      'No Orders Yet',
+                      AppLocalizations.of(context)!.no_orders_yet,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,

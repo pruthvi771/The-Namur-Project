@@ -1,3 +1,5 @@
+// translation done
+
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/sell_bloc/sell_bloc.dart';
@@ -118,7 +120,7 @@ class _ProductInventoryState extends State<ProductInventory> {
           }
         }
         if (state is ProductAddEditDeleteSuccessfully) {
-          ToastComponent.showDialog('Stock Updated Successfully',
+          ToastComponent.showDialog(AppLocalizations.of(context)!.stock_updated,
               gravity: Toast.center, duration: Toast.lengthLong);
           BlocProvider.of<SellBloc>(context)
               .add(ProductsForSubCategoryRequested(
@@ -136,7 +138,7 @@ class _ProductInventoryState extends State<ProductInventory> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'No products found',
+                          AppLocalizations.of(context)!.no_product_found,
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.w600),
                         ),
@@ -151,7 +153,7 @@ class _ProductInventoryState extends State<ProductInventory> {
                             ),
                           ),
                           child: Text(
-                            'Add Product',
+                            AppLocalizations.of(context)!.add_product,
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w600,
@@ -403,7 +405,8 @@ class ProductInventoryWidget extends StatelessWidget {
                                             builder: (context) {
                                               return AlertDialog(
                                                 title: Text(
-                                                  'Delete Product',
+                                                  AppLocalizations.of(context)!
+                                                      .delete_product,
                                                   style: TextStyle(
                                                     color:
                                                         MyTheme.primary_color,
@@ -412,14 +415,16 @@ class ProductInventoryWidget extends StatelessWidget {
                                                   ),
                                                 ),
                                                 content: Text(
-                                                    'Are you sure you want to delete this product? \n\nProduct Name: $productName'),
+                                                    '${AppLocalizations.of(context)!.are_you_sure_to_delete} $productName'),
                                                 actions: [
                                                   TextButton(
                                                     onPressed: () {
                                                       Navigator.pop(context);
                                                     },
                                                     child: Text(
-                                                      'Cancel',
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .cancel,
                                                       style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 15,
@@ -433,7 +438,9 @@ class ProductInventoryWidget extends StatelessWidget {
                                                       Navigator.pop(context);
                                                     },
                                                     child: Text(
-                                                      'Delete',
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .cancel,
                                                       style: TextStyle(
                                                         color: Colors.red,
                                                         fontSize: 15,

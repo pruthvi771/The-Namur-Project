@@ -666,5 +666,13 @@
   "add_to_stock": "Add To Stock",
   "edit_product": "Edit Product",
   "product_category": "Product Category",
-  "select_unit": "Select Unit"
+  "select_unit": "Select Unit",
+  "add_product": "Add Product",
+  "no_product_found": "No Product Found",
+  "stock_updated": "Stock Updated",
+  "are_you_sure_to_delete":"Are you sure you want to delete this product? \n\nProduct Name:",
+"delete_product": "Delete Product",
+"delete": "Delete",
+"cancel": "Cancel",
+"no_orders_yet" : "No Orders Yet"
 }

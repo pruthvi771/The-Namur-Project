@@ -137,10 +137,12 @@ class AuthRepository {
       if (!userSnapshot.exists) {
         toReturn = true;
         firestoreRepository.addUserToBuyerSellerCollections(
-            userId: userCredential.user!.uid,
-            name: userCredential.user!.displayName!,
-            email: userCredential.user!.email!,
-            photoURL: userCredential.user!.photoURL!);
+          userId: userCredential.user!.uid,
+          name: userCredential.user!.displayName!,
+          email: userCredential.user!.email!,
+          photoURL: userCredential.user!.photoURL!,
+          googleSignIn: true,
+        );
 
         firestoreRepository.createEmptyHiveDataInstance(
             userId: userCredential.user!.uid);
@@ -359,4 +361,7 @@ class AuthRepository {
       throw Exception('Failed to fetch locations. Please try again.');
     }
   }
+
+  // Future<bool> isGoogleSignInUser(String userId) async {
+  // User? user = await _firebaseAuth.getUserById(userId);
 }
