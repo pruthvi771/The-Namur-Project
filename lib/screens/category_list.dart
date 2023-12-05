@@ -3,37 +3,26 @@ import 'dart:ui';
 import 'package:active_ecommerce_flutter/custom/box_decorations.dart';
 import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
-import 'package:active_ecommerce_flutter/features/auth/screens/add_phone.dart';
-import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart';
-import 'package:active_ecommerce_flutter/features/screen_database.dart';
+import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_screen.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/my_purchases.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/seller_orderlist.dart';
+import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/parent_screen.dart';
 import 'package:active_ecommerce_flutter/helpers/shimmer_helper.dart';
 import 'package:active_ecommerce_flutter/presenter/bottom_appbar_index.dart';
-import 'package:active_ecommerce_flutter/screens/calender/calender.dart';
-import 'package:active_ecommerce_flutter/screens/profile_edit.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/drawer/drawer.dart';
-import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hive/hive.dart';
-import 'package:toast/toast.dart';
 import 'package:active_ecommerce_flutter/screens/category_products.dart';
-import 'package:active_ecommerce_flutter/repositories/category_repository.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:active_ecommerce_flutter/app_config.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../controller/sub_category_controller.dart';
 import '../features/profile/screens/edit_profile.dart';
 import '../presenter/home_presenter.dart';
-import 'category/sub_category.dart';
-import 'home_widget/buy_sell_button_widget.dart';
-import 'home_widget/hexagonal_widget.dart';
 import '../features/profile/title_bar_widget.dart';
 import 'package:get/get.dart';
 
@@ -58,8 +47,6 @@ class CategoryList extends StatefulWidget {
 }
 
 class _CategoryListState extends State<CategoryList> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
   SubCategoryController subCategoryCon = Get.put(SubCategoryController());
   HomePresenter homeData = HomePresenter();
 
@@ -69,7 +56,6 @@ class _CategoryListState extends State<CategoryList> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _getProfileDataFuture = _getProfileData();
   }
@@ -188,14 +174,23 @@ class _CategoryListState extends State<CategoryList> {
                         // TitleBar(),
 
                         // screen database button
-                        // TextButton(
-                        //     onPressed: () {
-                        //       Navigator.push(
-                        //           context,
-                        //           MaterialPageRoute(
-                        //               builder: (context) => AddPhone()));
-                        //     },
-                        //     child: Text('Screen database')),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          PurchaseHistoryScreen()));
+                            },
+                            child: Text('Purchase History')),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => SellerOrderList()));
+                            },
+                            child: Text('Seller Dashboard')),
 
                         SizedBox(height: 15),
 
@@ -387,7 +382,7 @@ class _CategoryListState extends State<CategoryList> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  Calender()));
+                                                  CalendarScreen()));
                                     },
                                     child: HexagonWidget.flat(
                                         width: 120,

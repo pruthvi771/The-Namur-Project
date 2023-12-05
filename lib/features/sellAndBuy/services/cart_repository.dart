@@ -127,6 +127,21 @@ class CartRepository {
       print('User\'s cart document does not exist.');
     }
   }
+
+  Future<void> clearCart() async {
+    var currentUser = _firebaseAuth.currentUser!;
+
+    CollectionReference cartCollection = _firestore.collection('cart');
+
+    DocumentSnapshot cartSnapshot =
+        await cartCollection.doc(currentUser.uid).get();
+
+    if (cartSnapshot.exists) {
+      await cartCollection.doc(currentUser.uid).delete();
+    } else {
+      print('User\'s cart document does not exist.');
+    }
+  }
 }
 
 enum UpdateCartQuantityType { increment, decrement }

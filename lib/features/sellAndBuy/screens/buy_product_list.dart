@@ -1,10 +1,7 @@
-import 'package:active_ecommerce_flutter/data_model/check_response.dart';
-import 'package:active_ecommerce_flutter/features/profile/screens/friends_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/subSubCategory_filter_item.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/filter_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/machine_rent_form.dart';
-import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/parent_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/product_details_screen.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -172,7 +169,7 @@ class _BuyProductListState extends State<BuyProductList> {
           );
         },
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(0.0, 0.0);
+          const begin = Offset(0.0, 1.0);
           const end = Offset.zero;
           const curve = Curves.easeInOut;
           var tween =
@@ -224,7 +221,7 @@ class _BuyProductListState extends State<BuyProductList> {
             app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
         child: Scaffold(
           appBar: AppBar(
-            // automaticallyImplyLeading: false,
+            automaticallyImplyLeading: false,
             // elevation: 0,
             flexibleSpace: Container(
               decoration: const BoxDecoration(
@@ -243,6 +240,21 @@ class _BuyProductListState extends State<BuyProductList> {
                   fontFamily: 'Poppins'),
             ),
             centerTitle: true,
+            actions: [
+              IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: Icon(
+                  Icons.keyboard_arrow_left,
+                  size: 35,
+                  color: MyTheme.white,
+                ),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+            ],
           ),
           body: StreamBuilder(
               stream: productsStream,

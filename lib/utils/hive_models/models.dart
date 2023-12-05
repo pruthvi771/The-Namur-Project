@@ -103,3 +103,21 @@ class SecondaryLocations {
   @HiveField(1)
   late List<String> address;
 }
+
+@HiveType(typeId: 7)
+class CropCalendarItem {
+  @HiveField(0)
+  late String cropName;
+
+  @HiveField(1)
+  late String landSyno;
+
+  @HiveField(2)
+  late DateTime plantingDate;
+}
+
+@HiveType(typeId: 8)
+class CropCalendarData {
+  @HiveField(0)
+  late List<CropCalendarItem> cropCalendarItems;
+}

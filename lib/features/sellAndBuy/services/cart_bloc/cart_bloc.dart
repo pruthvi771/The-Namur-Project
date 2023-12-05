@@ -53,7 +53,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           await cartRepository.removeFromCart(
             productId: event.productId,
           );
-          emit(CartInitial());
+          // emit(CartInitial());
+          emit(CartProductDeleted());
+          // emit(CartUpdated());
           return;
         } else {
           CartProduct? cartProduct = await cartRepository.updateCartQuantity(
@@ -62,9 +64,11 @@ class CartBloc extends Bloc<CartEvent, CartState> {
             type: event.type,
           );
           if (cartProduct != null) {
-            emit(AddToCartSuccessful(quantity: cartProduct.quantity));
+            // emit(AddToCartSuccessful(quantity: cartProduct.quantity));
+            emit(CartUpdated(quantity: cartProduct.quantity));
           } else {
             emit(CartInitial());
+            // emit(CartUpdated());
           }
         }
       } catch (e) {

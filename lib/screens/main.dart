@@ -1,34 +1,22 @@
 import 'dart:io';
 
-import 'package:active_ecommerce_flutter/custom/common_functions.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
-import 'package:active_ecommerce_flutter/features/profile/enum.dart';
-import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart'
-    as hiveModels;
-import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/cart.dart';
-import 'package:active_ecommerce_flutter/features/sellAndBuy/services/buy_repository.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/presenter/bottom_appbar_index.dart';
 import 'package:active_ecommerce_flutter/presenter/cart_counter.dart';
 import 'package:active_ecommerce_flutter/screens/address.dart';
-import 'package:active_ecommerce_flutter/screens/cart.dart';
 import 'package:active_ecommerce_flutter/screens/category_list.dart';
 // import 'package:active_ecommerce_flutter/screens/home.dart';
 // import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
 // import 'package:active_ecommerce_flutter/features/profile/screens/profile.dart';
 import 'package:badges/badges.dart' as badges;
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:hive/hive.dart';
-import 'package:permission_handler/permission_handler.dart'
-    as permissionHandler;
 import 'package:provider/provider.dart';
 // import 'package:route_transitions/route_transitions.dart';
-import 'package:location/location.dart';
 
 import 'my_account/my_account.dart';
 
@@ -128,33 +116,29 @@ class _MainState extends State<Main> {
             isExitDialogShowing = true;
             // CommonFunctions(context).appExitDialog();
             showDialog(
-                context: context,
-                builder: (context) => Directionality(
-                      textDirection: app_language_rtl.$!
-                          ? TextDirection.rtl
-                          : TextDirection.ltr,
-                      child: AlertDialog(
-                        content: Text(AppLocalizations.of(context)!
-                            .do_you_want_close_the_app),
-                        actions: [
-                          TextButton(
-                              onPressed: () {
-                                Platform.isAndroid
-                                    ? SystemNavigator.pop()
-                                    : exit(0);
-                              },
-                              child:
-                                  Text(AppLocalizations.of(context)!.yes_ucf)),
-                          TextButton(
-                              onPressed: () {
-                                isExitDialogShowing = false;
-                                Navigator.pop(context);
-                              },
-                              child:
-                                  Text(AppLocalizations.of(context)!.no_ucf)),
-                        ],
-                      ),
-                    ));
+              context: context,
+              builder: (context) => Directionality(
+                textDirection:
+                    app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
+                child: AlertDialog(
+                  content: Text(
+                      AppLocalizations.of(context)!.do_you_want_close_the_app),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Platform.isAndroid ? SystemNavigator.pop() : exit(0);
+                        },
+                        child: Text(AppLocalizations.of(context)!.yes_ucf)),
+                    TextButton(
+                        onPressed: () {
+                          isExitDialogShowing = false;
+                          Navigator.pop(context);
+                        },
+                        child: Text(AppLocalizations.of(context)!.no_ucf)),
+                  ],
+                ),
+              ),
+            );
           }
         }
         return widget.go_back;

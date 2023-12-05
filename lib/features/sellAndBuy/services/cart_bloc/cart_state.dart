@@ -32,6 +32,21 @@ final class CartQuantityLoading extends CartState {
   List<Object> get props => [];
 }
 
+final class CartUpdated extends CartState {
+  final int quantity;
+  const CartUpdated({required this.quantity});
+
+  @override
+  List<Object> get props => [quantity];
+}
+
+final class CartProductDeleted extends CartState {
+  const CartProductDeleted();
+
+  @override
+  List<Object> get props => [];
+}
+
 final class CartError extends CartState {
   final String message;
 

@@ -460,5 +460,27 @@
   "otp_sent_to_phone": "تم إرسال OTP إلى رقم هاتفك",
   "rent_a_machine" : "استئجار آلة",
   "book" : "كتاب",
-  "no_image_found" : "لم يتم العثور على صورة"
+  "no_image_found" : "لم يتم العثور على صورة",
+  "could_not_fetch_order_details": "تعذر جلب تفاصيل الطلب",
+  "your_total": "إجماليك",
+"order_status": "حالة الطلب",
+"buyer_info": "معلومات المشتري",
+"order_id": "رقم الطلب",
+"status": "الحالة",
+"total": "الإجمالي",
+"enter_product_name": "أدخل اسم المنتج",
+"a_product_by_this_name_exists": "يوجد بالفعل منتج بهذا الاسم",
+"select_category": "اختر الفئة",
+"select_quantity_unit": "اختر وحدة الكمية",
+"enter_product_description": "أدخل وصف المنتج",
+"enter_product_price": "أدخل سعر المنتج",
+"enter_product_quantity": "أدخل كمية المنتج",
+"select_product_image": "اختر صورة المنتج",
+"enter_valid_price": "الرجاء إدخال سعر صحيح",
+"enter_valid_quantity": "الرجاء إدخال كمية صحيحة",
+"add_to_stock": "إضافة إلى المخزون",
+"edit_product": "تعديل المنتج",
+"product_category": "فئة المنتج",
+"select_unit": "اختر الوحدة"
+
 }

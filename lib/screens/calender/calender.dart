@@ -1,3 +1,4 @@
+import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_add_crop.dart';
 import 'package:active_ecommerce_flutter/screens/calender/cultivation_tip.dart';
 import 'package:active_ecommerce_flutter/screens/calender/pest_control.dart';
 import 'package:active_ecommerce_flutter/screens/calender/tutorial.dart';
@@ -6,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../custom/device_info.dart';
 import '../../my_theme.dart';
-import '../../presenter/home_presenter.dart';
-import '../../drawer/drawer.dart';
 
 class Calender extends StatefulWidget {
   const Calender({Key? key}) : super(key: key);
@@ -17,7 +16,7 @@ class Calender extends StatefulWidget {
 }
 
 class _CalenderState extends State<Calender> {
-  HomePresenter homeData = HomePresenter();
+  // HomePresenter homeData = HomePresenter();
 
   Future<void> _onPageRefresh() async {
     //reset();
@@ -38,10 +37,40 @@ class _CalenderState extends State<Calender> {
       child: Stack(
         children: [
           Scaffold(
-            key: homeData.scaffoldKey,
-            drawer: const MainDrawer(),
             backgroundColor: Colors.transparent,
-            appBar: buildCustomAppBar(context),
+            appBar: AppBar(
+              // backgroundColor: MyTheme.primary_color,
+              flexibleSpace: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Color(0xff107B28), Color(0xff4C7B10)]),
+                ),
+              ),
+              title: Text(AppLocalizations.of(context)!.calender_ucf,
+                  style: TextStyle(
+                      color: MyTheme.white,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: .5,
+                      fontFamily: 'Poppins')),
+              centerTitle: true,
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(
+                    Icons.keyboard_arrow_left,
+                    size: 35,
+                    color: MyTheme.white,
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+              ],
+            ),
             body: buildBody(),
           ),
         ],
@@ -59,82 +88,24 @@ class _CalenderState extends State<Calender> {
     );
   }
 
-  PreferredSize buildCustomAppBar(context) {
-    return PreferredSize(
-      preferredSize: Size(DeviceInfo(context).width!, 80),
-      child: Container(
-        height: 92,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xff107B28), Color(0xff4C7B10)])),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20.0, right: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    homeData.scaffoldKey.currentState?.openDrawer();
-                  },
-                  icon: Icon(
-                    Icons.menu,
-                    color: Colors.white,
-                  ),
-                ),
-                Center(
-                  child: Text(AppLocalizations.of(context)!.calender_ucf,
-                      style: TextStyle(
-                          color: MyTheme.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: .5,
-                          fontFamily: 'Poppins')),
-                ),
-                Container(
-                  height: 30,
-                  child: Container(
-                    child: InkWell(
-                      //padding: EdgeInsets.zero,
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Icon(
-                        Icons.keyboard_arrow_left,
-                        size: 35,
-                        color: MyTheme.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   bodyscreen() {
     return Stack(
       children: [
         ListView(
           children: [
             SizedBox(
-              height: 200,
+              height: 250,
             ),
             Center(
                 child: Container(
               padding: EdgeInsets.only(
-                bottom: 2, // Space between underline and text
+                bottom: 2,
               ),
               decoration: BoxDecoration(
                   border: Border(
                       bottom: BorderSide(
                 color: Color(0xff107B28),
-                width: 1.0, // Underline thickness
+                width: 1.0,
               ))),
               child: Text(
                 "Calender Events",
@@ -355,9 +326,17 @@ class _CalenderState extends State<Calender> {
                             );
                           }),
                     ),
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundImage: AssetImage("assets/add 2.png"),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CalendarAddCrop()));
+                      },
+                      child: CircleAvatar(
+                        radius: 30,
+                        backgroundImage: AssetImage("assets/add 2.png"),
+                      ),
                     ),
                   ],
                 ),

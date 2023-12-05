@@ -4,7 +4,7 @@ import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_e
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_state.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
-import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart'
+import 'package:active_ecommerce_flutter/utils/hive_models/models.dart'
     as hiveModels;
 import 'package:active_ecommerce_flutter/features/weather/weather_repository.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';

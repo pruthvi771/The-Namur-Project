@@ -296,3 +296,75 @@ class SecondaryLocationsAdapter extends TypeAdapter<SecondaryLocations> {
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
+
+class CropCalendarItemAdapter extends TypeAdapter<CropCalendarItem> {
+  @override
+  final int typeId = 7;
+
+  @override
+  CropCalendarItem read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return CropCalendarItem()
+      ..cropName = fields[0] as String
+      ..landSyno = fields[1] as String
+      ..plantingDate = fields[2] as DateTime;
+  }
+
+  @override
+  void write(BinaryWriter writer, CropCalendarItem obj) {
+    writer
+      ..writeByte(3)
+      ..writeByte(0)
+      ..write(obj.cropName)
+      ..writeByte(1)
+      ..write(obj.landSyno)
+      ..writeByte(2)
+      ..write(obj.plantingDate);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CropCalendarItemAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class CropCalendarDataAdapter extends TypeAdapter<CropCalendarData> {
+  @override
+  final int typeId = 8;
+
+  @override
+  CropCalendarData read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return CropCalendarData()
+      ..cropCalendarItems = (fields[0] as List).cast<CropCalendarItem>();
+  }
+
+  @override
+  void write(BinaryWriter writer, CropCalendarData obj) {
+    writer
+      ..writeByte(1)
+      ..writeByte(0)
+      ..write(obj.cropCalendarItems);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CropCalendarDataAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}

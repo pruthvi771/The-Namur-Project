@@ -3,7 +3,7 @@ import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 import 'package:active_ecommerce_flutter/features/notification/messagingapi.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_bloc.dart';
-import 'package:active_ecommerce_flutter/features/profile/hive_models/models.dart'
+import 'package:active_ecommerce_flutter/utils/hive_models/models.dart'
     as hiveModels;
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_bloc.dart';
@@ -11,6 +11,8 @@ import 'package:active_ecommerce_flutter/features/sellAndBuy/services/buy_bloc/b
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/buy_repository.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_repository.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/checkout_bloc/checkout_bloc.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/checkout_repository.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/sell_bloc/sell_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/sell_repository.dart';
 import 'package:active_ecommerce_flutter/features/weather/bloc/weather_bloc.dart';
@@ -99,9 +101,12 @@ main() async {
   Hive.registerAdapter(hiveModels.ProfileDataAdapter());
   Hive.registerAdapter(hiveModels.PrimaryLocationAdapter());
   Hive.registerAdapter(hiveModels.SecondaryLocationsAdapter());
+  Hive.registerAdapter(hiveModels.CropCalendarItemAdapter());
+  Hive.registerAdapter(hiveModels.CropCalendarDataAdapter());
   await Hive.openBox<hiveModels.ProfileData>('profileDataBox3');
   await Hive.openBox<hiveModels.PrimaryLocation>('primaryLocationBox');
   await Hive.openBox<hiveModels.SecondaryLocations>('secondaryLocationsBox');
+  await Hive.openBox<hiveModels.CropCalendarData>('cropCalendarDataBox');
 
   runApp(
     SharedValue.wrapApp(
@@ -129,11 +134,18 @@ class _MyAppState extends State<MyApp> {
     SellRepository sellRepository = SellRepository();
     BuyRepository buyRepository = BuyRepository();
     CartRepository cartRepository = CartRepository();
+    CheckoutRepository checkoutRepository = CheckoutRepository();
 
     return MultiBlocProvider(
         providers: [
           BlocProvider<WeatherBloc>(
             create: (context) => WeatherBloc(),
+          ),
+          BlocProvider<CheckoutBloc>(
+            create: (context) => CheckoutBloc(
+              checkoutRepository: checkoutRepository,
+              cartRepository: cartRepository,
+            ),
           ),
           BlocProvider(
             create: (context) => WeatherSectionBloc(),

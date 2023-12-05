@@ -1,3 +1,5 @@
+// translation done.
+
 import 'dart:io';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
@@ -15,12 +17,12 @@ import 'package:active_ecommerce_flutter/utils/enums.dart' as enums;
 import 'package:image_picker/image_picker.dart';
 import 'package:toast/toast.dart';
 
-const List<String> productList = <String>[
-  'Product Category',
-  'Two',
-  'Three',
-  'Four'
-];
+// const List<String> productList = <String>[
+//   'Product Category',
+//   'Two',
+//   'Three',
+//   'Four'
+// ];
 
 class ProductPost extends StatefulWidget {
   final SubCategoryEnum subCategoryEnum;
@@ -127,45 +129,61 @@ class _ProductPostState extends State<ProductPost> {
     // String productPriceType = perPiecePrice ? "Per piece" : "Per kg";
 
     if (productName == "") {
-      ToastComponent.showDialog('Enter Product Name',
-          gravity: Toast.center, duration: Toast.lengthLong);
+      ToastComponent.showDialog(
+          AppLocalizations.of(context)!.enter_product_name,
+          gravity: Toast.center,
+          duration: Toast.lengthLong);
+      // ToastComponent.showDialog(AppLocalizations.of(context)!.enter,
+      //     gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
 
     if (widget.alreadyExistingProductNames.contains(productName)) {
-      ToastComponent.showDialog('A Product By This Name Already Exists',
-          gravity: Toast.center, duration: Toast.lengthLong);
+      ToastComponent.showDialog(
+          AppLocalizations.of(context)!.a_product_by_this_name_exists,
+          gravity: Toast.center,
+          duration: Toast.lengthLong);
       return;
     }
 
     if (productSubSubCategory == null) {
-      ToastComponent.showDialog('Select Category',
+      ToastComponent.showDialog(AppLocalizations.of(context)!.select_category,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
     if (quantityUnit == null) {
-      ToastComponent.showDialog('Select Quantity Unit',
-          gravity: Toast.center, duration: Toast.lengthLong);
+      ToastComponent.showDialog(
+          AppLocalizations.of(context)!.select_quantity_unit,
+          gravity: Toast.center,
+          duration: Toast.lengthLong);
       return;
     }
     if (description == "") {
-      ToastComponent.showDialog('Enter Product Description',
-          gravity: Toast.center, duration: Toast.lengthLong);
+      ToastComponent.showDialog(
+          AppLocalizations.of(context)!.enter_product_description,
+          gravity: Toast.center,
+          duration: Toast.lengthLong);
       return;
     }
     if (price == "") {
-      ToastComponent.showDialog('Enter Product Price',
-          gravity: Toast.center, duration: Toast.lengthLong);
+      ToastComponent.showDialog(
+          AppLocalizations.of(context)!.enter_product_price,
+          gravity: Toast.center,
+          duration: Toast.lengthLong);
       return;
     }
     if (productQuantity == "") {
-      ToastComponent.showDialog('Enter Product Quantity',
-          gravity: Toast.center, duration: Toast.lengthLong);
+      ToastComponent.showDialog(
+          AppLocalizations.of(context)!.enter_product_quantity,
+          gravity: Toast.center,
+          duration: Toast.lengthLong);
       return;
     }
     if (_mediaFileList == null || _mediaFileList!.isEmpty) {
-      ToastComponent.showDialog('Select Product Image',
-          gravity: Toast.center, duration: Toast.lengthLong);
+      ToastComponent.showDialog(
+          AppLocalizations.of(context)!.select_product_image,
+          gravity: Toast.center,
+          duration: Toast.lengthLong);
       return;
     }
 
@@ -173,7 +191,7 @@ class _ProductPostState extends State<ProductPost> {
     try {
       productPrice = double.parse(price);
     } catch (e) {
-      ToastComponent.showDialog('Please Enter Valid Price',
+      ToastComponent.showDialog(AppLocalizations.of(context)!.enter_valid_price,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
@@ -182,8 +200,10 @@ class _ProductPostState extends State<ProductPost> {
     try {
       productQuantityInt = int.parse(productQuantity);
     } catch (e) {
-      ToastComponent.showDialog('Please Enter Valid Quantity',
-          gravity: Toast.center, duration: Toast.lengthLong);
+      ToastComponent.showDialog(
+          AppLocalizations.of(context)!.enter_valid_quantity,
+          gravity: Toast.center,
+          duration: Toast.lengthLong);
       return;
     }
 
@@ -222,40 +242,52 @@ class _ProductPostState extends State<ProductPost> {
     // String productPriceType = perPiecePrice ? "Per piece" : "Per kg";
 
     if (productName == "") {
-      ToastComponent.showDialog('Enter Product Name',
-          gravity: Toast.center, duration: Toast.lengthLong);
+      ToastComponent.showDialog(
+          AppLocalizations.of(context)!.enter_product_name,
+          gravity: Toast.center,
+          duration: Toast.lengthLong);
       return;
     }
 
     if (widget.alreadyExistingProductNames.contains(productName)) {
-      ToastComponent.showDialog('A Product By This Name Already Exists',
-          gravity: Toast.center, duration: Toast.lengthLong);
+      ToastComponent.showDialog(
+          AppLocalizations.of(context)!.a_product_by_this_name_exists,
+          gravity: Toast.center,
+          duration: Toast.lengthLong);
       return;
     }
 
     if (productSubSubCategory == null) {
-      ToastComponent.showDialog('Select Category',
+      ToastComponent.showDialog(AppLocalizations.of(context)!.select_category,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
     if (quantityUnit == null) {
-      ToastComponent.showDialog('Select Quantity Unit',
-          gravity: Toast.center, duration: Toast.lengthLong);
+      ToastComponent.showDialog(
+          AppLocalizations.of(context)!.select_quantity_unit,
+          gravity: Toast.center,
+          duration: Toast.lengthLong);
       return;
     }
     if (description == "") {
-      ToastComponent.showDialog('Enter Product Description',
-          gravity: Toast.center, duration: Toast.lengthLong);
+      ToastComponent.showDialog(
+          AppLocalizations.of(context)!.enter_product_description,
+          gravity: Toast.center,
+          duration: Toast.lengthLong);
       return;
     }
     if (price == "") {
-      ToastComponent.showDialog('Enter Product Price',
-          gravity: Toast.center, duration: Toast.lengthLong);
+      ToastComponent.showDialog(
+          AppLocalizations.of(context)!.enter_product_price,
+          gravity: Toast.center,
+          duration: Toast.lengthLong);
       return;
     }
     if (productQuantity == "") {
-      ToastComponent.showDialog('Enter Product Quantity',
-          gravity: Toast.center, duration: Toast.lengthLong);
+      ToastComponent.showDialog(
+          AppLocalizations.of(context)!.enter_product_quantity,
+          gravity: Toast.center,
+          duration: Toast.lengthLong);
       return;
     }
     // if (_image == null) {
@@ -268,7 +300,7 @@ class _ProductPostState extends State<ProductPost> {
     try {
       productPrice = double.parse(price);
     } catch (e) {
-      ToastComponent.showDialog('Please Enter Valid Price',
+      ToastComponent.showDialog(AppLocalizations.of(context)!.enter_valid_price,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
@@ -277,8 +309,10 @@ class _ProductPostState extends State<ProductPost> {
     try {
       productQuantityInt = int.parse(productQuantity);
     } catch (e) {
-      ToastComponent.showDialog('Please Enter Valid Quantity',
-          gravity: Toast.center, duration: Toast.lengthLong);
+      ToastComponent.showDialog(
+          AppLocalizations.of(context)!.enter_valid_quantity,
+          gravity: Toast.center,
+          duration: Toast.lengthLong);
       return;
     }
 
@@ -313,7 +347,7 @@ class _ProductPostState extends State<ProductPost> {
         automaticallyImplyLeading: false,
         title: Text(
             widget.isProductEditScreen
-                ? "Product"
+                ? AppLocalizations.of(context)!.product_ucf
                 : AppLocalizations.of(context)!.product_post_ucf,
             style: TextStyle(
                 color: MyTheme.white,
@@ -360,7 +394,9 @@ class _ProductPostState extends State<ProductPost> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(0))),
           ),
           child: Text(
-            widget.isProductEditScreen ? "Edit Product" : "Add to Stock",
+            widget.isProductEditScreen
+                ? AppLocalizations.of(context)!.edit_product
+                : AppLocalizations.of(context)!.add_to_stock,
             style: TextStyle(
                 color: Colors.white, fontSize: 20, fontWeight: FontWeight.w500),
           ),
@@ -403,7 +439,7 @@ class _ProductPostState extends State<ProductPost> {
               decoration: InputDecoration(
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.only(left: 15),
-                hintText: "Product Name",
+                hintText: AppLocalizations.of(context)!.product_name_ucf,
                 hintStyle: TextStyle(
                     color: Colors.grey[600],
                     fontWeight: FontWeight.w400,
@@ -476,7 +512,7 @@ class _ProductPostState extends State<ProductPost> {
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.only(left: 15),
-                        hintText: "Quantity",
+                        hintText: AppLocalizations.of(context)!.quantity_ucf,
                         hintStyle: TextStyle(
                           color: Colors.grey[600],
                           fontWeight: FontWeight.w400,
@@ -848,30 +884,6 @@ class _ProductPostState extends State<ProductPost> {
         Container(
           height: 60,
         ),
-
-        // Preview button
-        // Container(
-        //   height: 60,
-        //   child: ElevatedButton(
-        //     onPressed: () {
-        //       Navigator.push(context,
-        //           MaterialPageRoute(builder: (context) => ProductInventory()));
-        //     },
-        //     style: ButtonStyle(
-        //       backgroundColor: MaterialStateProperty.all(MyTheme.primary_color),
-        //       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-        //           RoundedRectangleBorder(
-        //               borderRadius: BorderRadius.circular(0))),
-        //     ),
-        //     child: Text(
-        //       "Add to Stock",
-        //       style: TextStyle(
-        //           color: Colors.white,
-        //           fontSize: 20,
-        //           fontWeight: FontWeight.w500),
-        //     ),
-        //   ),
-        // )
       ],
     );
   }
