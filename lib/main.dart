@@ -1,6 +1,7 @@
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_bloc.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
+import 'package:active_ecommerce_flutter/features/notification/messagingapi.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_bloc.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart'
     as hiveModels;
@@ -41,18 +42,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
-// import 'package:active_ecommerce_flutter/screens/splash.dart';
+
+import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_value/shared_value.dart';
-// import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
-// import 'dart:async';
+
 import 'app_config.dart';
-// import 'package:active_ecommerce_flutter/services/push_notification_service.dart';
+
 import 'package:one_context/one_context.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-// import 'package:active_ecommerce_flutter/providers/locale_provider.dart';
+
 import 'lang_config.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -76,30 +77,14 @@ import 'screens/product_details.dart';
 import 'screens/seller_details.dart';
 import 'screens/seller_products.dart';
 
-// import 'package:bloc/bloc.dart';
-
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  FlutterDownloader.initialize(
-      debug: true,
-      // optional: set to false to disable printing logs to console (default: true)
-      ignoreSsl:
-          true // option: set to false to disable working with http links (default: false)
-      );
+
+  FlutterDownloader.initialize(debug: true, ignoreSsl: true);
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-
-  // AddonsHelper().setAddonsData();
-  // BusinessSettingHelper().setBusinessSettingData();
-  // app_language.load();
-  // app_mobile_language.load();
-  // app_language_rtl.load();
-  //
-  // access_token.load().whenComplete(() {
-  //   AuthHelper().fetch_and_set();
-  // });
 
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
@@ -107,6 +92,7 @@ main() async {
   ));
 
   await Firebase.initializeApp();
+  await MessagingAPI().initNotifications();
   await Hive.initFlutter();
   Hive.registerAdapter(hiveModels.AddressAdapter());
   Hive.registerAdapter(hiveModels.KYCAdapter());
@@ -130,8 +116,6 @@ main() async {
 }
 
 class MyApp extends StatefulWidget {
-  // This widget is the root of your application.
-
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -140,18 +124,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    // Firebase.initializeApp();
-    // Future.delayed(Duration.zero).then(
-    //   (value) async {
-    //     Firebase.initializeApp().then((value) {
-    //       // if (OtherConfig.USE_PUSH_NOTIFICATION) {
-    //       //   Future.delayed(Duration(milliseconds: 10), () async {
-    //       //     PushNotificationService().initialise();
-    //       //   });
-    //       }
-    //     });
-    //   },
-    // );
   }
 
   @override
@@ -208,7 +180,6 @@ class _MyAppState extends State<MyApp> {
               ChangeNotifierProvider(create: (_) => LocaleProvider()),
               ChangeNotifierProvider(create: (context) => CartCounter()),
               ChangeNotifierProvider(create: (context) => CurrencyPresenter()),
-              // ChangeNotifierProvider(create: (context) => HomePresenter())
             ],
             child: MaterialApp(
               initialRoute: "/",
@@ -275,12 +246,6 @@ class _MyAppState extends State<MyApp> {
                 primaryColor: MyTheme.white,
                 scaffoldBackgroundColor: MyTheme.white,
                 visualDensity: VisualDensity.adaptivePlatformDensity,
-                /*textTheme: TextTheme(
-              bodyText1: TextStyle(),
-              bodyText2: TextStyle(fontSize: 12.0),
-            )*/
-                //
-                // the below code is getting fonts from http
                 textTheme: GoogleFonts.publicSansTextTheme(textTheme).copyWith(
                   bodyText1:
                       GoogleFonts.publicSans(textStyle: textTheme.bodyText1),
@@ -294,18 +259,8 @@ class _MyAppState extends State<MyApp> {
                 GlobalCupertinoLocalizations.delegate,
                 AppLocalizations.delegate,
               ],
-              // locale: provider.locale,
               supportedLocales: LangConfig().supportedLocales(),
               locale: Locale('en'),
-              // localeResolutionCallback: (deviceLocale, supportedLocales) {
-              //   if (AppLocalizations.delegate.isSupported(deviceLocale!)) {
-              //     return deviceLocale;
-              //   }
-              //   return const Locale('ar');
-              // },
-              //home: SplashScreen(),
-              // home: Splash(),
             )));
-    // );
   }
 }

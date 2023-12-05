@@ -5,12 +5,11 @@ import 'package:active_ecommerce_flutter/screens/about_us/about_us.dart';
 import 'package:active_ecommerce_flutter/screens/change_language.dart';
 import 'package:active_ecommerce_flutter/screens/contact_us/contact_us.dart';
 import 'package:active_ecommerce_flutter/screens/my_account/my_account.dart';
-import 'package:active_ecommerce_flutter/screens/notification/notification_screen.dart';
+import 'package:active_ecommerce_flutter/features/notification/notification_screen.dart';
 import 'package:active_ecommerce_flutter/screens/setting/setting.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 
 import 'package:active_ecommerce_flutter/screens/main.dart';
 import 'package:active_ecommerce_flutter/screens/order_list.dart';
@@ -44,22 +43,11 @@ class _MainDrawerState extends State<MainDrawer> {
   onTapLogout(context) async {
     AuthHelper().clearUserData();
 
-    // var logoutResponse = await AuthRepository().getLogoutResponse();
-    //
-    // if (logoutResponse.result == true) {
-    //   ToastComponent.showDialog(logoutResponse.message, context,
-    //       gravity: Toast.center, duration: Toast.lengthLong);
-    //
-    //   Navigator.push(context, MaterialPageRoute(builder: (context) {
-    //     return Login();
-    //   }));
-    // }
     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) {
       return Main();
     }), (route) => false);
   }
 
-  // final user = AuthService.firebase().currentUser;
   final user = 1;
 
   @override
@@ -73,14 +61,8 @@ class _MainDrawerState extends State<MainDrawer> {
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                // ignore: unnecessary_null_comparison
                 user != null
                     ? ListTile(
-                        // leading: CircleAvatar(
-                        //   backgroundImage: NetworkImage(
-                        //     "${avatar_original.$}",
-                        //   ),
-                        // ),
                         title: Text(
                           "${user_name.$}",
                           style: TextStyle(
@@ -145,36 +127,6 @@ class _MainDrawerState extends State<MainDrawer> {
                                 }));
                               }),
                           Divider(),
-                          /* ListTile(
-                              visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-                              leading: Image.asset("assets/home.png",
-                                  height: 16, color: Color.fromRGBO(153, 153, 153, 1)),
-                              title: Text("Payment",
-                                  style: TextStyle(
-                                      color: MyTheme.primary_color,
-                                      fontSize: 14)),
-                              onTap: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                      return RazorpayScreen();
-                                    }));
-                              }),*/
-                          // Divider(),
-                          // ListTile(
-                          //     visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-                          //     leading: Image.asset("assets/home.png",
-                          //         height: 16, color: Color.fromRGBO(153, 153, 153, 1)),
-                          //     title: Text("wallet",
-                          //         style: TextStyle(
-                          //             color: MyTheme.primary_color,
-                          //             fontSize: 14)),
-                          //     onTap: () {
-                          //       Navigator.push(context,
-                          //           MaterialPageRoute(builder: (context) {
-                          //             return Main();
-                          //           }));
-                          //     }),
-                          //  Divider(),
                           Visibility(
                             visible: conversation_system_status.$,
                             child: ListTile(
@@ -306,7 +258,6 @@ class _MainDrawerState extends State<MainDrawer> {
                                   return AboutUs();
                                 }));
                               }),
-
                           ListTile(
                               visualDensity:
                                   VisualDensity(horizontal: -4, vertical: -4),
@@ -323,7 +274,6 @@ class _MainDrawerState extends State<MainDrawer> {
                                   return PaymentInfo();
                                 }));
                               }),
-
                           ListTile(
                               visualDensity:
                                   VisualDensity(horizontal: -4, vertical: -4),
@@ -340,22 +290,16 @@ class _MainDrawerState extends State<MainDrawer> {
                                   return Option();
                                 }));
                               }),
-
-                          //TEMPORARY LOGOUT BUTTON
                           Divider(),
                           ListTile(
                               visualDensity:
                                   VisualDensity(horizontal: -4, vertical: -4),
                               leading: Icon(Icons.logout),
-                              // height: 16, color: Color.fromRGBO(153, 153, 153, 1)),
                               title: Text("Logout",
                                   style: TextStyle(
                                       color: MyTheme.primary_color,
                                       fontSize: 18)),
                               onTap: () async {
-                                // await AuthService.firebase().logOut();
-                                // final user = AuthService.firebase().currentUser;
-
                                 await FirebaseAuth.instance.signOut();
                                 final GoogleSignIn googleSignIn =
                                     GoogleSignIn();
@@ -377,21 +321,15 @@ class _MainDrawerState extends State<MainDrawer> {
                                         'secondaryLocationsBox');
                                 await dataBox3.clear();
 
-                                // final user = null;
-                                // if (user == null) {
                                 ToastComponent.showDialog('Logout Successful',
                                     gravity: Toast.center,
                                     duration: Toast.lengthLong);
-                                // } else {
-                                //   ToastComponent.showDialog('Still logged in',
-                                //       gravity: Toast.center,
-                                //       duration: Toast.lengthLong);
-                                // }
+
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) {
-                                      return Login(); // Main(go_back: false,);
+                                      return Login();
                                     },
                                   ),
                                   (route) => false,
@@ -458,5 +396,3 @@ class _MainDrawerState extends State<MainDrawer> {
     );
   }
 }
-
-// (C:\Users\Piyush Pandey/.ssh/id_ed25519):
