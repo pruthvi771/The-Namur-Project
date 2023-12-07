@@ -709,5 +709,7 @@
 "planning_date": "Planning Date",
 "time": "Time",
 "land": "Land",
-"select_land": "Select Land"
+"select_land": "Select Land",
+"select_date": "Select Date",
+"select_time": "Select Time"
 }

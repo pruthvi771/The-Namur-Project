@@ -201,10 +201,22 @@ class _FriendsState extends State<Friends> {
                                             border: null,
                                           ),
                                           child: ClipOval(
-                                            child: CachedNetworkImage(
-                                              imageUrl: sellerData.photoURL!,
-                                              fit: BoxFit.cover,
-                                            ),
+                                            // child: CachedNetworkImage(
+                                            //   imageUrl: sellerData.photoURL!,
+                                            //   fit: BoxFit.cover,
+                                            // ),
+                                            child: (sellerData.photoURL ==
+                                                        null ||
+                                                    sellerData.photoURL == '')
+                                                ? Image.asset(
+                                                    "assets/default_profile2.png",
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                : CachedNetworkImage(
+                                                    imageUrl:
+                                                        sellerData.photoURL!,
+                                                    fit: BoxFit.cover,
+                                                  ),
                                           ),
                                         ),
                                       ),

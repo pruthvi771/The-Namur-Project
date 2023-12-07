@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:active_ecommerce_flutter/custom/box_decorations.dart';
 import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
-import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/my_purchases.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/seller_orderlist.dart';
@@ -194,15 +193,6 @@ class _CategoryListState extends State<CategoryList> {
                             child: Text('Seller Dashboard')),
 
                         SizedBox(height: 15),
-
-                        // TextButton(
-                        //     onPressed: () async {
-                        //       print(await FirestoreRepository()
-                        //           .isGoogleSignedIn('+91 7683089932'));
-                        //     },
-                        //     child: Text('Get result')),
-
-                        // SizedBox(height: 15),
 
                         //Buy Sell Button Design
                         Center(

@@ -503,7 +503,8 @@
 "planning_date": "تاريخ التخطيط",
 "time": "الوقت",
 "land": "أرض",
-"select_land": "اختر الأرض"
-
+"select_land": "اختر الأرض",
+"select_date": "اختر التاريخ",
+"select_time": "اختر الوقت"
 
 }

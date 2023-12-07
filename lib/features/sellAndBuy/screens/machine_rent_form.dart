@@ -1,11 +1,17 @@
-// translation done.
+// translation done. needs updating
 
+import 'package:active_ecommerce_flutter/custom/toast_component.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/models/order_item.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/rent_bloc/rent_bloc.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/rent_bloc/rent_event.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive/hive.dart';
+import 'package:toast/toast.dart';
 import '../../../custom/device_info.dart';
 
 import 'package:time_range_picker/time_range_picker.dart';
@@ -13,17 +19,21 @@ import 'package:time_range_picker/time_range_picker.dart';
 // import '../seller_platform/seller_platform.dart';
 
 class MachineRentForm extends StatefulWidget {
+  final String machineId;
   final List imageURL;
   final String machineName;
   final double machinePrice;
   final String machineDescription;
+  final String sellerId;
 
   const MachineRentForm({
     Key? key,
+    required this.machineId,
     required this.imageURL,
     required this.machineName,
     required this.machinePrice,
     required this.machineDescription,
+    required this.sellerId,
   }) : super(key: key);
 
   @override
@@ -55,6 +65,51 @@ class _MachineRentFormState extends State<MachineRentForm> {
     }
 
     return savedData.land;
+  }
+
+  getTimeRangeString(TimeRange timeRange) {
+    var time = timeRange.startTime;
+    var endTime = timeRange.endTime;
+    return 'range: ${time.hour}:${time.minute}-${endTime.hour}:${endTime.minute}';
+  }
+
+  onPressedBook(BuildContext buildContext) async {
+    if (dateOfRenting == null) {
+      ToastComponent.showDialog(AppLocalizations.of(context)!.select_date,
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    if (timeRangeOfRenting == null) {
+      ToastComponent.showDialog(AppLocalizations.of(context)!.select_time,
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    if (landDropdownValue == null) {
+      ToastComponent.showDialog(AppLocalizations.of(context)!.select_land,
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    BlocProvider.of<RentBloc>(buildContext).add(
+      RentProductRequested(
+        sellerId: widget.sellerId,
+        bookedSlot: '12-11',
+        bookedSlotBroken: [],
+        orderItems: [
+          OrderItem(
+            productID: widget.machineId,
+            price: widget.machinePrice,
+            quantity: 1,
+            sellerID: widget.sellerId,
+          ),
+        ],
+        numberOfHalfHours: 1,
+      ),
+    );
+
+    // Navigator.pop(context);
   }
 
   @override
@@ -177,6 +232,44 @@ class _MachineRentFormState extends State<MachineRentForm> {
                       height: 10,
                     ),
 
+                    Center(
+                      child: TextButton(
+                        child: Text('Click me. This is not a scam.'),
+                        onPressed: () {
+                          List<String> result = [];
+                          var inputRange = '10:00-15:30';
+                          List<String> parts = inputRange.split('-');
+                          String startStr = parts[0];
+                          String endStr = parts[1];
+
+                          print(parts);
+
+                          // DateTime startTime =
+                          //     DateTime.parse('2023-01-01 ' + startStr);
+                          // DateTime endTime =
+                          //     DateTime.parse('2023-01-01 ' + endStr);
+
+                          // DateTime currentTime = startTime;
+
+                          // while (currentTime.isBefore(endTime) ||
+                          //     currentTime == endTime) {
+                          //   DateTime nextTime =
+                          //       currentTime.add(Duration(minutes: 30));
+                          //   if (nextTime.isAfter(endTime)) {
+                          //     nextTime = endTime;
+                          //   }
+
+                          //   result.add(
+                          //       "${currentTime.hour.toString().padLeft(2, '0')}:${currentTime.minute.toString().padLeft(2, '0')}-${nextTime.hour.toString().padLeft(2, '0')}:${nextTime.minute.toString().padLeft(2, '0')}");
+                          //   currentTime = nextTime;
+                          // }
+                          // // return result;
+                          // print(result);
+                          print('somethign something');
+                        },
+                      ),
+                    ),
+
                     // Machine Price
                     Container(
                       padding: EdgeInsets.only(
@@ -244,10 +337,10 @@ class _MachineRentFormState extends State<MachineRentForm> {
               child: Row(
                 children: [
                   Expanded(
-                    flex: 4,
+                    // flex: 4,
                     child: Container(
                       height: 60,
-                      padding: EdgeInsets.all(8),
+                      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
                       child: ElevatedButton(
                         onPressed: () async {
                           DateTime? newData = await showDatePicker(
@@ -285,87 +378,230 @@ class _MachineRentFormState extends State<MachineRentForm> {
                       ),
                     ),
                   ),
-                  Expanded(
-                    flex: 6,
-                    child: Container(
-                      height: 60,
-                      padding: EdgeInsets.all(8),
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          TimeRange result = await showTimeRangePicker(
-                            context: context,
-                            start: const TimeOfDay(hour: 22, minute: 9),
-                            interval: const Duration(minutes: 30),
-                            minDuration: const Duration(minutes: 30),
-                            use24HourFormat: false,
-                            padding: 30,
-                            strokeWidth: 12,
-                            handlerRadius: 9,
-                            strokeColor: MyTheme.primary_color,
-                            handlerColor: MyTheme.green_light,
-                            selectedColor: MyTheme.primary_color,
-                            backgroundColor: Colors.black.withOpacity(0.3),
-                            ticks: 12,
-                            ticksColor: Colors.white,
-                            snap: true,
-                            labels: [
-                              "12 am",
-                              "3 am",
-                              "6 am",
-                              "9 am",
-                              "12 pm",
-                              "3 pm",
-                              "6 pm",
-                              "9 pm"
-                            ].asMap().entries.map((e) {
-                              return ClockLabel.fromIndex(
-                                  idx: e.key, length: 8, text: e.value);
-                            }).toList(),
-                            labelOffset: -30,
-                            labelStyle: const TextStyle(
-                                fontSize: 15,
-                                color: Colors.grey,
-                                fontWeight: FontWeight.bold),
-                            timeTextStyle: TextStyle(
-                                color: MyTheme.primary_color,
-                                fontSize: 24,
-                                fontWeight: FontWeight.w900),
-                            activeTimeTextStyle: TextStyle(
-                                color: MyTheme.primary_color,
-                                fontSize: 26,
-                                fontWeight: FontWeight.bold),
-                          );
+                  // Expanded(
+                  //   flex: 6,
+                  //   child: Container(
+                  //     height: 60,
+                  //     padding: EdgeInsets.all(8),
+                  //     child: ElevatedButton(
+                  //       onPressed: () async {
+                  //         TimeRange result = await showTimeRangePicker(
+                  //           // disabledTime: TimeRange(
+                  //           //     startTime: TimeOfDay(hour: 1, minute: 0),
+                  //           //     endTime: TimeOfDay(hour: 0, minute: 0)),
+                  //           context: context,
+                  //           start: const TimeOfDay(hour: 22, minute: 9),
+                  //           interval: const Duration(minutes: 30),
+                  //           minDuration: const Duration(minutes: 30),
+                  //           use24HourFormat: false,
+                  //           padding: 30,
+                  //           strokeWidth: 12,
+                  //           handlerRadius: 9,
+                  //           strokeColor: MyTheme.primary_color,
+                  //           handlerColor: MyTheme.green_light,
+                  //           selectedColor: MyTheme.primary_color,
+                  //           backgroundColor: Colors.black.withOpacity(0.3),
+                  //           ticks: 12,
+                  //           ticksColor: Colors.white,
+                  //           snap: true,
+                  //           labels: [
+                  //             "12 am",
+                  //             "3 am",
+                  //             "6 am",
+                  //             "9 am",
+                  //             "12 pm",
+                  //             "3 pm",
+                  //             "6 pm",
+                  //             "9 pm"
+                  //           ].asMap().entries.map((e) {
+                  //             return ClockLabel.fromIndex(
+                  //                 idx: e.key, length: 8, text: e.value);
+                  //           }).toList(),
+                  //           labelOffset: -30,
+                  //           labelStyle: const TextStyle(
+                  //               fontSize: 15,
+                  //               color: Colors.grey,
+                  //               fontWeight: FontWeight.bold),
+                  //           timeTextStyle: TextStyle(
+                  //               color: MyTheme.primary_color,
+                  //               fontSize: 24,
+                  //               fontWeight: FontWeight.w900),
+                  //           activeTimeTextStyle: TextStyle(
+                  //               color: MyTheme.primary_color,
+                  //               fontSize: 26,
+                  //               fontWeight: FontWeight.bold),
+                  //         );
+                  //         print("result " + result.toString());
+                  //         setState(() {
+                  //           timeRangeOfRenting = result;
+                  //         });
+                  //       },
+                  //       child: Text(
+                  //         timeRangeOfRenting != null
+                  //             ? '${rentStartTime!.hourOfPeriod}:${rentStartTime.minute == 0 ? '00' : rentStartTime.minute} ${rentStartTime.period.name} - ${rentEndTime!.hourOfPeriod}:${rentEndTime.minute == 0 ? '00' : rentEndTime.minute} ${rentEndTime.period.name}'
+                  //             : AppLocalizations.of(context)!.time,
+                  //         style: TextStyle(
+                  //           color: Colors.black,
+                  //           fontWeight: FontWeight.w800,
+                  //           fontSize: 15,
+                  //         ),
+                  //       ),
+                  //       style: ButtonStyle(
+                  //           elevation: MaterialStateProperty.all(0),
+                  //           shape: MaterialStateProperty.all<
+                  //                   RoundedRectangleBorder>(
+                  //               RoundedRectangleBorder(
+                  //                   borderRadius: BorderRadius.circular(12),
+                  //                   side: BorderSide(
+                  //                       color: Colors.transparent, width: 0))),
+                  //           backgroundColor: MaterialStateProperty.all(
+                  //               const Color.fromARGB(255, 255, 243, 131))),
+                  //     ),
+                  //   ),
+                  // ),
+                ],
+              ),
+            ),
 
-                          print("result " + result.toString());
+            SizedBox(
+              height: 10,
+            ),
 
-                          setState(() {
-                            timeRangeOfRenting = result;
-                          });
-                        },
-                        child: Text(
-                          timeRangeOfRenting != null
-                              ? '${rentStartTime!.hourOfPeriod}:${rentStartTime.minute == 0 ? '00' : rentStartTime.minute} ${rentStartTime.period.name} - ${rentEndTime!.hourOfPeriod}:${rentEndTime.minute == 0 ? '00' : rentEndTime.minute} ${rentEndTime.period.name}'
-                              : AppLocalizations.of(context)!.time,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w800,
-                            fontSize: 15,
-                          ),
-                        ),
-                        style: ButtonStyle(
-                            elevation: MaterialStateProperty.all(0),
-                            shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    side: BorderSide(
-                                        color: Colors.transparent, width: 0))),
-                            backgroundColor: MaterialStateProperty.all(
-                                const Color.fromARGB(255, 255, 243, 131))),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(
+                      'Already Booked Slots:',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.black,
                       ),
                     ),
                   ),
+                  Wrap(
+                    children: [
+                      Chip(
+                          labelPadding: EdgeInsets.symmetric(horizontal: 2),
+                          label: Text(
+                            '10:00 AM - 11:00 AM',
+                            style: TextStyle(
+                              fontSize: 10,
+                            ),
+                          )),
+                      Chip(
+                          labelPadding: EdgeInsets.symmetric(horizontal: 2),
+                          label: Text(
+                            '10:00 AM - 11:00 AM',
+                            style: TextStyle(
+                              fontSize: 10,
+                            ),
+                          )),
+                      Chip(
+                          labelPadding: EdgeInsets.symmetric(horizontal: 2),
+                          label: Text(
+                            '10:00 AM - 11:00 AM',
+                            style: TextStyle(
+                              fontSize: 10,
+                            ),
+                          )),
+                      Chip(
+                          labelPadding: EdgeInsets.symmetric(horizontal: 2),
+                          label: Text(
+                            '10:00 AM - 11:00 AM',
+                            style: TextStyle(
+                              fontSize: 10,
+                            ),
+                          )),
+                    ],
+                  ),
                 ],
+              ),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Container(
+              height: 60,
+              padding: EdgeInsets.all(8),
+              child: ElevatedButton(
+                onPressed: () async {
+                  TimeRange result = await showTimeRangePicker(
+                    // disabledTime: TimeRange(
+                    //     startTime: TimeOfDay(hour: 1, minute: 0),
+                    //     endTime: TimeOfDay(hour: 0, minute: 0)),
+                    context: context,
+                    start: const TimeOfDay(hour: 22, minute: 9),
+                    interval: const Duration(minutes: 30),
+                    minDuration: const Duration(minutes: 30),
+                    use24HourFormat: false,
+                    padding: 30,
+                    strokeWidth: 12,
+                    handlerRadius: 9,
+                    strokeColor: MyTheme.primary_color,
+                    handlerColor: MyTheme.green_light,
+                    selectedColor: MyTheme.primary_color,
+                    backgroundColor: Colors.black.withOpacity(0.3),
+                    ticks: 12,
+                    ticksColor: Colors.white,
+                    snap: true,
+                    labels: [
+                      "12 am",
+                      "3 am",
+                      "6 am",
+                      "9 am",
+                      "12 pm",
+                      "3 pm",
+                      "6 pm",
+                      "9 pm"
+                    ].asMap().entries.map((e) {
+                      return ClockLabel.fromIndex(
+                          idx: e.key, length: 8, text: e.value);
+                    }).toList(),
+                    labelOffset: -30,
+                    labelStyle: const TextStyle(
+                        fontSize: 15,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold),
+                    timeTextStyle: TextStyle(
+                        color: MyTheme.primary_color,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w900),
+                    activeTimeTextStyle: TextStyle(
+                        color: MyTheme.primary_color,
+                        fontSize: 26,
+                        fontWeight: FontWeight.bold),
+                  );
+
+                  print("result " + result.toString());
+
+                  setState(() {
+                    timeRangeOfRenting = result;
+                  });
+                },
+                child: Text(
+                  timeRangeOfRenting != null
+                      ? '${rentStartTime!.hourOfPeriod}:${rentStartTime.minute == 0 ? '00' : rentStartTime.minute} ${rentStartTime.period.name} - ${rentEndTime!.hourOfPeriod}:${rentEndTime.minute == 0 ? '00' : rentEndTime.minute} ${rentEndTime.period.name}'
+                      : AppLocalizations.of(context)!.time,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
+                  ),
+                ),
+                style: ButtonStyle(
+                    elevation: MaterialStateProperty.all(0),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            side: BorderSide(
+                                color: Colors.transparent, width: 0))),
+                    backgroundColor: MaterialStateProperty.all(
+                        const Color.fromARGB(255, 255, 243, 131))),
               ),
             ),
 

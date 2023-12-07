@@ -463,10 +463,12 @@ class _BuyProductListState extends State<BuyProductList> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => MachineRentForm(
+                      machineId: products[index].id,
                       imageURL: products[index].imageURL,
                       machineName: products[index].productName,
                       machinePrice: products[index].productPrice,
                       machineDescription: products[index].productDescription,
+                      sellerId: products[index].sellerId,
                     ),
                   ));
             } else {
