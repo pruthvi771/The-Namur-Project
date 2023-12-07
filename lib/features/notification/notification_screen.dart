@@ -61,13 +61,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   ),
                 ),
                 Center(
-                  child: Text(AppLocalizations.of(context)!.notification_ucf,
-                      style: TextStyle(
-                          color: MyTheme.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: .5,
-                          fontFamily: 'Poppins')),
+                  child: Text(
+                    AppLocalizations.of(context)!.notification_ucf,
+                    style: TextStyle(
+                        color: MyTheme.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: .5,
+                        fontFamily: 'Poppins'),
+                  ),
                 ),
                 SizedBox(
                   width: 30,
