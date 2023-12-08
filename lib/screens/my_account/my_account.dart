@@ -291,16 +291,6 @@ class _MyAccountState extends State<MyAccount> {
               child: buildBottomVerticalCardList(),
             ),
 
-            /*  Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18.0),
-              child: buildHorizontalSettings(),
-            ),*/
-
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 18.0),
-            //   child: buildSettingAndAddonsVerticalMenu(),
-            // ),
-
             SizedBox(
               height: 100,
             )
@@ -1331,53 +1321,37 @@ class _MyAccountState extends State<MyAccount> {
 */
   Widget buildCountersRow() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         buildCountersRowItem(
-            _cartCounterString,
-            AppLocalizations.of(context)!.in_your_cart_all_lower,
-            Color(0xff7075F2)),
+          _cartCounterString,
+          AppLocalizations.of(context)!.in_your_cart_all_lower,
+        ),
         buildCountersRowItem(
-            _wishlistCounterString,
-            AppLocalizations.of(context)!.in_your_wishlist_all_lower,
-            Color(0xff429525)),
-        buildCountersRowItem(
-            _orderCounterString,
-            AppLocalizations.of(context)!.your_ordered_all_lower,
-            Color(0xffF98D8D)),
+          _wishlistCounterString,
+          AppLocalizations.of(context)!.in_your_wishlist_all_lower,
+        ),
       ],
     );
   }
 
-  Widget buildCountersRowItem(String counter, String title, color) {
+  Widget buildCountersRowItem(String counter, String title) {
     return Container(
-      margin: EdgeInsets.only(top: 20),
-      padding: EdgeInsets.symmetric(vertical: 14),
-      width: DeviceInfo(context).width! / 3.8,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: color,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            counter,
-            maxLines: 2,
-            style: TextStyle(
-                fontSize: 18, color: Colors.black, fontWeight: FontWeight.w600),
+        margin: EdgeInsets.only(top: 10),
+        padding: EdgeInsets.symmetric(vertical: 14),
+        width: DeviceInfo(context).width! / 3.8,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: MyTheme.green_light,
+        ),
+        child: IconButton(
+          onPressed: () {},
+          icon: Image.asset(
+            'assets/cart.png',
+            height: 16,
+            color: Colors.red,
           ),
-          SizedBox(
-            height: 5,
-          ),
-          Text(
-            title,
-            maxLines: 2,
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
-          ),
-        ],
-      ),
-    );
+        ));
   }
 
   Widget buildAppbarSection() {

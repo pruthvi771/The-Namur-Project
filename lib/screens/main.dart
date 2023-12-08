@@ -195,32 +195,12 @@ class _MainState extends State<Main> {
                 BottomNavigationBarItem(
                     icon: Padding(
                       padding: const EdgeInsets.only(bottom: 8.0),
-                      child: badges.Badge(
-                        badgeStyle: badges.BadgeStyle(
-                          shape: badges.BadgeShape.circle,
-                          badgeColor: MyTheme.primary_color,
-                          borderRadius: BorderRadius.circular(10),
-                          padding: EdgeInsets.all(5),
-                        ),
-                        badgeAnimation: badges.BadgeAnimation.slide(
-                          toAnimate: false,
-                        ),
-                        child: Image.asset(
-                          "assets/cart.png",
-                          color: _currentIndex == 2
-                              ? MyTheme.primary_color
-                              : Color.fromRGBO(153, 153, 153, 1),
-                          height: 16,
-                        ),
-                        badgeContent: Consumer<CartCounter>(
-                          builder: (context, cart, child) {
-                            return Text(
-                              "${cart.cartCounter}",
-                              style:
-                                  TextStyle(fontSize: 10, color: Colors.white),
-                            );
-                          },
-                        ),
+                      child: Image.asset(
+                        "assets/cart.png",
+                        color: _currentIndex == 2
+                            ? MyTheme.primary_color
+                            : Color.fromRGBO(153, 153, 153, 1),
+                        height: 16,
                       ),
                     ),
                     label: AppLocalizations.of(context)!.cart_ucf),

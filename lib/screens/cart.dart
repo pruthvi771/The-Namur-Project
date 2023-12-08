@@ -25,15 +25,15 @@ import 'package:active_ecommerce_flutter/custom/common_functions.dart';
 import '../presenter/home_presenter.dart';
 
 class Cart extends StatefulWidget {
-  Cart(
-      {Key? key,
-      this.has_bottomnav,
-      this.from_navigation = false,
-      this.counter})
-      : super(key: key);
+  Cart({
+    Key? key,
+    this.has_bottomnav,
+    this.from_navigation = false,
+    // this.counter,
+  }) : super(key: key);
   final bool? has_bottomnav;
   final bool from_navigation;
-  final CartCounter? counter;
+  // final CartCounter? counter;
 
   @override
   _CartState createState() => _CartState();
