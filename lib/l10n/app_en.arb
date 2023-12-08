@@ -711,5 +711,8 @@
 "land": "Land",
 "select_land": "Select Land",
 "select_date": "Select Date",
-"select_time": "Select Time"
+"select_time": "Select Time",
+"select_crop": "Select Crop",
+"no_crop_for_tracking": "No Crop Added for Tracking",
+"add_crop_for_tracking": "Add Crop for Tracking"
 }

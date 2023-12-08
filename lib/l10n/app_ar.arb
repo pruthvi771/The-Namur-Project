@@ -505,6 +505,9 @@
 "land": "أرض",
 "select_land": "اختر الأرض",
 "select_date": "اختر التاريخ",
-"select_time": "اختر الوقت"
+"select_time": "اختر الوقت",
+"select_crop": "اختر المحصول",
+"no_crop_for_tracking": "لم يتم إضافة محصول للتتبع",
+"add_crop_for_tracking": "إضافة محصول للتتبع"
 
 }

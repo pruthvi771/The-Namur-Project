@@ -1,3 +1,4 @@
+import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_screen.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/machine_rent_form.dart';
@@ -5,6 +6,7 @@ import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive/hive.dart';
+import 'package:toast/toast.dart';
 import '../../../custom/device_info.dart';
 import 'package:active_ecommerce_flutter/features/profile/address_list.dart'
     as addressList;
@@ -30,7 +32,8 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
 
   final imageForCrop = addressList.imageForCrop;
 
-  int selectedIndex = 0;
+  int? selectedIndex;
+  String? selectedCropName;
 
   @override
   void initState() {
@@ -68,6 +71,68 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
     return savedData.land
         .firstWhere((element) => element.syno == landSyno)
         .crops;
+  }
+
+  Future<void> onPressedAdd() async {
+    if (landDropdownValue == null) {
+      ToastComponent.showDialog(AppLocalizations.of(context)!.select_land,
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    if (selectedCropName == null) {
+      ToastComponent.showDialog(AppLocalizations.of(context)!.select_crop,
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    if (dateOfRenting == null) {
+      ToastComponent.showDialog(AppLocalizations.of(context)!.select_date,
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    var dataBox = Hive.box<CropCalendarData>('cropCalendarDataBox');
+    var savedData = dataBox.get('calendar');
+
+    //  if (savedData != null) {
+    //   var kyc = KYC()
+    //     ..aadhar = ''
+    //     ..pan = ''
+    //     ..gst = '';
+
+    //   var newData = ProfileData()
+    //     ..id = savedData.id
+    //     ..updated = savedData.updated
+    //     ..address = savedData.address
+    //     ..kyc = kyc
+    //     ..land = savedData.land;
+
+    //   await dataBox.put(newData.id, newData);
+
+    var cropCalendarItem = CropCalendarItem()
+      ..cropName = selectedCropName!
+      ..landSyno = landDropdownValue!
+      ..plantingDate = dateOfRenting!;
+
+    if (savedData == null) {
+      print('null');
+      var newData = CropCalendarData()..cropCalendarItems = [cropCalendarItem];
+      await dataBox.put('calendar', newData);
+      print('null data to added');
+    } else {
+      var newData = CropCalendarData()
+        ..cropCalendarItems = [
+          ...savedData.cropCalendarItems,
+          cropCalendarItem
+        ];
+      await dataBox.put('calendar', newData);
+      print('not null data to added');
+    }
+
+    print(landDropdownValue);
+    print(selectedCropName);
+    print(dateOfRenting);
   }
 
   @override
@@ -115,6 +180,7 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () async {
+              await onPressedAdd();
               Navigator.of(context).pop();
               Navigator.of(context).pop();
               Navigator.push(context,
@@ -154,36 +220,49 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
                 future: landList,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: DropdownButtonWidget(
-                        hintText: 'Select Land',
-                        itemList: List.generate(
-                            snapshot.data!.length,
-                            (index) => DropdownMenuItem<String>(
-                                  value: snapshot.data![index].syno,
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                          child: Text(
-                                              snapshot.data![index].village)),
-                                      Expanded(
-                                          child:
-                                              Text(snapshot.data![index].syno)),
-                                    ],
-                                  ),
-                                )).toList(),
-                        dropdownValue: landDropdownValue,
-                        onChanged: (value) {
-                          setState(() {
-                            landDropdownValue = value;
-                            cropListFuture =
-                                getCropsList(landSyno: landDropdownValue);
-                          });
-                          print(landDropdownValue);
-                        },
-                      ),
-                    );
+                    return snapshot.data!.length == 0
+                        ? Container(
+                            height: 100,
+                            child: Center(
+                                child: Text(
+                              'No lands added yet',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
+                              ),
+                            )),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: DropdownButtonWidget(
+                              hintText: 'Select Land',
+                              itemList: List.generate(
+                                  snapshot.data!.length,
+                                  (index) => DropdownMenuItem<String>(
+                                        value: snapshot.data![index].syno,
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                                child: Text(snapshot
+                                                    .data![index].village)),
+                                            Expanded(
+                                                child: Text(snapshot
+                                                    .data![index].syno)),
+                                          ],
+                                        ),
+                                      )).toList(),
+                              dropdownValue: landDropdownValue,
+                              onChanged: (value) {
+                                setState(() {
+                                  landDropdownValue = value;
+                                  cropListFuture =
+                                      getCropsList(landSyno: landDropdownValue);
+                                });
+                                // print(landDropdownValue);
+                              },
+                            ),
+                          );
                   }
                   return Center(
                     child: CircularProgressIndicator(),
@@ -212,7 +291,7 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
                     //   return Text('Error: ${cropSnapshot.error}');
                   } else if (cropSnapshot.hasData &&
                       cropSnapshot.data != null) {
-                    print(cropSnapshot.data);
+                    // print(cropSnapshot.data);
                     // return Center(child: Text('has data '));
                     List<Crop> cropList = cropSnapshot.data!;
                     return cropList.length == 0
@@ -240,6 +319,7 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
                                   onTap: () {
                                     setState(() {
                                       selectedIndex = index;
+                                      selectedCropName = cropList[index].name;
                                     });
                                   },
                                   child: EquipmentWidget(
@@ -269,105 +349,6 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
             SizedBox(
               height: 15,
             ),
-
-            // Machine
-            // Padding(
-            //   padding: const EdgeInsets.all(6.0),
-            //   child: Container(
-            //     decoration: BoxDecoration(
-            //       color: Colors.grey[100],
-            //       borderRadius: BorderRadius.circular(12),
-            //     ),
-            //     child: Column(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: [
-            //         // Machine Image
-            //         // Container(
-            //         //   height: 250,
-            //         //   color: Colors.grey[200],
-            //         //   padding:
-            //         //       EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            //         //   child: CarouselSlider(
-            //         //     options: CarouselOptions(
-            //         //       viewportFraction: 1,
-            //         //       height: double.infinity,
-            //         //       aspectRatio: 1 / 1.5,
-            //         //       enlargeCenterPage: true,
-            //         //       enableInfiniteScroll: false,
-            //         //       autoPlay: false,
-            //         //       padEnds: false,
-            //         //     ),
-            //         //     items: widget.imageURL.map((fileURL) {
-            //         //       return Builder(
-            //         //         builder: (BuildContext context) {
-            //         //           return Container(
-            //         //             child: ClipRRect(
-            //         //               borderRadius: BorderRadius.all(
-            //         //                 Radius.circular(10),
-            //         //               ),
-            //         //               child: Image.network(
-            //         //                 fileURL,
-            //         //                 fit: BoxFit.cover,
-            //         //                 width: MediaQuery.of(context).size.width,
-            //         //               ),
-            //         //             ),
-            //         //           );
-            //         //         },
-            //         //       );
-            //         //     }).toList(),
-            //         //   ),
-            //         // ),
-            //         SizedBox(
-            //           height: 10,
-            //         ),
-            //         // Machine Price
-            //         Container(
-            //           padding: EdgeInsets.only(
-            //               left: 18, right: 18, bottom: 12, top: 5),
-            //           child: Column(
-            //             crossAxisAlignment: CrossAxisAlignment.start,
-            //             children: [
-            //               Text(
-            //                 'widget.machineName',
-            //                 style: TextStyle(
-            //                   fontSize: 18,
-            //                   fontWeight: FontWeight.w900,
-            //                   color: Colors.black,
-            //                 ),
-            //               ),
-            //               SizedBox(
-            //                 height: 10,
-            //               ),
-            //               Text(
-            //                 '\₹{widget.machinePrice/30 mins',
-            //                 style: TextStyle(
-            //                   fontSize: 16,
-            //                   fontWeight: FontWeight.w900,
-            //                   color: Colors.grey[700],
-            //                 ),
-            //               ),
-            //               SizedBox(
-            //                 height: 8,
-            //               ),
-            //               Container(
-            //                 // padding: const EdgeInsets.all(8.0),
-            //                 child: Text(
-            //                   'widget.machineDescription',
-            //                   style: TextStyle(
-            //                     fontSize: 13.5,
-            //                     height: 1.2,
-            //                     fontWeight: FontWeight.w500,
-            //                     color: Colors.black,
-            //                   ),
-            //                 ),
-            //               ),
-            //             ],
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ),
 
             SizedBox(
               height: 20,
