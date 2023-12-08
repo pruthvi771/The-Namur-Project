@@ -237,33 +237,33 @@ class _MachineRentFormState extends State<MachineRentForm> {
                         child: Text('Click me. This is not a scam.'),
                         onPressed: () {
                           List<String> result = [];
-                          var inputRange = '10:00-15:30';
+                          var inputRange = '9:00-15:30';
                           List<String> parts = inputRange.split('-');
                           String startStr = parts[0];
                           String endStr = parts[1];
 
                           print(parts);
 
-                          // DateTime startTime =
-                          //     DateTime.parse('2023-01-01 ' + startStr);
-                          // DateTime endTime =
-                          //     DateTime.parse('2023-01-01 ' + endStr);
+                          DateTime startTime =
+                              DateTime.parse('2023-01-01 ' + startStr);
+                          DateTime endTime =
+                              DateTime.parse('2023-01-01 ' + endStr);
 
-                          // DateTime currentTime = startTime;
+                          DateTime currentTime = startTime;
 
-                          // while (currentTime.isBefore(endTime) ||
-                          //     currentTime == endTime) {
-                          //   DateTime nextTime =
-                          //       currentTime.add(Duration(minutes: 30));
-                          //   if (nextTime.isAfter(endTime)) {
-                          //     nextTime = endTime;
-                          //   }
+                          while (currentTime.isBefore(endTime) ||
+                              currentTime == endTime) {
+                            DateTime nextTime =
+                                currentTime.add(Duration(minutes: 30));
+                            if (nextTime.isAfter(endTime)) {
+                              nextTime = endTime;
+                            }
 
-                          //   result.add(
-                          //       "${currentTime.hour.toString().padLeft(2, '0')}:${currentTime.minute.toString().padLeft(2, '0')}-${nextTime.hour.toString().padLeft(2, '0')}:${nextTime.minute.toString().padLeft(2, '0')}");
-                          //   currentTime = nextTime;
-                          // }
-                          // // return result;
+                            result.add(
+                                "${currentTime.hour.toString().padLeft(2, '0')}:${currentTime.minute.toString().padLeft(2, '0')}-${nextTime.hour.toString().padLeft(2, '0')}:${nextTime.minute.toString().padLeft(2, '0')}");
+                            currentTime = nextTime;
+                          }
+                          // return result;
                           // print(result);
                           print('somethign something');
                         },

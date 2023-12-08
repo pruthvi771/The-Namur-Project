@@ -535,10 +535,20 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
                                   height: double.infinity,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(5),
-                                    child: CachedNetworkImage(
-                                      imageUrl: sellerImageURL,
-                                      fit: BoxFit.cover,
-                                    ),
+                                    // child: CachedNetworkImage(
+                                    //   imageUrl: sellerImageURL,
+                                    //   fit: BoxFit.cover,
+                                    // ),
+                                    child: (sellerImageURL == null ||
+                                            sellerImageURL == '')
+                                        ? Image.asset(
+                                            "assets/default_profile2.png",
+                                            fit: BoxFit.cover,
+                                          )
+                                        : CachedNetworkImage(
+                                            imageUrl: sellerImageURL!,
+                                            fit: BoxFit.cover,
+                                          ),
                                   ),
                                 ),
                               ),
@@ -635,10 +645,19 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
                       height: 140,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(5),
-                        child: CachedNetworkImage(
-                          imageUrl: buyerImageURL,
-                          fit: BoxFit.cover,
-                        ),
+                        // child: CachedNetworkImage(
+                        //   imageUrl: buyerImageURL,
+                        //   fit: BoxFit.cover,
+                        // ),
+                        child: (buyerImageURL == null || buyerImageURL == '')
+                            ? Image.asset(
+                                "assets/default_profile2.png",
+                                fit: BoxFit.cover,
+                              )
+                            : CachedNetworkImage(
+                                imageUrl: buyerImageURL!,
+                                fit: BoxFit.cover,
+                              ),
                       )),
                 ),
 
