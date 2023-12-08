@@ -1,41 +1,22 @@
 import 'dart:async';
-
-import 'package:active_ecommerce_flutter/custom/box_decorations.dart';
-import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/custom/lang_text.dart';
 import 'package:active_ecommerce_flutter/helpers/auth_helper.dart';
 import 'package:active_ecommerce_flutter/presenter/home_presenter.dart';
-import 'package:active_ecommerce_flutter/screens/auction_products.dart';
 import 'package:active_ecommerce_flutter/screens/change_language.dart';
-import 'package:active_ecommerce_flutter/screens/classified_ads/classified_ads.dart';
-import 'package:active_ecommerce_flutter/screens/classified_ads/my_classified_ads.dart';
 import 'package:active_ecommerce_flutter/screens/currency_change.dart';
-import 'package:active_ecommerce_flutter/screens/digital_product/digital_products.dart';
-import 'package:active_ecommerce_flutter/screens/digital_product/purchased_digital_produts.dart';
-import 'package:active_ecommerce_flutter/screens/filter.dart';
-import 'package:active_ecommerce_flutter/screens/followed_sellers.dart';
-import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
 import 'package:active_ecommerce_flutter/screens/main.dart';
 import 'package:active_ecommerce_flutter/screens/messenger_list.dart';
-import 'package:active_ecommerce_flutter/screens/whole_sale_products.dart';
-import 'package:active_ecommerce_flutter/screens/wishlist.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/drawer/drawer.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
-import 'package:active_ecommerce_flutter/app_config.dart';
 import 'package:active_ecommerce_flutter/screens/wallet.dart';
 import 'package:active_ecommerce_flutter/screens/profile_edit.dart';
 import 'package:active_ecommerce_flutter/screens/address.dart';
 import 'package:active_ecommerce_flutter/screens/order_list.dart';
-import 'package:active_ecommerce_flutter/screens/club_point.dart';
-import 'package:active_ecommerce_flutter/screens/refund_request.dart';
 import 'package:active_ecommerce_flutter/repositories/profile_repository.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
-import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:toast/toast.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -54,14 +35,14 @@ class MyAccount extends StatefulWidget {
 class _MyAccountState extends State<MyAccount> {
   HomePresenter homeData = HomePresenter();
   ScrollController _mainScrollController = ScrollController();
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  // final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   int? _cartCounter = 0;
   String _cartCounterString = "00";
   int? _wishlistCounter = 0;
   String _wishlistCounterString = "00";
   int? _orderCounter = 0;
-  String _orderCounterString = "00";
+  // String _orderCounterString = "00";
   late BuildContext loadingcontext;
 
   // var user = AuthService.firebase().currentUser;
@@ -69,7 +50,6 @@ class _MyAccountState extends State<MyAccount> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     if (user != null) {
