@@ -56,9 +56,11 @@ class RentRepository {
     required String buyerId,
     required String sellerId,
     required String bookedSlot,
-    required List bookedSlotBroken,
+    // required List bookedSlotBroken,
     required List<OrderItem> orderItems,
     required int numberOfHalfHours,
+    required String bookedDate,
+    required String locationName,
   }) async {
     try {
       // Get a reference to the Firestore collection
@@ -69,12 +71,14 @@ class RentRepository {
         {
           'buyer': buyerId,
           'rent': true,
+          'locationName': locationName,
           'sellers': [sellerId],
           'orderDate': FieldValue.serverTimestamp(),
           'totalAmount': orderItems[0].price * numberOfHalfHours,
           'items': orderItems.map((item) => item.toMap()).toList(),
           'bookedSlot': bookedSlot,
-          'bookedSlotBroken': bookedSlotBroken,
+          'bookedDate': bookedDate,
+          // 'bookedSlotBroken': bookedSlotBroken,
           'status': 'Confirmed',
         },
       );

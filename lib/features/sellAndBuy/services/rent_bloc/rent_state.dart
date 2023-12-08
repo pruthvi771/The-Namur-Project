@@ -9,6 +9,8 @@ abstract class RentState extends Equatable {
 
 final class RentInitial extends RentState {}
 
+final class RentSuccess extends RentState {}
+
 final class RentLoading extends RentState {
   const RentLoading();
 

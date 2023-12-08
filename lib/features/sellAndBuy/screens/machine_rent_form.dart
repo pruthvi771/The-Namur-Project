@@ -4,13 +4,16 @@ import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/order_item.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/rent_bloc/rent_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/rent_bloc/rent_event.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/rent_bloc/rent_state.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 import 'package:toast/toast.dart';
 import '../../../custom/device_info.dart';
 
@@ -47,7 +50,35 @@ class _MachineRentFormState extends State<MachineRentForm> {
   TimeRange? timeRangeOfRenting;
 
   String? landDropdownValue;
+  // String? pinCodeOfLand;
+  String? locationNameOfLand;
   late Future<List<Land>> landList;
+
+  String? hour12FormarTimeSlot;
+
+  List splitTimeRange(String timeRange) {
+    List<String> timeSlots = [];
+
+    var parts = timeRange.split(' - ');
+
+    // Convert input strings to DateTime objects
+    final dateFormat = DateFormat('HH:mm');
+
+    DateTime startDateTime = dateFormat.parse(parts[0]);
+    DateTime endDateTime = dateFormat.parse(parts[1]);
+
+    while (startDateTime.isBefore(endDateTime)) {
+      String slotStart = dateFormat.format(startDateTime);
+
+      startDateTime = startDateTime.add(Duration(minutes: 30));
+
+      String slotEnd = dateFormat.format(startDateTime);
+
+      timeSlots.add('$slotStart - $slotEnd');
+    }
+
+    return timeSlots;
+  }
 
   @override
   void initState() {
@@ -73,6 +104,49 @@ class _MachineRentFormState extends State<MachineRentForm> {
     return 'range: ${time.hour}:${time.minute}-${endTime.hour}:${endTime.minute}';
   }
 
+  String getVillageFromSyno(List<Land> lands, String targetSyno) {
+    for (Land land in lands) {
+      if (land.syno == targetSyno) {
+        return land.village;
+      }
+    }
+    // Return a default value or handle the case where the syno is not found
+    return 'Syno not found';
+  }
+
+  String convert12HourTo24Hour(String inputTime) {
+    List<String> timeParts = inputTime.split(' - ');
+
+    String startTime = _convertSingle12HourTo24Hour(timeParts[0]);
+    String endTime = _convertSingle12HourTo24Hour(timeParts[1]);
+
+    return '$startTime - $endTime';
+  }
+
+  String _convertSingle12HourTo24Hour(String time) {
+    // Extracting hours, minutes, and period from the input time
+    RegExp timeRegex = RegExp(r'(\d+):(\d+)\s?([apAP][mM])');
+    Match match = timeRegex.firstMatch(time) as Match;
+
+    if (match != null) {
+      int hours = int.parse(match.group(1)!);
+      int minutes = int.parse(match.group(2)!);
+      String period = match.group(3)!.toLowerCase();
+
+      // Adjusting hours based on the period (AM/PM)
+      if (period == 'pm' && hours < 12) {
+        hours += 12;
+      } else if (period == 'am' && hours == 12) {
+        hours = 0;
+      }
+
+      return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}';
+    }
+
+    // Return the original time if the regex doesn't match
+    return time;
+  }
+
   onPressedBook(BuildContext buildContext) async {
     if (dateOfRenting == null) {
       ToastComponent.showDialog(AppLocalizations.of(context)!.select_date,
@@ -92,11 +166,28 @@ class _MachineRentFormState extends State<MachineRentForm> {
       return;
     }
 
+    var hour24format =
+        '${timeRangeOfRenting!.startTime.hour}:${timeRangeOfRenting!.startTime.minute == 0 ? '00' : timeRangeOfRenting!.startTime.minute} - ${timeRangeOfRenting!.endTime.hour}:${timeRangeOfRenting!.endTime.minute == 0 ? '00' : timeRangeOfRenting!.endTime.minute}';
+
+    await FirebaseFirestore.instance
+        .collection('products')
+        .doc(widget.machineId)
+        .update(
+      {
+        'bookedSlots.${dateOfRenting!.day}-${dateOfRenting!.month}-${dateOfRenting!.year}':
+            FieldValue.arrayUnion([hour24format]),
+        'bookedSlotsBroken.${dateOfRenting!.day}-${dateOfRenting!.month}-${dateOfRenting!.year}':
+            FieldValue.arrayUnion(splitTimeRange(hour24format)),
+      },
+    );
+
     BlocProvider.of<RentBloc>(buildContext).add(
       RentProductRequested(
+        bookedDate:
+            '${dateOfRenting!.day}-${dateOfRenting!.month}-${dateOfRenting!.year}',
         sellerId: widget.sellerId,
-        bookedSlot: '12-11',
-        bookedSlotBroken: [],
+        bookedSlot: hour24format,
+        locationName: locationNameOfLand!,
         orderItems: [
           OrderItem(
             productID: widget.machineId,
@@ -105,7 +196,7 @@ class _MachineRentFormState extends State<MachineRentForm> {
             sellerID: widget.sellerId,
           ),
         ],
-        numberOfHalfHours: 1,
+        numberOfHalfHours: splitTimeRange(hour24format).length,
       ),
     );
 
@@ -145,24 +236,53 @@ class _MachineRentFormState extends State<MachineRentForm> {
         bottomSheet: Container(
           height: 60,
           width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () async {
-              // widget.isProductEditScreen
-              //     ? await onPressedEdit(context)
-              //     : await onPressedPost(context);
+          child: BlocListener<RentBloc, RentState>(
+            listener: (context, state) {
+              if (state is RentSuccess) {
+                print('order placed');
+              }
             },
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(MyTheme.primary_color),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(0))),
-            ),
-            child: Text(
-              AppLocalizations.of(context)!.book,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500),
+            child: BlocBuilder<RentBloc, RentState>(
+              builder: (context, state) {
+                if (state is RentLoading) {
+                  return ElevatedButton(
+                    onPressed: () async {
+                      // onPressedBook(context);
+                    },
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(MyTheme.primary_color),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(0))),
+                    ),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                      ),
+                    ),
+                  );
+                }
+                return ElevatedButton(
+                  onPressed: () async {
+                    onPressedBook(context);
+                  },
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all(MyTheme.primary_color),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(0))),
+                  ),
+                  child: Text(
+                    AppLocalizations.of(context)!.book,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500),
+                  ),
+                );
+              },
             ),
           ),
         ),
@@ -230,43 +350,6 @@ class _MachineRentFormState extends State<MachineRentForm> {
 
                     SizedBox(
                       height: 10,
-                    ),
-
-                    Center(
-                      child: TextButton(
-                        child: Text('Click me. This is not a scam.'),
-                        onPressed: () {
-                          // List<String> result = [];
-                          // var inputRange = '10:00-15:30';
-
-                          // List<String> parts = inputRange.split('-');
-                          // String startStr = parts[0];
-                          // String endStr = parts[1];
-
-                          // DateTime startTime =
-                          //     DateTime.parse('2023-01-01 ' + startStr);
-                          // DateTime endTime =
-                          //     DateTime.parse('2023-01-01 ' + endStr);
-
-                          // DateTime currentTime = startTime;
-
-                          // while (currentTime.isBefore(endTime) ||
-                          //     currentTime == endTime) {
-                          //   DateTime nextTime =
-                          //       currentTime.add(Duration(minutes: 30));
-                          //   if (nextTime.isAfter(endTime)) {
-                          //     nextTime = endTime;
-                          //   }
-
-                          //   result.add(
-                          //       "${currentTime.hour.toString().padLeft(2, '0')}:${currentTime.minute.toString().padLeft(2, '0')}-${nextTime.hour.toString().padLeft(2, '0')}:${nextTime.minute.toString().padLeft(2, '0')}");
-                          //   currentTime = nextTime;
-                          // }
-
-                          // print(result);
-                          print('somethign something');
-                        },
-                      ),
                     ),
 
                     // Machine Price
@@ -521,18 +604,20 @@ class _MachineRentFormState extends State<MachineRentForm> {
                 ],
               ),
             ),
+
             SizedBox(
               height: 5,
             ),
+
             Container(
               height: 60,
               padding: EdgeInsets.all(8),
               child: ElevatedButton(
                 onPressed: () async {
                   TimeRange result = await showTimeRangePicker(
-                    // disabledTime: TimeRange(
-                    //     startTime: TimeOfDay(hour: 1, minute: 0),
-                    //     endTime: TimeOfDay(hour: 0, minute: 0)),
+                    disabledTime: TimeRange(
+                        startTime: TimeOfDay(hour: 20, minute: 0),
+                        endTime: TimeOfDay(hour: 8, minute: 0)),
                     context: context,
                     start: const TimeOfDay(hour: 22, minute: 9),
                     interval: const Duration(minutes: 30),
@@ -580,6 +665,8 @@ class _MachineRentFormState extends State<MachineRentForm> {
 
                   setState(() {
                     timeRangeOfRenting = result;
+                    // hour12FormarTimeSlot =
+                    //     '${rentStartTime!.hourOfPeriod}:${rentStartTime.minute == 0 ? '00' : rentStartTime.minute} ${rentStartTime.period.name} - ${rentEndTime!.hourOfPeriod}:${rentEndTime.minute == 0 ? '00' : rentEndTime.minute} ${rentEndTime.period.name}';
                   });
                 },
                 child: Text(
@@ -642,6 +729,8 @@ class _MachineRentFormState extends State<MachineRentForm> {
                         onChanged: (value) {
                           setState(() {
                             landDropdownValue = value;
+                            locationNameOfLand = getVillageFromSyno(
+                                snapshot.data!, landDropdownValue!);
                           });
                         },
                       ),
