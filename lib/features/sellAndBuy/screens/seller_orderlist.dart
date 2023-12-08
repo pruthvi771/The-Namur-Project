@@ -1,5 +1,6 @@
 // translation done
 
+import 'package:flutter/services.dart';
 import 'dart:async';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/order_item.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/seller_order_checkup_screen.dart';
@@ -25,10 +26,23 @@ class _SellerOrderListState extends State<SellerOrderList> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.portraitUp,
+    ]);
     currentUser = _firebaseAuth.currentUser!;
     sellerOrderList = _sellerOrderList();
     super.initState();
+  }
+
+  @override
+  dispose() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.dispose();
   }
 
   // Future _sellerOrderList() async {

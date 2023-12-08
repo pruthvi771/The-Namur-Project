@@ -141,40 +141,11 @@ class _MainDrawerState extends State<MainDrawer> {
                               onTap: () {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
-                                  return MyAccount(show_back_button: true);
+                                  return MyAccount();
                                 }));
                               }),
                           Divider(),
-                          /* ListTile(
-                              visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-                              leading: Image.asset("assets/home.png",
-                                  height: 16, color: Color.fromRGBO(153, 153, 153, 1)),
-                              title: Text("Payment",
-                                  style: TextStyle(
-                                      color: MyTheme.primary_color,
-                                      fontSize: 14)),
-                              onTap: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                      return RazorpayScreen();
-                                    }));
-                              }),*/
-                          // Divider(),
-                          // ListTile(
-                          //     visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-                          //     leading: Image.asset("assets/home.png",
-                          //         height: 16, color: Color.fromRGBO(153, 153, 153, 1)),
-                          //     title: Text("wallet",
-                          //         style: TextStyle(
-                          //             color: MyTheme.primary_color,
-                          //             fontSize: 14)),
-                          //     onTap: () {
-                          //       Navigator.push(context,
-                          //           MaterialPageRoute(builder: (context) {
-                          //             return Main();
-                          //           }));
-                          //     }),
-                          //  Divider(),
+
                           Visibility(
                             visible: conversation_system_status.$,
                             child: ListTile(
