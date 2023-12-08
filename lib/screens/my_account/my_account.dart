@@ -151,59 +151,6 @@ class _MyAccountState extends State<MyAccount> {
     );
   }
 
-  // CustomScrollView buildBodyChildren() {
-  //   return CustomScrollView(
-  //     controller: _mainScrollController,
-  //     physics:
-  //         const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-  //     slivers: [
-  //       SliverList(
-  //         delegate: SliverChildListDelegate([
-  //           Padding(
-  //             padding: const EdgeInsets.only(right: 70.0, left: 70, top: 20),
-  //             child: Container(
-  //               width: 150,
-  //               height: 150,
-  //               decoration: BoxDecoration(
-  //                 color: Colors.green,
-  //                 borderRadius: BorderRadius.circular(25),
-  //                 border: Border.all(color: MyTheme.white, width: 1),
-  //               ),
-  //               child: (user != null)
-  //                   ? ClipRRect(
-  //                       clipBehavior: Clip.hardEdge,
-  //                       borderRadius: BorderRadius.all(Radius.circular(25.0)),
-  //                       child: FadeInImage.assetNetwork(
-  //                         placeholder: 'assets/placeholder.png',
-  //                         image: "${avatar_original.$}",
-  //                         fit: BoxFit.fill,
-  //                       ))
-  //                   : Image.asset(
-  //                       'assets/profile_placeholder.png',
-  //                       height: 150,
-  //                       width: 150,
-  //                       fit: BoxFit.fitHeight,
-  //                     ),
-  //             ),
-  //           ),
-  //           Padding(
-  //             padding: const EdgeInsets.symmetric(horizontal: 18.0),
-  //             child: buildCountersRow(),
-  //           ),
-  //           SizedBox(height: 15),
-  //           Padding(
-  //             padding: const EdgeInsets.only(left: 20.0, right: 20),
-  //             child: buildBottomVerticalCardList(),
-  //           ),
-  //           SizedBox(
-  //             height: 100,
-  //           )
-  //         ]),
-  //       )
-  //     ],
-  //   );
-  // }
-
   Widget buildBottomVerticalCardList() {
     return Container(
       child: Column(

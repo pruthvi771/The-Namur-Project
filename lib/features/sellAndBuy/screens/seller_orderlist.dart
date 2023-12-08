@@ -137,18 +137,19 @@ class _SellerOrderListState extends State<SellerOrderList> {
                     SizedBox(
                       height: 10,
                     ),
-                    Container(
-                      color: MyTheme.green_light,
-                      height: 100,
-                    ),
+                    // Container(
+                    //   color: MyTheme.green_light,
+                    //   height: 100,
+                    // ),
                     Expanded(
                       child: Container(
+                        width: double.infinity,
                         padding: EdgeInsets.all(10),
                         // color: MyTheme.green_lighter,
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(10)),
-                            color: Colors.grey[50],
+                            color: Colors.grey[100],
                           ),
                           child: SingleChildScrollView(
                             physics: BouncingScrollPhysics(),
