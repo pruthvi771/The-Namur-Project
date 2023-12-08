@@ -155,7 +155,7 @@ class FirestoreRepository {
   }
 
   Future<String> uploadImagetoFirebase(String childName, Uint8List file) async {
-    Reference ref = _storage.ref().child(childName);
+    Reference ref = _storage.ref().child('users/$childName');
     UploadTask uploadTask = ref.putData(file);
 
     TaskSnapshot taskSnapshot = await uploadTask;
