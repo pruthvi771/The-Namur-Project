@@ -184,14 +184,6 @@ class _FriendsState extends State<Friends> {
                                       Positioned(
                                         top: 5,
                                         left: 5,
-                                        // child: ClipRRect(
-                                        //   child: CircleAvatar(
-                                        //     child: CachedNetworkImage(
-                                        //       imageUrl: sellerData.photoURL!,
-                                        //     ),
-                                        //     radius: 40,
-                                        //   ),
-                                        // ),
                                         child: Container(
                                           width:
                                               80, // Set your desired width for the circular avatar
@@ -201,10 +193,6 @@ class _FriendsState extends State<Friends> {
                                             border: null,
                                           ),
                                           child: ClipOval(
-                                            // child: CachedNetworkImage(
-                                            //   imageUrl: sellerData.photoURL!,
-                                            //   fit: BoxFit.cover,
-                                            // ),
                                             child: (sellerData.photoURL ==
                                                         null ||
                                                     sellerData.photoURL == '')

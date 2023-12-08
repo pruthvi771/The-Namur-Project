@@ -130,9 +130,12 @@ class _MainDrawerState extends State<MainDrawer> {
                           ListTile(
                               visualDensity:
                                   VisualDensity(horizontal: -4, vertical: -4),
-                              leading: Image.asset("assets/profile.png",
-                                  height: 16,
-                                  color: Color.fromRGBO(153, 153, 153, 1)),
+                              // leading: Image.asset("assets/profile.png",
+                              //     height: 16,
+                              //     color: Color.fromRGBO(153, 153, 153, 1)),
+                              leading: Icon(
+                                Icons.person,
+                              ),
                               title: Text(
                                   AppLocalizations.of(context)!.acccount_ucf,
                                   style: TextStyle(

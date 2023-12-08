@@ -182,13 +182,14 @@ class _MainState extends State<Main> {
                 BottomNavigationBarItem(
                   icon: Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Image.asset(
-                      "assets/profile.png",
-                      color: _currentIndex == 1
-                          ? MyTheme.primary_color
-                          : Color.fromRGBO(153, 153, 153, 1),
-                      height: 16,
-                    ),
+                    // child: Image.asset(
+                    //   "assets/profile.png",
+                    //   color: _currentIndex == 1
+                    //       ? MyTheme.primary_color
+                    //       : Color.fromRGBO(153, 153, 153, 1),
+                    //   height: 16,
+                    // ),
+                    child: Icon(Icons.person_outlined),
                   ),
                   label: AppLocalizations.of(context)!.profile_ucf,
                 ),

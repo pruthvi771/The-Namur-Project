@@ -174,25 +174,17 @@ class _CategoryListState extends State<CategoryList> {
                         // TitleBar(),
 
                         // screen database button
-                        TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          PurchaseHistoryScreen()));
-                            },
-                            child: Text('Purchase History')),
-                        TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => SellerOrderList()));
-                            },
-                            child: Text('Seller Dashboard')),
+                        // TextButton(
+                        //     onPressed: () {
+                        //       Navigator.push(
+                        //           context,
+                        //           MaterialPageRoute(
+                        //               builder: (context) =>
+                        //                   PurchaseHistoryScreen()));
+                        //     },
+                        //     child: Text('Purchase History')),
 
-                        SizedBox(height: 15),
+                        SizedBox(height: 10),
 
                         //Buy Sell Button Design
                         Center(
