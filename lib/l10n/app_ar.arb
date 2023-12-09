@@ -511,6 +511,7 @@
 "add_crop_for_tracking": "إضافة محصول للتتبع",
 "no_slot_booked": "لم يتم حجز أي فتحة",
 "recheck_slot_and_try_again": "يرجى إعادة فحص الفتحات المتاحة والمحاولة مرة أخرى",
-"already_booked_slots": "الفتحات محجوزة بالفعل"
-
+"already_booked_slots": "الفتحات محجوزة بالفعل",
+"sell_upper": "بيع",
+"buy_upper": "شراء"
 }

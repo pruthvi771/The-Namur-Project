@@ -1,3 +1,5 @@
+// translation done.
+
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_bloc.dart';
@@ -17,6 +19,7 @@ import 'package:active_ecommerce_flutter/features/profile/address_list.dart'
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:toast/toast.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AddWeatherLocation extends StatefulWidget {
   AddWeatherLocation({
@@ -97,7 +100,7 @@ class _AddWeatherLocationState extends State<AddWeatherLocation> {
 
   Future<void> addLocationToHive() async {
     if (districtDropdownValue == '') {
-      ToastComponent.showDialog('Please select a location',
+      ToastComponent.showDialog(AppLocalizations.of(context)!.select_a_location,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
@@ -109,8 +112,10 @@ class _AddWeatherLocationState extends State<AddWeatherLocation> {
 
     if (savedPrimaryData != null) {
       if (savedPrimaryData.address == districtDropdownValue) {
-        ToastComponent.showDialog('This location is already added',
-            gravity: Toast.center, duration: Toast.lengthLong);
+        ToastComponent.showDialog(
+            AppLocalizations.of(context)!.location_is_already_added,
+            gravity: Toast.center,
+            duration: Toast.lengthLong);
         return;
       }
     }
@@ -123,8 +128,10 @@ class _AddWeatherLocationState extends State<AddWeatherLocation> {
 
     if (savedData != null) {
       if (savedData.address.length == 2) {
-        ToastComponent.showDialog('You can only add 2 Locations at once',
-            gravity: Toast.center, duration: Toast.lengthLong);
+        ToastComponent.showDialog(
+            AppLocalizations.of(context)!.can_add_only_two_location,
+            gravity: Toast.center,
+            duration: Toast.lengthLong);
         return;
       }
     }
@@ -137,8 +144,10 @@ class _AddWeatherLocationState extends State<AddWeatherLocation> {
         ..address = [districtDropdownValue];
     } else {
       if (savedData.address.contains(districtDropdownValue)) {
-        ToastComponent.showDialog('This location is already added',
-            gravity: Toast.center, duration: Toast.lengthLong);
+        ToastComponent.showDialog(
+            AppLocalizations.of(context)!.location_is_already_added,
+            gravity: Toast.center,
+            duration: Toast.lengthLong);
         return;
       }
       secondaryLocations = hiveModels.SecondaryLocations()
@@ -180,7 +189,7 @@ class _AddWeatherLocationState extends State<AddWeatherLocation> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Select Location for Weather',
+                  AppLocalizations.of(context)!.select_location_for_weather,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 17,
@@ -258,7 +267,7 @@ class _AddWeatherLocationState extends State<AddWeatherLocation> {
               height: 15,
             ),
             DropdownButtonWidget(
-                'Select',
+                AppLocalizations.of(context)!.select,
                 districts.map((district) {
                   return DropdownMenuItem<String>(
                     value: district,
@@ -287,7 +296,7 @@ class _AddWeatherLocationState extends State<AddWeatherLocation> {
                       ),
                     ),
                     child: Text(
-                      'Add Location',
+                      AppLocalizations.of(context)!.add_location_ucf,
                       style: TextStyle(
                         fontSize: 13.5,
                         fontWeight: FontWeight.w600,
@@ -309,28 +318,6 @@ class _AddWeatherLocationState extends State<AddWeatherLocation> {
                 ],
               ),
             ),
-            // TextButton(
-            //     child: Text('show'),
-            //     onPressed: () {
-            //       var dataBox = Hive.box<hiveModels.SecondaryLocations>(
-            //           'secondaryLocationsBox');
-            //       var savedData = dataBox.get('secondaryLocations');
-            //       if (savedData == null) {
-            //         print('no data found');
-            //       } else {
-            //         print(savedData.address.length);
-            //         for (var secondaryDataBox in savedData.address) {
-            //           print(secondaryDataBox);
-            //         }
-            //       }
-            //     }),
-            // TextButton(
-            //     child: Text('clear'),
-            //     onPressed: () {
-            //       var dataBox = Hive.box<hiveModels.SecondaryLocations>(
-            //           'secondaryLocationsBox');
-            //       dataBox.clear();
-            //     }),
           ]),
         ),
       ),
@@ -381,12 +368,6 @@ class _AddWeatherLocationState extends State<AddWeatherLocation> {
               // This is called when the user selects an item.
               onChanged(value!);
             },
-            // items: itemList.map<DropdownMenuItem<String>>((String value) {
-            //   return DropdownMenuItem<String>(
-            //     value: value,
-            //     child: Text(value),
-            //   );
-            // }).toList(),
             items: itemList,
           ),
         ),
@@ -419,7 +400,7 @@ class _AddWeatherLocationState extends State<AddWeatherLocation> {
                   height: double.infinity,
                 ),
                 Center(
-                  child: Text('Add Location',
+                  child: Text(AppLocalizations.of(context)!.add_location_ucf,
                       style: TextStyle(
                           color: MyTheme.white,
                           fontSize: 20,

@@ -1,3 +1,5 @@
+// translation done.
+
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/custom/input_decorations.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
@@ -17,7 +19,7 @@ import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:toast/toast.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:active_ecommerce_flutter/features/profile/address_list.dart'
     as addressList;
 
@@ -29,8 +31,6 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  // TextEditingController _districtController = TextEditingController();
-  // TextEditingController _talukController = TextEditingController();
   TextEditingController _hobliController = TextEditingController();
   TextEditingController _villageController = TextEditingController();
 
@@ -128,8 +128,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void fetchLocations(BuildContext buildContext) {
     if (_pinCodeController.text.toString().isEmpty ||
         _pinCodeController.text.toString().length != 6) {
-      ToastComponent.showDialog('Enter a valid Pincode',
-          gravity: Toast.center, duration: Toast.lengthLong);
+      ToastComponent.showDialog(
+          AppLocalizations.of(context)!.enter_valid_pincode,
+          gravity: Toast.center,
+          duration: Toast.lengthLong);
       return;
     }
     BlocProvider.of<AuthBloc>(buildContext).add(
@@ -140,8 +142,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void fetchLocationsForLand(BuildContext buildContext) {
     if (_pinCodeControllerForLand.text.toString().isEmpty ||
         _pinCodeControllerForLand.text.toString().length != 6) {
-      ToastComponent.showDialog('Enter a valid Pincode',
-          gravity: Toast.center, duration: Toast.lengthLong);
+      ToastComponent.showDialog(
+          AppLocalizations.of(context)!.enter_valid_pincode,
+          gravity: Toast.center,
+          duration: Toast.lengthLong);
       return;
     }
     BlocProvider.of<AuthBloc>(buildContext).add(
@@ -157,17 +161,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     var savedData = dataBox.get('profile');
 
     if (savedData!.address.length != 0) {
-      ToastComponent.showDialog('You have already added an address',
-          gravity: Toast.center, duration: Toast.lengthLong);
+      ToastComponent.showDialog(
+          AppLocalizations.of(context)!.already_added_address,
+          gravity: Toast.center,
+          duration: Toast.lengthLong);
       return;
     }
     if (pincode.isEmpty) {
-      ToastComponent.showDialog('Enter Pin Code',
+      ToastComponent.showDialog(AppLocalizations.of(context)!.enter_pincode,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
     if (locationDropdownValue == null) {
-      ToastComponent.showDialog('Select Location',
+      ToastComponent.showDialog(AppLocalizations.of(context)!.select_a_location,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
@@ -180,7 +186,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ..pincode = pincode;
 
     // if (savedData != null) {
-    print('object detected');
+    // print('object detected');
     print(savedData.id);
     var newData = ProfileData()
       ..id = savedData.id
@@ -190,7 +196,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ..land = savedData.land;
 
     await dataBox.put(newData.id, newData);
-    print('object updated');
+    // print('object updated');
 
     BlocProvider.of<HiveBloc>(context).add(
       SyncHiveToFirestoreRequested(profileData: newData),
@@ -207,19 +213,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   void _addLandToHive(area, syno, village) async {
     if (village == null) {
-      ToastComponent.showDialog('Select Village',
+      ToastComponent.showDialog(AppLocalizations.of(context)!.select_village,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
 
     if (syno.isEmpty) {
-      ToastComponent.showDialog('Enter Sy No',
+      ToastComponent.showDialog('${AppLocalizations.of(context)!.enter} Sy No',
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
 
     if (area.isEmpty) {
-      ToastComponent.showDialog('Enter Area name',
+      ToastComponent.showDialog(AppLocalizations.of(context)!.enter_area_name,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
@@ -228,8 +234,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     try {
       areaDouble = double.parse(area);
     } catch (e) {
-      ToastComponent.showDialog('Please Enter Valid Area',
-          gravity: Toast.center, duration: Toast.lengthLong);
+      ToastComponent.showDialog(
+          AppLocalizations.of(context)!.enter_valid_area_name,
+          gravity: Toast.center,
+          duration: Toast.lengthLong);
       return;
     }
 
@@ -245,7 +253,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ..equipments = [];
 
     if (savedData != null) {
-      print('object detected');
+      // print('object detected');
       print(savedData.id);
       var newData = ProfileData()
         ..id = savedData.id
@@ -255,7 +263,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ..land = [...savedData.land, land];
 
       await dataBox.put(newData.id, newData);
-      print('object updated');
+      // print('object updated');
 
       BlocProvider.of<HiveBloc>(context).add(
         SyncHiveToFirestoreRequested(profileData: newData),
@@ -299,21 +307,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   void _saveKycToHive(aadhar, pan, gst) async {
     if (aadhar.length != 12) {
-      ToastComponent.showDialog('Enter a valid Aadhar Number',
-          gravity: Toast.center, duration: Toast.lengthLong);
+      ToastComponent.showDialog(
+          AppLocalizations.of(context)!.enter_valid_aadhar_number,
+          gravity: Toast.center,
+          duration: Toast.lengthLong);
       return;
     }
-
-    // if (pan.length != 12) {
-    //   ToastComponent.showDialog('Enter a valid PAN Card Number',
-    //       gravity: Toast.center, duration: Toast.lengthLong);
-    //   return;
-    // }
-    // if (gst.length != 15) {
-    //   ToastComponent.showDialog('Enter a valid GST Number',
-    //       gravity: Toast.center, duration: Toast.lengthLong);
-    //   return;
-    // }
 
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
 
@@ -407,19 +406,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   void _addCropToHive(landSyno, crop, yieldOfCrop) async {
     if (landSyno.isEmpty) {
-      ToastComponent.showDialog('Select Land',
+      ToastComponent.showDialog(AppLocalizations.of(context)!.select_land,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
 
     if (crop.isEmpty) {
-      ToastComponent.showDialog('Select Crop',
+      ToastComponent.showDialog(AppLocalizations.of(context)!.select_crop,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
 
     if (yieldOfCrop.isEmpty) {
-      ToastComponent.showDialog('Enter Yield',
+      ToastComponent.showDialog(AppLocalizations.of(context)!.enter_yield,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
@@ -428,7 +427,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     try {
       yieldOfCropDouble = double.parse(yieldOfCrop);
     } catch (e) {
-      ToastComponent.showDialog('Please Enter Valid Yield',
+      ToastComponent.showDialog(AppLocalizations.of(context)!.enter_valid_yield,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
@@ -477,14 +476,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
       dataBox.put(savedData.id, savedData);
 
-      print('Crop removed');
+      // print('Crop removed');
       dataBox.put(savedData.id, savedData);
 
       BlocProvider.of<HiveBloc>(context).add(
         SyncHiveToFirestoreRequested(profileData: savedData),
       );
     } else {
-      print('Land with syno $landSyno not found.');
+      // print('Land with syno $landSyno not found.');
     }
 
     BlocProvider.of<HiveBloc>(context).add(
@@ -512,13 +511,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   void _addEquipmentToHive(landSyno, equipment) async {
     if (landSyno.isEmpty) {
-      ToastComponent.showDialog('Select Land',
+      ToastComponent.showDialog(AppLocalizations.of(context)!.select_land,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
 
     if (equipment.isEmpty) {
-      ToastComponent.showDialog('Select Crop',
+      ToastComponent.showDialog(AppLocalizations.of(context)!.select_crop,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
@@ -695,7 +694,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       Column(
                         children: [
                           TextFieldWidget('Aadhar Card', _aadharController,
-                              'Enter Aadhar Card Number'),
+                              '${AppLocalizations.of(context)!.enter} Aadhar Card'),
                           Row(
                             children: [
                               Expanded(child: SizedBox.shrink()),
@@ -719,14 +718,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             height: 10,
                           ),
                           TextFieldWidget('PAN Card', _panController,
-                              'Enter PAN Card Number'),
-                          TextFieldWidget(
-                              'GST', _gstController, 'Enter GST Number'),
+                              '${AppLocalizations.of(context)!.enter} PAN Card'),
+                          TextFieldWidget('GST', _gstController,
+                              '${AppLocalizations.of(context)!.enter} GST Number'),
                           Row(
                             children: [
                               Expanded(child: SizedBox()),
                               TextButton(
-                                child: Text('Save'),
+                                child: Text(
+                                    AppLocalizations.of(context)!.save_ucf),
                                 onPressed: () {
                                   _saveKycToHive(_aadharController.text,
                                       _panController.text, _gstController.text);
@@ -748,7 +748,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       height: 12,
                     ),
 
-                    HeadingTextWidget('Address Details'),
+                    HeadingTextWidget(
+                        AppLocalizations.of(context)!.address_details),
                     Column(
                       children: List.generate(
                         state.profileData.address.length,
@@ -808,7 +809,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             listener: (context, state) {
                               if (state
                                   is authState.LocationsForPincodeReceived) {
-                                ToastComponent.showDialog('Locations fetched.',
+                                ToastComponent.showDialog(
+                                    AppLocalizations.of(context)!
+                                        .locations_fetched,
                                     gravity: Toast.center,
                                     duration: Toast.lengthLong);
                                 postOfficeResponse = state.postOfficeResponse;
@@ -826,7 +829,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 clearAddressValues();
                                 locationsList.clear();
                                 ToastComponent.showDialog(
-                                    'Fetching Locations...',
+                                    AppLocalizations.of(context)!
+                                        .fetching_locations,
                                     gravity: Toast.center,
                                     duration: Toast.lengthLong);
                               }
@@ -850,7 +854,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             autofocus: false,
                                             decoration: InputDecorations
                                                 .buildInputDecoration_1(
-                                                    hint_text: "Pin Code"),
+                                                    hint_text: "Pincode"),
                                           ),
                                         ),
                                         Padding(
@@ -886,14 +890,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       child: DropdownButton<String>(
                                         isExpanded: true,
                                         hint: Text(
-                                          'Select Location',
+                                          AppLocalizations.of(context)!
+                                              .select_a_location,
                                           style: TextStyle(
                                             color: Colors.grey,
                                             fontSize: 13,
                                           ),
                                         ),
                                         disabledHint: Text(
-                                          'Fetch Locations first',
+                                          AppLocalizations.of(context)!
+                                              .fetch_locations_first,
                                           style: TextStyle(
                                             color: Colors.grey,
                                             fontSize: 13,
@@ -938,7 +944,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             children: [
                               Expanded(child: SizedBox()),
                               TextButton(
-                                child: Text('Add Record'),
+                                child: Text(
+                                    AppLocalizations.of(context)!.add_record),
                                 onPressed: () {
                                   _addAddressToHive(
                                     pincode: _pinCodeController.text,
@@ -967,7 +974,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       height: 12,
                     ),
 
-                    HeadingTextWidget('Land Details'),
+                    HeadingTextWidget(
+                        AppLocalizations.of(context)!.land_details),
 
                     Column(
                       children: List.generate(
@@ -1025,7 +1033,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       listener: (context, state) {
                         if (state
                             is authState.LandLocationsForPincodeReceived) {
-                          ToastComponent.showDialog('Locations fetched.',
+                          ToastComponent.showDialog(
+                              AppLocalizations.of(context)!.locations_fetched,
                               gravity: Toast.center,
                               duration: Toast.lengthLong);
                           postOfficeResponseForLand = state.postOfficeResponse;
@@ -1041,7 +1050,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           locationDropdownValueForLand = null;
                           clearAddressValuesForLand();
                           locationsListForLand.clear();
-                          ToastComponent.showDialog('Fetching Locations...',
+                          ToastComponent.showDialog(
+                              AppLocalizations.of(context)!.fetching_locations,
                               gravity: Toast.center,
                               duration: Toast.lengthLong);
                         }
@@ -1064,7 +1074,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       autofocus: false,
                                       decoration: InputDecorations
                                           .buildInputDecoration_1(
-                                              hint_text: "Pin Code"),
+                                              hint_text: "Pincode"),
                                     ),
                                   ),
                                   Padding(
@@ -1075,7 +1085,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         fetchLocationsForLand(context);
                                       },
                                       child: Text(
-                                        'Get Locations',
+                                        AppLocalizations.of(context)!
+                                            .get_locations,
                                         style: TextStyle(
                                             color: MyTheme.accent_color,
                                             fontStyle: FontStyle.italic,
@@ -1100,14 +1111,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 child: DropdownButton<String>(
                                   isExpanded: true,
                                   hint: Text(
-                                    'Select Village',
+                                    AppLocalizations.of(context)!
+                                        .select_village,
                                     style: TextStyle(
                                       color: Colors.grey,
                                       fontSize: 13,
                                     ),
                                   ),
                                   disabledHint: Text(
-                                    'Enter Pin Code first',
+                                    AppLocalizations.of(context)!
+                                        .enter_pincode_first,
                                     style: TextStyle(
                                       color: Colors.grey,
                                       fontSize: 13,
@@ -1151,18 +1164,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     SizedBox(
                       height: 10,
                     ),
-                    TextFieldWidget('Syno', _synoController, 'Enter Syno'),
+                    TextFieldWidget('Syno', _synoController,
+                        '${AppLocalizations.of(context)!.enter} Syno'),
 
                     //custom Area text field for accepting double values
                     TexiFieldWidgetForDouble(
-                        'Area', _areaController, 'Enter Area (in Acres)'),
+                      // 'Area',
+                      _areaController,
+                      AppLocalizations.of(context)!.enter_area_in_acres,
+                    ),
 
                     //Add Land to Hive
                     Row(
                       children: [
                         Expanded(child: SizedBox()),
                         TextButton(
-                          child: Text('Add Record'),
+                          child: Text(AppLocalizations.of(context)!.add_record),
                           onPressed: () {
                             _addLandToHive(
                               _areaController.text,
@@ -1186,7 +1203,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       height: 12,
                     ),
 
-                    HeadingTextWidget('Farm Details'),
+                    HeadingTextWidget(
+                        AppLocalizations.of(context)!.farm_details),
                     SizedBox(
                       height: 10,
                     ),
@@ -1197,7 +1215,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             child: Align(
                               alignment: Alignment.center,
                               child: Text(
-                                'Add Land First',
+                                AppLocalizations.of(context)!.add_land_first,
                                 style: TextStyle(
                                   color: Colors.red,
                                   fontSize: 18,
@@ -1211,8 +1229,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         : Column(
                             children: [
                               DropdownButtonWidget(
-                                  'Land',
-                                  'Select Land',
+                                  AppLocalizations.of(context)!.land,
+                                  AppLocalizations.of(context)!.select_land,
                                   List.generate(
                                     state.profileData.land.length,
                                     (index) {
@@ -1246,7 +1264,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    'Add Crop',
+                                    AppLocalizations.of(context)!.add_crop,
                                     style: TextStyle(
                                         // color: MyTheme.accent_color,
                                         fontSize: 15,
@@ -1298,7 +1316,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   children: [
                                     DropdownButtonWidget(
                                         '',
-                                        'Select Crop',
+                                        AppLocalizations.of(context)!
+                                            .select_crop,
                                         cropsList.map<DropdownMenuItem<String>>(
                                             (String value) {
                                           return DropdownMenuItem<String>(
@@ -1312,14 +1331,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       });
                                     }),
                                     TexiFieldWidgetForDouble(
-                                        'Yield',
+                                        // 'Yield',
                                         _yieldController,
                                         'Enter Crop Yield (in Acres)'),
                                     Row(
                                       children: [
                                         Expanded(child: SizedBox()),
                                         TextButton(
-                                          child: Text('Add Record'),
+                                          child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .add_record),
                                           onPressed: () {
                                             _addCropToHive(
                                               landDropdownValue,
@@ -1343,7 +1364,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    'Add Machines',
+                                    AppLocalizations.of(context)!.add_machines,
                                     style: TextStyle(
                                         // color: MyTheme.accent_color,
                                         fontSize: 15,
@@ -1393,7 +1414,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   children: [
                                     DropdownButtonWidget(
                                         '',
-                                        'Select Equipments',
+                                        AppLocalizations.of(context)!
+                                            .select_equipments,
                                         equipmentsList
                                             .map<DropdownMenuItem<String>>(
                                                 (String value) {
@@ -1411,7 +1433,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       children: [
                                         Expanded(child: SizedBox()),
                                         TextButton(
-                                          child: Text('Add Record'),
+                                          child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .add_record),
                                           onPressed: () {
                                             _addEquipmentToHive(
                                               landDropdownValue,
@@ -1427,142 +1451,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               ),
                             ],
                           ),
-
-                    // SizedBox(
-                    //   height: 8,
-                    // ),
-                    // Divider(
-                    //   // color: MyTheme.grey_153,
-                    //   thickness: 2,
-                    // ),
-                    // SizedBox(
-                    //   height: 12,
-                    // ),
-                    // HeadingTextWidget('Machines and Equipments'),
-
-                    // (state.profileData.land.length == 0)
-                    //     ? Padding(
-                    //         padding: const EdgeInsets.all(20),
-                    //         child: Align(
-                    //           alignment: Alignment.center,
-                    //           child: Text(
-                    //             'Add Land First',
-                    //             style: TextStyle(
-                    //               color: Colors.red,
-                    //               fontSize: 18,
-                    //               fontWeight: FontWeight.w500,
-                    //               letterSpacing: .5,
-                    //               fontFamily: 'Poppins',
-                    //             ),
-                    //           ),
-                    //         ),
-                    //       )
-                    //     : Column(
-                    //         children: [
-                    //           // DropdownButtonWidget(
-                    //           //     'Select Land',
-                    //           //     List.generate(
-                    //           //       state.profileData.land.length + 1,
-                    //           //       (index) {
-                    //           //         var item = [
-                    //           //           Land()
-                    //           //             ..village = ''
-                    //           //             ..area = 0
-                    //           //             ..syno = '',
-                    //           //           ...state.profileData.land
-                    //           //         ][index];
-                    //           //         return DropdownMenuItem(
-                    //           //           child: Row(
-                    //           //             mainAxisAlignment:
-                    //           //                 MainAxisAlignment.spaceBetween,
-                    //           //             children: [
-                    //           //               Expanded(child: Text(item.village)),
-                    //           //               Expanded(child: Text(item.syno)),
-                    //           //               Expanded(
-                    //           //                   child:
-                    //           //                       Text(item.area.toString())),
-                    //           //               // Expanded(child: Text(item.village)),
-                    //           //             ],
-                    //           //           ),
-                    //           //           value: item.syno,
-                    //           //         );
-                    //           //       },
-                    //           //     ),
-                    //           //     landDropdownValue, (value) {
-                    //           //   setState(() {
-                    //           //     landDropdownValue = value;
-                    //           //     setState(() {});
-                    //           //   });
-                    //           // }),
-                    //           if (landDropdownValue.isNotEmpty)
-                    //             Align(
-                    //               alignment: Alignment.topLeft,
-                    //               child: Wrap(
-                    //                 children: List.generate(
-                    //                   getMachinesForSyno(state.profileData,
-                    //                           landDropdownValue)
-                    //                       .length,
-                    //                   (index) {
-                    //                     var item = getMachinesForSyno(
-                    //                         state.profileData,
-                    //                         landDropdownValue)[index];
-                    //                     return Padding(
-                    //                       padding: const EdgeInsets.symmetric(
-                    //                           horizontal: 2),
-                    //                       child: Chip(
-                    //                         backgroundColor:
-                    //                             MyTheme.green_lighter,
-                    //                         labelPadding: EdgeInsets.symmetric(
-                    //                             horizontal: 10, vertical: 0),
-                    //                         label: Text(item),
-                    //                         // deleteIcon: Icon(Icons.delete),
-                    //                         onDeleted: () {
-                    //                           _deleteEquipmentFromHive(
-                    //                               landDropdownValue, index);
-                    //                           setState(() {});
-                    //                         },
-                    //                       ),
-                    //                     );
-                    //                   },
-                    //                 ),
-                    //               ),
-                    //             ),
-                    //           DropdownButtonWidget(
-                    //               'Select Machine',
-                    //               equipmentsList.map<DropdownMenuItem<String>>(
-                    //                   (String value) {
-                    //                 return DropdownMenuItem<String>(
-                    //                   value: value,
-                    //                   child: Text(value),
-                    //                 );
-                    //               }).toList(),
-                    //               equipmentDropdownValue, (value) {
-                    //             setState(() {
-                    //               equipmentDropdownValue = value;
-                    //             });
-                    //           }),
-                    //           Row(
-                    //             children: [
-                    //               Expanded(child: SizedBox()),
-                    //               TextButton(
-                    //                 child: Text('Add Record'),
-                    //                 onPressed: () {
-                    //                   _addEquipmentToHive(
-                    //                     landDropdownValue,
-                    //                     equipmentDropdownValue,
-                    //                   );
-                    //                   setState(() {});
-                    //                 },
-                    //               ),
-                    //             ],
-                    //           ),
-                    //         ],
-                    //       ),
                   ],
                 );
               return Container(
                 color: Colors.white30,
-                child: Text('Something Went Wrong'),
+                child: Text(AppLocalizations.of(context)!.something_went_wrong),
               );
             },
           ),
@@ -1571,48 +1464,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Container CropDisplayWidget() {
-    return Container(
-      color: MyTheme.green_lighter,
-      margin: EdgeInsets.all(5),
-      padding: EdgeInsets.all(5),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Text('Croperinsta',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 13,
-            )),
-        SizedBox(width: 8),
-        CircleAvatar(
-          radius: 12,
-          backgroundColor: MyTheme.green,
-          child: Icon(
-            Icons.delete,
-            size: 15.0,
-            color: Colors.white,
-          ),
-        ),
-      ]),
-    );
-  }
-
   Column TexiFieldWidgetForDouble(
-      String title, TextEditingController _textController, String hintText) {
+    // String title,
+    TextEditingController _textController,
+    String hintText,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Padding(
-        //   padding: const EdgeInsets.only(left: 4, bottom: 5),
-        //   child: Text(
-        //     title,
-        //     style: TextStyle(
-        //         // color: MyTheme.accent_color,
-        //         fontSize: 12,
-        //         fontWeight: FontWeight.w500,
-        //         letterSpacing: .5,
-        //         fontFamily: 'Poppins'),
-        //   ),
-        // ),
         Container(
           height: 40,
           child: TextField(
@@ -1639,18 +1498,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Padding(
-        //   padding: const EdgeInsets.only(left: 4, bottom: 5),
-        //   child: Text(
-        //     title,
-        //     style: TextStyle(
-        //         // color: MyTheme.accent_color,
-        //         fontSize: 12,
-        //         fontWeight: FontWeight.w500,
-        //         letterSpacing: .5,
-        //         fontFamily: 'Poppins'),
-        //   ),
-        // ),
         Container(
           height: 40,
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
@@ -1682,12 +1529,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               // This is called when the user selects an item.
               onChanged(value!);
             },
-            // items: itemList.map<DropdownMenuItem<String>>((String value) {
-            //   return DropdownMenuItem<String>(
-            //     value: value,
-            //     child: Text(value),
-            //   );
-            // }).toList(),
             items: itemList,
           ),
         ),
@@ -1719,18 +1560,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Padding(
-        //   padding: const EdgeInsets.only(left: 4, bottom: 5),
-        //   child: Text(
-        //     title,
-        //     style: TextStyle(
-        //         // color: MyTheme.accent_color,
-        //         fontSize: 12,
-        //         fontWeight: FontWeight.w500,
-        //         letterSpacing: .5,
-        //         fontFamily: 'Poppins'),
-        //   ),
-        // ),
         Container(
           height: 40,
           child: TextField(
@@ -1771,7 +1600,7 @@ PreferredSize buildCustomAppBar(context) {
                 width: 30,
               ),
               Center(
-                child: Text('Edit Profile',
+                child: Text(AppLocalizations.of(context)!.edit_profile_ucf,
                     style: TextStyle(
                         color: MyTheme.white,
                         fontSize: 20,

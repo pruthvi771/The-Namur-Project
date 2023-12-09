@@ -1,5 +1,5 @@
-import 'package:active_ecommerce_flutter/custom/toast_component.dart';
-import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
+// translation done.
+
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_event.dart';
 import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_state.dart';
@@ -10,9 +10,6 @@ import 'package:active_ecommerce_flutter/features/weather/screens/add_location.d
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:hive/hive.dart';
-import 'package:toast/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../custom/device_info.dart';
 import '../../../my_theme.dart';
@@ -308,7 +305,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'Forecast',
+                AppLocalizations.of(context)!.forecast,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
@@ -378,7 +375,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                           height: 20,
                         ),
                         Text(
-                          'No Location Data Found',
+                          AppLocalizations.of(context)!.no_location_found,
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
@@ -397,7 +394,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                             ),
                           ),
                           child: Text(
-                            'Add Location',
+                            AppLocalizations.of(context)!.add_location_ucf,
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
@@ -498,7 +495,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'Satellite View',
+                AppLocalizations.of(context)!.satellite_view,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
@@ -531,25 +528,10 @@ class _WeatherScreenState extends State<WeatherScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Padding(
-        //   padding: const EdgeInsets.only(left: 4, bottom: 5),
-        //   child: Text(
-        //     title,
-        //     style: TextStyle(
-        //         // color: MyTheme.accent_color,
-        //         fontSize: 12,
-        //         fontWeight: FontWeight.w500,
-        //         letterSpacing: .5,
-        //         fontFamily: 'Poppins'),
-        //   ),
-        // ),
         InputDecorator(
           decoration: InputDecoration(
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5.0),
-              // borderSide: BorderSide(
-              //   color: MyTheme.textfield_grey,
-              // ),
             ),
             filled: true,
             fillColor: MyTheme.light_grey,
@@ -631,7 +613,7 @@ class CurrentWeatherWidget extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Current Weather',
+                    AppLocalizations.of(context)!.current_weather,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 15,
@@ -700,7 +682,7 @@ class CurrentWeatherWidget extends StatelessWidget {
                               height: 4,
                             ),
                             Text(
-                              'Humidity: ${currentHumidity}',
+                              '${AppLocalizations.of(context)!.humidity}: $currentHumidity',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 13,
@@ -708,7 +690,7 @@ class CurrentWeatherWidget extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              'Wind: ${currentWind}',
+                              '${AppLocalizations.of(context)!.wind}: $currentWind',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 13,

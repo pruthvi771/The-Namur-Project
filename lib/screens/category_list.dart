@@ -1,3 +1,5 @@
+// translation done.
+
 import 'dart:ui';
 
 import 'package:active_ecommerce_flutter/custom/box_decorations.dart';
@@ -163,7 +165,6 @@ class _CategoryListState extends State<CategoryList> {
           if (snapshot.hasData) {
             profileProgress =
                 calculatingProfileProgress(profileData: snapshot.data!);
-            print('profile progress is $profileProgress');
             return Column(
               children: [
                 TitleBar(),
@@ -184,11 +185,6 @@ class _CategoryListState extends State<CategoryList> {
                         //               builder: (context) => TestWidget()));
                         //     },
                         //     child: Text('Test Widget')),
-
-                        // CachedNetworkImage(
-                        //   imageUrl:
-                        //       'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers%2FfruitsAndVeg%2Fbanana.png?alt=media&token=5cf50bc8-63e0-495f-9581-37e98d1833c4',
-                        // ),
 
                         SizedBox(height: 10),
 
@@ -231,7 +227,8 @@ class _CategoryListState extends State<CategoryList> {
                                                 : MyTheme.light_grey),
                                         child: Center(
                                           child: Text(
-                                            "SELL",
+                                            AppLocalizations.of(context)!
+                                                .sell_upper,
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontSize: 14,
@@ -265,7 +262,7 @@ class _CategoryListState extends State<CategoryList> {
                                             : MyTheme.light_grey),
                                     child: Center(
                                       child: Text(
-                                        "BUY",
+                                        AppLocalizations.of(context)!.buy_upper,
                                         textAlign: TextAlign.right,
                                         style: TextStyle(
                                           fontSize: 14,
@@ -317,7 +314,9 @@ class _CategoryListState extends State<CategoryList> {
                                                               .center,
                                                       children: [
                                                         Text(
-                                                          'Complete Your Profile to Become a Seller',
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .complate_profile_to_become_seller,
                                                           style: TextStyle(
                                                               fontSize: 20,
                                                               color:
@@ -347,7 +346,9 @@ class _CategoryListState extends State<CategoryList> {
                                                                       false);
                                                             },
                                                             child: Text(
-                                                                'Complete Profile')),
+                                                                AppLocalizations.of(
+                                                                        context)!
+                                                                    .complate_profile)),
                                                       ],
                                                     ),
                                                   ),
@@ -395,7 +396,7 @@ class _CategoryListState extends State<CategoryList> {
                             ),
                             SizedBox(height: 5),
                             Text(
-                              "Calender",
+                              AppLocalizations.of(context)!.calendar,
                               style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontFamily: 'Poppins'),
@@ -432,10 +433,6 @@ class _CategoryListState extends State<CategoryList> {
   }
 
   buildCategoryList({required bool isBuy}) {
-    // var data = widget.is_top_category
-    //     ? CategoryRepository().getTopCategories()
-    //     : CategoryRepository()
-    //         .getCategories(parent_id: widget.parent_category_id);
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         mainAxisSpacing: 10,
@@ -579,14 +576,14 @@ class _CategoryListState extends State<CategoryList> {
               Text(
                 // "${categoryResponse.categories[index].name}",
                 index == 0
-                    ? "Animal"
+                    ? AppLocalizations.of(context)!.animal
                     : index == 1
-                        ? "Food"
+                        ? AppLocalizations.of(context)!.food
                         : index == 2
-                            ? "Machine"
+                            ? AppLocalizations.of(context)!.machine
                             : index == 3
-                                ? "Land"
-                                : "Calendar",
+                                ? AppLocalizations.of(context)!.land
+                                : AppLocalizations.of(context)!.calendar,
                 style: TextStyle(
                     fontWeight: FontWeight.w600, fontFamily: 'Poppins'),
               )
