@@ -149,18 +149,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    // Firebase.initializeApp();
-    // Future.delayed(Duration.zero).then(
-    //   (value) async {
-    //     Firebase.initializeApp().then((value) {
-    //       // if (OtherConfig.USE_PUSH_NOTIFICATION) {
-    //       //   Future.delayed(Duration(milliseconds: 10), () async {
-    //       //     PushNotificationService().initialise();
-    //       //   });
-    //       }
-    //     });
-    //   },
-    // );
   }
 
   @override

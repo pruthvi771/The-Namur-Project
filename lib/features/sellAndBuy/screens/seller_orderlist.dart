@@ -146,100 +146,120 @@ class _SellerOrderListState extends State<SellerOrderList> {
                         width: double.infinity,
                         padding: EdgeInsets.all(10),
                         // color: MyTheme.green_lighter,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            color: Colors.grey[100],
-                          ),
-                          child: SingleChildScrollView(
-                            physics: BouncingScrollPhysics(),
-                            scrollDirection: Axis.vertical,
-                            child: SingleChildScrollView(
-                              physics: BouncingScrollPhysics(),
-                              scrollDirection: Axis.horizontal,
-                              child: DataTable(
-                                columns: <DataColumn>[
-                                  DataColumn(
-                                    label: Text(
-                                      AppLocalizations.of(context)!.order_id,
-                                    ),
+
+                        child: sellerOrderList.length == 0
+                            ? Container(
+                                child: Center(
+                                child: Text(
+                                  AppLocalizations.of(context)!.no_orders_yet,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: 'Poppins',
                                   ),
-                                  DataColumn(
-                                    label: Text(
-                                      AppLocalizations.of(context)!.date_ucf,
-                                    ),
-                                  ),
-                                  DataColumn(
-                                    label: Text(
-                                      AppLocalizations.of(context)!.status,
-                                    ),
-                                  ),
-                                  DataColumn(
-                                    label: Text(
-                                      AppLocalizations.of(context)!.total,
-                                    ),
-                                  ),
-                                ],
-                                // rows: <DataRow>[],
-                                rows: List.generate(sellerOrderList.length,
-                                    (index) {
-                                  DateTime date = DateTime.parse(
-                                      sellerOrderList[index]
-                                          .timestamp
-                                          .toDate()
-                                          .toString());
-                                  return DataRow(
-                                    cells: <DataCell>[
-                                      DataCell(
-                                        Text(
-                                          sellerOrderList[index].orderID,
-                                          style: TextStyle(
-                                            color: MyTheme.accent_color,
-                                            fontWeight: FontWeight.w500,
-                                            fontFamily: 'Poppins',
-                                            decoration:
-                                                TextDecoration.underline,
+                                ),
+                              ))
+                            : Container(
+                                decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                  color: Colors.grey[100],
+                                ),
+                                child: SingleChildScrollView(
+                                  physics: BouncingScrollPhysics(),
+                                  scrollDirection: Axis.vertical,
+                                  child: SingleChildScrollView(
+                                    physics: BouncingScrollPhysics(),
+                                    scrollDirection: Axis.horizontal,
+                                    child: DataTable(
+                                      columns: <DataColumn>[
+                                        DataColumn(
+                                          label: Text(
+                                            AppLocalizations.of(context)!
+                                                .order_id,
                                           ),
                                         ),
-                                        onTap: () {
-                                          print(sellerOrderList[index].orderID);
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    SellerOrderCheckupScreen(
-                                                      orderID:
-                                                          sellerOrderList[index]
-                                                              .orderID,
-                                                      sellerID: currentUser.uid,
-                                                    )),
-                                          );
-                                        },
-                                      ),
-                                      DataCell(
-                                        Text(
-                                          '${date.day}-${date.month}-${date.year}',
+                                        DataColumn(
+                                          label: Text(
+                                            AppLocalizations.of(context)!
+                                                .date_ucf,
+                                          ),
                                         ),
-                                      ),
-                                      DataCell(
-                                        Text(
-                                          sellerOrderList[index].status,
+                                        DataColumn(
+                                          label: Text(
+                                            AppLocalizations.of(context)!
+                                                .status,
+                                          ),
                                         ),
-                                      ),
-                                      DataCell(
-                                        Text(
-                                          sellerOrderList[index]
-                                              .totalAmount
-                                              .toString(),
+                                        DataColumn(
+                                          label: Text(
+                                            AppLocalizations.of(context)!.total,
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  );
-                                }),
+                                      ],
+                                      // rows: <DataRow>[],
+                                      rows: List.generate(
+                                          sellerOrderList.length, (index) {
+                                        DateTime date = DateTime.parse(
+                                            sellerOrderList[index]
+                                                .timestamp
+                                                .toDate()
+                                                .toString());
+                                        return DataRow(
+                                          cells: <DataCell>[
+                                            DataCell(
+                                              Text(
+                                                sellerOrderList[index].orderID,
+                                                style: TextStyle(
+                                                  color: MyTheme.accent_color,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontFamily: 'Poppins',
+                                                  decoration:
+                                                      TextDecoration.underline,
+                                                ),
+                                              ),
+                                              onTap: () {
+                                                print(sellerOrderList[index]
+                                                    .orderID);
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          SellerOrderCheckupScreen(
+                                                            orderID:
+                                                                sellerOrderList[
+                                                                        index]
+                                                                    .orderID,
+                                                            sellerID:
+                                                                currentUser.uid,
+                                                          )),
+                                                );
+                                              },
+                                            ),
+                                            DataCell(
+                                              Text(
+                                                '${date.day}-${date.month}-${date.year}',
+                                              ),
+                                            ),
+                                            DataCell(
+                                              Text(
+                                                sellerOrderList[index].status,
+                                              ),
+                                            ),
+                                            DataCell(
+                                              Text(
+                                                sellerOrderList[index]
+                                                    .totalAmount
+                                                    .toString(),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      }),
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
                       ),
                     ),
                   ],
