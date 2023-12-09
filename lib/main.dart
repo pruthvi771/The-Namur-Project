@@ -37,6 +37,8 @@ import 'package:active_ecommerce_flutter/screens/splash_screen.dart';
 import 'package:active_ecommerce_flutter/screens/todays_deal_products.dart';
 import 'package:active_ecommerce_flutter/screens/top_selling_products.dart';
 import 'package:active_ecommerce_flutter/screens/wallet.dart';
+import 'package:active_ecommerce_flutter/utils/translation_bloc/translation_bloc.dart';
+import 'package:active_ecommerce_flutter/utils/translation_bloc/translation_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -126,7 +128,10 @@ main() async {
 
   runApp(
     SharedValue.wrapApp(
-      MyApp(),
+      BlocProvider(
+        create: (context) => TranslationBloc(),
+        child: MyApp(),
+      ),
     ),
   );
 }
@@ -139,6 +144,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  Locale _currentLocale = Locale('en');
+
   @override
   void initState() {
     super.initState();
@@ -218,101 +225,112 @@ class _MyAppState extends State<MyApp> {
               ChangeNotifierProvider(create: (context) => CurrencyPresenter()),
               // ChangeNotifierProvider(create: (context) => HomePresenter())
             ],
-            child: MaterialApp(
-              initialRoute: "/",
-              routes: {
-                "/": (context) => SplashScreen(),
-                "/classified_ads": (context) => ClassifiedAds(),
-                "/classified_ads_details": (context) =>
-                    ClassifiedAdsDetails(id: 0),
-                "/my_classified_ads": (context) => MyClassifiedAds(),
-                "/digital_product_details": (context) => DigitalProductDetails(
-                      id: 0,
-                    ),
-                "/digital_products": (context) => DigitalProducts(),
-                "/purchased_digital_products": (context) =>
-                    PurchasedDigitalProducts(),
-                "/update_package": (context) => UpdatePackage(),
-                "/address": (context) => Address(),
-                "/auction_products": (context) => AuctionProducts(),
-                "/auction_products_details": (context) =>
-                    AuctionProductsDetails(id: 0),
-                "/brand_products": (context) =>
-                    BrandProducts(id: 0, brand_name: ""),
-                "/cart": (context) => Cart(),
-                "/category_list": (context) => CategoryList(
-                    parent_category_id: 0,
-                    is_base_category: true,
-                    parent_category_name: "",
-                    is_top_category: false),
-                "/category_products": (context) =>
-                    CategoryProducts(category_id: 0, category_name: ""),
-                "/chat": (context) => Chat(),
-                "/checkout": (context) => Checkout(),
-                "/clubpoint": (context) => Clubpoint(),
-                "/flash_deal_list": (context) => FlashDealList(),
-                "/flash_deal_products": (context) => FlashDealProducts(),
-                "/home": (context) => Home(),
-                "/login": (context) => Login(),
-                "/main": (context) => Main(),
-                "/map_location": (context) => MapLocation(),
-                "/messenger_list": (context) => MessengerList(),
-                "/order_details": (context) => OrderDetails(),
-                "/order_list": (context) => OrderList(),
-                "/product_details": (context) => ProductDetails(
-                      id: 0,
-                    ),
-                "/product_reviews": (context) => ProductReviews(
-                      id: 0,
-                    ),
-                "/profile": (context) => Profile(),
-                "/refund_request": (context) => RefundRequest(),
-                "/seller_details": (context) => SellerDetails(
-                      id: 0,
-                    ),
-                "/seller_products": (context) => SellerProducts(),
-                "/todays_deal_products": (context) => TodaysDealProducts(),
-                "/top_selling_products": (context) => TopSellingProducts(),
-                "/wallet": (context) => Wallet(),
+            child: BlocListener<TranslationBloc, TranslationState>(
+              listener: (context, state) {
+                if (state is TranslationDataReceived) {
+                  setState(() {
+                    _currentLocale = state.locale;
+                  });
+                }
               },
-              builder: OneContext().builder,
-              navigatorKey: OneContext().navigator.key,
-              title: AppConfig.app_name,
-              debugShowCheckedModeBanner: false,
-              theme: ThemeData(
-                primaryColor: MyTheme.white,
-                scaffoldBackgroundColor: MyTheme.white,
-                visualDensity: VisualDensity.adaptivePlatformDensity,
-                /*textTheme: TextTheme(
-              bodyText1: TextStyle(),
-              bodyText2: TextStyle(fontSize: 12.0),
-            )*/
-                //
-                // the below code is getting fonts from http
-                textTheme: GoogleFonts.publicSansTextTheme(textTheme).copyWith(
-                  bodyText1:
-                      GoogleFonts.publicSans(textStyle: textTheme.bodyText1),
-                  bodyText2: GoogleFonts.publicSans(
-                      textStyle: textTheme.bodyText2, fontSize: 12),
+              child: MaterialApp(
+                initialRoute: "/",
+                routes: {
+                  "/": (context) => SplashScreen(),
+                  "/classified_ads": (context) => ClassifiedAds(),
+                  "/classified_ads_details": (context) =>
+                      ClassifiedAdsDetails(id: 0),
+                  "/my_classified_ads": (context) => MyClassifiedAds(),
+                  "/digital_product_details": (context) =>
+                      DigitalProductDetails(
+                        id: 0,
+                      ),
+                  "/digital_products": (context) => DigitalProducts(),
+                  "/purchased_digital_products": (context) =>
+                      PurchasedDigitalProducts(),
+                  "/update_package": (context) => UpdatePackage(),
+                  "/address": (context) => Address(),
+                  "/auction_products": (context) => AuctionProducts(),
+                  "/auction_products_details": (context) =>
+                      AuctionProductsDetails(id: 0),
+                  "/brand_products": (context) =>
+                      BrandProducts(id: 0, brand_name: ""),
+                  "/cart": (context) => Cart(),
+                  "/category_list": (context) => CategoryList(
+                      parent_category_id: 0,
+                      is_base_category: true,
+                      parent_category_name: "",
+                      is_top_category: false),
+                  "/category_products": (context) =>
+                      CategoryProducts(category_id: 0, category_name: ""),
+                  "/chat": (context) => Chat(),
+                  "/checkout": (context) => Checkout(),
+                  "/clubpoint": (context) => Clubpoint(),
+                  "/flash_deal_list": (context) => FlashDealList(),
+                  "/flash_deal_products": (context) => FlashDealProducts(),
+                  "/home": (context) => Home(),
+                  "/login": (context) => Login(),
+                  "/main": (context) => Main(),
+                  "/map_location": (context) => MapLocation(),
+                  "/messenger_list": (context) => MessengerList(),
+                  "/order_details": (context) => OrderDetails(),
+                  "/order_list": (context) => OrderList(),
+                  "/product_details": (context) => ProductDetails(
+                        id: 0,
+                      ),
+                  "/product_reviews": (context) => ProductReviews(
+                        id: 0,
+                      ),
+                  "/profile": (context) => Profile(),
+                  "/refund_request": (context) => RefundRequest(),
+                  "/seller_details": (context) => SellerDetails(
+                        id: 0,
+                      ),
+                  "/seller_products": (context) => SellerProducts(),
+                  "/todays_deal_products": (context) => TodaysDealProducts(),
+                  "/top_selling_products": (context) => TopSellingProducts(),
+                  "/wallet": (context) => Wallet(),
+                },
+                builder: OneContext().builder,
+                navigatorKey: OneContext().navigator.key,
+                title: AppConfig.app_name,
+                debugShowCheckedModeBanner: false,
+                theme: ThemeData(
+                  primaryColor: MyTheme.white,
+                  scaffoldBackgroundColor: MyTheme.white,
+                  visualDensity: VisualDensity.adaptivePlatformDensity,
+                  /*textTheme: TextTheme(
+                          bodyText1: TextStyle(),
+                          bodyText2: TextStyle(fontSize: 12.0),
+                        )*/
+                  //
+                  // the below code is getting fonts from http
+                  textTheme:
+                      GoogleFonts.publicSansTextTheme(textTheme).copyWith(
+                    bodyText1:
+                        GoogleFonts.publicSans(textStyle: textTheme.bodyText1),
+                    bodyText2: GoogleFonts.publicSans(
+                        textStyle: textTheme.bodyText2, fontSize: 12),
+                  ),
                 ),
+                localizationsDelegates: [
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                  AppLocalizations.delegate,
+                ],
+                // locale: provider.locale,
+                supportedLocales: LangConfig().supportedLocales(),
+                locale: _currentLocale,
+                // localeResolutionCallback: (deviceLocale, supportedLocales) {
+                //   if (AppLocalizations.delegate.isSupported(deviceLocale!)) {
+                //     return deviceLocale;
+                //   }
+                //   return const Locale('ar');
+                // },
+                //home: SplashScreen(),
+                // home: Splash(),
               ),
-              localizationsDelegates: [
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-                AppLocalizations.delegate,
-              ],
-              // locale: provider.locale,
-              supportedLocales: LangConfig().supportedLocales(),
-              locale: Locale('en'),
-              // localeResolutionCallback: (deviceLocale, supportedLocales) {
-              //   if (AppLocalizations.delegate.isSupported(deviceLocale!)) {
-              //     return deviceLocale;
-              //   }
-              //   return const Locale('ar');
-              // },
-              //home: SplashScreen(),
-              // home: Splash(),
             )));
     // );
   }
