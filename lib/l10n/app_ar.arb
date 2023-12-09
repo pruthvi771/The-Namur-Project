@@ -510,6 +510,7 @@
 "no_crop_for_tracking": "لم يتم إضافة محصول للتتبع",
 "add_crop_for_tracking": "إضافة محصول للتتبع",
 "no_slot_booked": "لم يتم حجز أي فتحة",
-"recheck_slot_and_try_again": "يرجى إعادة فحص الفتحات المتاحة والمحاولة مرة أخرى"
+"recheck_slot_and_try_again": "يرجى إعادة فحص الفتحات المتاحة والمحاولة مرة أخرى",
+"already_booked_slots": "الفتحات محجوزة بالفعل"
 
 }

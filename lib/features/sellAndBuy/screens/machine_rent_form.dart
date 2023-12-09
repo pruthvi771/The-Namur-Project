@@ -1,4 +1,4 @@
-// translation done. needs updating
+// translation done.
 
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/order_item.dart';
@@ -364,7 +364,7 @@ class _MachineRentFormState extends State<MachineRentForm> {
             });
           },
           child: ListView(
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+            padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
             physics: BouncingScrollPhysics(),
             children: [
               SizedBox(
@@ -379,7 +379,7 @@ class _MachineRentFormState extends State<MachineRentForm> {
 
               // Machine
               Padding(
-                padding: const EdgeInsets.all(6.0),
+                padding: const EdgeInsets.all(0.0),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.grey[100],
@@ -553,7 +553,7 @@ class _MachineRentFormState extends State<MachineRentForm> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
-                  'Already Booked Slots:',
+                  AppLocalizations.of(context)!.already_booked_slots,
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w900,
