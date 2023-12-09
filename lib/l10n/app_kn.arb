@@ -755,9 +755,10 @@
   "fetch_locations_first": "ಮೊದಲು ಸ್ಥಳಗಳನ್ನು ತರಬೇಕು",
   "locations_fetched": "ಸ್ಥಳಗಳು ತರಲಾಗಿದೆ",
   "fetching_locations": "ಸ್ಥಳಗಳನ್ನು ತರುವಾಗ..",
-  "address_details" : "Address Details",
-"land_details" : "Land Details",
-"farm_details" : "Farm Details",
+  "address_details": "ವಿಳಾಸ ವಿವರಗಳು",
+  "land_details": "ಭೂಮಿ ವಿವರಗಳು",
+  "farm_details": "ಹೊನ್ನು ವಿವರಗಳು",
 "enter_pincode_first" : "ಮೊದಲು Pincode ನಮೂದಿಸಿ",
-"enter_area_in_acres": "ವಿಸ್ತರಣವನ್ನು ನಮೂದಿಸಿ (ಏಕರೆಗಳಲ್ಲಿ)"
+"enter_area_in_acres": "ವಿಸ್ತರಣವನ್ನು ನಮೂದಿಸಿ (ಏಕರೆಗಳಲ್ಲಿ)",
+"enter_crop_yield": "ಬೆಳೆ ವೃದ್ಧಿಯನ್ನು ನಮೂದಿಸಿ"
 }

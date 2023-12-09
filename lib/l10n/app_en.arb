@@ -759,5 +759,6 @@
 "land_details" : "Land Details",
 "farm_details" : "Farm Details",
 "enter_pincode_first" : "Enter Pincode First",
-"enter_area_in_acres" : "Enter Area (in Acres)"
+"enter_area_in_acres" : "Enter Area (in Acres)",
+"enter_crop_yield" : "Enter Crop Yield"
 }

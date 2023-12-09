@@ -865,7 +865,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                               fetchLocations(context);
                                             },
                                             child: Text(
-                                              'Get Locations',
+                                              AppLocalizations.of(context)!
+                                                  .get_locations,
                                               style: TextStyle(
                                                   color: MyTheme.accent_color,
                                                   fontStyle: FontStyle.italic,
@@ -1333,7 +1334,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     TexiFieldWidgetForDouble(
                                         // 'Yield',
                                         _yieldController,
-                                        'Enter Crop Yield (in Acres)'),
+                                        AppLocalizations.of(context)!
+                                            .enter_crop_yield),
                                     Row(
                                       children: [
                                         Expanded(child: SizedBox()),
