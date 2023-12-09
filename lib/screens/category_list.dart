@@ -6,11 +6,13 @@ import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/my_purchases.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/seller_orderlist.dart';
+import 'package:active_ecommerce_flutter/features/testscreen.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/parent_screen.dart';
 import 'package:active_ecommerce_flutter/helpers/shimmer_helper.dart';
 import 'package:active_ecommerce_flutter/presenter/bottom_appbar_index.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/drawer/drawer.dart';
@@ -179,10 +181,14 @@ class _CategoryListState extends State<CategoryList> {
                         //       Navigator.push(
                         //           context,
                         //           MaterialPageRoute(
-                        //               builder: (context) =>
-                        //                   PurchaseHistoryScreen()));
+                        //               builder: (context) => TestWidget()));
                         //     },
-                        //     child: Text('Purchase History')),
+                        //     child: Text('Test Widget')),
+
+                        // CachedNetworkImage(
+                        //   imageUrl:
+                        //       'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers%2FfruitsAndVeg%2Fbanana.png?alt=media&token=5cf50bc8-63e0-495f-9581-37e98d1833c4',
+                        // ),
 
                         SizedBox(height: 10),
 

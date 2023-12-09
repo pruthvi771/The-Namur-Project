@@ -33,7 +33,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     var savedData = dataBox.get('calendar');
 
     if (savedData == null) {
-      return null;
+      throw Exception('No data found in the box');
     }
 
     return savedData;
@@ -101,20 +101,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  // RefreshIndicator buildBody() {
-  //   return RefreshIndicator(
-  //     color: MyTheme.white,
-  //     backgroundColor: MyTheme.primary_color,
-  //     onRefresh: _onPageRefresh,
-  //     displacement: 10,
-  //     child: bodyscreen(),
-  //   );
-  // }
-
   bodyscreen() {
     return FutureBuilder(
         future: cropsForTrackingFuture,
         builder: (context, parentSnapshot) {
+          if (parentSnapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
           if (parentSnapshot.hasData && parentSnapshot.data == null) {
             return Center(
               child: Column(
@@ -454,9 +449,59 @@ class _CalendarScreenState extends State<CalendarScreen> {
               ],
             );
           }
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+          if (parentSnapshot.hasError) {
+            return Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    AppLocalizations.of(context)!.no_crop_for_tracking,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: .5,
+                      fontFamily: 'Poppins',
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: MyTheme.accent_color,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Text(
+                      AppLocalizations.of(context)!.add_crop_for_tracking,
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: .5,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CalendarAddCrop()));
+                    },
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                ],
+              ),
+            );
+          }
+          print(parentSnapshot.hashCode);
+          return Text('hello');
         });
   }
 
