@@ -714,5 +714,7 @@
 "select_time": "Select Time",
 "select_crop": "Select Crop",
 "no_crop_for_tracking": "No Crop Added for Tracking",
-"add_crop_for_tracking": "Add Crop for Tracking"
+"add_crop_for_tracking": "Add Crop for Tracking",
+"no_slot_booked": "No Slot Booked",
+"recheck_slot_and_try_again": "Please Recheck Available Slots and Try Again"
 }

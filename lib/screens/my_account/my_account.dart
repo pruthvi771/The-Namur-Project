@@ -123,7 +123,9 @@ class _MyAccountState extends State<MyAccount> {
                             );
                           }
                           return Center(
-                            child: CircularProgressIndicator(),
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
                           );
                         }),
                   ),

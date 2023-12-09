@@ -1,5 +1,7 @@
 // translation done
 
+// ignore_for_file: unnecessary_null_comparison
+
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/order_item.dart';
 import 'package:active_ecommerce_flutter/utils/functions.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -546,7 +548,7 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
                                             fit: BoxFit.cover,
                                           )
                                         : CachedNetworkImage(
-                                            imageUrl: sellerImageURL!,
+                                            imageUrl: sellerImageURL,
                                             fit: BoxFit.cover,
                                           ),
                                   ),
@@ -655,7 +657,7 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
                                 fit: BoxFit.cover,
                               )
                             : CachedNetworkImage(
-                                imageUrl: buyerImageURL!,
+                                imageUrl: buyerImageURL,
                                 fit: BoxFit.cover,
                               ),
                       )),
