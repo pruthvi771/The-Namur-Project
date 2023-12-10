@@ -133,6 +133,10 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
     print(landDropdownValue);
     print(selectedCropName);
     print(dateOfRenting);
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => CalendarScreen()));
   }
 
   @override
@@ -181,10 +185,6 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
           child: ElevatedButton(
             onPressed: () async {
               await onPressedAdd();
-              Navigator.of(context).pop();
-              Navigator.of(context).pop();
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => CalendarScreen()));
             },
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(MyTheme.primary_color),

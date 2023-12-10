@@ -527,7 +527,7 @@ var imageFromFirebaseStorage = {
   'Wheat': 'assets/ikons/fruitsAndVeg/wheat-sack.png',
 };
 
-Map<String, String> fruitsAndVeggies = {
+var imageForNameCloud = {
   'Beetroot':
       'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FfruitsAndVeg%2FBeetroot.png?alt=media&token=a8e45430-5864-45a9-b244-c8de7a721ef9',
   'Cashew':
@@ -652,6 +652,32 @@ Map<String, String> fruitsAndVeggies = {
       'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FfruitsAndVeg%2FSapling.png?alt=media&token=26cd42d0-644e-4a26-b2ca-bd73871ede0f',
   'Sunflower Oil':
       'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FfruitsAndVeg%2FSunflower%20Oil.png?alt=media&token=8a882cde-aeb4-4f7e-b4f1-40ab65f98785',
+  'Combine harvester':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FmanAndMcs%2FCombine%20harvester.png?alt=media&token=83f01c1d-df87-4da5-bd21-36c0c3eb5c8d',
+  'Backhoe':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FmanAndMcs%2FBackhoe.png?alt=media&token=c2b877fc-1a25-48dc-b616-08fac3ffecf4',
+  'Equipment':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FmanAndMcs%2FEquipment.png?alt=media&token=db7d9d2d-3ffa-4c1f-9921-ce1fa7307eb5',
+  'Billhook':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FmanAndMcs%2FBillhook.png?alt=media&token=dee1028c-9369-4949-89bf-c62a7c168a27',
+  'Gardening tools':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FmanAndMcs%2FGardening%20tools.png?alt=media&token=49fdce61-e190-426e-9e13-7b4222082caa',
+  'Electric scooter':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FmanAndMcs%2FElectric%20scooter.png?alt=media&token=c8b2999f-07ab-46d0-b0c7-42130546e4cd',
+  'Fan':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FmanAndMcs%2FFan.png?alt=media&token=4435275d-3365-46ee-9c4b-e68426a60cee',
+  'Scooter':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FmanAndMcs%2FScooter.png?alt=media&token=ac726aba-3129-4146-9869-2b0e82c42aa3',
+  'Loader':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FmanAndMcs%2FLoader.png?alt=media&token=b1613855-0554-4123-84ad-15d0133a5e29',
+  'Tractor':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FmanAndMcs%2FTractor.png?alt=media&token=42e725b1-8142-4258-a1a4-caafd6cf9ee8',
+  'Car':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FmanAndMcs%2FCar.png?alt=media&token=3b6f7331-7486-462d-9ade-ab9e28537384',
+  'Shredder':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FmanAndMcs%2FShredder.png?alt=media&token=51013d9e-da12-441e-8878-86d23b1b0d42',
+  'Plow':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FmanAndMcs%2FPlow.png?alt=media&token=f94691b1-4419-4f5d-9404-3a81a768e780',
 };
 
 var manAndMcs = {
@@ -801,4 +827,22 @@ var SubSubCategoryList = {
     'On Rent',
     'Sell',
   ],
+};
+
+// animal images:
+var animalAndBirdsImages = {
+  'Buffalo': 'assets/ikons/animals/buffalo.png',
+  'Cow': 'assets/ikons/animals/cow.png',
+  'Duck': 'assets/ikons/animals/duck.png',
+  'Bee': 'assets/ikons/animals/bee.png',
+  'Bird': 'assets/ikons/animals/bird.png',
+  'Donkey': 'assets/ikons/animals/donkey.png',
+  'Dog': 'assets/ikons/animals/dog.png',
+  'Fish': 'assets/ikons/animals/fish.png',
+  'Pig': 'assets/ikons/animals/pig.png',
+  'Sheep': 'assets/ikons/animals/sheep.png',
+  'Turkey': 'assets/ikons/animals/turkey.png',
+  'Hen': 'assets/ikons/animals/hen.png',
+  'Goat': 'assets/ikons/animals/goat.png',
+  'Cat': 'assets/ikons/animals/cat.png',
 };

@@ -5,6 +5,8 @@ import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/buy_product
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/product_inventory.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart' as enums;
+import 'package:active_ecommerce_flutter/utils/enums.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -40,6 +42,8 @@ class _ParentScreenState extends State<ParentScreen> {
   var nameForCategoryEnum = enums.nameForCategoryEnum;
   var subCategoryListsForCategory = enums.subCategoryListsForCategory;
   var nameForSubCategoryEnum = enums.nameForSubCategoryEnum;
+
+  var imageForName = imageForNameCloud;
 
   final stocks = [
     'assets/onion.png',
@@ -276,6 +280,26 @@ class _ParentScreenState extends State<ParentScreen> {
                                       stocks[index],
                                       fit: BoxFit.cover,
                                     ),
+                                    // child: CachedNetworkImage(
+                                    //   imageUrl: imageForName[
+                                    //       nameForSubCategoryEnum[
+                                    //           subCategoryEnum]]!,
+                                    // imageBuilder:
+                                    //     (context, imageProvider) =>
+                                    //         Container(
+                                    //   decoration: BoxDecoration(
+                                    //     borderRadius:
+                                    //         BorderRadius.circular(15),
+                                    //     image: DecorationImage(
+                                    //       image: imageProvider,
+                                    //       fit: BoxFit.cover,
+                                    //     ),
+                                    //   ),
+                                    // ),
+                                    // placeholder: (context, url) => Center(
+                                    //     child: CircularProgressIndicator()),
+                                    // errorWidget: (context, url, error) =>
+                                    //     Icon(Icons.error),
                                   ),
                                 ),
                                 SizedBox(

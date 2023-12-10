@@ -583,7 +583,7 @@ class _MachineRentFormState extends State<MachineRentForm> {
                       // }
                       if (slotSnapshot.hasData && slotSnapshot.data != null) {
                         List? bookedSlots = slotSnapshot.data[0]['bookedSlots']
-                            [slotSnapshot.data[1]];
+                            ?[slotSnapshot.data[1]];
 
                         return bookedSlots == null || bookedSlots.length == 0
                             ? Container(

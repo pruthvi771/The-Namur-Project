@@ -3,7 +3,9 @@ import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/screens/calender/cultivation_tip.dart';
 import 'package:active_ecommerce_flutter/screens/calender/pest_control.dart';
 import 'package:active_ecommerce_flutter/screens/calender/tutorial.dart';
+import 'package:active_ecommerce_flutter/utils/enums.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -19,11 +21,13 @@ class CalendarScreen extends StatefulWidget {
 class _CalendarScreenState extends State<CalendarScreen> {
   // HomePresenter homeData = HomePresenter();
 
-  final DateTime currentDateTime = DateTime.now();
-  late DateTime tenDaysAhead = currentDateTime.add(Duration(days: 10));
+  // final DateTime currentDateTime = DateTime.now();
+  // late DateTime tenDaysAhead = currentDateTime.add(Duration(days: 10));
 
   late Future<CropCalendarData?> cropsForTrackingFuture;
   late Future cropDocumentForInfoFuture;
+
+  var imageLinks = imageForNameCloud;
 
   int? selectedIndex;
 
@@ -193,7 +197,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                         .cropName);
                               }),
                               child: CropSelectionItemWidget(
-                                image: "assets/onion.png",
+                                image: imageLinks[parentSnapshot
+                                    .data!.cropCalendarItems[index].cropName]!,
                                 title: parentSnapshot
                                     .data!.cropCalendarItems[index].cropName,
                                 isSelected: index == selectedIndex,
@@ -211,7 +216,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                   MaterialPageRoute(
                                       builder: (context) => CalendarAddCrop()));
                             },
-                            child: Text("Track Another Crop")),
+                            child: Text(AppLocalizations.of(context)!
+                                .track_another_crop)),
                       ),
                     ],
                   ),
@@ -243,9 +249,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           if (cropDocSnapshot.hasData &&
                               cropDocSnapshot.data != null) {
                             var docData = cropDocSnapshot.data;
+                            var currentCrop = parentSnapshot
+                                .data!.cropCalendarItems[selectedIndex!];
                             return Column(
                               children: [
-                                Text(docData.toString()),
+                                Text(docData['stages'].toString()),
 
                                 // cost estimate, schedule, pest control, cultivation tips
                                 Container(
@@ -396,7 +404,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 Align(
                                   alignment: Alignment.center,
                                   child: Text(
-                                    "Calender Events",
+                                    AppLocalizations.of(context)!
+                                        .calendar_events,
                                     style: TextStyle(
                                       color: Color(0xff107B28),
                                       // fontFamily: "Poppins",
@@ -408,24 +417,130 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 ),
 
                                 SizedBox(
-                                  height: 15,
+                                  height: 20,
                                 ),
 
                                 // SizedBox(height: 20),
 
                                 Padding(
+                                  padding: const EdgeInsets.only(left: 20),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          'Planting Date: ',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w700,
+                                              fontFamily: "Poppins"),
+                                        ),
+                                        Text(
+                                          '${currentCrop.plantingDate.day}/${currentCrop.plantingDate.month}/${currentCrop.plantingDate.year}',
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontFamily: "Poppins"),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+
+                                SizedBox(
+                                  height: 15,
+                                ),
+
+                                Padding(
                                   padding: const EdgeInsets.only(
                                       left: 20.0, right: 20),
+                                  // child: Container(
+                                  //   child: ListView.builder(
+                                  //       itemCount: docData['stages'].length,
+                                  //       shrinkWrap: true,
+                                  //       scrollDirection: Axis.vertical,
+                                  //       physics: NeverScrollableScrollPhysics(),
+                                  //       itemBuilder: (context, index) {
+                                  //         DateTime? initialDate = null;
+                                  //         var myWidget = CalendarStageItem(
+                                  //           stageName: 'Stage ${index + 1}',
+                                  //           stage1text: docData['stages'][index]
+                                  //               ['0']['name'],
+                                  //           stage2text: docData['stages'][index]
+                                  //               ['1']['name'],
+                                  //           initialDate: initialDate == null
+                                  //               ? currentCrop.plantingDate
+                                  //               : initialDate,
+                                  //           stage1days: docData['stages'][index]
+                                  //               ['0']['days'],
+                                  //           stage2days: docData['stages'][index]
+                                  //               ['1']['days'],
+                                  //         );
+                                  //         if (initialDate == null) {
+                                  //           initialDate = currentCrop
+                                  //               .plantingDate
+                                  //               .add(Duration(
+                                  //                   days: docData['stages']
+                                  //                               [index]['0']
+                                  //                           ['days'] +
+                                  //                       docData['stages'][index]
+                                  //                           ['1']['days']));
+                                  //         } else {
+                                  //           initialDate = initialDate.add(
+                                  //               Duration(
+                                  //                   days: docData['stages']
+                                  //                               [index]['0']
+                                  //                           ['days'] +
+                                  //                       docData['stages'][index]
+                                  //                           ['1']['days']));
+                                  //         }
+                                  //         return myWidget;
+                                  //       }),
+                                  // ),
                                   child: Container(
                                     child: ListView.builder(
-                                        itemCount: 4,
-                                        shrinkWrap: true,
-                                        scrollDirection: Axis.vertical,
-                                        physics: NeverScrollableScrollPhysics(),
-                                        itemBuilder: (context, index) {
-                                          return CalendarStageItem(
-                                              stageName: 'hello');
-                                        }),
+                                      itemCount: docData['stages'].length,
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.vertical,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      itemBuilder: (context, index) {
+                                        DateTime? initialDate = null;
+                                        int cumulativeDays = 0;
+
+                                        var myWidget = CalendarStageItem(
+                                          stageName: 'Stage ${index + 1}',
+                                          stage1text: docData['stages'][index]
+                                              ['0']['name'],
+                                          stage2text: docData['stages'][index]
+                                              ['1']['name'],
+                                          initialDate: initialDate == null
+                                              ? currentCrop.plantingDate
+                                              : initialDate,
+                                          stage1days: docData['stages'][index]
+                                              ['0']['days'],
+                                          stage2days: docData['stages'][index]
+                                              ['1']['days'],
+                                        );
+
+                                        int days1 = docData['stages'][index]
+                                            ['0']['days'];
+                                        int days2 = docData['stages'][index]
+                                            ['1']['days'];
+
+                                        cumulativeDays =
+                                            cumulativeDays + days1 + days2;
+
+                                        if (initialDate == null) {
+                                          initialDate = currentCrop.plantingDate
+                                              .add(Duration(
+                                                  days: cumulativeDays));
+                                        } else {
+                                          initialDate = initialDate.add(
+                                              Duration(days: cumulativeDays));
+                                        }
+
+                                        return myWidget;
+                                      },
+                                    ),
                                   ),
                                 ),
                               ],
@@ -501,13 +616,28 @@ class _CalendarScreenState extends State<CalendarScreen> {
             );
           }
           print(parentSnapshot.hashCode);
-          return Text('hello');
+          return Center(
+            child: Text(AppLocalizations.of(context)!.something_went_wrong,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: .5,
+                  fontFamily: 'Poppins',
+                )),
+          );
         });
   }
 
   Container CalendarStageItem({
     required String stageName,
+    required String stage1text,
+    required String stage2text,
+    required DateTime initialDate,
+    required int stage1days,
+    required int stage2days,
   }) {
+    DateTime stage1Date = initialDate.add(Duration(days: stage1days));
+    DateTime stage2Date = stage1Date.add(Duration(days: stage2days));
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -535,11 +665,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   letterSpacing: .5),
             ),
           ),
+          SizedBox(
+            height: 5,
+          ),
           Row(
             children: [
               Container(
                 child: Text(
-                  "${currentDateTime.day}/${currentDateTime.month}/${currentDateTime.year}:",
+                  "${stage1Date.day}/${stage1Date.month}/${stage1Date.year}:",
                   style: TextStyle(
                       color: MyTheme.primary_color,
                       fontSize: 15,
@@ -550,7 +683,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               SizedBox(width: 15),
               Container(
                 child: Text(
-                  "Current Date",
+                  stage1text,
                   style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w400,
@@ -563,7 +696,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             children: [
               Container(
                 child: Text(
-                  "${tenDaysAhead.day}/${tenDaysAhead.month}/${tenDaysAhead.year}:",
+                  "${stage2Date.day}/${stage2Date.month}/${stage2Date.year}:",
                   style: TextStyle(
                       color: MyTheme.primary_color,
                       fontSize: 15,
@@ -574,7 +707,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               SizedBox(width: 15),
               Container(
                 child: Text(
-                  "10 days ahead",
+                  stage2text,
                   style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w400,
@@ -628,9 +761,21 @@ class CropSelectionItemWidget extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 2),
-              child: Image.asset(
-                image,
-                fit: BoxFit.cover,
+              // child: Image.asset(
+              //   image,
+              //   fit: BoxFit.cover,
+              // ),
+              child: CachedNetworkImage(
+                imageUrl: image,
+                fit: BoxFit.fitWidth,
+                placeholder: (context, url) => Center(
+                  child: Container(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+                errorWidget: (context, url, error) => Icon(Icons.error),
               ),
             ),
           ),

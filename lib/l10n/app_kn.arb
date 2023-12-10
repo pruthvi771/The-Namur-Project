@@ -760,5 +760,9 @@
   "farm_details": "ಹೊನ್ನು ವಿವರಗಳು",
 "enter_pincode_first" : "ಮೊದಲು Pincode ನಮೂದಿಸಿ",
 "enter_area_in_acres": "ವಿಸ್ತರಣವನ್ನು ನಮೂದಿಸಿ (ಏಕರೆಗಳಲ್ಲಿ)",
-"enter_crop_yield": "ಬೆಳೆ ವೃದ್ಧಿಯನ್ನು ನಮೂದಿಸಿ"
+"enter_crop_yield": "ಬೆಳೆ ವೃದ್ಧಿಯನ್ನು ನಮೂದಿಸಿ",
+
+"track_another_crop": "ಇನ್ನೊಂದು ಬೆಳೆಗಳನ್ನು ಹಾಕಿ",
+
+"calendar_events": "ಕ್ಯಾಲೆಂಡರ್ ಘಟನೆಗಳು"
 }
