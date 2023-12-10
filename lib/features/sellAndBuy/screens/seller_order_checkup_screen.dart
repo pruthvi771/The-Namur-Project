@@ -66,7 +66,14 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
       totalAmount: cartDoc.data()!['totalAmount'],
       status: cartDoc.data()!['status'],
       sellers: cartDoc.data()!['sellers'],
+      rent: cartDoc.data()!['rent'] == null ? false : cartDoc.data()!['rent'],
       orderItems: orderItems,
+      bookedDate: cartDoc.data()!['bookedDate'] == null
+          ? null
+          : cartDoc.data()!['bookedDate'],
+      bookedSlot: cartDoc.data()!['bookedSlot'] == null
+          ? null
+          : cartDoc.data()!['bookedSlot'],
     );
 
     return orderDocument;
@@ -364,6 +371,11 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
                                                       sellerSnapshot.data!
                                                           .data()!;
                                                   return CheckoutProductCard(
+                                                    rent: orderDocument.rent,
+                                                    bookedDate: orderDocument
+                                                        .bookedDate,
+                                                    bookedSlot: orderDocument
+                                                        .bookedSlot,
                                                     context: context,
                                                     productImageURL:
                                                         productData['imageURL']
@@ -438,6 +450,9 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
     required String sellerImageURL,
     required String sellerName,
     required String? sellerPhone,
+    required bool rent,
+    String? bookedDate,
+    String? bookedSlot,
   }) {
     return Padding(
       padding: const EdgeInsets.only(
@@ -519,15 +534,25 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
                             ),
                           ],
                         ),
-                        Text(
-                          ' (₹${unitPrice.toString()} x $quantity ${quantityUnit.toLowerCase()})',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 12,
-                            // fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                        rent
+                            ? Text(
+                                '$bookedDate, $bookedSlot',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  // fontWeight: FontWeight.w600,
+                                ),
+                              )
+                            : Text(
+                                ' (₹${unitPrice.toString()} x $quantity ${quantityUnit.toLowerCase()})',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  // fontWeight: FontWeight.w600,
+                                ),
+                              ),
                         Container(
                           height: 50,
                           child: Row(

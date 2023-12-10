@@ -24,7 +24,7 @@ class RentBloc extends Bloc<RentEvent, RentState> {
         //   // isSecondHand: event.isSecondHand,
         // );
 
-        rentRepository.addRentOrderDocument(
+        String? documentId = await rentRepository.addRentOrderDocument(
           buyerId: currentUser.userId,
           locationName: event.locationName,
           sellerId: event.sellerId,
@@ -34,7 +34,7 @@ class RentBloc extends Bloc<RentEvent, RentState> {
           numberOfHalfHours: event.numberOfHalfHours,
         );
 
-        emit(RentSuccess());
+        emit(RentSuccess(documentId: documentId!));
       } catch (e) {
         // emit(SellAddProductErrorState(message: e.toString()));
         print('error happened in ProductsForSubCategoryRequested');

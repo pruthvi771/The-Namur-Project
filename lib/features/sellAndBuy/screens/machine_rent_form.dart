@@ -2,6 +2,7 @@
 
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/order_item.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/checkout_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/rent_bloc/rent_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/rent_bloc/rent_event.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/rent_bloc/rent_state.dart';
@@ -12,6 +13,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:toast/toast.dart';
@@ -203,21 +205,21 @@ class _MachineRentFormState extends State<MachineRentForm> {
     }
 
     var documentData;
-    var alreadyBookedSlotsBroken = [];
+    List? alreadyBookedSlotsBroken = [];
 
     DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
         .collection('products')
         .doc(widget.machineId)
         .get();
     documentData = userSnapshot.data();
-    alreadyBookedSlotsBroken = documentData['bookedSlotsBroken'][
+    alreadyBookedSlotsBroken = documentData['bookedSlotsBroken']?[
         dateOfRenting!.day.toString() +
             '-' +
             dateOfRenting!.month.toString() +
             '-' +
             dateOfRenting!.year.toString()];
 
-    print(alreadyBookedSlotsBroken);
+    // print(alreadyBookedSlotsBroken);
 
     // return;
 
@@ -228,6 +230,10 @@ class _MachineRentFormState extends State<MachineRentForm> {
     print(hour24format);
     print(checkerBookedSlotsBroken);
 
+    if (alreadyBookedSlotsBroken == null ||
+        alreadyBookedSlotsBroken.length == 0) {
+      alreadyBookedSlotsBroken = [];
+    }
     if (hasCommonElement(alreadyBookedSlotsBroken, checkerBookedSlotsBroken)) {
       ToastComponent.showDialog(
           AppLocalizations.of(context)!.recheck_slot_and_try_again,
@@ -306,7 +312,13 @@ class _MachineRentFormState extends State<MachineRentForm> {
           child: BlocListener<RentBloc, RentState>(
             listener: (context, state) {
               if (state is RentSuccess) {
-                print('order placed');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CheckoutScreen(
+                            orderID: state.documentId,
+                          )),
+                );
               }
             },
             child: BlocBuilder<RentBloc, RentState>(

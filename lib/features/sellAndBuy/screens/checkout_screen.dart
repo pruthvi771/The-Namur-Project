@@ -62,6 +62,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       status: cartDoc.data()!['status'],
       sellers: cartDoc.data()!['sellers'],
       orderItems: orderItems,
+      rent: cartDoc.data()!['rent'] == null ? false : cartDoc.data()!['rent'],
+      bookedDate: cartDoc.data()!['bookedDate'] == null
+          ? null
+          : cartDoc.data()!['bookedDate'],
+      bookedSlot: cartDoc.data()!['bookedSlot'] == null
+          ? null
+          : cartDoc.data()!['bookedSlot'],
     );
 
     return orderDocument;
@@ -101,7 +108,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     physics: BouncingScrollPhysics(),
                     child: Column(
                       children: [
-                        // Text(orderDocument.buyerID),
                         Container(
                           margin: EdgeInsets.all(10),
                           padding: EdgeInsets.symmetric(
@@ -230,13 +236,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             color: MyTheme.green_lighter,
                           ),
                           child: Center(
-                              child: Text(
-                            AppLocalizations.of(context)!.ordered_product_ucf,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
+                            child: Text(
+                              AppLocalizations.of(context)!.ordered_product_ucf,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
                             ),
-                          )),
+                          ),
                         ),
                         SizedBox(
                           height: 10,
@@ -268,6 +275,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                               var sellerData =
                                                   sellerSnapshot.data!.data()!;
                                               return CheckoutProductCard(
+                                                rent: orderDocument.rent,
+                                                bookedDate:
+                                                    orderDocument.bookedDate,
+                                                bookedSlot:
+                                                    orderDocument.bookedSlot,
                                                 context: context,
                                                 productImageURL:
                                                     productData['imageURL'][0],
@@ -337,6 +349,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     required String sellerImageURL,
     required String sellerName,
     required String? sellerPhone,
+    required bool rent,
+    String? bookedDate,
+    String? bookedSlot,
   }) {
     return Padding(
       padding: const EdgeInsets.only(
@@ -418,15 +433,25 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             ),
                           ],
                         ),
-                        Text(
-                          ' (₹${unitPrice.toString()} x $quantity ${quantityUnit.toLowerCase()})',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 12,
-                            // fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                        rent
+                            ? Text(
+                                '$bookedDate, $bookedSlot',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  // fontWeight: FontWeight.w600,
+                                ),
+                              )
+                            : Text(
+                                ' (₹${unitPrice.toString()} x $quantity ${quantityUnit.toLowerCase()})',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  // fontWeight: FontWeight.w600,
+                                ),
+                              ),
                         Container(
                           height: 50,
                           child: Row(

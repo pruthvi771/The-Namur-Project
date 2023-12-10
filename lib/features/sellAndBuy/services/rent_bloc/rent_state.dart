@@ -9,7 +9,16 @@ abstract class RentState extends Equatable {
 
 final class RentInitial extends RentState {}
 
-final class RentSuccess extends RentState {}
+final class RentSuccess extends RentState {
+  final String documentId;
+
+  const RentSuccess({
+    required this.documentId,
+  });
+
+  @override
+  List<Object> get props => [documentId];
+}
 
 final class RentLoading extends RentState {
   const RentLoading();

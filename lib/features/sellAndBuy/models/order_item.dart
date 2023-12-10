@@ -52,6 +52,9 @@ class OrderDocument {
   final double totalAmount;
   final String status;
   final List sellers;
+  final bool rent;
+  final String? bookedDate;
+  final String? bookedSlot;
   final List<OrderItem> orderItems;
 
   OrderDocument({
@@ -61,6 +64,9 @@ class OrderDocument {
     required this.status,
     required this.sellers,
     required this.orderItems,
+    required this.rent,
+    this.bookedDate,
+    this.bookedSlot,
   });
   Map<String, dynamic> toMap() {
     return {
@@ -70,6 +76,9 @@ class OrderDocument {
       'status': status,
       'sellers': sellers,
       'orderItems': orderItems.map((item) => item.toMap()).toList(),
+      'rent': rent,
+      'bookedDate': bookedDate,
+      'bookedSlot': bookedSlot,
     };
   }
 }
