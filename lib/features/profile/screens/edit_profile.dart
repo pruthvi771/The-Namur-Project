@@ -12,6 +12,11 @@ import 'package:active_ecommerce_flutter/features/profile/enum.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_event.dart';
 import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_state.dart';
+import 'package:active_ecommerce_flutter/features/profile/screens/profile.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_bloc.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_event.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_state.dart'
+    as profileState;
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/more_details.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +50,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController _yieldController = TextEditingController();
   TextEditingController _pinCodeController = TextEditingController();
   TextEditingController _pinCodeControllerForLand = TextEditingController();
+
+  TextEditingController _nameControllerForAccount = TextEditingController();
 
   final districts = addressList.districtTalukMap;
 
@@ -86,6 +93,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   List<String> locationsList = [];
   List<String> locationsListForLand = [];
+
+  late bool profileDataUpdating;
 
   get console => null;
 
@@ -281,6 +290,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void initState() {
+    profileDataUpdating = false;
     super.initState();
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
 
@@ -303,6 +313,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       HiveDataRequested(),
       // HiveAppendAddress(context: context),
     );
+    BlocProvider.of<ProfileBloc>(context).add(
+      ProfileDataRequested(),
+      // HiveAppendAddress(context: context),
+    );
+  }
+
+  void dispose() {
+    super.dispose();
   }
 
   void _saveKycToHive(aadhar, pan, gst) async {
@@ -625,6 +643,189 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     SizedBox(
                       height: 10,
                     ),
+
+                    BlocBuilder<ProfileBloc, profileState.ProfileState>(
+                      builder: (context, state) {
+                        if (state is profileState.Loading) {
+                          return LinearProgressIndicator();
+                        }
+                        if (state is profileState.ProfileDataReceived) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Text(state.buyerProfileData.name),
+                              HeadingTextWidget(
+                                  AppLocalizations.of(context)!.account_ucf),
+                              !profileDataUpdating
+                                  ? Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0, vertical: 3),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: MyTheme.green_lighter,
+                                        ),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 15, vertical: 5),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                      'Name: ${state.buyerProfileData.name}'),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                      "Phone: ${state.buyerProfileData.phoneNumber}"),
+                                                ),
+                                              ],
+                                            ),
+                                            // Expanded(child: Text('PAN')),
+                                            InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  _nameControllerForAccount
+                                                          .text =
+                                                      state.buyerProfileData
+                                                          .name;
+                                                  profileDataUpdating =
+                                                      !profileDataUpdating;
+                                                });
+                                              },
+                                              child: CircleAvatar(
+                                                radius: 12,
+                                                backgroundColor: MyTheme.green,
+                                                child: Icon(
+                                                  Icons.edit,
+                                                  size: 15.0,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  : Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8.0, vertical: 3),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              color: MyTheme.green_lighter,
+                                            ),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 15, vertical: 5),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: Text(
+                                                          "Phone: ${state.buyerProfileData.phoneNumber}"),
+                                                    ),
+                                                  ],
+                                                ),
+                                                // Expanded(child: Text('PAN')),
+                                                // InkWell(
+                                                //   onTap: () {
+                                                //     setState(() {
+                                                //       _nameControllerForAccount
+                                                //               .text =
+                                                //           state.buyerProfileData
+                                                //               .name;
+                                                //       profileDataUpdating =
+                                                //           !profileDataUpdating;
+                                                //     });
+                                                //   },
+                                                //   child: CircleAvatar(
+                                                //     radius: 12,
+                                                //     backgroundColor:
+                                                //         MyTheme.green,
+                                                //     child: Icon(
+                                                //       Icons.edit,
+                                                //       size: 15.0,
+                                                //       color: Colors.white,
+                                                //     ),
+                                                //   ),
+                                                // ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 8,
+                                        ),
+                                        TextFieldWidget(
+                                          'Aadhar Card',
+                                          _nameControllerForAccount,
+                                          AppLocalizations.of(context)!.enter,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Expanded(child: SizedBox()),
+                                            TextButton(
+                                              child: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .save_ucf),
+                                              onPressed: () {
+                                                BlocProvider.of<ProfileBloc>(
+                                                        context)
+                                                    .add(
+                                                  UserNameUpdateRequested(
+                                                      name:
+                                                          _nameControllerForAccount
+                                                              .text),
+                                                );
+                                                setState(() {
+                                                  profileDataUpdating = false;
+                                                });
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                            ],
+                          );
+                        }
+                        return SizedBox.shrink();
+                      },
+                    ),
+
+                    SizedBox(
+                      height: 18,
+                    ),
+
+                    Divider(
+                      // color: MyTheme.grey_153,
+                      thickness: 2,
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+
                     HeadingTextWidget('KYC'),
 
                     if (state.profileData.kyc.aadhar.isNotEmpty)

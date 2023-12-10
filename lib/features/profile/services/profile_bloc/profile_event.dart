@@ -21,3 +21,11 @@ class ProfileImageUpdateRequested extends ProfileEvent {
     required this.file,
   });
 }
+
+// ignore: must_be_immutable
+class UserNameUpdateRequested extends ProfileEvent {
+  String name;
+  UserNameUpdateRequested({
+    required this.name,
+  });
+}

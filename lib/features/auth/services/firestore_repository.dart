@@ -73,6 +73,37 @@ class FirestoreRepository {
     }
   }
 
+  Future<BuyerData> updateUsername({
+    required String userId,
+    required String name,
+  }) async {
+    try {
+      // Reference to the Firestore collection and document
+      var userDocument1 = _firestore.collection('buyer').doc(userId);
+
+      // Update the 'name' field with the new value
+      await userDocument1.update({
+        'name': name,
+      });
+
+      var userDocument2 = _firestore.collection('seller').doc(userId);
+
+      // Update the 'name' field with the new value
+      await userDocument2.update({
+        'name': name,
+      });
+
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('buyer')
+          .doc(userId)
+          .get();
+      return BuyerData.fromJson(userSnapshot.data() as Map<String, dynamic>);
+    } catch (_) {
+      print(_);
+      throw Exception('Something went wrong. Please try again.');
+    }
+  }
+
   Future<SellerDataForFriendsScreen> getSellerData({
     required String userId,
   }) async {

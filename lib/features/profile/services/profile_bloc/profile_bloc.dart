@@ -30,5 +30,17 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         emit(Error('Could Not Update Image. Please Try Again'));
       }
     });
+
+    on<UserNameUpdateRequested>((event, emit) async {
+      emit(Loading());
+      try {
+        AuthUser user = AuthRepository().currentUser!;
+        BuyerData buyerProfileData = await FirestoreRepository()
+            .updateUsername(userId: user.userId, name: event.name);
+        emit(ProfileDataReceived(buyerProfileData: buyerProfileData));
+      } catch (e) {
+        emit(Error('Could Not Update Image. Please Try Again'));
+      }
+    });
   }
 }

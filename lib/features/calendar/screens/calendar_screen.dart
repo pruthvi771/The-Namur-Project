@@ -253,7 +253,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 .data!.cropCalendarItems[selectedIndex!];
                             return Column(
                               children: [
-                                Text(docData['stages'].toString()),
+                                // Text(docData['stages'].toString()),
 
                                 // cost estimate, schedule, pest control, cultivation tips
                                 Container(
