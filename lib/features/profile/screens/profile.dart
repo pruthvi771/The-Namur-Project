@@ -48,6 +48,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
 
   ProfileSection _profileSection = ProfileSection.updates;
   late Future<List<UpdatesData>> updatesDataFuture;
+  late Future<List<Crop>> cropsDataFuture;
 
   @override
   void initState() {
@@ -57,6 +58,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
       ProfileDataRequested(),
     );
     updatesDataFuture = getUpdatesDate();
+    cropsDataFuture = getCropsDate();
   }
 
   Future<List<UpdatesData>> getUpdatesDate() async {
@@ -74,6 +76,25 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
     }
 
     return updatesData;
+  }
+
+  Future<List<Crop>> getCropsDate() async {
+    List<Crop> cropsData = [];
+
+    var dataBox = Hive.box<ProfileData>('profileDataBox3');
+    var savedData = dataBox.get('profile');
+
+    if (savedData == null) {
+      return [];
+    }
+
+    for (Land land in savedData.land) {
+      for (Crop crop in land.crops) {
+        cropsData.add(crop);
+      }
+    }
+
+    return cropsData;
   }
 
   void dispose() {
@@ -163,6 +184,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                   ProfileDataRequested(),
                 );
                 updatesDataFuture = getUpdatesDate();
+                cropsDataFuture = getCropsDate();
               },
             ),
           ),
@@ -525,56 +547,87 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                 child: CircularProgressIndicator(),
                               );
                             }),
-                        SingleChildScrollView(
-                          child: MasonryGridView.count(
-                            crossAxisCount: 3,
-                            mainAxisSpacing: 16,
-                            crossAxisSpacing: 16,
-                            itemCount: stocks.length,
-                            shrinkWrap: true,
-                            padding:
-                                EdgeInsets.only(top: 10.0, left: 18, right: 18),
-                            physics: NeverScrollableScrollPhysics(),
-                            scrollDirection: Axis.vertical,
-                            itemBuilder: (context, index) {
-                              //
-                              return Container(
-                                //  height: 100,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  color: (index % 5 == 0)
-                                      ? MyTheme.green_neon
-                                      : MyTheme.white,
-                                ),
-                                child: Column(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 8.0),
-                                      child: Container(
-                                        height: 50,
-                                        width: 50,
-                                        child: Image.asset(
-                                          stocks[index],
-                                          fit: BoxFit.cover,
+                        FutureBuilder(
+                            future: cropsDataFuture,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                              if (snapshot.hasData && snapshot.data != null) {
+                                return snapshot.data!.length == 0
+                                    ? Center(
+                                        child: Text(
+                                          AppLocalizations.of(context)!
+                                              .no_data_is_available,
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: 'Poppins'),
                                         ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 8.0, bottom: 8.0),
-                                      child: Text(
-                                        "Grapes",
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    )
-                                  ],
-                                ),
+                                      )
+                                    : SingleChildScrollView(
+                                        child: MasonryGridView.count(
+                                          crossAxisCount: 3,
+                                          mainAxisSpacing: 16,
+                                          crossAxisSpacing: 16,
+                                          itemCount: snapshot.data!.length,
+                                          shrinkWrap: true,
+                                          padding: EdgeInsets.only(
+                                              top: 10.0, left: 18, right: 18),
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          scrollDirection: Axis.vertical,
+                                          itemBuilder: (context, index) {
+                                            //
+                                            return Container(
+                                              //  height: 100,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                              ),
+                                              child: Column(
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 8.0),
+                                                    child: Container(
+                                                      height: 50,
+                                                      width: 50,
+                                                      child: Image.asset(
+                                                        stocks[index],
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 8.0,
+                                                            bottom: 8.0),
+                                                    child: Text(
+                                                      snapshot
+                                                          .data![index].name,
+                                                      style: TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w500),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      );
+                              }
+                              return Center(
+                                child: CircularProgressIndicator(),
                               );
-                            },
-                          ),
-                        ),
+                            }),
                       ],
                     ),
                   ),
