@@ -766,6 +766,8 @@
 "cost_estimate": "Cost Estimate",
 "planting_date": "Planting Date: ",
 "stage_for_calendar" : "Stage",
-"search": "Search"
-
+"search": "Search",
+"enter_animal_name" : "Enter Animal Name",
+"enter_count": "Enter Count",
+"enter_valid_count": "Enter Valid Count"
 }

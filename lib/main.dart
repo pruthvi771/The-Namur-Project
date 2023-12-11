@@ -116,6 +116,7 @@ main() async {
   Hive.registerAdapter(hiveModels.KYCAdapter());
   Hive.registerAdapter(hiveModels.LandAdapter());
   Hive.registerAdapter(hiveModels.CropAdapter());
+  Hive.registerAdapter(hiveModels.AnimalAdapter());
   Hive.registerAdapter(hiveModels.ProfileDataAdapter());
   Hive.registerAdapter(hiveModels.PrimaryLocationAdapter());
   Hive.registerAdapter(hiveModels.SecondaryLocationsAdapter());

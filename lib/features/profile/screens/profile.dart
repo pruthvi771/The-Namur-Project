@@ -245,14 +245,14 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                   TabController(length: 2, vsync: this);
               return SliverList(
                 delegate: SliverChildListDelegate([
-                  ElevatedButton(
-                      onPressed: () async {
-                        var userSnapshot = await FirebaseFirestore.instance
-                            .collection('updates')
-                            .get();
-                        print(userSnapshot.docs[0].data()!['imageURL']);
-                      },
-                      child: Text('get data')),
+                  // ElevatedButton(
+                  //     onPressed: () async {
+                  //       var userSnapshot = await FirebaseFirestore.instance
+                  //           .collection('updates')
+                  //           .get();
+                  //       print(userSnapshot.docs[0].data()!['imageURL']);
+                  //     },
+                  //     child: Text('get data')),
 
                   Stack(
                     alignment: AlignmentDirectional.bottomEnd,

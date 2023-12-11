@@ -407,7 +407,7 @@ class _RegistrationState extends State<Registration> {
                         child: Text(
                           AppLocalizations.of(context)!.search,
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
                         ),

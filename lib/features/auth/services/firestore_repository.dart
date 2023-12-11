@@ -267,8 +267,20 @@ class FirestoreRepository {
                   ..name = cropItem['name']
                   ..yieldOfCrop = cropItem['yieldOfCrop'])
                 .toList()
+            ..animals = (item['animals'] as List)
+                .map((animalItem) => Animal()
+                  ..name = animalItem['name']
+                  ..quantity = animalItem['quantity'])
+                .toList()
             ..equipments = List<String>.from(item['equipments']))
           .toList();
+      //   ..equipments = List<String>.from(item['equipments']))
+      // .toList()
+      //  ..animal = (item['animals'] as List)
+      //       .map((animalItem) => Animal()
+      //         ..name = animalItem['name']
+      //         ..quantity = animalItem['quantity'])
+      //       .toList();
 
       // Create ProfileData object by combining separated variables
       var profileData = ProfileData()
@@ -320,6 +332,12 @@ class FirestoreRepository {
                               })
                           .toList(),
                       'equipments': land.equipments,
+                      'animals': land.animals
+                          .map((animal) => {
+                                'name': animal.name,
+                                'quantity': animal.quantity,
+                              })
+                          .toList(),
                     })
                 .toList(),
           }

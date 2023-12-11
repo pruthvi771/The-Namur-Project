@@ -52,6 +52,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   TextEditingController _nameControllerForAccount = TextEditingController();
 
+  TextEditingController _animalNameController = TextEditingController();
+  TextEditingController _animalQuantityController = TextEditingController();
+
   final districts = addressList.districtTalukMap;
 
   final cropsList = addressList.crops;
@@ -258,6 +261,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ..syno = syno
       ..village = village
       ..crops = []
+      ..animals = []
       ..equipments = [];
 
     if (savedData != null) {
@@ -508,6 +512,94 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
+  void _addAnimalToHive(landSyno, name, quantity) async {
+    if (name.isEmpty) {
+      ToastComponent.showDialog(
+        AppLocalizations.of(context)!.enter_animal_name,
+        gravity: Toast.center,
+        duration: Toast.lengthLong,
+      );
+      return;
+    }
+
+    if (quantity.isEmpty) {
+      ToastComponent.showDialog(
+        AppLocalizations.of(context)!.enter_count,
+        gravity: Toast.center,
+        duration: Toast.lengthLong,
+      );
+      return;
+    }
+
+    int quantityInt = 0;
+    try {
+      quantityInt = int.parse(quantity);
+    } catch (e) {
+      ToastComponent.showDialog(AppLocalizations.of(context)!.enter_valid_count,
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    var dataBox = Hive.box<ProfileData>('profileDataBox3');
+
+    var savedData = dataBox.get('profile');
+
+    // Find the Land instance with the specified syno
+    int index = savedData!.land.indexWhere((land) => land.syno == landSyno);
+
+    if (index != -1) {
+      savedData.land[index].animals.add(
+        Animal()
+          ..name = name
+          ..quantity = quantityInt,
+      );
+
+      dataBox.put(savedData.id, savedData);
+
+      BlocProvider.of<HiveBloc>(context).add(
+        SyncHiveToFirestoreRequested(profileData: savedData),
+      );
+    } else {
+      // Handle the case where the Land instance with the specified syno is not found
+      print('Land with syno $landSyno not found.');
+    }
+
+    _animalNameController.clear();
+    _animalQuantityController.clear();
+
+    BlocProvider.of<HiveBloc>(context).add(
+      HiveDataRequested(),
+    );
+  }
+
+  void _deleteAnimalFromHive(landSyno, indexToDelete) async {
+    var dataBox = Hive.box<ProfileData>('profileDataBox3');
+
+    var savedData = dataBox.get('profile');
+
+    // Find the Land instance with the specified syno
+    int index = savedData!.land.indexWhere((land) => land.syno == landSyno);
+
+    if (index != -1) {
+      savedData.land[index].animals.removeAt(indexToDelete);
+
+      dataBox.put(savedData.id, savedData);
+
+      // print('Crop removed');
+      dataBox.put(savedData.id, savedData);
+
+      BlocProvider.of<HiveBloc>(context).add(
+        SyncHiveToFirestoreRequested(profileData: savedData),
+      );
+    } else {
+      // print('Land with syno $landSyno not found.');
+    }
+
+    BlocProvider.of<HiveBloc>(context).add(
+      HiveDataRequested(),
+    );
+  }
+
   List<Crop> getCropsForSyno(ProfileData profileData, String? landSyno) {
     if (landSyno == null) {
       return [];
@@ -515,6 +607,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     int index = profileData.land.indexWhere((land) => land.syno == landSyno);
     // if (index != -1) {
     return profileData.land[index].crops;
+  }
+
+  List<Animal> getAnimalsForSyno(ProfileData profileData, String? landSyno) {
+    if (landSyno == null) {
+      return [];
+    }
+    int index = profileData.land.indexWhere((land) => land.syno == landSyno);
+    // if (index != -1) {
+    return profileData.land[index].animals;
   }
 
   List<String> getMachinesForSyno(ProfileData profileData, String? landSyno) {
@@ -1080,7 +1181,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                                   AppLocalizations.of(context)!
                                                       .search,
                                                   style: TextStyle(
-                                                    fontSize: 16,
+                                                    fontSize: 14,
                                                     fontWeight: FontWeight.w600,
                                                   ),
                                                 ),
@@ -1317,7 +1418,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             AppLocalizations.of(context)!
                                                 .search,
                                             style: TextStyle(
-                                              fontSize: 16,
+                                              fontSize: 14,
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),
@@ -1491,6 +1592,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   setState(() {});
                                 });
                               }),
+
                               Padding(
                                 padding: const EdgeInsets.only(
                                     left: 8, top: 10, bottom: 5),
@@ -1541,6 +1643,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     ),
                                   ),
                                 ),
+
                               // for crop
                               Padding(
                                 padding:
@@ -1592,6 +1695,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 ),
                               ),
 
+                              // add machines
                               Padding(
                                 padding: const EdgeInsets.only(
                                     left: 8, top: 10, bottom: 5),
@@ -1608,6 +1712,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   ),
                                 ),
                               ),
+                              // showing machines
                               if (landDropdownValue != null)
                                 Align(
                                   alignment: Alignment.topLeft,
@@ -1641,6 +1746,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     ),
                                   ),
                                 ),
+                              // select machines dropdowns
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 5),
@@ -1674,6 +1780,96 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             _addEquipmentToHive(
                                               landDropdownValue,
                                               equipmentDropdownValue,
+                                            );
+                                            setState(() {});
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 8, top: 10, bottom: 5),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    // AppLocalizations.of(context)!.add_machines,
+                                    'Add Animals',
+                                    style: TextStyle(
+                                        // color: MyTheme.accent_color,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                        letterSpacing: .5,
+                                        fontFamily: 'Poppins'),
+                                  ),
+                                ),
+                              ),
+                              if (landDropdownValue != null)
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Wrap(
+                                    children: List.generate(
+                                      getAnimalsForSyno(state.profileData,
+                                              landDropdownValue)
+                                          .length,
+                                      (index) {
+                                        var item = getAnimalsForSyno(
+                                            state.profileData,
+                                            landDropdownValue)[index];
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 2),
+                                          child: Chip(
+                                            backgroundColor:
+                                                MyTheme.green_lighter,
+                                            labelPadding: EdgeInsets.symmetric(
+                                                horizontal: 10, vertical: 0),
+                                            label: Text(
+                                                '${item.name} (${item.quantity})'),
+                                            // deleteIcon: Icon(Icons.delete),
+                                            onDeleted: () {
+                                              _deleteAnimalFromHive(
+                                                  landDropdownValue, index);
+                                              setState(() {});
+                                            },
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 5),
+                                child: Column(
+                                  children: [
+                                    TextFieldWidget(
+                                      AppLocalizations.of(context)!.animal,
+                                      _animalNameController,
+                                      AppLocalizations.of(context)!
+                                          .enter_animal_name,
+                                    ),
+                                    TexiFieldWidgetForDouble(
+                                      // 'Quantity',
+                                      _animalQuantityController,
+                                      AppLocalizations.of(context)!.enter_count,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(child: SizedBox()),
+                                        TextButton(
+                                          child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .save_ucf),
+                                          onPressed: () {
+                                            _addAnimalToHive(
+                                              landDropdownValue,
+                                              _animalNameController.text,
+                                              _animalQuantityController.text,
                                             );
                                             setState(() {});
                                           },

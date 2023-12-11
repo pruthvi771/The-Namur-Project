@@ -48,6 +48,9 @@ class Land {
 
   @HiveField(4)
   late List<String> equipments;
+
+  @HiveField(5)
+  late List<Animal> animals;
 }
 
 @HiveType(typeId: 3)
@@ -120,4 +123,13 @@ class CropCalendarItem {
 class CropCalendarData {
   @HiveField(0)
   late List<CropCalendarItem> cropCalendarItems;
+}
+
+@HiveType(typeId: 9)
+class Animal {
+  @HiveField(0)
+  late String name;
+
+  @HiveField(1)
+  late int quantity;
 }

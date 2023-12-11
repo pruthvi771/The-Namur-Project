@@ -105,13 +105,14 @@ class LandAdapter extends TypeAdapter<Land> {
       ..syno = fields[1] as String
       ..area = fields[2] as double
       ..crops = (fields[3] as List).cast<Crop>()
-      ..equipments = (fields[4] as List).cast<String>();
+      ..equipments = (fields[4] as List).cast<String>()
+      ..animals = (fields[5] as List).cast<Animal>();
   }
 
   @override
   void write(BinaryWriter writer, Land obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.village)
       ..writeByte(1)
@@ -121,7 +122,9 @@ class LandAdapter extends TypeAdapter<Land> {
       ..writeByte(3)
       ..write(obj.crops)
       ..writeByte(4)
-      ..write(obj.equipments);
+      ..write(obj.equipments)
+      ..writeByte(5)
+      ..write(obj.animals);
   }
 
   @override
@@ -365,6 +368,42 @@ class CropCalendarDataAdapter extends TypeAdapter<CropCalendarData> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is CropCalendarDataAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class AnimalAdapter extends TypeAdapter<Animal> {
+  @override
+  final int typeId = 9;
+
+  @override
+  Animal read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return Animal()
+      ..name = fields[0] as String
+      ..quantity = fields[1] as int;
+  }
+
+  @override
+  void write(BinaryWriter writer, Animal obj) {
+    writer
+      ..writeByte(2)
+      ..writeByte(0)
+      ..write(obj.name)
+      ..writeByte(1)
+      ..write(obj.quantity);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AnimalAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
