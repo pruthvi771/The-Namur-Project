@@ -29,7 +29,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   var imageLinks = imageForNameCloud;
 
-  int? selectedIndex;
+  int selectedIndex = 0;
 
   Future<CropCalendarData?> getCropsForTracking() async {
     var dataBox = Hive.box<CropCalendarData>('cropCalendarDataBox');
@@ -58,10 +58,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   void initState() {
-    cropDocumentForInfoFuture = getCropDocForInfo(cropName: 'onion');
     cropsForTrackingFuture = getCropsForTracking();
+    // cropDocumentForInfoFuture = getCropDocForInfo(cropName: 'onion');
     // tenDaysAhead = currentDateTime.add(Duration(days: 10));
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -166,39 +171,40 @@ class _CalendarScreenState extends State<CalendarScreen> {
             );
           }
           if (parentSnapshot.hasData && parentSnapshot.data != null) {
+            cropDocumentForInfoFuture = getCropDocForInfo(
+                cropName: parentSnapshot
+                    .data!.cropCalendarItems[selectedIndex].cropName);
             return ListView(
               physics: BouncingScrollPhysics(),
               children: [
-                SizedBox(
-                  height: 10,
-                ),
                 // crop selection
                 Container(
-                  // color: Colors.red,
-                  // height: 110,
+                  height: 80,
                   padding: EdgeInsets.symmetric(horizontal: 5),
-                  child: Column(
+                  margin: EdgeInsets.symmetric(vertical: 10),
+                  child: Row(
                     children: [
-                      Container(
-                        height: 120,
+                      Expanded(
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           physics: BouncingScrollPhysics(),
                           itemCount:
                               parentSnapshot.data!.cropCalendarItems.length,
                           itemBuilder: (context, index) {
+                            print(parentSnapshot.data!
+                                .cropCalendarItems[selectedIndex].cropName);
                             return GestureDetector(
                               onTap: () => setState(() {
                                 selectedIndex = index;
                                 cropDocumentForInfoFuture = getCropDocForInfo(
                                     cropName: parentSnapshot
                                         .data!
-                                        .cropCalendarItems[selectedIndex!]
+                                        .cropCalendarItems[selectedIndex]
                                         .cropName);
                               }),
                               child: CropSelectionItemWidget(
                                 image: imageLinks[parentSnapshot
-                                    .data!.cropCalendarItems[index].cropName]!,
+                                    .data!.cropCalendarItems[index].cropName],
                                 title: parentSnapshot
                                     .data!.cropCalendarItems[index].cropName,
                                 isSelected: index == selectedIndex,
@@ -207,356 +213,293 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           },
                         ),
                       ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => CalendarAddCrop()));
-                            },
-                            child: Text(AppLocalizations.of(context)!
-                                .track_another_crop)),
-                      ),
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 5),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CalendarAddCrop()));
+                          },
+                          child: ClipRRect(
+                            child: Image.asset(
+                              "assets/add 2.png",
+                              height: 50,
+                            ),
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 ),
 
                 // cost estimate, schedule, pest control, cultivation tips
-                selectedIndex == null
-                    ? Container(
-                        height: 200,
-                        child: Center(
-                          child: Text(
-                            AppLocalizations.of(context)!.select_crop,
-                            style: TextStyle(fontSize: 16),
+
+                FutureBuilder(
+                    future: cropDocumentForInfoFuture,
+                    builder: (context, cropDocSnapshot) {
+                      if (cropDocSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return Container(
+                          height: 200,
+                          child: Center(
+                            child: CircularProgressIndicator(),
                           ),
-                        ),
-                      )
-                    : FutureBuilder(
-                        future: cropDocumentForInfoFuture,
-                        builder: (context, cropDocSnapshot) {
-                          if (cropDocSnapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Container(
-                              height: 200,
-                              child: Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                            );
-                          }
-                          if (cropDocSnapshot.hasData &&
-                              cropDocSnapshot.data != null) {
-                            var docData = cropDocSnapshot.data;
-                            var currentCrop = parentSnapshot
-                                .data!.cropCalendarItems[selectedIndex!];
-                            return Column(
-                              children: [
-                                // Text(docData['stages'].toString()),
+                        );
+                      }
+                      if (cropDocSnapshot.hasData &&
+                          cropDocSnapshot.data != null) {
+                        var docData = cropDocSnapshot.data;
+                        var currentCrop = parentSnapshot
+                            .data!.cropCalendarItems[selectedIndex];
+                        return Column(
+                          children: [
+                            // Text(docData['stages'].toString()),
 
-                                // cost estimate, schedule, pest control, cultivation tips
-                                Container(
-                                  height: 100,
-                                  // color: Color(0xffC3FF77),
-                                  color: MyTheme.green_lighter,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              width: 55,
-                                              height: 50,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                              child: Image.asset(
-                                                  "assets/pests 1.png"),
-                                            ),
-                                            SizedBox(height: 3),
-                                            Text(
-                                              "Cost Estimate",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontFamily: "Poppins"),
-                                            )
-                                          ],
-                                        ),
+                            // cost estimate, schedule, pest control, cultivation tips
+                            Container(
+                              height: 100,
+                              // color: Color(0xffC3FF77),
+                              color: MyTheme.green_lighter,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return ImageDialogPopup(
+                                                docData: docData);
+                                          });
+                                    },
+                                    child: Container(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            width: 55,
+                                            height: 50,
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                            child: Image.asset(
+                                                "assets/pests 1.png"),
+                                          ),
+                                          SizedBox(height: 3),
+                                          Text(
+                                            "Cost Estimate",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                fontFamily: "Poppins"),
+                                          )
+                                        ],
                                       ),
-                                      SizedBox(width: 15),
-                                      InkWell(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      Tutorial()));
-                                        },
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              width: 55,
-                                              height: 55,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                              child: Image.asset(
-                                                  "assets/cultivation 1.png"),
-                                            ),
-                                            SizedBox(height: 3),
-                                            Text(
-                                              "Schedule",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontFamily: "Poppins"),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(width: 15),
-                                      InkWell(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      PestControl()));
-                                        },
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              width: 55,
-                                              height: 55,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                              child: Image.asset(
-                                                  "assets/pests 1 (1).png"),
-                                            ),
-                                            SizedBox(height: 3),
-                                            Text(
-                                              "Pests Control",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontFamily: "Poppins"),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(width: 15),
-                                      InkWell(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      CultivationTips()));
-                                        },
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              width: 55,
-                                              height: 55,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                              child: Image.asset(
-                                                  "assets/cultivation 1 (1).png"),
-                                            ),
-                                            SizedBox(height: 3),
-                                            Text(
-                                              AppLocalizations.of(context)!
-                                                  .cultivation_tips_ucf,
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontFamily: "Poppins"),
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-
-                                SizedBox(
-                                  height: 20,
-                                ),
-
-                                // calendar event heading
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    AppLocalizations.of(context)!
-                                        .calendar_events,
-                                    style: TextStyle(
-                                      color: Color(0xff107B28),
-                                      // fontFamily: "Poppins",
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 20,
-                                      decoration: TextDecoration.underline,
                                     ),
                                   ),
-                                ),
-
-                                SizedBox(
-                                  height: 20,
-                                ),
-
-                                // SizedBox(height: 20),
-
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 20),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Row(
+                                  SizedBox(width: 15),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Tutorial()));
+                                    },
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
-                                        Text(
-                                          'Planting Date: ',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w700,
-                                              fontFamily: "Poppins"),
+                                        Container(
+                                          width: 55,
+                                          height: 55,
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: Image.asset(
+                                              "assets/cultivation 1.png"),
                                         ),
+                                        SizedBox(height: 3),
                                         Text(
-                                          '${currentCrop.plantingDate.day}/${currentCrop.plantingDate.month}/${currentCrop.plantingDate.year}',
+                                          "Schedule",
                                           style: TextStyle(
-                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
                                               fontFamily: "Poppins"),
-                                        ),
+                                        )
                                       ],
                                     ),
                                   ),
-                                ),
-
-                                SizedBox(
-                                  height: 15,
-                                ),
-
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 20.0, right: 20),
-                                  // child: Container(
-                                  //   child: ListView.builder(
-                                  //       itemCount: docData['stages'].length,
-                                  //       shrinkWrap: true,
-                                  //       scrollDirection: Axis.vertical,
-                                  //       physics: NeverScrollableScrollPhysics(),
-                                  //       itemBuilder: (context, index) {
-                                  //         DateTime? initialDate = null;
-                                  //         var myWidget = CalendarStageItem(
-                                  //           stageName: 'Stage ${index + 1}',
-                                  //           stage1text: docData['stages'][index]
-                                  //               ['0']['name'],
-                                  //           stage2text: docData['stages'][index]
-                                  //               ['1']['name'],
-                                  //           initialDate: initialDate == null
-                                  //               ? currentCrop.plantingDate
-                                  //               : initialDate,
-                                  //           stage1days: docData['stages'][index]
-                                  //               ['0']['days'],
-                                  //           stage2days: docData['stages'][index]
-                                  //               ['1']['days'],
-                                  //         );
-                                  //         if (initialDate == null) {
-                                  //           initialDate = currentCrop
-                                  //               .plantingDate
-                                  //               .add(Duration(
-                                  //                   days: docData['stages']
-                                  //                               [index]['0']
-                                  //                           ['days'] +
-                                  //                       docData['stages'][index]
-                                  //                           ['1']['days']));
-                                  //         } else {
-                                  //           initialDate = initialDate.add(
-                                  //               Duration(
-                                  //                   days: docData['stages']
-                                  //                               [index]['0']
-                                  //                           ['days'] +
-                                  //                       docData['stages'][index]
-                                  //                           ['1']['days']));
-                                  //         }
-                                  //         return myWidget;
-                                  //       }),
-                                  // ),
-                                  child: Container(
-                                    child: ListView.builder(
-                                      itemCount: docData['stages'].length,
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.vertical,
-                                      physics: NeverScrollableScrollPhysics(),
-                                      itemBuilder: (context, index) {
-                                        DateTime? initialDate = null;
-                                        int cumulativeDays = 0;
-
-                                        var myWidget = CalendarStageItem(
-                                          stageName: 'Stage ${index + 1}',
-                                          stage1text: docData['stages'][index]
-                                              ['0']['name'],
-                                          stage2text: docData['stages'][index]
-                                              ['1']['name'],
-                                          initialDate: initialDate == null
-                                              ? currentCrop.plantingDate
-                                              : initialDate,
-                                          stage1days: docData['stages'][index]
-                                              ['0']['days'],
-                                          stage2days: docData['stages'][index]
-                                              ['1']['days'],
-                                        );
-
-                                        int days1 = docData['stages'][index]
-                                            ['0']['days'];
-                                        int days2 = docData['stages'][index]
-                                            ['1']['days'];
-
-                                        cumulativeDays =
-                                            cumulativeDays + days1 + days2;
-
-                                        if (initialDate == null) {
-                                          initialDate = currentCrop.plantingDate
-                                              .add(Duration(
-                                                  days: cumulativeDays));
-                                        } else {
-                                          initialDate = initialDate.add(
-                                              Duration(days: cumulativeDays));
-                                        }
-
-                                        return myWidget;
-                                      },
+                                  SizedBox(width: 15),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  PestControl()));
+                                    },
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          width: 55,
+                                          height: 55,
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: Image.asset(
+                                              "assets/pests 1 (1).png"),
+                                        ),
+                                        SizedBox(height: 3),
+                                        Text(
+                                          "Pests Control",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: "Poppins"),
+                                        )
+                                      ],
                                     ),
                                   ),
-                                ),
-                              ],
-                            );
-                          }
-                          return Container(
-                            height: 200,
-                            child: Center(
-                              child: Text(
-                                AppLocalizations.of(context)!
-                                    .no_data_is_available,
-                                style: TextStyle(fontSize: 16),
+                                  SizedBox(width: 15),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CultivationTips()));
+                                    },
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          width: 55,
+                                          height: 55,
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: Image.asset(
+                                              "assets/cultivation 1 (1).png"),
+                                        ),
+                                        SizedBox(height: 3),
+                                        Text(
+                                          AppLocalizations.of(context)!
+                                              .cultivation_tips_ucf,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: "Poppins"),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
-                          );
-                        }),
+
+                            SizedBox(
+                              height: 20,
+                            ),
+
+                            // calendar event heading
+                            Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                AppLocalizations.of(context)!.calendar_events,
+                                style: TextStyle(
+                                  color: Color(0xff107B28),
+                                  // fontFamily: "Poppins",
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 20,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(
+                              height: 20,
+                            ),
+
+                            // SizedBox(height: 20),
+
+                            Padding(
+                              padding: const EdgeInsets.only(left: 20),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      AppLocalizations.of(context)!
+                                          .planting_date,
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700,
+                                          fontFamily: "Poppins"),
+                                    ),
+                                    Text(
+                                      '${currentCrop.plantingDate.day}/${currentCrop.plantingDate.month}/${currentCrop.plantingDate.year}',
+                                      style: TextStyle(
+                                          fontSize: 16, fontFamily: "Poppins"),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(
+                              height: 15,
+                            ),
+
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 20.0, right: 20),
+                              child: Container(
+                                child: ListView.builder(
+                                  itemCount: docData['stages'].length,
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.vertical,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    return CalendarStageItem(
+                                      stageName:
+                                          '${AppLocalizations.of(context)!.stage_for_calendar} ${index + 1}',
+                                      stage1text: docData['stages'][index]['0']
+                                          ['name'],
+                                      stage2text: docData['stages'][index]['1']
+                                          ['name'],
+                                      initialDate: currentCrop.plantingDate.add(
+                                          Duration(
+                                              days: docData['stages'][index]
+                                                  ['0']['days'])),
+                                      stage1days: docData['stages'][index]['0']
+                                          ['days'],
+                                      stage2days: docData['stages'][index]['1']
+                                          ['days'],
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                      return Container(
+                        height: 200,
+                        child: Center(
+                          child: Text(
+                            AppLocalizations.of(context)!.no_data_is_available,
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
+                      );
+                    }),
 
                 SizedBox(
                   height: 40,
@@ -725,6 +668,55 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 }
 
+class ImageDialogPopup extends StatefulWidget {
+  const ImageDialogPopup({
+    super.key,
+    required this.docData,
+  });
+
+  final docData;
+
+  @override
+  State<ImageDialogPopup> createState() => _ImageDialogPopupState();
+}
+
+class _ImageDialogPopupState extends State<ImageDialogPopup> {
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shadowColor: Colors.transparent,
+      backgroundColor: Colors.transparent,
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        width: double.infinity,
+        child: AspectRatio(
+          aspectRatio: 0.75,
+          child: CachedNetworkImage(
+            imageUrl: widget.docData['costEstimate'],
+            fit: BoxFit.fitWidth,
+            progressIndicatorBuilder: (context, url, progress) {
+              return Center(
+                child: Container(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class CropSelectionItemWidget extends StatelessWidget {
   const CropSelectionItemWidget({
     super.key,
@@ -733,7 +725,7 @@ class CropSelectionItemWidget extends StatelessWidget {
     required this.isSelected,
   });
 
-  final String image;
+  final String? image;
   final String title;
   final bool isSelected;
 
@@ -765,18 +757,23 @@ class CropSelectionItemWidget extends StatelessWidget {
               //   image,
               //   fit: BoxFit.cover,
               // ),
-              child: CachedNetworkImage(
-                imageUrl: image,
-                fit: BoxFit.fitWidth,
-                placeholder: (context, url) => Center(
-                  child: Container(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
-                errorWidget: (context, url, error) => Icon(Icons.error),
-              ),
+              child: image == null
+                  ? Image.asset(
+                      "assets/placeholder.png",
+                      fit: BoxFit.cover,
+                    )
+                  : CachedNetworkImage(
+                      imageUrl: image!,
+                      fit: BoxFit.fitWidth,
+                      placeholder: (context, url) => Center(
+                        child: Container(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    ),
             ),
           ),
           SizedBox(

@@ -762,5 +762,9 @@
 "enter_area_in_acres" : "Enter Area (in Acres)",
 "enter_crop_yield" : "Enter Crop Yield",
 "track_another_crop": "Track Another Crop",
-"calendar_events": "Calendar Events"
+"calendar_events": "Calendar Events",
+"cost_estimate": "Cost Estimate",
+"planting_date": "Planting Date: ",
+"stage_for_calendar" : "Stage"
+
 }

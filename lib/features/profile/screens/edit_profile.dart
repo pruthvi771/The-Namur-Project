@@ -1147,7 +1147,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               Expanded(child: SizedBox()),
                               TextButton(
                                 child: Text(
-                                    AppLocalizations.of(context)!.add_record),
+                                    AppLocalizations.of(context)!.save_ucf),
                                 onPressed: () {
                                   _addAddressToHive(
                                     pincode: _pinCodeController.text,
@@ -1381,7 +1381,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       children: [
                         Expanded(child: SizedBox()),
                         TextButton(
-                          child: Text(AppLocalizations.of(context)!.add_record),
+                          child: Text(AppLocalizations.of(context)!.save_ucf),
                           onPressed: () {
                             _addLandToHive(
                               _areaController.text,
@@ -1543,7 +1543,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         TextButton(
                                           child: Text(
                                               AppLocalizations.of(context)!
-                                                  .add_record),
+                                                  .save_ucf),
                                           onPressed: () {
                                             _addCropToHive(
                                               landDropdownValue,
@@ -1638,7 +1638,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         TextButton(
                                           child: Text(
                                               AppLocalizations.of(context)!
-                                                  .add_record),
+                                                  .save_ucf),
                                           onPressed: () {
                                             _addEquipmentToHive(
                                               landDropdownValue,

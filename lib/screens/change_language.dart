@@ -86,37 +86,6 @@ class _ChangeLanguageState extends State<ChangeLanguage> {
                 ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-              child: GestureDetector(
-                onTap: () {
-                  BlocProvider.of<TranslationBloc>(context).add(
-                    TranslationDataRequested(
-                      locale: 'ar',
-                    ),
-                  );
-                  Navigator.pop(context);
-                },
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Material(
-                    elevation: 2,
-                    child: Container(
-                      height: 70,
-                      width: double.infinity,
-                      color: Colors.green.shade100,
-                      child: Center(
-                        child: Text(
-                          'عربي',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
       ),

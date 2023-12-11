@@ -764,5 +764,8 @@
 
 "track_another_crop": "ಇನ್ನೊಂದು ಬೆಳೆಗಳನ್ನು ಹಾಕಿ",
 
-"calendar_events": "ಕ್ಯಾಲೆಂಡರ್ ಘಟನೆಗಳು"
+"calendar_events": "ಕ್ಯಾಲೆಂಡರ್ ಘಟನೆಗಳು",
+"cost_estimate": "ಅಂದಾಜು ವೆಚ್ಚ",
+"planting_date": "Planting Date",
+"stage_for_calendar" : "ಹಂತ"
 }
