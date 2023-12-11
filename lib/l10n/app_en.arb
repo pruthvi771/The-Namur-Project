@@ -765,6 +765,7 @@
 "calendar_events": "Calendar Events",
 "cost_estimate": "Cost Estimate",
 "planting_date": "Planting Date: ",
-"stage_for_calendar" : "Stage"
+"stage_for_calendar" : "Stage",
+"search": "Search"
 
 }

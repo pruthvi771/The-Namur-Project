@@ -1041,42 +1041,58 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               builder: (context, state) {
                                 return Column(
                                   children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Container(
-                                          height: 40,
-                                          child: TextField(
-                                            keyboardType:
-                                                TextInputType.numberWithOptions(
-                                                    decimal: true),
-                                            controller: _pinCodeController,
-                                            autofocus: false,
-                                            decoration: InputDecorations
-                                                .buildInputDecoration_1(
-                                                    hint_text: "Pincode"),
+                                    Container(
+                                      height: 40,
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          Expanded(
+                                            child: Container(
+                                              // height: 40,
+                                              child: TextField(
+                                                keyboardType: TextInputType
+                                                    .numberWithOptions(
+                                                        decimal: true),
+                                                controller: _pinCodeController,
+                                                autofocus: false,
+                                                decoration: InputDecorations
+                                                    .buildInputDecoration_1(
+                                                        hint_text: "Pincode"),
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 8),
-                                          child: GestureDetector(
+                                          GestureDetector(
                                             onTap: () {
                                               fetchLocations(context);
                                             },
-                                            child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .get_locations,
-                                              style: TextStyle(
-                                                  color: MyTheme.accent_color,
-                                                  fontStyle: FontStyle.italic,
-                                                  decoration:
-                                                      TextDecoration.underline),
+                                            child: Container(
+                                              height: double.infinity,
+                                              color: MyTheme.green_lighter,
+                                              margin: EdgeInsets.only(
+                                                left: 10,
+                                                top: 2,
+                                                bottom: 2,
+                                              ),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 10),
+                                              child: Center(
+                                                child: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .search,
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ),
                                             ),
-                                          ),
-                                        )
-                                      ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
                                     ),
                                     Container(
                                       height: 40,
@@ -1263,41 +1279,57 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         builder: (context, state) {
                           return Column(
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Container(
-                                    height: 40,
-                                    child: TextField(
-                                      keyboardType:
-                                          TextInputType.numberWithOptions(
-                                              decimal: true),
-                                      controller: _pinCodeControllerForLand,
-                                      autofocus: false,
-                                      decoration: InputDecorations
-                                          .buildInputDecoration_1(
-                                              hint_text: "Pincode"),
+                              Container(
+                                height: 40,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        // height: 40,
+                                        child: TextField(
+                                          keyboardType:
+                                              TextInputType.numberWithOptions(
+                                                  decimal: true),
+                                          controller: _pinCodeControllerForLand,
+                                          autofocus: false,
+                                          decoration: InputDecorations
+                                              .buildInputDecoration_1(
+                                                  hint_text: "Pincode"),
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 8),
-                                    child: GestureDetector(
+                                    GestureDetector(
                                       onTap: () {
                                         fetchLocationsForLand(context);
                                       },
-                                      child: Text(
-                                        AppLocalizations.of(context)!
-                                            .get_locations,
-                                        style: TextStyle(
-                                            color: MyTheme.accent_color,
-                                            fontStyle: FontStyle.italic,
-                                            decoration:
-                                                TextDecoration.underline),
+                                      child: Container(
+                                        height: double.infinity,
+                                        color: MyTheme.green_lighter,
+                                        margin: EdgeInsets.only(
+                                          left: 10,
+                                          top: 2,
+                                          bottom: 2,
+                                        ),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10),
+                                        child: Center(
+                                          child: Text(
+                                            AppLocalizations.of(context)!
+                                                .search,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  )
-                                ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
                               ),
                               Container(
                                 height: 40,

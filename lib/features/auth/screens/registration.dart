@@ -302,7 +302,7 @@ class _RegistrationState extends State<Registration> {
                   controller: _nameController,
                   autofocus: false,
                   decoration: InputDecorations.buildInputDecoration_1(
-                      hint_text: "Enter your name"),
+                      hint_text: AppLocalizations.of(context)!.name_ucf),
                 ),
               ),
             ),
@@ -321,7 +321,7 @@ class _RegistrationState extends State<Registration> {
                   disableLengthCheck: true,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.all(8),
-                    labelText: 'Mobile Number',
+                    labelText: AppLocalizations.of(context)!.phone_number_ucf,
                     labelStyle: TextStyle(
                       color: Colors.grey,
                       fontSize: 13,
@@ -371,45 +371,62 @@ class _RegistrationState extends State<Registration> {
                   controller: _emailController,
                   autofocus: false,
                   decoration: InputDecorations.buildInputDecoration_1(
-                      hint_text: "Email Id"),
+                      hint_text: AppLocalizations.of(context)!.email_ucf),
                 ),
               ),
             ),
 
             // pincode textbox
-            Padding(
+            Container(
+              height: 40,
               padding: const EdgeInsets.only(right: 20, left: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+              child: Row(
+                // crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Container(
-                    height: 40,
-                    child: TextField(
-                      keyboardType:
-                          TextInputType.numberWithOptions(decimal: true),
-                      controller: _pinCodeController,
-                      autofocus: false,
-                      decoration: InputDecorations.buildInputDecoration_1(
-                          hint_text: "Pin Code"),
+                  Expanded(
+                    child: Container(
+                      // height: 40,
+                      child: TextField(
+                        keyboardType:
+                            TextInputType.numberWithOptions(decimal: true),
+                        controller: _pinCodeController,
+                        autofocus: false,
+                        decoration: InputDecorations.buildInputDecoration_1(
+                            hint_text:
+                                AppLocalizations.of(context)!.enter_pincode),
+                      ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: GestureDetector(
-                      onTap: () {
-                        fetchLocations(context);
-                      },
-                      child: Text(
-                        'Get Locations',
-                        style: TextStyle(
-                            color: MyTheme.accent_color,
-                            fontStyle: FontStyle.italic,
-                            decoration: TextDecoration.underline),
+                  GestureDetector(
+                    onTap: () {
+                      fetchLocations(context);
+                    },
+                    child: Container(
+                      height: double.infinity,
+                      color: MyTheme.green_lighter,
+                      margin: EdgeInsets.only(
+                        left: 10,
+                        top: 2,
+                        bottom: 2,
+                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Center(
+                        child: Text(
+                          AppLocalizations.of(context)!.search,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
                     ),
                   )
                 ],
               ),
+            ),
+
+            SizedBox(
+              height: 10,
             ),
 
             // location dropdown
@@ -428,14 +445,14 @@ class _RegistrationState extends State<Registration> {
                 child: DropdownButton<String>(
                   isExpanded: true,
                   hint: Text(
-                    'Select Location',
+                    AppLocalizations.of(context)!.select_a_location,
                     style: TextStyle(
                       color: Colors.grey,
                       fontSize: 13,
                     ),
                   ),
                   disabledHint: Text(
-                    'Enter Pin Code first',
+                    AppLocalizations.of(context)!.enter_pincode_first,
                     style: TextStyle(
                       color: Colors.grey,
                       fontSize: 13,
@@ -473,15 +490,6 @@ class _RegistrationState extends State<Registration> {
             SizedBox(
               height: 10,
             ),
-
-            // Row(
-            //   children: [
-            //     Text(addressName ?? 'no data'),
-            //     Text(addressCircle ?? 'no data'),
-            //     Text(addressRegion ?? 'no data'),
-            //     Text(districtName ?? 'no data'),
-            //   ],
-            // ),
 
             // privacy policy button
             Padding(
@@ -576,7 +584,8 @@ class _RegistrationState extends State<Registration> {
                       borderRadius:
                           const BorderRadius.all(Radius.circular(10.0))),
                   child: Text(
-                    'Sign Up with Phone',
+                    // 'Sign Up with Phone',
+                    AppLocalizations.of(context)!.sign_up_ucf,
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 14,
