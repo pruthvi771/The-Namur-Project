@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/features/profile/enum.dart';
+import 'package:active_ecommerce_flutter/features/profile/models/updates_data.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/more_details.dart';
@@ -46,6 +47,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
   late BuildContext loadingcontext;
 
   ProfileSection _profileSection = ProfileSection.updates;
+  late Future<List<UpdatesData>> updatesDataFuture;
 
   @override
   void initState() {
@@ -54,11 +56,24 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
     BlocProvider.of<ProfileBloc>(context).add(
       ProfileDataRequested(),
     );
+    updatesDataFuture = getUpdatesDate();
+  }
 
-    // if (is_logged_in.$ == true) {
+  Future<List<UpdatesData>> getUpdatesDate() async {
+    List<UpdatesData> updatesData = [];
 
-    // fetchAll();
-    // }
+    var userSnapshot =
+        await FirebaseFirestore.instance.collection('updates').get();
+
+    for (var document in userSnapshot.docs) {
+      // userSnapshot.docs[0].data()!['imageURL']
+      updatesData.add(UpdatesData(
+        imageURL: document.data()['imageURL'],
+        goToURL: document.data()['link'],
+      ));
+    }
+
+    return updatesData;
   }
 
   void dispose() {
@@ -141,7 +156,15 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
             key: homeData.scaffoldKey,
             drawer: const MainDrawer(),
             backgroundColor: Colors.transparent,
-            body: buildBodyChildren(_profileSection),
+            body: RefreshIndicator(
+              child: buildBodyChildren(_profileSection),
+              onRefresh: () async {
+                BlocProvider.of<ProfileBloc>(context).add(
+                  ProfileDataRequested(),
+                );
+                updatesDataFuture = getUpdatesDate();
+              },
+            ),
           ),
         ],
       ),
@@ -222,6 +245,15 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                   TabController(length: 2, vsync: this);
               return SliverList(
                 delegate: SliverChildListDelegate([
+                  ElevatedButton(
+                      onPressed: () async {
+                        var userSnapshot = await FirebaseFirestore.instance
+                            .collection('updates')
+                            .get();
+                        print(userSnapshot.docs[0].data()!['imageURL']);
+                      },
+                      child: Text('get data')),
+
                   Stack(
                     alignment: AlignmentDirectional.bottomEnd,
                     children: [
@@ -275,6 +307,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                   SizedBox(
                     height: 15,
                   ),
+
                   //Profile Name
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -375,6 +408,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                     ),
                   ),
 
+                  // tabs
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Card(
@@ -423,46 +457,74 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                       ),
                     ),
                   ),
+
                   Container(
                     height: MediaQuery.of(context).size.height - 300,
                     child: TabBarView(
                       controller: tabController,
                       children: [
-                        Column(
-                          children: [
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: InkWell(
-                                  onTap: () async {
-                                    await _launchYouTubeVideo(
-                                        'https://www.youtube.com/watch?v=o5DGLMY7jsc');
-                                  },
-                                  child: Image.network(
-                                      'https://i.ytimg.com/vi/o5DGLMY7jsc/maxresdefault.jpg'),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: InkWell(
-                                  onTap: () async {
-                                    await _launchYouTubeVideo(
-                                        'https://www.youtube.com/watch?v=VeO_kVYPmmg');
-                                  },
-                                  child: Image.network(
-                                      'https://i.ytimg.com/vi/VeO_kVYPmmg/maxresdefault.jpg'),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                        FutureBuilder(
+                            future: updatesDataFuture,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                              if (snapshot.hasData &&
+                                  snapshot.connectionState ==
+                                      ConnectionState.done) {
+                                List<UpdatesData> updatesList = snapshot.data!;
+                                return updatesList.length == 0
+                                    ? Center(
+                                        child: Text(
+                                          AppLocalizations.of(context)!
+                                              .no_data_is_available,
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                              fontFamily: 'Poppins'),
+                                        ),
+                                      )
+                                    : Column(
+                                        children: [
+                                          Expanded(
+                                            child: ListView.builder(
+                                              itemCount: updatesList.length,
+                                              itemBuilder: (context, index) {
+                                                return Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                    child: InkWell(
+                                                      onTap: () async {
+                                                        await _launchYouTubeVideo(
+                                                            updatesList[index]
+                                                                .goToURL);
+                                                      },
+                                                      child: CachedNetworkImage(
+                                                        imageUrl:
+                                                            updatesList[index]
+                                                                .imageURL,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                              }
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }),
                         SingleChildScrollView(
                           child: MasonryGridView.count(
                             crossAxisCount: 3,
@@ -601,23 +663,5 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
         ),
       ),
     );
-  }
-
-  loading() {
-    showDialog(
-        context: context,
-        builder: (context) {
-          loadingcontext = context;
-          return AlertDialog(
-              content: Row(
-            children: [
-              CircularProgressIndicator(),
-              SizedBox(
-                width: 10,
-              ),
-              Text("${AppLocalizations.of(context)!.please_wait_ucf}"),
-            ],
-          ));
-        });
   }
 }

@@ -1,10 +1,8 @@
 //modified
 
 import 'package:active_ecommerce_flutter/app_config.dart';
-import 'package:active_ecommerce_flutter/custom/box_decorations.dart';
 import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
-import 'package:active_ecommerce_flutter/custom/google_recaptcha.dart';
 import 'package:active_ecommerce_flutter/custom/input_decorations.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/auth/models/postoffice_response_model.dart';
@@ -20,7 +18,6 @@ import 'package:active_ecommerce_flutter/screens/common_webview_screen.dart';
 import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
 import 'package:active_ecommerce_flutter/features/auth/screens/otp.dart';
 // import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
-import 'package:active_ecommerce_flutter/ui_elements/auth_ui.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -29,11 +26,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:intl_phone_field/phone_number.dart';
 import 'package:toast/toast.dart';
 import 'package:validators/validators.dart';
-
-import '../../../repositories/address_repository.dart';
 
 class Registration extends StatefulWidget {
   @override
@@ -57,7 +51,7 @@ class _RegistrationState extends State<Registration> {
   //controllers
   TextEditingController _nameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
-  TextEditingController _phoneNumberController = TextEditingController();
+  // TextEditingController _phoneNumberController = TextEditingController();
   TextEditingController _pinCodeController = TextEditingController();
 
   bool isDropdownEnabled = false;
@@ -159,7 +153,6 @@ class _RegistrationState extends State<Registration> {
 
   @override
   Widget build(BuildContext context) {
-    final _screen_height = MediaQuery.of(context).size.height;
     final _screen_width = MediaQuery.of(context).size.width;
 
     AuthRepository _authRepository = AuthRepository();
