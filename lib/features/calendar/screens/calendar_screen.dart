@@ -3,8 +3,8 @@ import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/screens/calender/cultivation_tip.dart';
 import 'package:active_ecommerce_flutter/screens/calender/pest_control.dart';
 import 'package:active_ecommerce_flutter/screens/calender/tutorial.dart';
-import 'package:active_ecommerce_flutter/utils/enums.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
+import 'package:active_ecommerce_flutter/utils/imageLinks.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -195,6 +195,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 .cropCalendarItems[selectedIndex].cropName);
                             return GestureDetector(
                               onTap: () => setState(() {
+                                // print(parentSnapshot.data!
+                                //     .cropCalendarItems[selectedIndex].cropName);
                                 selectedIndex = index;
                                 cropDocumentForInfoFuture = getCropDocForInfo(
                                     cropName: parentSnapshot

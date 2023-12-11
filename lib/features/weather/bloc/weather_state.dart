@@ -1,5 +1,4 @@
 // part of 'weather_bloc.dart';
-import 'package:active_ecommerce_flutter/features/weather/models/current_data.dart';
 import 'package:active_ecommerce_flutter/features/weather/models/forecast_data.dart';
 import 'package:equatable/equatable.dart';
 // @immutable

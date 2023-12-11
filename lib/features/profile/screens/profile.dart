@@ -11,6 +11,7 @@ import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_state.dart';
 import 'package:active_ecommerce_flutter/features/profile/utils.dart';
 import 'package:active_ecommerce_flutter/presenter/home_presenter.dart';
+import 'package:active_ecommerce_flutter/utils/imageLinks.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 // import 'package:active_ecommerce_flutter/screens/setting/setting.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -33,9 +34,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 // ignore: must_be_immutable
 class Profile extends StatefulWidget {
-  Profile({Key? key, this.show_back_button = false}) : super(key: key);
-
-  bool show_back_button;
+  Profile({Key? key}) : super(key: key);
 
   @override
   _ProfileState createState() => _ProfileState();
@@ -49,6 +48,8 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
   ProfileSection _profileSection = ProfileSection.updates;
   late Future<List<UpdatesData>> updatesDataFuture;
   late Future<List<Crop>> cropsDataFuture;
+
+  var imageLinks = imageForNameCloud;
 
   @override
   void initState() {
@@ -597,10 +598,18 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                                     child: Container(
                                                       height: 50,
                                                       width: 50,
-                                                      child: Image.asset(
-                                                        stocks[index],
-                                                        fit: BoxFit.cover,
-                                                      ),
+                                                      // child: Image.asset(
+                                                      //   stocks[index],
+                                                      //   fit: BoxFit.cover,
+                                                      // ),
+                                                      child: CachedNetworkImage(
+                                                          imageUrl: imageLinks[
+                                                                  snapshot
+                                                                      .data![
+                                                                          index]
+                                                                      .name] ??
+                                                              imageLinks[
+                                                                  'placeholder']!),
                                                     ),
                                                   ),
                                                   Padding(

@@ -5,7 +5,7 @@ import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/buy_product
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/product_inventory.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart' as enums;
-import 'package:active_ecommerce_flutter/utils/enums.dart';
+import 'package:active_ecommerce_flutter/utils/imageLinks.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -264,7 +264,7 @@ class _ParentScreenState extends State<ParentScreen> {
                           },
                           child: Container(
                             height: 120,
-                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            padding: const EdgeInsets.symmetric(vertical: 5),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15),
                               border: Border.all(
@@ -274,32 +274,34 @@ class _ParentScreenState extends State<ParentScreen> {
                             child: Column(
                               children: [
                                 Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(3.0),
-                                    child: Image.asset(
-                                      stocks[index],
-                                      fit: BoxFit.cover,
+                                  child: Container(
+                                    margin: const EdgeInsets.all(5),
+                                    child: AspectRatio(
+                                      aspectRatio: 1,
+                                      child: CachedNetworkImage(
+                                        imageUrl: imageForName[
+                                                nameForSubCategoryEnum[
+                                                        subCategoryEnum]!
+                                                    .toLowerCase()] ??
+                                            imageForName['placeholder']!,
+                                        imageBuilder:
+                                            (context, imageProvider) =>
+                                                Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            image: DecorationImage(
+                                              image: imageProvider,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                        placeholder: (context, url) => Center(
+                                            child: CircularProgressIndicator()),
+                                        errorWidget: (context, url, error) =>
+                                            Icon(Icons.error),
+                                      ),
                                     ),
-                                    // child: CachedNetworkImage(
-                                    //   imageUrl: imageForName[
-                                    //       nameForSubCategoryEnum[
-                                    //           subCategoryEnum]]!,
-                                    // imageBuilder:
-                                    //     (context, imageProvider) =>
-                                    //         Container(
-                                    //   decoration: BoxDecoration(
-                                    //     borderRadius:
-                                    //         BorderRadius.circular(15),
-                                    //     image: DecorationImage(
-                                    //       image: imageProvider,
-                                    //       fit: BoxFit.cover,
-                                    //     ),
-                                    //   ),
-                                    // ),
-                                    // placeholder: (context, url) => Center(
-                                    //     child: CircularProgressIndicator()),
-                                    // errorWidget: (context, url, error) =>
-                                    //     Icon(Icons.error),
                                   ),
                                 ),
                                 SizedBox(

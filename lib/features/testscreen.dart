@@ -47,7 +47,7 @@ class _TestWidgetState extends State<TestWidget> {
     try {
       firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
           .ref()
-          .child('helpers3/manAndMcs/$key.png');
+          .child('helpers3/animals/$key.png');
 
       await ref.putFile(file);
 
@@ -59,20 +59,42 @@ class _TestWidgetState extends State<TestWidget> {
     }
   }
 
-  var imageForEquipment = {
-    'Backhoe': 'assets/ikons/manAndMcs/backhoe.png',
-    'Billhook': 'assets/ikons/manAndMcs/billhook.png',
-    'Car': 'assets/ikons/manAndMcs/car.png',
-    'Combine harvester': 'assets/ikons/manAndMcs/combine-harvester.png',
-    'Electric scooter': 'assets/ikons/manAndMcs/electric-scooter.png',
-    'Equipment': 'assets/ikons/manAndMcs/equipment.png',
-    'Fan': 'assets/ikons/manAndMcs/fan.png',
-    'Gardening tools': 'assets/ikons/manAndMcs/gardening-tools.png',
-    'Loader': 'assets/ikons/manAndMcs/loader.png',
-    'Plow': 'assets/ikons/manAndMcs/plow.png',
-    'Scooter': 'assets/ikons/manAndMcs/scooter.png',
-    'Shredder': 'assets/ikons/manAndMcs/shredder.png',
-    'Tractor': 'assets/ikons/manAndMcs/tractor.png',
+  var animalAndBirdsImages = {
+    // 'honey': 'assets/ikons/animals/honey.png',
+    // 'veterinarian': 'assets/ikons/animals/veterinarian.png',
+    // 'veterinary': 'assets/ikons/animals/veterinary.png',
+    // 'shampoo': 'assets/ikons/animals/shampoo.png',
+    // 'smoker': 'assets/ikons/animals/smoker.png',
+    // 'rabbit': 'assets/ikons/animals/rabbit.png',
+    // 'kennel': 'assets/ikons/animals/kennel.png',
+    // 'milk tank': 'assets/ikons/animals/milk-tank.png',
+    // 'pet food': 'assets/ikons/animals/pet-food.png',
+    // 'pet supplies': 'assets/ikons/animals/pet-supplies.png',
+    // 'dairy products': 'assets/ikons/animals/dairy-products.png',
+    // 'dog-carrier': 'assets/ikons/animals/dog-carrier.png',
+    // 'buffalo': 'assets/ikons/animals/buffalo.png',
+    // 'cow': 'assets/ikons/animals/cow.png',
+    // 'duck': 'assets/ikons/animals/duck.png',
+    // 'bee': 'assets/ikons/animals/bee.png',
+    // 'beehive': 'assets/ikons/animals/beehive.png',
+    // 'hive': 'assets/ikons/animals/hive.png',
+    // 'bird': 'assets/ikons/animals/bird.png',
+    // 'donkey': 'assets/ikons/animals/donkey.png',
+    // 'dog': 'assets/ikons/animals/dog.png',
+    // 'fish': 'assets/ikons/animals/fish.png',
+    // 'pig': 'assets/ikons/animals/pig.png',
+    // 'pork': 'assets/ikons/animals/pork.png',
+    // 'pills': 'assets/ikons/animals/pills.png',
+    // 'sheep': 'assets/ikons/animals/sheep.png',
+    // 'turkey': 'assets/ikons/animals/turkey.png',
+    // 'hen': 'assets/ikons/animals/hen.png',
+    // 'goat': 'assets/ikons/animals/goat.png',
+    // 'fertilizer': 'assets/ikons/animals/fertilizer.png',
+    // 'first aid kit': 'assets/ikons/animals/first-aid-kit.png',
+    'cat': 'assets/ikons/animals/cat.png',
+    'egg': 'assets/ikons/animals/egg.png',
+    'emu': 'assets/ikons/animals/emu.png',
+    'black cat': 'assets/ikons/animals/black-cat.png',
   };
 
   var downloadLinks = {};
@@ -98,7 +120,7 @@ class _TestWidgetState extends State<TestWidget> {
               // String? downloadURL = await uploadAssetToFirebase(key, assetPath);
               // print('Download URL for $key: $downloadURL');
 
-              imageForEquipment.forEach(
+              animalAndBirdsImages.forEach(
                 (key, value) async {
                   // print(key);
                   // print(value);

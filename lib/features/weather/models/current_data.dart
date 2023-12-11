@@ -1,5 +1,3 @@
-import 'package:active_ecommerce_flutter/ui_elements/list_product_card.dart';
-
 class Condition {
   late String text;
   late String icon;
