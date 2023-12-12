@@ -53,15 +53,18 @@ class _MainDrawerState extends State<MainDrawer> {
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                Container(
+                SizedBox(
                   height: 30,
                 ),
+
                 Divider(),
-                // TODO: Change language button
+
+                // change language
                 ListTile(
                     visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-                    leading: Image.asset("assets/language.png",
-                        height: 16, color: Color.fromRGBO(153, 153, 153, 1)),
+                    leading: Icon(
+                      Icons.translate_outlined,
+                    ),
                     title: Text(
                         AppLocalizations.of(context)!.change_language_ucf,
                         style: TextStyle(
@@ -72,11 +75,15 @@ class _MainDrawerState extends State<MainDrawer> {
                         return ChangeLanguage();
                       }));
                     }),
+
                 Divider(),
+
+                // home
                 ListTile(
                     visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-                    leading: Image.asset("assets/home.png",
-                        height: 16, color: Color.fromRGBO(153, 153, 153, 1)),
+                    leading: Icon(
+                      Icons.home_outlined,
+                    ),
                     title: Text(AppLocalizations.of(context)!.home_ucf,
                         style: TextStyle(
                             color: MyTheme.primary_color, fontSize: 14)),
@@ -86,190 +93,187 @@ class _MainDrawerState extends State<MainDrawer> {
                         return Main();
                       }));
                     }),
+
                 Divider(),
-                // user != null
-                Column(
-                  children: [
-                    ListTile(
-                        visualDensity:
-                            VisualDensity(horizontal: -4, vertical: -4),
-                        leading: Icon(
-                          Icons.person,
+
+                // my account
+                ListTile(
+                    visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                    leading: Icon(
+                      Icons.person,
+                    ),
+                    title: Text(AppLocalizations.of(context)!.acccount_ucf,
+                        style: TextStyle(
+                            color: MyTheme.primary_color, fontSize: 14)),
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return MyAccount();
+                      }));
+                    }),
+
+                Divider(),
+
+                // TODO: Navigation route up
+                ListTile(
+                    visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                    leading: Icon(
+                      Icons.notifications_outlined,
+                    ),
+                    title: Text(AppLocalizations.of(context)!.inbox_ucf,
+                        style: TextStyle(
+                            color: MyTheme.primary_color, fontSize: 14)),
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return NotificationScreen();
+                      }));
+                    }),
+
+                Divider(),
+
+                // wallet
+                ListTile(
+                    visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                    // leading: Image.asset(
+                    //   "assets/wallet.png",
+                    //   height: 16,
+                    //   color: Color.fromRGBO(153, 153, 153, 1),
+                    // ),
+                    leading: Icon(
+                      Icons.wallet_outlined,
+                      // size: 23,
+                    ),
+                    title: Text(AppLocalizations.of(context)!.wallet_ucf,
+                        style: TextStyle(
+                            color: MyTheme.primary_color, fontSize: 14)),
+                    onTap: () {
+                      ToastComponent.showDialog(
+                          '${AppLocalizations.of(context)!.coming_soon}...',
+                          gravity: Toast.center,
+                          duration: Toast.lengthLong);
+                    }),
+
+                Divider(),
+
+                // purchase history
+                ListTile(
+                    visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                    leading: Icon(
+                      Icons.list_alt_outlined,
+                    ),
+                    title: Text(
+                        AppLocalizations.of(context)!.purchase_history_ucf,
+                        style: TextStyle(
+                            color: MyTheme.primary_color, fontSize: 14)),
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return PurchaseHistoryScreen();
+                      }));
+                    }),
+
+                Divider(),
+
+                // settings
+                ListTile(
+                    visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                    leading: Icon(
+                      Icons.settings_outlined,
+                    ),
+                    title: Text(AppLocalizations.of(context)!.setting_ucf,
+                        style: TextStyle(
+                            color: MyTheme.primary_color, fontSize: 14)),
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return MoreDetails();
+                      }));
+                    }),
+
+                Divider(),
+
+                // TODO: Contact us page
+                ListTile(
+                    visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                    leading: Icon(
+                      Icons.phone_outlined,
+                      size: 23,
+                    ),
+                    title: Text(AppLocalizations.of(context)!.contact_ucf,
+                        style: TextStyle(
+                            color: MyTheme.primary_color, fontSize: 14)),
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return ContactUs();
+                      }));
+                    }),
+
+                Divider(),
+
+                ListTile(
+                    visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                    // leading: Image.asset("assets/home.png",
+                    //     height: 16, color: Color.fromRGBO(153, 153, 153, 1)),
+                    leading: Icon(
+                      Icons.info_outline,
+                      // size: 23,
+                    ),
+                    title: Text(AppLocalizations.of(context)!.about_ucf,
+                        style: TextStyle(
+                            color: MyTheme.primary_color, fontSize: 14)),
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return AboutUs();
+                      }));
+                    }),
+
+                //TEMPORARY LOGOUT BUTTON
+                Divider(),
+
+                ListTile(
+                    visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                    leading: Icon(Icons.logout),
+                    title: Text("Logout",
+                        style: TextStyle(
+                            color: MyTheme.primary_color, fontSize: 18)),
+                    onTap: () async {
+                      await FirebaseAuth.instance.signOut();
+                      final GoogleSignIn googleSignIn = GoogleSignIn();
+                      await googleSignIn.signOut();
+
+                      var dataBox1 = Hive.box<hiveModels.PrimaryLocation>(
+                          'primaryLocationBox');
+                      await dataBox1.clear();
+
+                      var dataBox2 =
+                          Hive.box<hiveModels.ProfileData>('profileDataBox3');
+                      await dataBox2.clear();
+
+                      var dataBox3 = Hive.box<hiveModels.SecondaryLocations>(
+                          'secondaryLocationsBox');
+                      await dataBox3.clear();
+
+                      var dataBox4 = Hive.box<hiveModels.SecondaryLocations>(
+                          'cropCalendarDataBox');
+                      await dataBox4.clear();
+
+                      ToastComponent.showDialog('Logout Successful',
+                          gravity: Toast.center, duration: Toast.lengthLong);
+
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return Login();
+                          },
                         ),
-                        title: Text(AppLocalizations.of(context)!.acccount_ucf,
-                            style: TextStyle(
-                                color: MyTheme.primary_color, fontSize: 14)),
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return MyAccount();
-                          }));
-                        }),
+                        (route) => false,
+                      );
+                    }),
 
-                    Divider(),
-
-                    // TODO: Navigation route up
-                    ListTile(
-                        visualDensity:
-                            VisualDensity(horizontal: -4, vertical: -4),
-                        leading: Image.asset("assets/home.png",
-                            height: 16,
-                            color: Color.fromRGBO(153, 153, 153, 1)),
-                        title: Text(AppLocalizations.of(context)!.inbox_ucf,
-                            style: TextStyle(
-                                color: MyTheme.primary_color, fontSize: 14)),
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return NotificationScreen();
-                          }));
-                        }),
-
-                    Divider(),
-
-                    ListTile(
-                        visualDensity:
-                            VisualDensity(horizontal: -4, vertical: -4),
-                        leading: Image.asset(
-                          "assets/wallet.png",
-                          height: 16,
-                          color: Color.fromRGBO(153, 153, 153, 1),
-                        ),
-                        title: Text(AppLocalizations.of(context)!.wallet_ucf,
-                            style: TextStyle(
-                                color: MyTheme.primary_color, fontSize: 14)),
-                        onTap: () {
-                          ToastComponent.showDialog(
-                              '${AppLocalizations.of(context)!.coming_soon}...',
-                              gravity: Toast.center,
-                              duration: Toast.lengthLong);
-                        }),
-
-                    Divider(),
-
-                    ListTile(
-                        visualDensity:
-                            VisualDensity(horizontal: -4, vertical: -4),
-                        leading: Image.asset("assets/order.png",
-                            height: 16,
-                            color: Color.fromRGBO(153, 153, 153, 1)),
-                        title: Text(
-                            AppLocalizations.of(context)!.purchase_history_ucf,
-                            style: TextStyle(
-                                color: MyTheme.primary_color, fontSize: 14)),
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return PurchaseHistoryScreen();
-                          }));
-                        }),
-
-                    Divider(),
-
-                    ListTile(
-                        visualDensity:
-                            VisualDensity(horizontal: -4, vertical: -4),
-                        leading: Icon(
-                          Icons.settings_outlined,
-                          size: 23,
-                        ),
-                        title: Text(AppLocalizations.of(context)!.setting_ucf,
-                            style: TextStyle(
-                                color: MyTheme.primary_color, fontSize: 14)),
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return MoreDetails();
-                          }));
-                        }),
-
-                    Divider(),
-
-                    // TODO: Contact us page
-                    ListTile(
-                        visualDensity:
-                            VisualDensity(horizontal: -4, vertical: -4),
-                        // leading: Image.asset("assets/home.png",
-                        //     height: 16,
-                        //     color: Color.fromRGBO(153, 153, 153, 1)),
-                        leading: Icon(
-                          Icons.phone_outlined,
-                          size: 23,
-                        ),
-                        title: Text(AppLocalizations.of(context)!.contact_ucf,
-                            style: TextStyle(
-                                color: MyTheme.primary_color, fontSize: 14)),
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return ContactUs();
-                          }));
-                        }),
-
-                    Divider(),
-
-                    ListTile(
-                        visualDensity:
-                            VisualDensity(horizontal: -4, vertical: -4),
-                        leading: Image.asset("assets/home.png",
-                            height: 16,
-                            color: Color.fromRGBO(153, 153, 153, 1)),
-                        title: Text(AppLocalizations.of(context)!.about_ucf,
-                            style: TextStyle(
-                                color: MyTheme.primary_color, fontSize: 14)),
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return AboutUs();
-                          }));
-                        }),
-
-                    //TEMPORARY LOGOUT BUTTON
-                    Divider(),
-
-                    ListTile(
-                        visualDensity:
-                            VisualDensity(horizontal: -4, vertical: -4),
-                        leading: Icon(Icons.logout),
-                        title: Text("Logout",
-                            style: TextStyle(
-                                color: MyTheme.primary_color, fontSize: 18)),
-                        onTap: () async {
-                          await FirebaseAuth.instance.signOut();
-                          final GoogleSignIn googleSignIn = GoogleSignIn();
-                          await googleSignIn.signOut();
-
-                          var dataBox1 = Hive.box<hiveModels.PrimaryLocation>(
-                              'primaryLocationBox');
-
-                          await dataBox1.clear();
-
-                          var dataBox2 = Hive.box<hiveModels.ProfileData>(
-                              'profileDataBox3');
-
-                          await dataBox2.clear();
-
-                          var dataBox3 =
-                              Hive.box<hiveModels.SecondaryLocations>(
-                                  'secondaryLocationsBox');
-                          await dataBox3.clear();
-
-                          ToastComponent.showDialog('Logout Successful',
-                              gravity: Toast.center,
-                              duration: Toast.lengthLong);
-
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return Login();
-                              },
-                            ),
-                            (route) => false,
-                          );
-                        }),
-                  ],
-                ),
                 SizedBox(
                   height: 150,
                 )
