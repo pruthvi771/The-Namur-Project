@@ -47,6 +47,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 // import 'package:active_ecommerce_flutter/screens/splash.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_value/shared_value.dart';
 // import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 // import 'dart:async';
@@ -95,16 +96,6 @@ main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  // AddonsHelper().setAddonsData();
-  // BusinessSettingHelper().setBusinessSettingData();
-  // app_language.load();
-  // app_mobile_language.load();
-  // app_language_rtl.load();
-  //
-  // access_token.load().whenComplete(() {
-  //   AuthHelper().fetch_and_set();
-  // });
-
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
     systemNavigationBarDividerColor: Colors.transparent,
@@ -127,17 +118,33 @@ main() async {
   await Hive.openBox<hiveModels.SecondaryLocations>('secondaryLocationsBox');
   await Hive.openBox<hiveModels.CropCalendarData>('cropCalendarDataBox');
 
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+
+  Locale? currentLocale;
+
+  preferences.getString("locale");
+  if (preferences.getString("locale") == null) {
+    preferences.setString("locale", "en");
+  } else {
+    currentLocale = Locale(preferences.getString("locale")!);
+  }
+
   runApp(
     SharedValue.wrapApp(
       BlocProvider(
         create: (context) => TranslationBloc(),
-        child: MyApp(),
+        child: MyApp(
+          locale: currentLocale,
+        ),
       ),
     ),
   );
 }
 
 class MyApp extends StatefulWidget {
+  final Locale? locale;
+
+  const MyApp({super.key, required this.locale});
   // This widget is the root of your application.
 
   @override
@@ -145,10 +152,15 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Locale _currentLocale = Locale('en');
+  late Locale _currentLocale;
 
   @override
   void initState() {
+    if (widget.locale == null) {
+      _currentLocale = Locale('en');
+    } else {
+      _currentLocale = widget.locale!;
+    }
     super.initState();
   }
 
