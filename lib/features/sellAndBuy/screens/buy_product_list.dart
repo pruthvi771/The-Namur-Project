@@ -3,6 +3,7 @@
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/subSubCategory_filter_item.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/filter_screen.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/machine_details_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/machine_rent_form.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/product_details_screen.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart';
@@ -458,19 +459,29 @@ class _BuyProductListState extends State<BuyProductList> {
       children: [
         InkWell(
           onTap: () {
-            if (products[index].subSubCategory == 'On Rent') {
+            if (products[index].subSubCategory == 'On Rent' ||
+                products[index].subSubCategory == 'Sell') {
+              // Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //       builder: (context) => MachineRentForm(
+              //         machineId: products[index].id,
+              //         imageURL: products[index].imageURL,
+              //         machineName: products[index].productName,
+              //         machinePrice: products[index].productPrice,
+              //         machineDescription: products[index].productDescription,
+              //         sellerId: products[index].sellerId,
+              //       ),
+              //     ));
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MachineRentForm(
-                      machineId: products[index].id,
-                      imageURL: products[index].imageURL,
-                      machineName: products[index].productName,
-                      machinePrice: products[index].productPrice,
-                      machineDescription: products[index].productDescription,
-                      sellerId: products[index].sellerId,
-                    ),
-                  ));
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MachineDetails(
+                    sellProduct: products[index],
+                    onRent: products[index].subSubCategory == 'On Rent',
+                  ),
+                ),
+              );
             } else {
               Navigator.push(
                 context,
@@ -488,12 +499,9 @@ class _BuyProductListState extends State<BuyProductList> {
             imageURL: products[index].imageURL,
             price: products[index].productPrice,
             quantityUnit: products[index].quantityUnit,
-            // description:
-            //     products[index]
-            //         .productDescription,
             subSubCategory: products[index].subSubCategory,
             village:
-                sellerData!['profileData']['address'][0]['village'] ?? '---',
+                sellerData['profileData']['address'][0]['village'] ?? '---',
             district:
                 sellerData['profileData']['address'][0]['district'] ?? '---',
           ),
