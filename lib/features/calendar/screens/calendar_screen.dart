@@ -783,6 +783,8 @@ class CropSelectionItemWidget extends StatelessWidget {
             height: 5,
           ),
           Text(title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
