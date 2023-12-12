@@ -26,7 +26,7 @@ var imageForNameCloud = {
       'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FfruitsAndVeg%2FCabbage.png?alt=media&token=f4cd8e3b-7d45-4fb5-bec9-f6ae817be93f',
   'coconut tree':
       'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FfruitsAndVeg%2FCoconut%20Tree.png?alt=media&token=83ff21e8-2ad2-48d8-b971-58b5c27b5411',
-  'Coconut':
+  'coconut':
       'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FfruitsAndVeg%2FCoconut.png?alt=media&token=2acd1fbb-2423-4744-b253-08303d96d1ae',
   'coffee':
       'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FfruitsAndVeg%2FCoffee.png?alt=media&token=9cad2b25-a345-4edc-8264-12f7c4021949',

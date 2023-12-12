@@ -607,7 +607,8 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                                                   snapshot
                                                                       .data![
                                                                           index]
-                                                                      .name] ??
+                                                                      .name
+                                                                      .toLowerCase()] ??
                                                               imageLinks[
                                                                   'placeholder']!),
                                                     ),
@@ -617,13 +618,18 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                                         const EdgeInsets.only(
                                                             top: 8.0,
                                                             bottom: 8.0),
-                                                    child: Text(
-                                                      snapshot
-                                                          .data![index].name,
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w500),
+                                                    child: Align(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text(
+                                                        snapshot
+                                                            .data![index].name,
+                                                        style: TextStyle(
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                      ),
                                                     ),
                                                   )
                                                 ],

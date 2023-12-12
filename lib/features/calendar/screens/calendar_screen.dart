@@ -206,7 +206,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               }),
                               child: CropSelectionItemWidget(
                                 image: imageLinks[parentSnapshot
-                                    .data!.cropCalendarItems[index].cropName],
+                                    .data!.cropCalendarItems[index].cropName
+                                    .toLowerCase()],
                                 title: parentSnapshot
                                     .data!.cropCalendarItems[index].cropName,
                                 isSelected: index == selectedIndex,
