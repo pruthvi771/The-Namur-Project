@@ -769,5 +769,14 @@
 "search": "खोजें",
 "enter_animal_name": "पशु का नाम दर्ज करें",
 "enter_count": "गणना करें",
-"enter_valid_count": "मान्य काउंट दर्ज करें"
+"enter_valid_count": "मान्य काउंट दर्ज करें",
+"friends": "दोस्त",
+"add_address_to_see_this": "इसे देखने के लिए पता जोड़ें",
+"there_are_no_people_in_this_group": "इस समूह में कोई लोग नहीं हैं",
+"people_in_your_area": "आपके क्षेत्र में लोग",
+"groups": "समूह",
+"add_products_to_see_this_screen": "इस स्क्रीन को देखने के लिए उत्पाद जोड़ें",
+"society": "समाज",
+"add_animal": "पशु जोड़ें",
+"dismiss": "खारिज करें"
     }

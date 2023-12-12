@@ -780,13 +780,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                                   padding:
                                                       const EdgeInsets.all(8.0),
                                                   child: Text(
-                                                      'Name: ${state.buyerProfileData.name}'),
+                                                      '${AppLocalizations.of(context)!.name_ucf}: ${state.buyerProfileData.name}'),
                                                 ),
                                                 Padding(
                                                   padding:
                                                       const EdgeInsets.all(8.0),
                                                   child: Text(
-                                                      "Phone: ${state.buyerProfileData.phoneNumber}"),
+                                                      "${AppLocalizations.of(context)!.phone_ucf}: ${state.buyerProfileData.phoneNumber}"),
                                                 ),
                                               ],
                                             ),
@@ -843,7 +843,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                                           const EdgeInsets.all(
                                                               8.0),
                                                       child: Text(
-                                                          "Phone: ${state.buyerProfileData.phoneNumber}"),
+                                                          "${AppLocalizations.of(context)!.phone_ucf}: ${state.buyerProfileData.phoneNumber}"),
                                                     ),
                                                   ],
                                                 ),
@@ -1796,8 +1796,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    // AppLocalizations.of(context)!.add_machines,
-                                    'Add Animals',
+                                    AppLocalizations.of(context)!.add_animal,
                                     style: TextStyle(
                                         // color: MyTheme.accent_color,
                                         fontSize: 15,

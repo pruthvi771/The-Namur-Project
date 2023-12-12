@@ -2,11 +2,13 @@ class SellerGroupItem {
   final String name;
   final String imageURL;
   final String sellerId;
+  final String phoneNumber;
 
   SellerGroupItem({
     required this.name,
     required this.imageURL,
     required this.sellerId,
+    required this.phoneNumber,
   });
 
   // factory SellerGroupItem.fromJson(Map<String, dynamic> json) {

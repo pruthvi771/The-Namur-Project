@@ -2,16 +2,20 @@ import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
 import 'package:active_ecommerce_flutter/features/auth/models/seller_group_item.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
+import 'package:active_ecommerce_flutter/utils/functions.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
+import 'package:active_ecommerce_flutter/utils/imageLinks.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive/hive.dart';
 import '../../../custom/device_info.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // import '../seller_platform/seller_platform.dart';
 
@@ -69,7 +73,6 @@ class _FriendsState extends State<Friends> {
     return [villageName, pincode, count - 1];
   }
 
-  String title = "KYC";
   final double progress = 0.80;
 
   late final AuthUser currentUser;
@@ -133,6 +136,8 @@ class _FriendsState extends State<Friends> {
 
   // bool loading = true;
   int indexForSellers = 0;
+
+  var imageLinks = imageForNameCloud;
 
   @override
   Widget build(BuildContext context) {
@@ -228,6 +233,7 @@ class _FriendsState extends State<Friends> {
                               ),
                             ),
                             Expanded(
+                              // TODO: localizations, group number and beyond
                               child: FutureBuilder(
                                   future: getNumberOfFriends(),
                                   builder: (context, snapshot) {
@@ -256,7 +262,7 @@ class _FriendsState extends State<Friends> {
                                             height: 5,
                                           ),
                                           Text(
-                                              'Society: ${snapshot.data![0]} ${snapshot.data![1]}',
+                                              '${AppLocalizations.of(context)!.society}: ${snapshot.data![0]} ${snapshot.data![1]}',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w700,
                                                   fontSize: 13.0,
@@ -266,7 +272,8 @@ class _FriendsState extends State<Friends> {
                                     }
                                     if (snapshot.hasError) {
                                       return Text(
-                                        'Add Address To See This',
+                                        AppLocalizations.of(context)!
+                                            .add_address_to_see_this,
                                         style: TextStyle(
                                             fontFamily: 'Poppins',
                                             fontWeight: FontWeight.w500,
@@ -298,7 +305,8 @@ class _FriendsState extends State<Friends> {
                                 child: Align(
                                     alignment: Alignment.center,
                                     child: Text(
-                                      'Add products to see this screen.',
+                                      AppLocalizations.of(context)!
+                                          .add_products_to_see_this_screen,
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontSize: 16,
@@ -317,7 +325,8 @@ class _FriendsState extends State<Friends> {
                                   padding: EdgeInsets.all(8),
                                   child: Align(
                                     alignment: Alignment.centerLeft,
-                                    child: Text('Groups',
+                                    child: Text(
+                                        AppLocalizations.of(context)!.groups,
                                         style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 16,
@@ -339,16 +348,21 @@ class _FriendsState extends State<Friends> {
                                       itemCount: categoryList.length,
                                       scrollDirection: Axis.horizontal,
                                       itemBuilder: (context, index) {
-                                        return InkWell(
+                                        return GestureDetector(
                                           onTap: () {
                                             setState(() {
                                               selectedGroupIndex = index;
                                               indexForSellers = index;
                                             });
                                           },
-                                          child: GroupWidget(
-                                            name: categoryList[index],
-                                            image: "assets/onion.png",
+                                          // TODO: Add image
+                                          child: GroupWidget2(
+                                            title: categoryList[index],
+                                            // name: 'hello',
+                                            image: imageLinks[
+                                                    categoryList[index]
+                                                        .toLowerCase()] ??
+                                                imageLinks['placeholder']!,
                                             isSelected:
                                                 selectedGroupIndex == index
                                                     ? true
@@ -365,7 +379,9 @@ class _FriendsState extends State<Friends> {
                                   padding: EdgeInsets.all(8),
                                   child: Align(
                                     alignment: Alignment.centerLeft,
-                                    child: Text('People in your Area',
+                                    child: Text(
+                                        AppLocalizations.of(context)!
+                                            .people_in_your_area,
                                         style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 16,
@@ -411,7 +427,9 @@ class _FriendsState extends State<Friends> {
                                                 child: Align(
                                                     alignment: Alignment.center,
                                                     child: Text(
-                                                      'There are no people \nin this group',
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .there_are_no_people_in_this_group,
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: TextStyle(
@@ -434,24 +452,142 @@ class _FriendsState extends State<Friends> {
                                                 scrollDirection: Axis.vertical,
                                                 itemBuilder: (context, index) {
                                                   //
-                                                  return ClipOval(
-                                                    child: InkWell(
-                                                      onTap: () => print(
-                                                          'tapped $index'),
+                                                  return GestureDetector(
+                                                    onTap: () {
+                                                      print(sellersList[index]
+                                                          .phoneNumber);
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (context) {
+                                                            return AlertDialog(
+                                                              contentPadding:
+                                                                  EdgeInsets.only(
+                                                                      top: 10,
+                                                                      left: 10,
+                                                                      right:
+                                                                          10),
+                                                              actionsPadding:
+                                                                  EdgeInsets
+                                                                      .all(0),
+                                                              buttonPadding:
+                                                                  EdgeInsets
+                                                                      .all(0),
+                                                              content:
+                                                                  Container(
+                                                                height: 300,
+                                                                child: Column(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    SizedBox(
+                                                                      height:
+                                                                          10,
+                                                                    ),
+                                                                    Expanded(
+                                                                      child:
+                                                                          Container(
+                                                                        width: double
+                                                                            .infinity,
+                                                                        child: CachedNetworkImage(
+                                                                            imageUrl:
+                                                                                sellersList[index].imageURL,
+                                                                            fit: BoxFit.cover),
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      height:
+                                                                          20,
+                                                                    ),
+                                                                    Padding(
+                                                                      padding: const EdgeInsets
+                                                                          .symmetric(
+                                                                          horizontal:
+                                                                              10),
+                                                                      child:
+                                                                          Align(
+                                                                        alignment:
+                                                                            Alignment.centerLeft,
+                                                                        child:
+                                                                            Text(
+                                                                          sellersList[index]
+                                                                              .name,
+                                                                          style: TextStyle(
+                                                                              fontSize: 17,
+                                                                              fontWeight: FontWeight.w600),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      height:
+                                                                          10,
+                                                                    ),
+                                                                    Container(
+                                                                      padding: EdgeInsets.symmetric(
+                                                                          horizontal:
+                                                                              10,
+                                                                          vertical:
+                                                                              10),
+                                                                      color: Colors
+                                                                          .grey
+                                                                          .withOpacity(
+                                                                              0.1),
+                                                                      width: double
+                                                                          .infinity,
+                                                                      child:
+                                                                          Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.spaceBetween,
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.center,
+                                                                        children: [
+                                                                          Text(
+                                                                            sellersList[index].phoneNumber,
+                                                                            style:
+                                                                                TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                                                                          ),
+                                                                          IconButton(
+                                                                            icon:
+                                                                                FaIcon(
+                                                                              FontAwesomeIcons.whatsapp,
+                                                                              color: sellersList[index].phoneNumber.isEmpty ? Colors.grey : Colors.green,
+                                                                              size: 30,
+                                                                            ),
+                                                                            onPressed:
+                                                                                () {
+                                                                              if (sellersList[index].phoneNumber.isEmpty) {
+                                                                                return;
+                                                                              }
+                                                                              openWhatsAppChat(sellersList[index].phoneNumber);
+                                                                            },
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              actions: [
+                                                                TextButton(
+                                                                    onPressed:
+                                                                        () {
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                    },
+                                                                    child: Text(
+                                                                        AppLocalizations.of(context)!
+                                                                            .dismiss)),
+                                                              ],
+                                                            );
+                                                          });
+                                                    },
+                                                    child: ClipOval(
                                                       child: Container(
-                                                        // height: 50,
-                                                        // width: 50,
                                                         child: Stack(
                                                           children: [
                                                             AspectRatio(
                                                               aspectRatio:
                                                                   1 / 1,
-                                                              // child: Image.asset(
-                                                              //   (index % 3 == 0)
-                                                              //       ? 'assets/Ellipse2.png'
-                                                              //       : 'assets/Ellipse3.png',
-                                                              //   fit: BoxFit.fill,
-                                                              // ),
                                                               child:
                                                                   CachedNetworkImage(
                                                                 imageUrl:
@@ -462,33 +598,6 @@ class _FriendsState extends State<Friends> {
                                                                     .cover,
                                                               ),
                                                             ),
-                                                            // (index % 3 == 0)
-                                                            //     ? Positioned(
-                                                            //         bottom: 10,
-                                                            //         left: 50,
-                                                            //         child:
-                                                            //             ClipRRect(
-                                                            //           child:
-                                                            //               CircleAvatar(
-                                                            //             radius:
-                                                            //                 10,
-                                                            //             backgroundColor:
-                                                            //                 MyTheme
-                                                            //                     .green,
-                                                            //             child:
-                                                            //                 Icon(
-                                                            //               Icons
-                                                            //                   .check,
-                                                            //               size:
-                                                            //                   15.0,
-                                                            //               color: Colors
-                                                            //                   .white,
-                                                            //             ),
-                                                            //           ),
-                                                            //         ),
-                                                            //       )
-                                                            //     : SizedBox
-                                                            //         .shrink()
                                                           ],
                                                         ),
                                                       ),
@@ -517,9 +626,6 @@ class _FriendsState extends State<Friends> {
                   ],
                 );
               }
-              // if (snapshot.hasError) {
-              //   return Text('error');
-              // }
               return Center(
                 child: CircularProgressIndicator(),
               );
@@ -548,13 +654,15 @@ class _FriendsState extends State<Friends> {
                   width: 30,
                 ),
                 Center(
-                  child: Text('Friends',
-                      style: TextStyle(
-                          color: MyTheme.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: .5,
-                          fontFamily: 'Poppins')),
+                  child: Text(
+                    AppLocalizations.of(context)!.friends,
+                    style: TextStyle(
+                        color: MyTheme.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: .5,
+                        fontFamily: 'Poppins'),
+                  ),
                 ),
                 Container(
                   margin: EdgeInsets.only(right: 0),
@@ -616,13 +724,8 @@ class GroupWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Expanded(
-              // aspectRatio: 1 / 1,
-              // child: CachedNetworkImage(
-              //   imageUrl: image,
-              //   fit: BoxFit.cover,
-              // ),
-              child: Image.asset(
-                image,
+              child: CachedNetworkImage(
+                imageUrl: image,
                 fit: BoxFit.cover,
               ),
             ),
@@ -635,6 +738,70 @@ class GroupWidget extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class GroupWidget2 extends StatelessWidget {
+  const GroupWidget2({
+    super.key,
+    required this.image,
+    required this.title,
+    required this.isSelected,
+  });
+
+  final String image;
+  final String title;
+  final bool isSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      // height: 60,
+      width: 80,
+      margin: EdgeInsets.only(left: 5, right: 5, top: 10, bottom: 5),
+      padding: const EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isSelected ? Colors.black87 : Colors.black12,
+          width: 3,
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2),
+              child: CachedNetworkImage(
+                imageUrl: image!,
+                fit: BoxFit.fitWidth,
+                placeholder: (context, url) => Center(
+                  child: Container(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Text(title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                letterSpacing: .5,
+                fontFamily: 'Poppins',
+              )),
+        ],
       ),
     );
   }

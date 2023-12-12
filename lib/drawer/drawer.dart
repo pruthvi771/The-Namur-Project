@@ -256,7 +256,7 @@ class _MainDrawerState extends State<MainDrawer> {
                           'secondaryLocationsBox');
                       await dataBox3.clear();
 
-                      var dataBox4 = Hive.box<hiveModels.SecondaryLocations>(
+                      var dataBox4 = Hive.box<hiveModels.CropCalendarData>(
                           'cropCalendarDataBox');
                       await dataBox4.clear();
 

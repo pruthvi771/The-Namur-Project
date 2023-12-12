@@ -769,5 +769,14 @@
 "search": "Search",
 "enter_animal_name" : "Enter Animal Name",
 "enter_count": "Enter Count",
-"enter_valid_count": "Enter Valid Count"
+"enter_valid_count": "Enter Valid Count",
+"friends": "Friends",
+"add_address_to_see_this": "Add Address to See This",
+"there_are_no_people_in_this_group": "There are no people in this group",
+"people_in_your_area": "People in Your Area",
+"groups": "Groups",
+"add_products_to_see_this_screen": "Add Products to See This Screen",
+"society": "Society",
+"add_animal": "Add Animal",
+"dismiss": "Dismiss"
 }

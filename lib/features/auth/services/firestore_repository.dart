@@ -173,10 +173,14 @@ class FirestoreRepository {
                 .collection('seller')
                 .doc(sellerId)
                 .get();
-        sellerDetails.add(SellerGroupItem(
+        sellerDetails.add(
+          SellerGroupItem(
             name: productDoc.data()!['name'],
             imageURL: productDoc.data()!['photoURL'],
-            sellerId: sellerId));
+            sellerId: sellerId,
+            phoneNumber: productDoc.data()!['phone number'],
+          ),
+        );
       }
       return sellerDetails;
     } catch (e) {

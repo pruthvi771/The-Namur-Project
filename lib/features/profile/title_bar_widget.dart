@@ -19,7 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:toast/toast.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../my_theme.dart';
 import '../weather/screens/weather_screen.dart';
 
@@ -228,7 +228,8 @@ class _TitleBarState extends State<TitleBar> {
                                             padding: const EdgeInsets.all(8.0),
                                             child: Center(
                                                 child: Text(
-                                              "Add Address To See This",
+                                              AppLocalizations.of(context)!
+                                                  .add_address_to_see_this,
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w800,
                                                   fontSize: 13,
@@ -264,11 +265,6 @@ class _TitleBarState extends State<TitleBar> {
                               gravity: Toast.center,
                               duration: Toast.lengthLong);
                         }
-                        // else {
-                        //   BlocProvider.of<WeatherBloc>(context).add(
-                        //     WeatherSectionInfoRequested(),
-                        //   );
-                        // }
                       },
                       child:
                           BlocBuilder<WeatherSectionBloc, WeatherSectionState>(

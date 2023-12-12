@@ -77,6 +77,12 @@ class _AddPhoneState extends State<AddPhone> {
             .update({
           'phone number': newPhone2,
         });
+        await FirebaseFirestore.instance
+            .collection('seller')
+            .doc(userId)
+            .update({
+          'phone number': newPhone2,
+        });
         Navigator.pushAndRemoveUntil(context,
             MaterialPageRoute(builder: (context) {
           return Main();

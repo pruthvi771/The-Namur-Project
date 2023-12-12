@@ -769,5 +769,14 @@
 "search": "ಹುಡುಕು",
 "enter_animal_name" : "ಪ್ರಾಣಿಯ ಹೆಸರನ್ನು ನಮೂದಿಸಿ",
 "enter_count": "ಎಣಿಕೆ ನಮೂದಿಸಿ",
-"enter_valid_count": "ಮಾನ್ಯತೆಯನ್ನು ನಮೂದಿಸಿ"
+"enter_valid_count": "ಮಾನ್ಯತೆಯನ್ನು ನಮೂದಿಸಿ",
+"friends": "ಸ್ನೇಹಿತರು",
+"add_address_to_see_this": "ಇದನ್ನು ನೋಡಲು ವಿಳಾಸವನ್ನು ಸೇರಿಸಿ",
+"there_are_no_people_in_this_group": "ಈ ಗುಂಪಿನಲ್ಲಿ ಯಾರೂ ಇಲ್ಲ",
+"people_in_your_area": "ನಿಮ್ಮ ಪ್ರದೇಶದಲ್ಲಿರುವ ಜನರು",
+"groups": "ಗುಂಪುಗಳು",
+"add_products_to_see_this_screen": "ಈ ಪರದೆಯನ್ನು ನೋಡಲು ಉತ್ಪನ್ನಗಳನ್ನು ಸೇರಿಸಿ",
+"society":  "ಸೊಸೈಟಿ",
+"add_animal": "ಪ್ರಾಣಿ ಸೇರಿಸಿ",
+"dismiss": "ತಿರಸ್ಕರಿಸಿ"
 }
