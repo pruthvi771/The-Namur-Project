@@ -1650,27 +1650,41 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     const EdgeInsets.symmetric(horizontal: 5),
                                 child: Column(
                                   children: [
-                                    DropdownButtonWidget(
-                                        '',
-                                        AppLocalizations.of(context)!
-                                            .select_crop,
-                                        cropsList.map<DropdownMenuItem<String>>(
-                                            (String value) {
-                                          return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(value),
-                                          );
-                                        }).toList(),
-                                        cropDropdownValue, (value) {
-                                      setState(() {
-                                        cropDropdownValue = value;
-                                      });
-                                    }),
-                                    TexiFieldWidgetForDouble(
-                                        // 'Yield',
-                                        _yieldController,
-                                        AppLocalizations.of(context)!
-                                            .enter_crop_yield),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 3,
+                                          child: DropdownButtonWidget(
+                                              '',
+                                              AppLocalizations.of(context)!
+                                                  .select_crop,
+                                              cropsList.map<
+                                                      DropdownMenuItem<String>>(
+                                                  (String value) {
+                                                return DropdownMenuItem<String>(
+                                                  value: value,
+                                                  child: Text(value),
+                                                );
+                                              }).toList(),
+                                              cropDropdownValue, (value) {
+                                            setState(() {
+                                              cropDropdownValue = value;
+                                            });
+                                          }),
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Expanded(
+                                          flex: 2,
+                                          child: TexiFieldWidgetForDouble(
+                                              // 'Yield',
+                                              _yieldController,
+                                              AppLocalizations.of(context)!
+                                                  .enter_crop_yield),
+                                        ),
+                                      ],
+                                    ),
                                     Row(
                                       children: [
                                         Expanded(child: SizedBox()),
@@ -1846,16 +1860,31 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     const EdgeInsets.symmetric(horizontal: 5),
                                 child: Column(
                                   children: [
-                                    TextFieldWidget(
-                                      AppLocalizations.of(context)!.animal,
-                                      _animalNameController,
-                                      AppLocalizations.of(context)!
-                                          .enter_animal_name,
-                                    ),
-                                    TexiFieldWidgetForDouble(
-                                      // 'Quantity',
-                                      _animalQuantityController,
-                                      AppLocalizations.of(context)!.enter_count,
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 3,
+                                          child: TextFieldWidget(
+                                            AppLocalizations.of(context)!
+                                                .animal,
+                                            _animalNameController,
+                                            AppLocalizations.of(context)!
+                                                .enter_animal_name,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Expanded(
+                                          flex: 2,
+                                          child: TexiFieldWidgetForDouble(
+                                            // 'Quantity',
+                                            _animalQuantityController,
+                                            AppLocalizations.of(context)!
+                                                .enter_count,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                     Row(
                                       children: [

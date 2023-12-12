@@ -353,13 +353,18 @@ class _FilterScreenState extends State<FilterScreen> {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                Text(
-                                                  subSubCategoryList[index]
-                                                      .name,
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w600),
+                                                Expanded(
+                                                  child: Text(
+                                                    subSubCategoryList[index]
+                                                        .name,
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                  ),
                                                 ),
                                                 Checkbox(
                                                     activeColor:
@@ -402,12 +407,17 @@ class _FilterScreenState extends State<FilterScreen> {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                Text(
-                                                  locationsList[index].name,
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w600),
+                                                Expanded(
+                                                  child: Text(
+                                                    locationsList[index].name,
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                  ),
                                                 ),
                                                 Checkbox(
                                                     activeColor:
