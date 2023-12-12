@@ -586,6 +586,8 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                             return Container(
                                               //  height: 100,
                                               decoration: BoxDecoration(
+                                                color: MyTheme.green_lighter
+                                                    .withOpacity(0.2),
                                                 borderRadius:
                                                     BorderRadius.circular(15),
                                               ),
@@ -617,13 +619,18 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                                     padding:
                                                         const EdgeInsets.only(
                                                             top: 8.0,
-                                                            bottom: 8.0),
+                                                            bottom: 8.0,
+                                                            left: 5,
+                                                            right: 5),
                                                     child: Align(
                                                       alignment:
                                                           Alignment.center,
                                                       child: Text(
                                                         snapshot
                                                             .data![index].name,
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                         style: TextStyle(
                                                             fontSize: 16,
                                                             fontWeight:
