@@ -127,6 +127,15 @@ CategoryEnum? findCategoryForSubCategory(SubCategoryEnum subCategory) {
   return null; // Return null if subcategory is not found in any category
 }
 
+ParentEnum? findParentForCategory(CategoryEnum category) {
+  for (var parent in categoryListForParentEnum.keys) {
+    if (categoryListForParentEnum[parent]!.contains(category)) {
+      return parent;
+    }
+  }
+  return null; // Return null if subcategory is not found in any category
+}
+
 enum CategoryEnum {
   animals,
   birds,

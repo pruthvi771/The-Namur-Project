@@ -22,6 +22,9 @@ class AddProductRequested extends SellEvent {
   final List<XFile> imageList;
   final bool isSecondHand;
   final ProductType productType;
+  final int runningHours;
+  final int kms;
+  final bool isMachine;
 
   const AddProductRequested({
     required this.productName,
@@ -36,6 +39,9 @@ class AddProductRequested extends SellEvent {
     required this.imageList,
     required this.isSecondHand,
     required this.productType,
+    this.runningHours = 0,
+    this.kms = 0,
+    this.isMachine = false,
   });
 
   @override
@@ -65,6 +71,9 @@ class EditProductRequested extends SellEvent {
   final String subSubCategory;
   final bool areImagesUpdated;
   final List<XFile>? imageList;
+  final int? runningHours;
+  final int? kms;
+  final bool isMachine;
   // final Uint8List image;
 
   const EditProductRequested({
@@ -79,6 +88,9 @@ class EditProductRequested extends SellEvent {
     required this.subSubCategory,
     required this.areImagesUpdated,
     this.imageList,
+    this.kms,
+    this.runningHours,
+    this.isMachine = false,
     // required this.image,
   });
 
@@ -93,6 +105,10 @@ class EditProductRequested extends SellEvent {
         category,
         subCategory,
         subSubCategory,
+        areImagesUpdated,
+        imageList!,
+        runningHours!,
+        kms!,
         // image,
       ];
 }

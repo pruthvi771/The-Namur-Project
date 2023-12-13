@@ -20,20 +20,40 @@ class SellBloc extends Bloc<SellEvent, SellState> {
       var currentUser = authRepository.currentUser!;
 
       try {
-        var docId = await sellRepository.addProductBuying(
-          productName: event.productName,
-          productDescription: event.productDescription,
-          productPrice: event.productPrice,
-          productQuantity: event.productQuantity,
-          quantityUnit: event.quantityUnit,
-          // priceType: event.priceType,
-          category: event.category,
-          subCategory: event.subCategory,
-          subSubCategory: event.subSubCategory,
-          imageURL: [],
-          userId: currentUser.userId,
-          isSecondHand: event.isSecondHand,
-        );
+        var docId;
+        if (event.isMachine) {
+          docId = await sellRepository.addMachineBuying(
+            productName: event.productName,
+            productDescription: event.productDescription,
+            productPrice: event.productPrice,
+            productQuantity: event.productQuantity,
+            quantityUnit: event.quantityUnit,
+            // priceType: event.priceType,
+            category: event.category,
+            subCategory: event.subCategory,
+            subSubCategory: event.subSubCategory,
+            imageURL: [],
+            userId: currentUser.userId,
+            isSecondHand: event.isSecondHand,
+            runningHours: event.runningHours,
+            kms: event.kms,
+          );
+        } else {
+          docId = await sellRepository.addProductBuying(
+            productName: event.productName,
+            productDescription: event.productDescription,
+            productPrice: event.productPrice,
+            productQuantity: event.productQuantity,
+            quantityUnit: event.quantityUnit,
+            // priceType: event.priceType,
+            category: event.category,
+            subCategory: event.subCategory,
+            subSubCategory: event.subSubCategory,
+            imageURL: [],
+            userId: currentUser.userId,
+            isSecondHand: event.isSecondHand,
+          );
+        }
 
         // await sellRepository.saveProductImage(file: event.image, docId: docId!);
         await sellRepository.saveProductImages(
@@ -88,19 +108,37 @@ class SellBloc extends Bloc<SellEvent, SellState> {
     on<EditProductRequested>((event, emit) async {
       emit(ProductAddEditDeleteLoading());
       try {
-        await sellRepository.editProductBuying(
-          productId: event.productId,
-          productName: event.productName,
-          productDescription: event.productDescription,
-          productPrice: event.productPrice,
-          productQuantity: event.productQuantity,
-          quantityUnit: event.quantityUnit,
-          category: event.category,
-          subCategory: event.subCategory,
-          subSubCategory: event.subSubCategory,
-          // imageURL: event.imageURL,
-          // userId: authRepository.currentUser!.userId,
-        );
+        if (event.isMachine) {
+          await sellRepository.editMachineBuying(
+            productId: event.productId,
+            productName: event.productName,
+            productDescription: event.productDescription,
+            productPrice: event.productPrice,
+            productQuantity: event.productQuantity,
+            quantityUnit: event.quantityUnit,
+            category: event.category,
+            subCategory: event.subCategory,
+            subSubCategory: event.subSubCategory,
+            // imageURL: event.imageURL,
+            // userId: authRepository.currentUser!.userId,
+            runningHours: event.runningHours!,
+            kms: event.kms!,
+          );
+        } else {
+          await sellRepository.editProductBuying(
+            productId: event.productId,
+            productName: event.productName,
+            productDescription: event.productDescription,
+            productPrice: event.productPrice,
+            productQuantity: event.productQuantity,
+            quantityUnit: event.quantityUnit,
+            category: event.category,
+            subCategory: event.subCategory,
+            subSubCategory: event.subSubCategory,
+            // imageURL: event.imageURL,
+            // userId: authRepository.currentUser!.userId,
+          );
+        }
 
         if (event.areImagesUpdated) {
           await sellRepository.deleteProductImagesByProductId(

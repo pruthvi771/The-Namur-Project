@@ -36,6 +36,7 @@ class MachineDetails extends StatefulWidget {
 class _MachineDetailsState extends State<MachineDetails> {
   initState() {
     _getSellerData = getSellerDataFuture();
+    runningHoursAndKmsFuture = getRunningHoursAndKms();
     if (!widget.onRent) {
       BlocProvider.of<CartBloc>(context).add(
         CheckIfAlreadyInCartRequested(productId: widget.sellProduct.id),
@@ -46,9 +47,17 @@ class _MachineDetailsState extends State<MachineDetails> {
 
   late Future<BuyerData> _getSellerData;
 
+  late Future runningHoursAndKmsFuture;
+
   Future<BuyerData> getSellerDataFuture() async {
     BuyerData user = await BuyRepository()
         .getSellerData(userId: widget.sellProduct.sellerId);
+    return user;
+  }
+
+  Future getRunningHoursAndKms() async {
+    Map user = await BuyRepository()
+        .getRunningHoursAndKmsForMachine(machineId: widget.sellProduct.id);
     return user;
   }
 
@@ -193,55 +202,74 @@ class _MachineDetailsState extends State<MachineDetails> {
         ),
 
         // running hours and kms
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Container(
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                color: Colors.red.shade200,
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    'Running Hours',
-                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    '200 Hrs',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                color: Colors.green.shade200,
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    'Running Hours',
-                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    '200 Hrs',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+        FutureBuilder(
+            future: runningHoursAndKmsFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting)
+                return Container();
+              if (snapshot.hasData) {
+                if (snapshot.data!['runningHours'] != null &&
+                    snapshot.data!['kms'] != null)
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Colors.red.shade200,
+                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              'Running Hours',
+                              style: TextStyle(
+                                  fontSize: 13, fontWeight: FontWeight.w600),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              snapshot.data!['runningHours'].toString() +
+                                  ' Hrs',
+                              style: TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Colors.green.shade200,
+                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              'Kms',
+                              style: TextStyle(
+                                  fontSize: 13, fontWeight: FontWeight.w600),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              snapshot.data!['kms'].toString() + ' Kms',
+                              style: TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                else {
+                  return Container();
+                }
+              }
+              return Container();
+            }),
 
         // product price
         Container(

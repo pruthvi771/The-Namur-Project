@@ -52,6 +52,51 @@ class SellRepository {
     }
   }
 
+  Future<String?> addMachineBuying({
+    required String productName,
+    required String productDescription,
+    required double productPrice,
+    required int productQuantity,
+    required String quantityUnit,
+    // required String priceType,
+    required String category,
+    required String subCategory,
+    required String subSubCategory,
+    required List imageURL,
+    required String userId,
+    required bool isSecondHand,
+    required int runningHours,
+    required int kms,
+  }) async {
+    try {
+      // Get a reference to the Firestore collection
+      CollectionReference products =
+          FirebaseFirestore.instance.collection('products');
+
+      // Add a new document with a generated ID
+      DocumentReference documentReference = await products.add({
+        'name': productName,
+        'description': productDescription,
+        'price': productPrice,
+        'quantity': productQuantity,
+        'quantityUnit': quantityUnit,
+        // 'priceType': priceType,
+        'category': category,
+        'subCategory': subCategory,
+        'subSubCategory': subSubCategory,
+        'imageURL': imageURL,
+        'sellerId': userId,
+        'isSecondHand': isSecondHand,
+        'runningHours': runningHours,
+        'kms': kms,
+      });
+      return documentReference.id;
+    } catch (e) {
+      print('Error adding document: $e');
+      return null; // Return null in case of error
+    }
+  }
+
   Future<String?> editProductBuying({
     required String productId,
     required String productName,
@@ -78,6 +123,44 @@ class SellRepository {
         'category': category,
         'subCategory': subCategory,
         'subSubCategory': subSubCategory,
+        // 'imageURL': imageURL,
+      });
+    } catch (e) {
+      print('Error updating product: $e');
+      // Handle the error according to your application's requirements
+    }
+  }
+
+  Future<String?> editMachineBuying({
+    required String productId,
+    required String productName,
+    required String productDescription,
+    required double productPrice,
+    required int productQuantity,
+    required String quantityUnit,
+    required String category,
+    required String subCategory,
+    required String subSubCategory,
+    required int runningHours,
+    required int kms,
+    // required String imageURL,
+    // required String userId,
+  }) async {
+    CollectionReference products =
+        FirebaseFirestore.instance.collection('products');
+
+    try {
+      await products.doc(productId).update({
+        'name': productName,
+        'description': productDescription,
+        'price': productPrice,
+        'quantity': productQuantity,
+        'quantityUnit': quantityUnit,
+        'category': category,
+        'subCategory': subCategory,
+        'subSubCategory': subSubCategory,
+        'runningHours': runningHours,
+        'kms': kms,
         // 'imageURL': imageURL,
       });
     } catch (e) {
@@ -222,44 +305,44 @@ class SellRepository {
     }
   }
 
-  Future<String?> addMachineBuying({
-    required String productName,
-    required String productDescription,
-    required double productPrice,
-    required int productQuantity,
-    required String quantityUnit,
-    // required String priceType,
-    required String category,
-    required String subCategory,
-    required String subSubCategory,
-    required List imageURL,
-    required String userId,
-  }) async {
-    try {
-      // Get a reference to the Firestore collection
-      CollectionReference products =
-          FirebaseFirestore.instance.collection('machines');
+  // Future<String?> addMachineBuying({
+  //   required String productName,
+  //   required String productDescription,
+  //   required double productPrice,
+  //   required int productQuantity,
+  //   required String quantityUnit,
+  //   // required String priceType,
+  //   required String category,
+  //   required String subCategory,
+  //   required String subSubCategory,
+  //   required List imageURL,
+  //   required String userId,
+  // }) async {
+  //   try {
+  //     // Get a reference to the Firestore collection
+  //     CollectionReference products =
+  //         FirebaseFirestore.instance.collection('machines');
 
-      // Add a new document with a generated ID
-      DocumentReference documentReference = await products.add({
-        'name': productName,
-        'description': productDescription,
-        'price': productPrice,
-        'quantity': productQuantity,
-        'quantityUnit': quantityUnit,
-        // 'priceType': priceType,
-        'category': category,
-        'subCategory': subCategory,
-        'subSubCategory': subSubCategory,
-        'imageURL': imageURL,
-        'sellerId': userId,
-      });
-      return documentReference.id;
-    } catch (e) {
-      print('Error adding document: $e');
-      return null; // Return null in case of error
-    }
-  }
+  //     // Add a new document with a generated ID
+  //     DocumentReference documentReference = await products.add({
+  //       'name': productName,
+  //       'description': productDescription,
+  //       'price': productPrice,
+  //       'quantity': productQuantity,
+  //       'quantityUnit': quantityUnit,
+  //       // 'priceType': priceType,
+  //       'category': category,
+  //       'subCategory': subCategory,
+  //       'subSubCategory': subSubCategory,
+  //       'imageURL': imageURL,
+  //       'sellerId': userId,
+  //     });
+  //     return documentReference.id;
+  //   } catch (e) {
+  //     print('Error adding document: $e');
+  //     return null; // Return null in case of error
+  //   }
+  // }
 
   Future<String?> addProductToSellerDocument({
     required String productDocId,

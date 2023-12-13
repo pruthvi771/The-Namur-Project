@@ -51,6 +51,8 @@ class ProductPost extends StatefulWidget {
 
 class _ProductPostState extends State<ProductPost> {
   TextEditingController _nameController = TextEditingController();
+  TextEditingController _runningHoursController = TextEditingController();
+  TextEditingController _kmsController = TextEditingController();
   TextEditingController _additionalController = TextEditingController();
   TextEditingController _priceController = TextEditingController();
   TextEditingController _quantityController = TextEditingController();
@@ -67,6 +69,8 @@ class _ProductPostState extends State<ProductPost> {
     _dropdownItems = enums.SubSubCategoryList[widget.subCategoryEnum]!;
     category = enums.nameForCategoryEnum[
         enums.findCategoryForSubCategory(widget.subCategoryEnum)]!;
+    parentEnum = enums.findParentForCategory(
+        enums.findCategoryForSubCategory(widget.subCategoryEnum)!)!;
     subCategory = enums.nameForSubCategoryEnum[widget.subCategoryEnum]!;
     // perPiecePrice = true;
     if (widget.isProductEditScreen) {
@@ -97,9 +101,13 @@ class _ProductPostState extends State<ProductPost> {
   var listOfQuantityUnits = nameForProductQuantity.values.toList();
   String? selectedQuantityUnit;
 
+  bool hideQuantityBox = false;
+
   List<XFile>? _mediaFileList;
 
   final ImagePicker imagePicker = ImagePicker();
+
+  late ParentEnum parentEnum;
 
   void printError(String text) {
     print('\x1B[31m$text\x1B[0m');
@@ -126,6 +134,8 @@ class _ProductPostState extends State<ProductPost> {
     var productQuantity = _quantityController.text.toString();
     var quantityUnit = selectedQuantityUnit;
     String price = _priceController.text;
+    var runningHours = _runningHoursController.text.toString();
+    var kms = _kmsController.text.toString();
     // String productPriceType = perPiecePrice ? "Per piece" : "Per kg";
 
     if (productName == "") {
@@ -207,6 +217,42 @@ class _ProductPostState extends State<ProductPost> {
       return;
     }
 
+    int runningHoursInt = 0;
+    int kmsInt = 0;
+
+    if (parentEnum == ParentEnum.machine) {
+      if (runningHours == "") {
+        ToastComponent.showDialog('Enter Running Hours',
+            gravity: Toast.center, duration: Toast.lengthLong);
+        // ToastComponent.showDialog(AppLocalizations.of(context)!.enter,
+        //     gravity: Toast.center, duration: Toast.lengthLong);
+        return;
+      }
+      if (kms == "") {
+        ToastComponent.showDialog('Enter KMs Completed',
+            gravity: Toast.center, duration: Toast.lengthLong);
+        // ToastComponent.showDialog(AppLocalizations.of(context)!.enter,
+        //     gravity: Toast.center, duration: Toast.lengthLong);
+        return;
+      }
+
+      try {
+        runningHoursInt = int.parse(runningHours);
+      } catch (e) {
+        ToastComponent.showDialog('Enter Valid Running Hours',
+            gravity: Toast.center, duration: Toast.lengthLong);
+        return;
+      }
+
+      try {
+        kmsInt = int.parse(kms);
+      } catch (e) {
+        ToastComponent.showDialog('Enter Valid KMs Completed',
+            gravity: Toast.center, duration: Toast.lengthLong);
+        return;
+      }
+    }
+
     BlocProvider.of<SellBloc>(buildContext).add(
       AddProductRequested(
         productName: productName,
@@ -222,6 +268,9 @@ class _ProductPostState extends State<ProductPost> {
         productType: widget.isSecondHand
             ? ProductType.secondHand
             : ProductType.newProduct,
+        runningHours: runningHoursInt,
+        kms: kmsInt,
+        isMachine: parentEnum == ParentEnum.machine,
       ),
     );
 
@@ -237,6 +286,8 @@ class _ProductPostState extends State<ProductPost> {
     var productCategory = category;
     var productQuantity = _quantityController.text.toString();
     var quantityUnit = selectedQuantityUnit;
+    var runningHours = _runningHoursController.text.toString();
+    var kms = _kmsController.text.toString();
 
     String price = _priceController.text;
     // String productPriceType = perPiecePrice ? "Per piece" : "Per kg";
@@ -316,6 +367,42 @@ class _ProductPostState extends State<ProductPost> {
       return;
     }
 
+    int runningHoursInt = 0;
+    int kmsInt = 0;
+
+    if (parentEnum == ParentEnum.machine) {
+      if (runningHours == "") {
+        ToastComponent.showDialog('Enter Running Hours',
+            gravity: Toast.center, duration: Toast.lengthLong);
+        // ToastComponent.showDialog(AppLocalizations.of(context)!.enter,
+        //     gravity: Toast.center, duration: Toast.lengthLong);
+        return;
+      }
+      if (kms == "") {
+        ToastComponent.showDialog('Enter KMs Completed',
+            gravity: Toast.center, duration: Toast.lengthLong);
+        // ToastComponent.showDialog(AppLocalizations.of(context)!.enter,
+        //     gravity: Toast.center, duration: Toast.lengthLong);
+        return;
+      }
+
+      try {
+        runningHoursInt = int.parse(runningHours);
+      } catch (e) {
+        ToastComponent.showDialog('Enter Valid Running Hours',
+            gravity: Toast.center, duration: Toast.lengthLong);
+        return;
+      }
+
+      try {
+        kmsInt = int.parse(kms);
+      } catch (e) {
+        ToastComponent.showDialog('Enter Valid KMs Completed',
+            gravity: Toast.center, duration: Toast.lengthLong);
+        return;
+      }
+    }
+
     BlocProvider.of<SellBloc>(buildContext).add(
       EditProductRequested(
         productId: widget.sellProduct!.id,
@@ -333,6 +420,8 @@ class _ProductPostState extends State<ProductPost> {
                 : false
             : false,
         imageList: _mediaFileList,
+        runningHours: runningHoursInt,
+        kms: kmsInt,
         // image: _image!,
       ),
     );
@@ -467,6 +556,12 @@ class _ProductPostState extends State<ProductPost> {
                 onChanged: (String? newValue) {
                   setState(() {
                     _selectedItem = newValue!;
+                    if (_selectedItem == "On Rent") {
+                      hideQuantityBox = true;
+                      _quantityController.text = "1";
+                    } else {
+                      hideQuantityBox = false;
+                    }
                   });
                 },
                 items: _dropdownItems
@@ -504,6 +599,7 @@ class _ProductPostState extends State<ProductPost> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: TextFormField(
+                      enabled: !hideQuantityBox,
                       controller: _quantityController,
                       inputFormatters: <TextInputFormatter>[
                         FilteringTextInputFormatter.digitsOnly,
@@ -632,6 +728,52 @@ class _ProductPostState extends State<ProductPost> {
             ),
           ),
         ),
+
+        // Text(parentEnum.toString()),
+
+        if (parentEnum == ParentEnum.machine)
+          Padding(
+            padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+            child: Container(
+              decoration: BoxDecoration(
+                  color: MyTheme.field_color,
+                  borderRadius: BorderRadius.circular(10)),
+              child: TextFormField(
+                controller: _runningHoursController,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.only(left: 15),
+                  hintText: 'Running Hours',
+                  hintStyle: TextStyle(
+                      color: Colors.grey[600],
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Poppins'),
+                ),
+              ),
+            ),
+          ),
+
+        if (parentEnum == ParentEnum.machine)
+          Padding(
+            padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+            child: Container(
+              decoration: BoxDecoration(
+                  color: MyTheme.field_color,
+                  borderRadius: BorderRadius.circular(10)),
+              child: TextFormField(
+                controller: _kmsController,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.only(left: 15),
+                  hintText: 'Kms',
+                  hintStyle: TextStyle(
+                      color: Colors.grey[600],
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Poppins'),
+                ),
+              ),
+            ),
+          ),
 
         // additional description
         Padding(

@@ -86,6 +86,20 @@ class BuyRepository {
     return BuyerData.fromJson(userSnapshot.data() as Map<String, dynamic>);
   }
 
+  Future<Map> getRunningHoursAndKmsForMachine({
+    required String machineId,
+  }) async {
+    // QuerySnapshot productSnapshot = await productsCollection.get();
+
+    var userSnapshot =
+        await _firestore.collection('products').doc(machineId).get();
+    // return BuyerData.fromJson(userSnapshot.data() as Map<String, dynamic>);
+    return {
+      'runningHours': userSnapshot.data()!['runningHours'],
+      'kms': userSnapshot.data()!['kms'],
+    };
+  }
+
   Future<List<SellProduct>> getSecondHandProductsForSubCategory({
     required String subCategory,
   }) async {
