@@ -27,8 +27,7 @@ class SellRepository {
   }) async {
     try {
       // Get a reference to the Firestore collection
-      CollectionReference products =
-          FirebaseFirestore.instance.collection('products');
+      CollectionReference products = _firestore.collection('products');
 
       // Add a new document with a generated ID
       DocumentReference documentReference = await products.add({
@@ -72,8 +71,7 @@ class SellRepository {
   }) async {
     try {
       // Get a reference to the Firestore collection
-      CollectionReference products =
-          FirebaseFirestore.instance.collection('products');
+      CollectionReference products = _firestore.collection('products');
 
       // Add a new document with a generated ID
       DocumentReference documentReference = await products.add({
@@ -101,6 +99,67 @@ class SellRepository {
     }
   }
 
+  Future<void> editAddressForAllProducts({
+    required String sellerId,
+    required String district,
+    required String gramPanchayat,
+    required double taluk,
+    required int villageName,
+  }) async {
+    try {
+      CollectionReference products = _firestore.collection('products');
+
+      List<String>? productsForSeller =
+          await getAllProductIdsForSeller(sellerId: sellerId);
+
+      if (productsForSeller == null || productsForSeller.length == 0) {
+        return;
+      }
+
+      for (String product in productsForSeller) {
+        await products.doc(product).update({
+          'villageName': villageName,
+          'gramPanchayat': gramPanchayat,
+          'district': district,
+          'taluk': taluk,
+          // 'imageURL': imageURL,
+        });
+      }
+    } catch (e) {
+      print('Error updating product: $e');
+      // Handle the error according to your application's requirements
+    }
+  }
+
+  Future<List<String>?> getAllProductIdsForSeller({
+    required String sellerId,
+  }) async {
+    try {
+      var userSnapshot =
+          await _firestore.collection('seller').doc(sellerId).get();
+
+      List<String> products = [];
+
+      print(userSnapshot.data()!['products'].length.toString());
+      print(userSnapshot.data()!['secondHandProducts'].length.toString());
+
+      for (var product in userSnapshot.data()!['products']) {
+        products.add(product);
+      }
+
+      for (var product in userSnapshot.data()!['secondHandProducts']) {
+        products.add(product);
+      }
+
+      // print(products.length);
+
+      return products;
+    } catch (e) {
+      print('Error updating product: $e');
+      // Handle the error according to your application's requirements
+    }
+  }
+
   Future<String?> editProductBuying({
     required String productId,
     required String productName,
@@ -114,8 +173,7 @@ class SellRepository {
     // required String imageURL,
     // required String userId,
   }) async {
-    CollectionReference products =
-        FirebaseFirestore.instance.collection('products');
+    CollectionReference products = _firestore.collection('products');
 
     try {
       await products.doc(productId).update({
@@ -150,8 +208,7 @@ class SellRepository {
     // required String imageURL,
     // required String userId,
   }) async {
-    CollectionReference products =
-        FirebaseFirestore.instance.collection('products');
+    CollectionReference products = _firestore.collection('products');
 
     try {
       await products.doc(productId).update({
@@ -225,8 +282,7 @@ class SellRepository {
 
   Future<void> removeProductFromSellerDocument(
       {required String productId, required String sellerId}) async {
-    CollectionReference sellerCollection =
-        FirebaseFirestore.instance.collection('seller');
+    CollectionReference sellerCollection = _firestore.collection('seller');
 
     try {
       await sellerCollection.doc(sellerId).update({
@@ -314,8 +370,7 @@ class SellRepository {
     required ProductType productType,
     required String sellerId,
   }) async {
-    CollectionReference sellerCollection =
-        FirebaseFirestore.instance.collection('seller');
+    CollectionReference sellerCollection = _firestore.collection('seller');
 
     try {
       if (productType == ProductType.newProduct) {

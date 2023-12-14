@@ -271,15 +271,7 @@ class _MoreDetailsState extends State<MoreDetails> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                          '${snapshot.data![2]} friends & neighbours',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: 13.0,
-                                              color: Colors.black)),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text('0 Groups',
+                                          '${snapshot.data![2]} ${AppLocalizations.of(context)!.friends_and_neighbours}',
                                           style: TextStyle(
                                               fontWeight: FontWeight.w700,
                                               fontSize: 13.0,
@@ -288,7 +280,16 @@ class _MoreDetailsState extends State<MoreDetails> {
                                         height: 5,
                                       ),
                                       Text(
-                                          'Society: ${snapshot.data![0]} ${snapshot.data![1]}',
+                                          '0 ${AppLocalizations.of(context)!.groups}',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 13.0,
+                                              color: Colors.black)),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                          '${AppLocalizations.of(context)!.society}: ${snapshot.data![0]} ${snapshot.data![1]}',
                                           style: TextStyle(
                                               fontWeight: FontWeight.w700,
                                               fontSize: 13.0,
@@ -297,7 +298,9 @@ class _MoreDetailsState extends State<MoreDetails> {
                                   );
                                 }
                                 if (snapshot.hasError) {
-                                  return Text('Add Address To See This',
+                                  return Text(
+                                      AppLocalizations.of(context)!
+                                          .add_address_to_see_this,
                                       style: TextStyle(
                                           fontWeight: FontWeight.w700,
                                           fontSize: 13.0,

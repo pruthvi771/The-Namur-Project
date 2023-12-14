@@ -778,5 +778,9 @@
 "add_products_to_see_this_screen": "इस स्क्रीन को देखने के लिए उत्पाद जोड़ें",
 "society": "समाज",
 "add_animal": "पशु जोड़ें",
-"dismiss": "खारिज करें"
+"dismiss": "खारिज करें",
+"enter_running_hours": "चल रहे घंटे दर्ज करें",
+"ratings": "रेटिंग्स",
+"no_ratings_yet": "अबतक कोई रेटिंग नहीं है",
+"friends_and_neighbours": "दोस्त और पड़ोसी"
     }

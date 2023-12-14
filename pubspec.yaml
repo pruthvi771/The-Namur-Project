@@ -138,6 +138,7 @@ flutter:
     - assets/
     - assets/htmls/
     - dummy_assets/
+    - assets/address.json
 
 
 

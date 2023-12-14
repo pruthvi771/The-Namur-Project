@@ -1,6 +1,12 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:active_ecommerce_flutter/utils/location_repository.dart';
+import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
+import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/services.dart';
@@ -99,6 +105,8 @@ class _TestWidgetState extends State<TestWidget> {
 
   var downloadLinks = {};
 
+  final AuthRepository authRepository = AuthRepository();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -134,6 +142,112 @@ class _TestWidgetState extends State<TestWidget> {
               print(downloadLinks);
             },
             child: const Text('Back'),
+          ),
+
+          ElevatedButton(
+            onPressed: () async {
+              print('it starts');
+              String jsonString =
+                  await rootBundle.loadString('assets/address.json');
+              List jsonData = json.decode(jsonString);
+
+              int count = 0;
+
+              final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+              // Loop through the JSON data and upload to Firestore
+              for (Map<String, dynamic> villageData in jsonData) {
+                print(count.toString());
+                // Create a reference to the Firestore collection
+                CollectionReference villagesCollection =
+                    firestore.collection('globaladdress');
+
+                // Map the JSON data to Firestore data
+                Map<String, dynamic> firestoreData = {
+                  'villageName': villageData['Village Name'],
+                  'gramPanchayat': villageData['Gram Panchayat'],
+                  'taluk': villageData['TALUK'],
+                  'district': villageData['district'],
+                  'state': villageData['state'],
+                };
+                print(villageData['TALUK']);
+
+                // Add the data to Firestore
+                await villagesCollection.add(firestoreData);
+                count++;
+              }
+
+              print('and it\'s done');
+            },
+            child: const Text('another scam'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              print('it starts');
+
+              List list = await LocationRepository()
+                  .getDistrictsForPincode(pinCode: '585201');
+
+              print(list);
+
+              QuerySnapshot<Map<String, dynamic>> querySnapshot =
+                  await FirebaseFirestore.instance
+                      .collection('globaladdress')
+                      .where(FieldPath.documentId, isNotEqualTo: null)
+                      .where('district',
+                          isEqualTo: list[0].toString().toUpperCase())
+                      .get();
+
+              List<DocumentSnapshot<Map<String, dynamic>>> documents =
+                  querySnapshot.docs;
+
+              print('document count: ${documents.length}');
+
+              for (var document in documents) {
+                Map<String, dynamic> data = document.data()!;
+                // if (!sellerIDs.contains(data['sellerId'])) {
+                //   sellerIDs.add(data['sellerId']);
+                // }
+                print(data);
+              }
+
+              // print(list);
+              print('and it\'s done');
+            },
+            child: const Text('yet another scam'),
+          ),
+
+          ElevatedButton(
+            onPressed: () async {
+              print('it starts');
+
+              var userSnapshot = await FirebaseFirestore.instance
+                  .collection('seller')
+                  .doc('BZ90pBJ7O6f2cmk0nwrCRcsvbks2')
+                  .get();
+
+              List<String> products = [];
+
+              print(userSnapshot.data()!['products'].length.toString());
+              print(
+                  userSnapshot.data()!['secondHandProducts'].length.toString());
+
+              for (var product in userSnapshot.data()!['products']) {
+                products.add(product);
+              }
+
+              for (var product in userSnapshot.data()!['secondHandProducts']) {
+                products.add(product);
+              }
+
+              print(products.length);
+
+              // for
+
+              // print(list);
+              print('and it\'s done');
+            },
+            child: const Text('yet another scam: part 2'),
           ),
         ],
       ),

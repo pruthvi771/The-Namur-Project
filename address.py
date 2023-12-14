@@ -28,7 +28,7 @@ for sheet_name in sheet_names:
     taluk_names_list = [item for sublist in taluk_names_list for item in sublist]
     taluk_names.extend(taluk_names_list)
 
-d = {"Village Name": village_names, "Gram Panchayat": gram_panchayat_names, "TALUK": taluk_names,"district":sheet_name}
+d = {"Village Name": village_names, "Gram Panchayat": gram_panchayat_names, "TALUK": taluk_names,"district":sheet_name, "state": "Karnakata"}
 df = pd.DataFrame(d)
 df.dropna(inplace=True)
 # df.drop_duplicates(inplace=True)

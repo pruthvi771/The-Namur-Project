@@ -1,3 +1,5 @@
+// translation done.
+
 import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
 import 'package:active_ecommerce_flutter/features/auth/models/seller_group_item.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
@@ -27,6 +29,17 @@ class Friends extends StatefulWidget {
 }
 
 class _FriendsState extends State<Friends> {
+  final double progress = 0.80;
+  late final AuthUser currentUser;
+  FirestoreRepository firestoreRepository = FirestoreRepository();
+  final String image = "assets/onion.png";
+  late Future<SellerDataForFriendsScreen> _sellerUserDataFuture;
+  late Future<List<String>?> _getSubCategoryListFuture;
+  late Future<List<SellerGroupItem>?> _getOtherSellersFuture;
+  int selectedGroupIndex = 0;
+  int indexForSellers = 0;
+  var imageLinks = imageForNameCloud;
+
   @override
   void initState() {
     currentUser = AuthRepository().currentUser!;
@@ -73,21 +86,10 @@ class _FriendsState extends State<Friends> {
     return [villageName, pincode, count - 1];
   }
 
-  final double progress = 0.80;
-
-  late final AuthUser currentUser;
-
-  FirestoreRepository firestoreRepository = FirestoreRepository();
-
-  final String image = "assets/onion.png";
-  late Future<SellerDataForFriendsScreen> _sellerUserDataFuture;
-
   Future<SellerDataForFriendsScreen> _getSellerUserData() async {
     AuthUser user = AuthRepository().currentUser!;
     return firestoreRepository.getSellerData(userId: user.userId);
   }
-
-  late Future<List<String>?> _getSubCategoryListFuture;
 
   Future<List<String>?> getSubCategoryList({required List? productIDs}) async {
     if (productIDs == null) {
@@ -113,8 +115,6 @@ class _FriendsState extends State<Friends> {
     return categoryList;
   }
 
-  late Future<List<SellerGroupItem>?> _getOtherSellersFuture;
-
   Future<List<SellerGroupItem>?> getOtherSellers(
       {required String? subCategory}) async {
     if (subCategory == null) {
@@ -128,16 +128,6 @@ class _FriendsState extends State<Friends> {
     // });
     return sellers;
   }
-
-  // Set<String> categoryListSet = {};
-
-  int selectedGroupIndex = 0;
-  // String selectedGroupSubCategory = "";
-
-  // bool loading = true;
-  int indexForSellers = 0;
-
-  var imageLinks = imageForNameCloud;
 
   @override
   Widget build(BuildContext context) {
@@ -159,9 +149,6 @@ class _FriendsState extends State<Friends> {
                   padding: EdgeInsets.all(8),
                   physics: BouncingScrollPhysics(),
                   children: [
-                    // Text(sellerData.name),
-                    // Text(sellerData.products.length.toString()),
-
                     // Top Bar
                     Padding(
                       padding: const EdgeInsets.all(5.0),
@@ -233,7 +220,7 @@ class _FriendsState extends State<Friends> {
                               ),
                             ),
                             Expanded(
-                              // TODO: localizations, group number and beyond
+                              // TODO: group number and beyond
                               child: FutureBuilder(
                                   future: getNumberOfFriends(),
                                   builder: (context, snapshot) {
@@ -245,7 +232,7 @@ class _FriendsState extends State<Friends> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                              '${snapshot.data![2]} friends & neighbours',
+                                              '${snapshot.data![2]} ${AppLocalizations.of(context)!.friends_and_neighbours}',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w700,
                                                   fontSize: 13.0,
@@ -253,7 +240,8 @@ class _FriendsState extends State<Friends> {
                                           SizedBox(
                                             height: 5,
                                           ),
-                                          Text('0 Groups',
+                                          Text(
+                                              '0 ${AppLocalizations.of(context)!.groups}',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.w700,
                                                   fontSize: 13.0,
@@ -355,7 +343,6 @@ class _FriendsState extends State<Friends> {
                                               indexForSellers = index;
                                             });
                                           },
-                                          // TODO: Add image
                                           child: GroupWidget2(
                                             title: categoryList[index],
                                             // name: 'hello',

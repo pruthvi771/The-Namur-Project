@@ -1135,7 +1135,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     gravity: Toast.center,
                                     duration: Toast.lengthLong);
                               }
-                              // TODO: implement listener
                             },
                             child: BlocBuilder<AuthBloc, authState.AuthState>(
                               builder: (context, state) {

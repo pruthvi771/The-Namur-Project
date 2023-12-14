@@ -524,62 +524,6 @@ class _ProductDetailsState extends State<ProductDetails> {
           ),
         ),
 
-        // Container(
-        //   margin: EdgeInsets.symmetric(vertical: 5),
-        //   height: 50,
-        //   color: Colors.grey[100],
-        // ),
-
-        FutureBuilder(
-            future: ratingDataFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Container();
-              }
-              if (snapshot.hasData) {
-                if (snapshot.data!['numberOfRatings'] != null &&
-                    snapshot.data!['rating'] != null) {
-                  if (snapshot.data!['numberOfRatings'] != 0)
-                    return Container(
-                      margin: EdgeInsets.symmetric(vertical: 5),
-                      height: 50,
-                      color: Colors.grey[100],
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          RatingBarIndicator(
-                            rating: snapshot.data!['rating'] /
-                                snapshot.data!['numberOfRatings'],
-                            itemCount: 5,
-                            // itemSize: 15.0,
-                            physics: BouncingScrollPhysics(),
-                            itemBuilder: (context, _) => Icon(
-                              Icons.star,
-                              color: Colors.amber,
-                            ),
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                snapshot.data!['numberOfRatings'].toString(),
-                                style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold),
-                              ),
-                              Text('Ratings'),
-                            ],
-                          ),
-                        ],
-                      ),
-                    );
-                } else {
-                  return Container();
-                }
-              }
-              return Container();
-            }),
-
         // seller data
         FutureBuilder(
           future: _getSellerData,
@@ -676,6 +620,96 @@ class _ProductDetailsState extends State<ProductDetails> {
             ],
           ),
         ),
+
+        // rating
+        FutureBuilder(
+            future: ratingDataFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Container();
+              }
+              if (snapshot.hasData) {
+                if (snapshot.data!['numberOfRatings'] != null &&
+                    snapshot.data!['rating'] != null) {
+                  if (snapshot.data!['numberOfRatings'] != 0)
+                    return Container(
+                      margin: EdgeInsets.symmetric(vertical: 5),
+                      height: 50,
+                      color: Colors.grey[100],
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              RatingBarIndicator(
+                                rating: snapshot.data!['rating'] /
+                                    snapshot.data!['numberOfRatings'],
+                                itemCount: 5,
+                                itemSize: 35.0,
+                                physics: BouncingScrollPhysics(),
+                                itemBuilder: (context, _) => Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                (snapshot.data!['rating'] /
+                                        snapshot.data!['numberOfRatings'])
+                                    .toString(),
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                snapshot.data!['numberOfRatings'].toString(),
+                                style: TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold),
+                              ),
+                              Text(AppLocalizations.of(context)!.ratings),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                } else {
+                  return Container(
+                    margin: EdgeInsets.symmetric(vertical: 5),
+                    padding: EdgeInsets.only(left: 20),
+                    height: 50,
+                    color: Colors.grey[100],
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        AppLocalizations.of(context)!.no_ratings_yet,
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ),
+                  );
+                }
+              }
+              return Container(
+                margin: EdgeInsets.symmetric(vertical: 5),
+                padding: EdgeInsets.only(left: 20),
+                height: 50,
+                color: Colors.grey[100],
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    AppLocalizations.of(context)!.no_ratings_yet,
+                    style: TextStyle(fontSize: 15),
+                  ),
+                ),
+              );
+            }),
       ],
     );
   }
