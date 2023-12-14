@@ -4,13 +4,15 @@ class OrderItem {
   final String productID;
   final double price;
   final int quantity;
-  final String sellerID; // Optional
+  final String sellerID;
+  final double? rating;
 
   OrderItem({
     required this.productID,
     required this.price,
     required this.quantity,
     required this.sellerID,
+    required this.rating,
   });
 
   Map<String, dynamic> toMap() {
@@ -19,6 +21,7 @@ class OrderItem {
       'price': price,
       'quantity': quantity,
       'sellerID': sellerID,
+      'rating': rating,
     };
   }
 }

@@ -44,6 +44,8 @@ class SellRepository {
         'imageURL': imageURL,
         'sellerId': userId,
         'isSecondHand': isSecondHand,
+        'rating': 0.0,
+        'numberOfRatings': 0,
       });
       return documentReference.id;
     } catch (e) {
@@ -89,6 +91,8 @@ class SellRepository {
         'isSecondHand': isSecondHand,
         'runningHours': runningHours,
         'kms': kms,
+        'rating': 0.0,
+        'numberOfRatings': 0,
       });
       return documentReference.id;
     } catch (e) {
@@ -304,45 +308,6 @@ class SellRepository {
       throw Exception('Failed to delete product images. Please try again.');
     }
   }
-
-  // Future<String?> addMachineBuying({
-  //   required String productName,
-  //   required String productDescription,
-  //   required double productPrice,
-  //   required int productQuantity,
-  //   required String quantityUnit,
-  //   // required String priceType,
-  //   required String category,
-  //   required String subCategory,
-  //   required String subSubCategory,
-  //   required List imageURL,
-  //   required String userId,
-  // }) async {
-  //   try {
-  //     // Get a reference to the Firestore collection
-  //     CollectionReference products =
-  //         FirebaseFirestore.instance.collection('machines');
-
-  //     // Add a new document with a generated ID
-  //     DocumentReference documentReference = await products.add({
-  //       'name': productName,
-  //       'description': productDescription,
-  //       'price': productPrice,
-  //       'quantity': productQuantity,
-  //       'quantityUnit': quantityUnit,
-  //       // 'priceType': priceType,
-  //       'category': category,
-  //       'subCategory': subCategory,
-  //       'subSubCategory': subSubCategory,
-  //       'imageURL': imageURL,
-  //       'sellerId': userId,
-  //     });
-  //     return documentReference.id;
-  //   } catch (e) {
-  //     print('Error adding document: $e');
-  //     return null; // Return null in case of error
-  //   }
-  // }
 
   Future<String?> addProductToSellerDocument({
     required String productDocId,

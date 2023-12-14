@@ -58,6 +58,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
               quantity: product['quantity'],
               price: userCartDocument!['price'],
               sellerID: userCartDocument['sellerId'],
+              rating: null,
             ),
           );
         }

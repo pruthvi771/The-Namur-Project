@@ -43,7 +43,7 @@ dependencies:
   webview_flutter: ^4.2.0
   clipboard: ^0.1.2+8
   google_fonts: ^4.0.4
-  flutter_rating_bar: ^4.0.0
+  flutter_rating_bar: ^4.0.1
   expandable: ^5.0.1
   dropdown_search: ^5.0.2
   flutter_countdown_timer: ^4.1.0

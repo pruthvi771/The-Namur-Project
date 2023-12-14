@@ -36,3 +36,16 @@ final class BuyError extends BuyState {
   @override
   List<Object> get props => [message];
 }
+
+final class RatingDataReceived extends BuyState {
+  final double rating;
+
+  const RatingDataReceived({
+    required this.rating,
+  });
+
+  @override
+  List<Object> get props => [
+        rating,
+      ];
+}

@@ -57,6 +57,7 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
         price: item['price'],
         quantity: item['quantity'],
         sellerID: item['sellerID'],
+        rating: item['rating'],
       ));
     }
 

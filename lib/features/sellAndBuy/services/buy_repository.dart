@@ -86,6 +86,55 @@ class BuyRepository {
     return BuyerData.fromJson(userSnapshot.data() as Map<String, dynamic>);
   }
 
+  Future<void> updateRatingInOrderDoc({
+    required String orderId,
+    required int indexInOrderItems,
+    required double rating,
+  }) async {
+    final cartDoc = await _firestore.collection('orders').doc(orderId).get();
+
+    var items = cartDoc.data()!['items'];
+
+    items[indexInOrderItems]['rating'] = rating;
+
+    await _firestore.collection('orders').doc(orderId).update({'items': items});
+  }
+
+  Future<double> getRatingFromOrderDoc({
+    required String orderId,
+    required int indexInOrderItems,
+  }) async {
+    final cartDoc = await _firestore.collection('orders').doc(orderId).get();
+
+    var items = cartDoc.data()!['items'];
+
+    return items[indexInOrderItems]['rating'];
+  }
+
+  Future<void> updateRatingInProductDoc({
+    required double? initialRatingInProductDoc,
+    required String productId,
+    required double rating,
+    required bool isFirstTime,
+  }) async {
+    final productDoc =
+        await _firestore.collection('products').doc(productId).get();
+
+    var initialRating = productDoc.data()!['rating'];
+    var initialNumberOfRatings = productDoc.data()!['numberOfRatings'];
+    if (initialRatingInProductDoc == null) {
+      initialRatingInProductDoc = 0;
+    }
+
+    await _firestore.collection('products').doc(productId).update(
+      {
+        'rating': initialRating - initialRatingInProductDoc + rating,
+        'numberOfRatings':
+            isFirstTime ? initialNumberOfRatings + 1 : initialNumberOfRatings,
+      },
+    );
+  }
+
   Future<Map> getRunningHoursAndKmsForMachine({
     required String machineId,
   }) async {
@@ -97,6 +146,22 @@ class BuyRepository {
     return {
       'runningHours': userSnapshot.data()!['runningHours'],
       'kms': userSnapshot.data()!['kms'],
+      'rating': userSnapshot.data()!['rating'],
+      'numberOfRatings': userSnapshot.data()!['numberOfRatings'],
+    };
+  }
+
+  Future<Map> getRatingOfProduct({
+    required String productId,
+  }) async {
+    // QuerySnapshot productSnapshot = await productsCollection.get();
+
+    var userSnapshot =
+        await _firestore.collection('products').doc(productId).get();
+    // return BuyerData.fromJson(userSnapshot.data() as Map<String, dynamic>);
+    return {
+      'rating': userSnapshot.data()!['rating'],
+      'numberOfRatings': userSnapshot.data()!['numberOfRatings'],
     };
   }
 

@@ -1,7 +1,5 @@
 // translations done.
 
-import 'dart:ffi';
-
 import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/machine_rent_form.dart';
@@ -17,6 +15,7 @@ import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -213,54 +212,36 @@ class _MachineDetailsState extends State<MachineDetails> {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          color: Colors.red.shade200,
+                      SmallInfoBox(
+                        title: 'Running Hours',
+                        value: Text(
+                          snapshot.data!['runningHours'].toString() + ' Hrs',
+                          style: TextStyle(fontSize: 13),
                         ),
-                        child: Column(
-                          children: [
-                            Text(
-                              'Running Hours',
-                              style: TextStyle(
-                                  fontSize: 13, fontWeight: FontWeight.w600),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              snapshot.data!['runningHours'].toString() +
-                                  ' Hrs',
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.w600),
-                            ),
-                          ],
-                        ),
+                        color: Colors.red.shade200,
                       ),
-                      Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          color: Colors.green.shade200,
+                      if (snapshot.data!['numberOfRatings'] != 0)
+                        SmallInfoBox(
+                            title: 'Rating',
+                            value: RatingBarIndicator(
+                              rating: snapshot.data!['rating'] /
+                                  snapshot.data!['numberOfRatings'],
+                              itemCount: 5,
+                              itemSize: 15.0,
+                              physics: BouncingScrollPhysics(),
+                              itemBuilder: (context, _) => Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                              ),
+                            ),
+                            color: Colors.blue.shade200),
+                      SmallInfoBox(
+                        title: 'Kms',
+                        value: Text(
+                          snapshot.data!['kms'].toString() + ' Kms',
+                          style: TextStyle(fontSize: 13),
                         ),
-                        child: Column(
-                          children: [
-                            Text(
-                              'Kms',
-                              style: TextStyle(
-                                  fontSize: 13, fontWeight: FontWeight.w600),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              snapshot.data!['kms'].toString() + ' Kms',
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.w600),
-                            ),
-                          ],
-                        ),
+                        color: Colors.green.shade200,
                       ),
                     ],
                   );
@@ -773,6 +754,32 @@ class _MachineDetailsState extends State<MachineDetails> {
           ),
         ),
       ],
+    );
+  }
+
+  Container SmallInfoBox({
+    required String title,
+    required Widget value,
+    required Color color,
+  }) {
+    return Container(
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        color: color,
+      ),
+      child: Column(
+        children: [
+          Text(
+            title,
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          value
+        ],
+      ),
     );
   }
 }

@@ -14,6 +14,7 @@ import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -31,6 +32,7 @@ class ProductDetails extends StatefulWidget {
 class _ProductDetailsState extends State<ProductDetails> {
   initState() {
     _getSellerData = getSellerDataFuture();
+    ratingDataFuture = getRating();
     BlocProvider.of<CartBloc>(context).add(
       CheckIfAlreadyInCartRequested(productId: widget.sellProduct.id),
     );
@@ -38,11 +40,18 @@ class _ProductDetailsState extends State<ProductDetails> {
   }
 
   late Future<BuyerData> _getSellerData;
+  late Future ratingDataFuture;
 
   Future<BuyerData> getSellerDataFuture() async {
     BuyerData user = await BuyRepository()
         .getSellerData(userId: widget.sellProduct.sellerId);
     return user;
+  }
+
+  Future getRating() async {
+    Map ratingData = await BuyRepository()
+        .getRatingOfProduct(productId: widget.sellProduct.id);
+    return ratingData;
   }
 
   int _current = 0;
@@ -189,7 +198,7 @@ class _ProductDetailsState extends State<ProductDetails> {
 
         // product name and price
         Container(
-          padding: EdgeInsets.only(top: 5, left: 15, right: 10, bottom: 15),
+          padding: EdgeInsets.only(top: 5, left: 15, right: 10),
           // color: Colors.grey[200],
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -201,7 +210,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                   Row(
                     children: [
                       Container(
-                        height: 30,
+                        height: 25,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -223,14 +232,14 @@ class _ProductDetailsState extends State<ProductDetails> {
                           Text(
                             '${widget.sellProduct.productPrice.toInt().toString()}',
                             style: TextStyle(
-                              fontSize: 35,
+                              fontSize: 28,
                               fontWeight: FontWeight.w400,
                             ),
                           ),
                           Text(
                             ' per ${widget.sellProduct.quantityUnit == "Units" ? 'unit' : widget.sellProduct.quantityUnit}',
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 14,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -514,6 +523,62 @@ class _ProductDetailsState extends State<ProductDetails> {
             ],
           ),
         ),
+
+        // Container(
+        //   margin: EdgeInsets.symmetric(vertical: 5),
+        //   height: 50,
+        //   color: Colors.grey[100],
+        // ),
+
+        FutureBuilder(
+            future: ratingDataFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Container();
+              }
+              if (snapshot.hasData) {
+                if (snapshot.data!['numberOfRatings'] != null &&
+                    snapshot.data!['rating'] != null) {
+                  if (snapshot.data!['numberOfRatings'] != 0)
+                    return Container(
+                      margin: EdgeInsets.symmetric(vertical: 5),
+                      height: 50,
+                      color: Colors.grey[100],
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          RatingBarIndicator(
+                            rating: snapshot.data!['rating'] /
+                                snapshot.data!['numberOfRatings'],
+                            itemCount: 5,
+                            // itemSize: 15.0,
+                            physics: BouncingScrollPhysics(),
+                            itemBuilder: (context, _) => Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                            ),
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                snapshot.data!['numberOfRatings'].toString(),
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              Text('Ratings'),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                } else {
+                  return Container();
+                }
+              }
+              return Container();
+            }),
 
         // seller data
         FutureBuilder(

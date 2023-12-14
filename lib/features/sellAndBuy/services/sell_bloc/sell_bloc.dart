@@ -119,8 +119,6 @@ class SellBloc extends Bloc<SellEvent, SellState> {
             category: event.category,
             subCategory: event.subCategory,
             subSubCategory: event.subSubCategory,
-            // imageURL: event.imageURL,
-            // userId: authRepository.currentUser!.userId,
             runningHours: event.runningHours!,
             kms: event.kms!,
           );
@@ -135,8 +133,6 @@ class SellBloc extends Bloc<SellEvent, SellState> {
             category: event.category,
             subCategory: event.subCategory,
             subSubCategory: event.subSubCategory,
-            // imageURL: event.imageURL,
-            // userId: authRepository.currentUser!.userId,
           );
         }
 
