@@ -18,6 +18,7 @@ import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/
     as profileState;
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/more_details.dart';
+import 'package:active_ecommerce_flutter/utils/location_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -60,6 +61,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final cropsList = addressList.crops;
   final equipmentsList = addressList.equipment;
 
+  LocationRepository locationRepository = LocationRepository();
+
   List<String> taluks = [];
 
   String? districtDropdownValue;
@@ -95,6 +98,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   List<String> locationsList = [];
   List<String> locationsListForLand = [];
+
+  List<String> districtsList = [];
+  List<String> taluksList = [];
+  List<String> gramPanchayatsList = [];
+  List<String> villageNamesList = [];
+
+  bool isDistrictEnabled = false;
+  bool isTalukEnabled = false;
+  bool isGramPanchayadEnabled = false;
+  bool isVillageNameEnabled = false;
+
+  String? districtsDropdownValue;
+  String? taluksDropdownValue;
+  String? gramPanchayatsDropdownValue;
+  String? villageNamesDropdownValue;
 
   late bool profileDataUpdating;
 
@@ -148,6 +166,57 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     BlocProvider.of<AuthBloc>(buildContext).add(
       LocationsForPincodeRequested(_pinCodeController.text.toString()),
     );
+  }
+
+  void fetchDistricts() async {
+    if (_pinCodeController.text.toString().isEmpty ||
+        _pinCodeController.text.toString().length != 6) {
+      ToastComponent.showDialog(
+          AppLocalizations.of(context)!.enter_valid_pincode,
+          gravity: Toast.center,
+          duration: Toast.lengthLong);
+      return;
+    }
+
+    List<String> temp = await locationRepository.getDistrictsForPincode(
+        pinCode: _pinCodeController.text);
+    setState(() {
+      districtsList = temp;
+      isDistrictEnabled = true;
+    });
+  }
+
+  void fetchTaluks({
+    required String districtName,
+  }) async {
+    List<String> temp = await locationRepository.getTaluksForDistrict(
+        districtName: 'BAGALKOTE');
+    setState(() {
+      taluksList = temp;
+      isTalukEnabled = true;
+    });
+  }
+
+  void fetchGramPanchayats({
+    required String talukName,
+  }) async {
+    List<String> temp =
+        await locationRepository.getGramPanchayatsForTaluk(taluk: talukName);
+    setState(() {
+      gramPanchayatsList = temp;
+      isGramPanchayadEnabled = true;
+    });
+  }
+
+  void fetchVillageNames({
+    required String gramPanchayatName,
+  }) async {
+    List<String> temp = await locationRepository.getVillagesForGramPanchayat(
+        gramPanchayat: gramPanchayatName);
+    setState(() {
+      villageNamesList = temp;
+      isVillageNameEnabled = true;
+    });
   }
 
   void fetchLocationsForLand(BuildContext buildContext) {
@@ -917,7 +986,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     SizedBox(
                       height: 18,
                     ),
-
                     Divider(
                       // color: MyTheme.grey_153,
                       thickness: 2,
@@ -1276,638 +1344,807 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ],
                       ),
 
-                    SizedBox(
-                      height: 10,
-                    ),
-
-                    SizedBox(
-                      height: 8,
-                    ),
-                    Divider(
-                      // color: MyTheme.grey_153,
-                      thickness: 2,
-                    ),
-                    SizedBox(
-                      height: 12,
-                    ),
-
-                    HeadingTextWidget(
-                        AppLocalizations.of(context)!.land_details),
-
-                    Column(
-                      children: List.generate(
-                        state.profileData.land.length,
-                        (index) {
-                          var item = state.profileData.land[index];
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0, vertical: 3),
+                    Container(
+                      height: 40,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Expanded(
                             child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: MyTheme.green_lighter,
-                              ),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 15, vertical: 5),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(child: Text(item.village)),
-                                  Expanded(child: Text(item.syno)),
-                                  Expanded(child: Text(item.area.toString())),
-                                  // Expanded(child: Text(item.village)),
-                                  InkWell(
-                                    onTap: () {
-                                      _deleteDataFromHive(
-                                        DataCollectionType.land,
-                                        index,
-                                      );
-                                      setState(() {});
-                                    },
-                                    child: CircleAvatar(
-                                      radius: 12,
-                                      backgroundColor: MyTheme.green,
-                                      child: Icon(
-                                        Icons.delete,
-                                        size: 15.0,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                              // height: 40,
+                              child: TextField(
+                                keyboardType: TextInputType.numberWithOptions(
+                                    decimal: true),
+                                controller: _pinCodeController,
+                                autofocus: false,
+                                decoration:
+                                    InputDecorations.buildInputDecoration_1(
+                                        hint_text: "Pincode"),
                               ),
                             ),
-                          );
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-
-                    BlocListener<AuthBloc, authState.AuthState>(
-                      listener: (context, state) {
-                        if (state
-                            is authState.LandLocationsForPincodeReceived) {
-                          ToastComponent.showDialog(
-                              AppLocalizations.of(context)!.locations_fetched,
-                              gravity: Toast.center,
-                              duration: Toast.lengthLong);
-                          postOfficeResponseForLand = state.postOfficeResponse;
-                          for (var postOffice
-                              in state.postOfficeResponse.postOffices) {
-                            locationsListForLand.add(postOffice.name);
-                          }
-                          isDropdownForLandEnabled = true;
-                          // print(state.postOfficeResponse.postOffices[0].name);
-                          // print(state.postOfficeResponse.message);
-                        }
-                        if (state is authState.LandLocationsForPincodeLoading) {
-                          locationDropdownValueForLand = null;
-                          clearAddressValuesForLand();
-                          locationsListForLand.clear();
-                          ToastComponent.showDialog(
-                              AppLocalizations.of(context)!.fetching_locations,
-                              gravity: Toast.center,
-                              duration: Toast.lengthLong);
-                        }
-                        // TODO: implement listener
-                      },
-                      child: BlocBuilder<AuthBloc, authState.AuthState>(
-                        builder: (context, state) {
-                          return Column(
-                            children: [
-                              Container(
-                                height: 40,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Expanded(
-                                      child: Container(
-                                        // height: 40,
-                                        child: TextField(
-                                          keyboardType:
-                                              TextInputType.numberWithOptions(
-                                                  decimal: true),
-                                          controller: _pinCodeControllerForLand,
-                                          autofocus: false,
-                                          decoration: InputDecorations
-                                              .buildInputDecoration_1(
-                                                  hint_text: "Pincode"),
-                                        ),
-                                      ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        fetchLocationsForLand(context);
-                                      },
-                                      child: Container(
-                                        height: double.infinity,
-                                        color: MyTheme.green_lighter,
-                                        margin: EdgeInsets.only(
-                                          left: 10,
-                                          top: 2,
-                                          bottom: 2,
-                                        ),
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 10),
-                                        child: Center(
-                                          child: Text(
-                                            AppLocalizations.of(context)!
-                                                .search,
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              fetchDistricts();
+                            },
+                            child: Container(
+                              height: double.infinity,
+                              color: MyTheme.green_lighter,
+                              margin: EdgeInsets.only(
+                                left: 10,
+                                top: 2,
+                                bottom: 2,
                               ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Container(
-                                height: 40,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12.0),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                    color: Colors
-                                        .grey, // You can customize the border color here
-                                  ),
-                                ),
-                                child: DropdownButton<String>(
-                                  isExpanded: true,
-                                  hint: Text(
-                                    AppLocalizations.of(context)!
-                                        .select_village,
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 13,
-                                    ),
-                                  ),
-                                  disabledHint: Text(
-                                    AppLocalizations.of(context)!
-                                        .enter_pincode_first,
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 13,
-                                    ),
-                                  ),
-                                  value: locationDropdownValueForLand,
-                                  icon: Icon(Icons.arrow_drop_down),
-                                  iconSize: 24,
-                                  elevation: 16,
-                                  underline: SizedBox(), // Remove the underline
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Center(
+                                child: Text(
+                                  AppLocalizations.of(context)!.search,
                                   style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors
-                                        .black, // You can customize the text color here
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
                                   ),
-                                  onChanged: isDropdownForLandEnabled
-                                      ? (String? newValue) {
-                                          setState(() {
-                                            locationDropdownValueForLand =
-                                                newValue!;
-                                            getAddressValuesForLand();
-                                          });
-                                        }
-                                      : null,
-                                  items: locationsListForLand
-                                      .map<DropdownMenuItem<String>>(
-                                          (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-
-                    SizedBox(
-                      height: 10,
-                    ),
-                    TextFieldWidget('Syno', _synoController,
-                        '${AppLocalizations.of(context)!.enter} Syno'),
-
-                    //custom Area text field for accepting double values
-                    TexiFieldWidgetForDouble(
-                      // 'Area',
-                      _areaController,
-                      AppLocalizations.of(context)!.enter_area_in_acres,
-                    ),
-
-                    //Add Land to Hive
-                    Row(
-                      children: [
-                        Expanded(child: SizedBox()),
-                        TextButton(
-                          child: Text(AppLocalizations.of(context)!.save_ucf),
-                          onPressed: () {
-                            _addLandToHive(
-                              _areaController.text,
-                              _synoController.text,
-                              locationDropdownValueForLand,
-                            );
-                            landDropdownValue = null;
-                          },
-                        ),
-                      ],
-                    ),
-
-                    SizedBox(
-                      height: 8,
-                    ),
-                    Divider(
-                      // color: MyTheme.grey_153,
-                      thickness: 2,
-                    ),
-                    SizedBox(
-                      height: 12,
-                    ),
-
-                    HeadingTextWidget(
-                        AppLocalizations.of(context)!.farm_details),
-                    SizedBox(
-                      height: 10,
-                    ),
-
-                    (state.profileData.land.length == 0)
-                        ? Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: Text(
-                                AppLocalizations.of(context)!.add_land_first,
-                                style: TextStyle(
-                                  color: Colors.red,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                  letterSpacing: .5,
-                                  fontFamily: 'Poppins',
                                 ),
                               ),
                             ),
                           )
-                        : Column(
-                            children: [
-                              DropdownButtonWidget(
-                                  AppLocalizations.of(context)!.land,
-                                  AppLocalizations.of(context)!.select_land,
-                                  List.generate(
-                                    state.profileData.land.length,
-                                    (index) {
-                                      var item = state.profileData.land[index];
-                                      return DropdownMenuItem(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                        ],
+                      ),
+                    ),
+
+                    SizedBox(
+                      height: 10,
+                    ),
+
+                    NewDropdownWidget(
+                      title: 'Select District',
+                      context: context,
+                      dropdownValue: districtsDropdownValue,
+                      listOfItems: districtsList,
+                      disabledHint: 'Fetch Districts First',
+                      isEnabled: isDistrictEnabled,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          districtsDropdownValue = newValue!;
+                        });
+                        fetchTaluks(districtName: districtsDropdownValue!);
+                      },
+                    ),
+
+                    SizedBox(
+                      height: 10,
+                    ),
+
+                    NewDropdownWidget(
+                      title: 'Select Taluk',
+                      context: context,
+                      dropdownValue: taluksDropdownValue,
+                      listOfItems: taluksList,
+                      disabledHint: 'Fetch Taluk First',
+                      isEnabled: isTalukEnabled,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          taluksDropdownValue = newValue!;
+                        });
+                        fetchGramPanchayats(talukName: taluksDropdownValue!);
+                      },
+                    ),
+
+                    SizedBox(
+                      height: 10,
+                    ),
+
+                    NewDropdownWidget(
+                      title: 'Select Gram Panchayat',
+                      context: context,
+                      dropdownValue: gramPanchayatsDropdownValue,
+                      listOfItems: gramPanchayatsList,
+                      disabledHint: 'Fetch Gram Panchayad First',
+                      isEnabled: isGramPanchayadEnabled,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          gramPanchayatsDropdownValue = newValue!;
+                        });
+                        fetchVillageNames(
+                            gramPanchayatName: gramPanchayatsDropdownValue!);
+                      },
+                    ),
+
+                    SizedBox(
+                      height: 10,
+                    ),
+
+                    NewDropdownWidget(
+                      title: 'Select Village Name',
+                      context: context,
+                      dropdownValue: villageNamesDropdownValue,
+                      listOfItems: villageNamesList,
+                      disabledHint: 'Fetch Gram Panchayad First',
+                      isEnabled: isVillageNameEnabled,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          villageNamesDropdownValue = newValue!;
+                          // fetchTaluks();
+                        });
+                      },
+                    ),
+
+                    SizedBox(
+                      height: 20,
+                    ),
+
+                    Text(districtsDropdownValue.toString()),
+                    Text(talukDropdownEnabled.toString()),
+                    Text(gramPanchayatsDropdownValue.toString()),
+                    Text(villageNamesDropdownValue.toString()),
+
+                    SizedBox(
+                      height: 18,
+                    ),
+                    Divider(
+                      // color: MyTheme.grey_153,
+                      thickness: 2,
+                    ),
+                    SizedBox(
+                      height: 12,
+                    ),
+
+                    // land details
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        HeadingTextWidget(
+                            AppLocalizations.of(context)!.land_details),
+
+                        Column(
+                          children: List.generate(
+                            state.profileData.land.length,
+                            (index) {
+                              var item = state.profileData.land[index];
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8.0, vertical: 3),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: MyTheme.green_lighter,
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 15, vertical: 5),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(child: Text(item.village)),
+                                      Expanded(child: Text(item.syno)),
+                                      Expanded(
+                                          child: Text(item.area.toString())),
+                                      // Expanded(child: Text(item.village)),
+                                      InkWell(
+                                        onTap: () {
+                                          _deleteDataFromHive(
+                                            DataCollectionType.land,
+                                            index,
+                                          );
+                                          setState(() {});
+                                        },
+                                        child: CircleAvatar(
+                                          radius: 12,
+                                          backgroundColor: MyTheme.green,
+                                          child: Icon(
+                                            Icons.delete,
+                                            size: 15.0,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+
+                        BlocListener<AuthBloc, authState.AuthState>(
+                          listener: (context, state) {
+                            if (state
+                                is authState.LandLocationsForPincodeReceived) {
+                              ToastComponent.showDialog(
+                                  AppLocalizations.of(context)!
+                                      .locations_fetched,
+                                  gravity: Toast.center,
+                                  duration: Toast.lengthLong);
+                              postOfficeResponseForLand =
+                                  state.postOfficeResponse;
+                              for (var postOffice
+                                  in state.postOfficeResponse.postOffices) {
+                                locationsListForLand.add(postOffice.name);
+                              }
+                              isDropdownForLandEnabled = true;
+                              // print(state.postOfficeResponse.postOffices[0].name);
+                              // print(state.postOfficeResponse.message);
+                            }
+                            if (state
+                                is authState.LandLocationsForPincodeLoading) {
+                              locationDropdownValueForLand = null;
+                              clearAddressValuesForLand();
+                              locationsListForLand.clear();
+                              ToastComponent.showDialog(
+                                  AppLocalizations.of(context)!
+                                      .fetching_locations,
+                                  gravity: Toast.center,
+                                  duration: Toast.lengthLong);
+                            }
+                            // TODO: implement listener
+                          },
+                          child: BlocBuilder<AuthBloc, authState.AuthState>(
+                            builder: (context, state) {
+                              return Column(
+                                children: [
+                                  Container(
+                                    height: 40,
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            // height: 40,
+                                            child: TextField(
+                                              keyboardType: TextInputType
+                                                  .numberWithOptions(
+                                                      decimal: true),
+                                              controller:
+                                                  _pinCodeControllerForLand,
+                                              autofocus: false,
+                                              decoration: InputDecorations
+                                                  .buildInputDecoration_1(
+                                                      hint_text: "Pincode"),
+                                            ),
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            fetchLocationsForLand(context);
+                                          },
+                                          child: Container(
+                                            height: double.infinity,
+                                            color: MyTheme.green_lighter,
+                                            margin: EdgeInsets.only(
+                                              left: 10,
+                                              top: 2,
+                                              bottom: 2,
+                                            ),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 10),
+                                            child: Center(
+                                              child: Text(
+                                                AppLocalizations.of(context)!
+                                                    .search,
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    height: 40,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12.0),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(
+                                        color: Colors
+                                            .grey, // You can customize the border color here
+                                      ),
+                                    ),
+                                    child: DropdownButton<String>(
+                                      isExpanded: true,
+                                      hint: Text(
+                                        AppLocalizations.of(context)!
+                                            .select_village,
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                      disabledHint: Text(
+                                        AppLocalizations.of(context)!
+                                            .enter_pincode_first,
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                      value: locationDropdownValueForLand,
+                                      icon: Icon(Icons.arrow_drop_down),
+                                      iconSize: 24,
+                                      elevation: 16,
+                                      underline:
+                                          SizedBox(), // Remove the underline
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors
+                                            .black, // You can customize the text color here
+                                      ),
+                                      onChanged: isDropdownForLandEnabled
+                                          ? (String? newValue) {
+                                              setState(() {
+                                                locationDropdownValueForLand =
+                                                    newValue!;
+                                                getAddressValuesForLand();
+                                              });
+                                            }
+                                          : null,
+                                      items: locationsListForLand
+                                          .map<DropdownMenuItem<String>>(
+                                              (String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        ),
+
+                        SizedBox(
+                          height: 10,
+                        ),
+
+                        TextFieldWidget('Syno', _synoController,
+                            '${AppLocalizations.of(context)!.enter} Syno'),
+
+                        //custom Area text field for accepting double values
+                        TexiFieldWidgetForDouble(
+                          // 'Area',
+                          _areaController,
+                          AppLocalizations.of(context)!.enter_area_in_acres,
+                        ),
+
+                        //Add Land to Hive
+                        Row(
+                          children: [
+                            Expanded(child: SizedBox()),
+                            TextButton(
+                              child:
+                                  Text(AppLocalizations.of(context)!.save_ucf),
+                              onPressed: () {
+                                _addLandToHive(
+                                  _areaController.text,
+                                  _synoController.text,
+                                  locationDropdownValueForLand,
+                                );
+                                landDropdownValue = null;
+                              },
+                            ),
+                          ],
+                        ),
+
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Divider(
+                          // color: MyTheme.grey_153,
+                          thickness: 2,
+                        ),
+                        SizedBox(
+                          height: 12,
+                        ),
+                      ],
+                    ),
+
+                    // farm details
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        HeadingTextWidget(
+                            AppLocalizations.of(context)!.farm_details),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        (state.profileData.land.length == 0)
+                            ? Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    AppLocalizations.of(context)!
+                                        .add_land_first,
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: .5,
+                                      fontFamily: 'Poppins',
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : Column(
+                                children: [
+                                  DropdownButtonWidget(
+                                      AppLocalizations.of(context)!.land,
+                                      AppLocalizations.of(context)!.select_land,
+                                      List.generate(
+                                        state.profileData.land.length,
+                                        (index) {
+                                          var item =
+                                              state.profileData.land[index];
+                                          return DropdownMenuItem(
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Expanded(
+                                                    child: Text(item.village)),
+                                                Expanded(
+                                                    child: Text(item.syno)),
+                                                Expanded(
+                                                    child: Text(
+                                                        item.area.toString())),
+                                                // Expanded(child: Text(item.village)),
+                                              ],
+                                            ),
+                                            value: item.syno,
+                                          );
+                                        },
+                                      ),
+                                      landDropdownValue, (value) {
+                                    setState(() {
+                                      landDropdownValue = value;
+                                      setState(() {});
+                                    });
+                                  }),
+
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 8, top: 10, bottom: 5),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        AppLocalizations.of(context)!.add_crop,
+                                        style: TextStyle(
+                                            // color: MyTheme.accent_color,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500,
+                                            letterSpacing: .5,
+                                            fontFamily: 'Poppins'),
+                                      ),
+                                    ),
+                                  ),
+                                  if (landDropdownValue != null)
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Wrap(
+                                        children: List.generate(
+                                          getCropsForSyno(state.profileData,
+                                                  landDropdownValue)
+                                              .length,
+                                          (index) {
+                                            var item = getCropsForSyno(
+                                                state.profileData,
+                                                landDropdownValue)[index];
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 2),
+                                              child: Chip(
+                                                backgroundColor:
+                                                    MyTheme.green_lighter,
+                                                labelPadding:
+                                                    EdgeInsets.symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 0),
+                                                label: Text(
+                                                    '${item.name} (${item.yieldOfCrop.toInt()})'),
+                                                // deleteIcon: Icon(Icons.delete),
+                                                onDeleted: () {
+                                                  _deleteCropFromHive(
+                                                      landDropdownValue, index);
+                                                  setState(() {});
+                                                },
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+
+                                  // for crop
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5),
+                                    child: Column(
+                                      children: [
+                                        Row(
                                           children: [
-                                            Expanded(child: Text(item.village)),
-                                            Expanded(child: Text(item.syno)),
                                             Expanded(
-                                                child:
-                                                    Text(item.area.toString())),
-                                            // Expanded(child: Text(item.village)),
+                                              flex: 3,
+                                              child: DropdownButtonWidget(
+                                                  '',
+                                                  AppLocalizations.of(context)!
+                                                      .select_crop,
+                                                  cropsList.map<
+                                                          DropdownMenuItem<
+                                                              String>>(
+                                                      (String value) {
+                                                    return DropdownMenuItem<
+                                                        String>(
+                                                      value: value,
+                                                      child: Text(value),
+                                                    );
+                                                  }).toList(),
+                                                  cropDropdownValue, (value) {
+                                                setState(() {
+                                                  cropDropdownValue = value;
+                                                });
+                                              }),
+                                            ),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            Expanded(
+                                              flex: 2,
+                                              child: TexiFieldWidgetForDouble(
+                                                  // 'Yield',
+                                                  _yieldController,
+                                                  AppLocalizations.of(context)!
+                                                      .enter_crop_yield),
+                                            ),
                                           ],
                                         ),
-                                        value: item.syno,
-                                      );
-                                    },
-                                  ),
-                                  landDropdownValue, (value) {
-                                setState(() {
-                                  landDropdownValue = value;
-                                  setState(() {});
-                                });
-                              }),
-
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 8, top: 10, bottom: 5),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    AppLocalizations.of(context)!.add_crop,
-                                    style: TextStyle(
-                                        // color: MyTheme.accent_color,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500,
-                                        letterSpacing: .5,
-                                        fontFamily: 'Poppins'),
-                                  ),
-                                ),
-                              ),
-                              if (landDropdownValue != null)
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Wrap(
-                                    children: List.generate(
-                                      getCropsForSyno(state.profileData,
-                                              landDropdownValue)
-                                          .length,
-                                      (index) {
-                                        var item = getCropsForSyno(
-                                            state.profileData,
-                                            landDropdownValue)[index];
-                                        return Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 2),
-                                          child: Chip(
-                                            backgroundColor:
-                                                MyTheme.green_lighter,
-                                            labelPadding: EdgeInsets.symmetric(
-                                                horizontal: 10, vertical: 0),
-                                            label: Text(
-                                                '${item.name} (${item.yieldOfCrop.toInt()})'),
-                                            // deleteIcon: Icon(Icons.delete),
-                                            onDeleted: () {
-                                              _deleteCropFromHive(
-                                                  landDropdownValue, index);
-                                              setState(() {});
-                                            },
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-
-                              // for crop
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 5),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          flex: 3,
-                                          child: DropdownButtonWidget(
-                                              '',
-                                              AppLocalizations.of(context)!
-                                                  .select_crop,
-                                              cropsList.map<
-                                                      DropdownMenuItem<String>>(
-                                                  (String value) {
-                                                return DropdownMenuItem<String>(
-                                                  value: value,
-                                                  child: Text(value),
+                                        Row(
+                                          children: [
+                                            Expanded(child: SizedBox()),
+                                            TextButton(
+                                              child: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .save_ucf),
+                                              onPressed: () {
+                                                _addCropToHive(
+                                                  landDropdownValue,
+                                                  cropDropdownValue,
+                                                  _yieldController.text,
                                                 );
-                                              }).toList(),
-                                              cropDropdownValue, (value) {
-                                            setState(() {
-                                              cropDropdownValue = value;
-                                            });
-                                          }),
-                                        ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Expanded(
-                                          flex: 2,
-                                          child: TexiFieldWidgetForDouble(
-                                              // 'Yield',
-                                              _yieldController,
-                                              AppLocalizations.of(context)!
-                                                  .enter_crop_yield),
+                                                setState(() {
+                                                  cropDropdownValue = null;
+                                                });
+                                              },
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
-                                    Row(
-                                      children: [
-                                        Expanded(child: SizedBox()),
-                                        TextButton(
-                                          child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .save_ucf),
-                                          onPressed: () {
-                                            _addCropToHive(
-                                              landDropdownValue,
-                                              cropDropdownValue,
-                                              _yieldController.text,
-                                            );
-                                            setState(() {
-                                              cropDropdownValue = null;
-                                            });
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                  ),
 
-                              // add machines
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 8, top: 10, bottom: 5),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    AppLocalizations.of(context)!.add_machines,
-                                    style: TextStyle(
-                                        // color: MyTheme.accent_color,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500,
-                                        letterSpacing: .5,
-                                        fontFamily: 'Poppins'),
-                                  ),
-                                ),
-                              ),
-                              // showing machines
-                              if (landDropdownValue != null)
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Wrap(
-                                    children: List.generate(
-                                      getMachinesForSyno(state.profileData,
-                                              landDropdownValue)
-                                          .length,
-                                      (index) {
-                                        var item = getMachinesForSyno(
-                                            state.profileData,
-                                            landDropdownValue)[index];
-                                        return Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 2),
-                                          child: Chip(
-                                            backgroundColor:
-                                                MyTheme.green_lighter,
-                                            labelPadding: EdgeInsets.symmetric(
-                                                horizontal: 10, vertical: 0),
-                                            label: Text(item),
-                                            // deleteIcon: Icon(Icons.delete),
-                                            onDeleted: () {
-                                              _deleteEquipmentFromHive(
-                                                  landDropdownValue, index);
-                                              setState(() {});
-                                            },
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              // select machines dropdowns
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 5),
-                                child: Column(
-                                  children: [
-                                    DropdownButtonWidget(
-                                        '',
+                                  // add machines
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 8, top: 10, bottom: 5),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
                                         AppLocalizations.of(context)!
-                                            .select_equipments,
-                                        equipmentsList
-                                            .map<DropdownMenuItem<String>>(
-                                                (String value) {
-                                          return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(value),
-                                          );
-                                        }).toList(),
-                                        equipmentDropdownValue, (value) {
-                                      setState(() {
-                                        equipmentDropdownValue = value;
-                                      });
-                                    }),
-                                    Row(
-                                      children: [
-                                        Expanded(child: SizedBox()),
-                                        TextButton(
-                                          child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .save_ucf),
-                                          onPressed: () {
-                                            _addEquipmentToHive(
-                                              landDropdownValue,
-                                              equipmentDropdownValue,
-                                            );
-                                            setState(() {});
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 8, top: 10, bottom: 5),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    AppLocalizations.of(context)!.add_animal,
-                                    style: TextStyle(
-                                        // color: MyTheme.accent_color,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500,
-                                        letterSpacing: .5,
-                                        fontFamily: 'Poppins'),
-                                  ),
-                                ),
-                              ),
-                              if (landDropdownValue != null)
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Wrap(
-                                    children: List.generate(
-                                      getAnimalsForSyno(state.profileData,
-                                              landDropdownValue)
-                                          .length,
-                                      (index) {
-                                        var item = getAnimalsForSyno(
-                                            state.profileData,
-                                            landDropdownValue)[index];
-                                        return Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 2),
-                                          child: Chip(
-                                            backgroundColor:
-                                                MyTheme.green_lighter,
-                                            labelPadding: EdgeInsets.symmetric(
-                                                horizontal: 10, vertical: 0),
-                                            label: Text(
-                                                '${item.name} (${item.quantity})'),
-                                            // deleteIcon: Icon(Icons.delete),
-                                            onDeleted: () {
-                                              _deleteAnimalFromHive(
-                                                  landDropdownValue, index);
-                                              setState(() {});
-                                            },
-                                          ),
-                                        );
-                                      },
+                                            .add_machines,
+                                        style: TextStyle(
+                                            // color: MyTheme.accent_color,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500,
+                                            letterSpacing: .5,
+                                            fontFamily: 'Poppins'),
+                                      ),
                                     ),
                                   ),
-                                ),
-
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 5),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          flex: 3,
-                                          child: TextFieldWidget(
-                                            AppLocalizations.of(context)!
-                                                .animal,
-                                            _animalNameController,
-                                            AppLocalizations.of(context)!
-                                                .enter_animal_name,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Expanded(
-                                          flex: 2,
-                                          child: TexiFieldWidgetForDouble(
-                                            // 'Quantity',
-                                            _animalQuantityController,
-                                            AppLocalizations.of(context)!
-                                                .enter_count,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Expanded(child: SizedBox()),
-                                        TextButton(
-                                          child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .save_ucf),
-                                          onPressed: () {
-                                            _addAnimalToHive(
-                                              landDropdownValue,
-                                              _animalNameController.text,
-                                              _animalQuantityController.text,
+                                  // showing machines
+                                  if (landDropdownValue != null)
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Wrap(
+                                        children: List.generate(
+                                          getMachinesForSyno(state.profileData,
+                                                  landDropdownValue)
+                                              .length,
+                                          (index) {
+                                            var item = getMachinesForSyno(
+                                                state.profileData,
+                                                landDropdownValue)[index];
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 2),
+                                              child: Chip(
+                                                backgroundColor:
+                                                    MyTheme.green_lighter,
+                                                labelPadding:
+                                                    EdgeInsets.symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 0),
+                                                label: Text(item),
+                                                // deleteIcon: Icon(Icons.delete),
+                                                onDeleted: () {
+                                                  _deleteEquipmentFromHive(
+                                                      landDropdownValue, index);
+                                                  setState(() {});
+                                                },
+                                              ),
                                             );
-                                            setState(() {});
                                           },
                                         ),
+                                      ),
+                                    ),
+                                  // select machines dropdowns
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5),
+                                    child: Column(
+                                      children: [
+                                        DropdownButtonWidget(
+                                            '',
+                                            AppLocalizations.of(context)!
+                                                .select_equipments,
+                                            equipmentsList
+                                                .map<DropdownMenuItem<String>>(
+                                                    (String value) {
+                                              return DropdownMenuItem<String>(
+                                                value: value,
+                                                child: Text(value),
+                                              );
+                                            }).toList(),
+                                            equipmentDropdownValue, (value) {
+                                          setState(() {
+                                            equipmentDropdownValue = value;
+                                          });
+                                        }),
+                                        Row(
+                                          children: [
+                                            Expanded(child: SizedBox()),
+                                            TextButton(
+                                              child: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .save_ucf),
+                                              onPressed: () {
+                                                _addEquipmentToHive(
+                                                  landDropdownValue,
+                                                  equipmentDropdownValue,
+                                                );
+                                                setState(() {});
+                                              },
+                                            ),
+                                          ],
+                                        ),
                                       ],
                                     ),
-                                  ],
-                                ),
+                                  ),
+
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 8, top: 10, bottom: 5),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        AppLocalizations.of(context)!
+                                            .add_animal,
+                                        style: TextStyle(
+                                            // color: MyTheme.accent_color,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500,
+                                            letterSpacing: .5,
+                                            fontFamily: 'Poppins'),
+                                      ),
+                                    ),
+                                  ),
+                                  if (landDropdownValue != null)
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Wrap(
+                                        children: List.generate(
+                                          getAnimalsForSyno(state.profileData,
+                                                  landDropdownValue)
+                                              .length,
+                                          (index) {
+                                            var item = getAnimalsForSyno(
+                                                state.profileData,
+                                                landDropdownValue)[index];
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 2),
+                                              child: Chip(
+                                                backgroundColor:
+                                                    MyTheme.green_lighter,
+                                                labelPadding:
+                                                    EdgeInsets.symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 0),
+                                                label: Text(
+                                                    '${item.name} (${item.quantity})'),
+                                                // deleteIcon: Icon(Icons.delete),
+                                                onDeleted: () {
+                                                  _deleteAnimalFromHive(
+                                                      landDropdownValue, index);
+                                                  setState(() {});
+                                                },
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              flex: 3,
+                                              child: TextFieldWidget(
+                                                AppLocalizations.of(context)!
+                                                    .animal,
+                                                _animalNameController,
+                                                AppLocalizations.of(context)!
+                                                    .enter_animal_name,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            Expanded(
+                                              flex: 2,
+                                              child: TexiFieldWidgetForDouble(
+                                                // 'Quantity',
+                                                _animalQuantityController,
+                                                AppLocalizations.of(context)!
+                                                    .enter_count,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Expanded(child: SizedBox()),
+                                            TextButton(
+                                              child: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .save_ucf),
+                                              onPressed: () {
+                                                _addAnimalToHive(
+                                                  landDropdownValue,
+                                                  _animalNameController.text,
+                                                  _animalQuantityController
+                                                      .text,
+                                                );
+                                                setState(() {});
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
+                      ],
+                    ),
                   ],
                 );
               return Container(
@@ -1917,6 +2154,60 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             },
           ),
         ),
+      ),
+    );
+  }
+
+  Container NewDropdownWidget({
+    required BuildContext context,
+    required List<String> listOfItems,
+    required String title,
+    required String disabledHint,
+    required String? dropdownValue,
+    required Function(String?) onChanged,
+    required bool isEnabled,
+  }) {
+    return Container(
+      height: 40,
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: Colors.grey, // You can customize the border color here
+        ),
+      ),
+      child: DropdownButton<String>(
+        isExpanded: true,
+        hint: Text(
+          title,
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 13,
+          ),
+        ),
+        disabledHint: Text(
+          disabledHint,
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 13,
+          ),
+        ),
+        value: dropdownValue,
+        icon: Icon(Icons.arrow_drop_down),
+        iconSize: 24,
+        elevation: 16,
+        underline: SizedBox(),
+        style: TextStyle(
+          fontSize: 16,
+          color: Colors.black,
+        ),
+        onChanged: isEnabled ? onChanged : null,
+        items: listOfItems.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
       ),
     );
   }
