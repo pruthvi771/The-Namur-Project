@@ -6,7 +6,7 @@ sheet_names = excel_file.sheet_names
 village_names = []
 gram_panchayat_names = []
 taluk_names = []
-
+sheet_names_for_json = []
 total = 0
 
 for sheet_name in sheet_names:
@@ -27,8 +27,14 @@ for sheet_name in sheet_names:
     taluk_names_list = sheet[taluk_cols].values.tolist()
     taluk_names_list = [item for sublist in taluk_names_list for item in sublist]
     taluk_names.extend(taluk_names_list)
+    temp_list = []
+    
+    for i in range(len(taluk_names_list)):
+        temp_list.append(sheet_name)
+    
+    sheet_names_for_json.extend(temp_list)
 
-d = {"Village Name": village_names, "Gram Panchayat": gram_panchayat_names, "TALUK": taluk_names,"district":sheet_name, "state": "Karnakata"}
+d = {"Village Name": village_names, "Gram Panchayat": gram_panchayat_names, "TALUK": taluk_names,"district":sheet_names_for_json, "state": "Karnakata"}
 df = pd.DataFrame(d)
 df.dropna(inplace=True)
 # df.drop_duplicates(inplace=True)

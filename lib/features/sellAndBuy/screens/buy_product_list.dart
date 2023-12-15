@@ -1,5 +1,6 @@
 // translation done.
 
+import 'package:active_ecommerce_flutter/features/profile/screens/edit_profile.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/subSubCategory_filter_item.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/filter_screen.dart';
@@ -7,6 +8,7 @@ import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/machine_det
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/machine_rent_form.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/product_details_screen.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart';
+import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
@@ -14,6 +16,8 @@ import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 enum FilterType { subSubCategory, location }
 
@@ -21,14 +25,15 @@ class BuyProductList extends StatefulWidget {
   final SubCategoryEnum subCategoryEnum;
   final bool isSecondHand;
   final List<FilterItem>? subSubCategoryList;
-  final List<FilterItem>? locationsList;
+  // final List<FilterItem>? locationsList;
+  final LocationFilterMap? locationFilterMap;
   final SortType? sortType;
 
   BuyProductList({
     Key? key,
     required this.subCategoryEnum,
     required this.isSecondHand,
-    this.locationsList,
+    this.locationFilterMap,
     this.subSubCategoryList,
     this.sortType,
   }) : super(key: key);
@@ -43,23 +48,26 @@ class _BuyProductListState extends State<BuyProductList> {
   bool fitlerLocationTabOpen = true;
 
   List<String> selectedCategories = [];
-  List<String> selectedLocations = [];
   late Stream<QuerySnapshot> productsStream;
-
   late List<FilterItem> subSubCategoryList;
-  late List<FilterItem> locationsList;
   late SortType? sortType;
   final String collectionName = 'buyer';
-  late final bool locationFilter;
   int text = 0;
+  late Address? userLocation;
+
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   void initState() {
+    userLocation = getUserLocationFromHive();
+    if (userLocation == null) {
+      super.initState();
+      return;
+    }
+
     subSubCategoryList =
         widget.subSubCategoryList != null ? widget.subSubCategoryList! : [];
-    locationsList = widget.locationsList != null ? widget.locationsList! : [];
     sortType = widget.sortType != null ? widget.sortType! : null;
-    // getCountFuture = getCount(count: null);
 
     try {
       print(subSubCategoryList[0].name);
@@ -80,17 +88,32 @@ class _BuyProductListState extends State<BuyProductList> {
     } else {
       productsStream = allProductStreamQuery();
     }
-
-    if (locationsList != null && locationsList.length != 0) {
-      locationFilter = true;
-    } else {
-      locationFilter = false;
-    }
     super.initState();
   }
 
+  Address? getUserLocationFromHive() {
+    var dataBox = Hive.box<ProfileData>('profileDataBox3');
+
+    var savedData = dataBox.get('profile');
+
+    if (savedData != null) {
+      if (savedData.address.length == 0) {
+        return null;
+      }
+      if (savedData.address[0].district == "" ||
+          savedData.address[0].village == "" ||
+          savedData.address[0].gramPanchayat == "" ||
+          savedData.address[0].taluk == "") {
+        return null;
+      }
+      return savedData.address[0];
+    } else {
+      return null;
+    }
+  }
+
   Stream<QuerySnapshot> allProductStreamQuery() {
-    return FirebaseFirestore.instance
+    return _firestore
         .collection('products')
         .where('subCategory',
             isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
@@ -98,11 +121,12 @@ class _BuyProductListState extends State<BuyProductList> {
         .snapshots();
   }
 
-  Stream<QuerySnapshot> allProductSortedStreamQuery(
-      {required SortType sortType}) {
+  Stream<QuerySnapshot> allProductSortedStreamQuery({
+    required SortType sortType,
+  }) {
     String orderByField = 'price';
 
-    return FirebaseFirestore.instance
+    return _firestore
         .collection('products')
         .where('subCategory',
             isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
@@ -121,7 +145,7 @@ class _BuyProductListState extends State<BuyProductList> {
       }
     }
 
-    return FirebaseFirestore.instance
+    return _firestore
         .collection('products')
         .where('subCategory',
             isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
@@ -141,7 +165,7 @@ class _BuyProductListState extends State<BuyProductList> {
       }
     }
 
-    return FirebaseFirestore.instance
+    return _firestore
         .collection('products')
         .where('subCategory',
             isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
@@ -152,22 +176,231 @@ class _BuyProductListState extends State<BuyProductList> {
         .snapshots();
   }
 
+  Stream<QuerySnapshot> productFilteredByLocationStreamQuery({
+    required LocationFilterMap locationFilterMap,
+  }) {
+    if (locationFilterMap.district) {
+      return _firestore
+          .collection('products')
+          .where('subCategory',
+              isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
+          .where('isSecondHand', isEqualTo: widget.isSecondHand)
+          .where('district', isEqualTo: userLocation!.district)
+          .snapshots();
+    } else if (locationFilterMap.taluk) {
+      return _firestore
+          .collection('products')
+          .where('subCategory',
+              isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
+          .where('isSecondHand', isEqualTo: widget.isSecondHand)
+          .where('taluk', isEqualTo: userLocation!.taluk)
+          .snapshots();
+    } else if (locationFilterMap.gramPanchayat) {
+      return _firestore
+          .collection('products')
+          .where('subCategory',
+              isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
+          .where('isSecondHand', isEqualTo: widget.isSecondHand)
+          .where('gramPanchayat', isEqualTo: userLocation!.gramPanchayat)
+          .snapshots();
+    } else {
+      return _firestore
+          .collection('products')
+          .where('subCategory',
+              isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
+          .where('isSecondHand', isEqualTo: widget.isSecondHand)
+          .where('village', isEqualTo: userLocation!.village)
+          .snapshots();
+    }
+  }
+
+  Stream<QuerySnapshot> productFilteredByLocationAndSubSubCategoryStreamQuery({
+    required LocationFilterMap locationFilterMap,
+    List<FilterItem>? theSubSubCategoryList,
+  }) {
+    List<String> subSubCategoryList = [];
+    for (var item in theSubSubCategoryList!) {
+      if (item.isSelected) {
+        subSubCategoryList.add(item.name);
+      }
+    }
+
+    if (locationFilterMap.district) {
+      return _firestore
+          .collection('products')
+          .where('subCategory',
+              isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
+          .where('isSecondHand', isEqualTo: widget.isSecondHand)
+          .where('subSubCategory',
+              whereIn:
+                  subSubCategoryList.length != 0 ? subSubCategoryList : [''])
+          .where('district', isEqualTo: userLocation!.district)
+          .snapshots();
+    } else if (locationFilterMap.taluk) {
+      return _firestore
+          .collection('products')
+          .where('subCategory',
+              isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
+          .where('isSecondHand', isEqualTo: widget.isSecondHand)
+          .where('subSubCategory',
+              whereIn:
+                  subSubCategoryList.length != 0 ? subSubCategoryList : [''])
+          .where('taluk', isEqualTo: userLocation!.taluk)
+          .snapshots();
+    } else if (locationFilterMap.gramPanchayat) {
+      return _firestore
+          .collection('products')
+          .where('subCategory',
+              isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
+          .where('isSecondHand', isEqualTo: widget.isSecondHand)
+          .where('subSubCategory',
+              whereIn:
+                  subSubCategoryList.length != 0 ? subSubCategoryList : [''])
+          .where('gramPanchayat', isEqualTo: userLocation!.gramPanchayat)
+          .snapshots();
+    } else {
+      return _firestore
+          .collection('products')
+          .where('subCategory',
+              isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
+          .where('isSecondHand', isEqualTo: widget.isSecondHand)
+          .where('subSubCategory',
+              whereIn:
+                  subSubCategoryList.length != 0 ? subSubCategoryList : [''])
+          .where('village', isEqualTo: userLocation!.village)
+          .snapshots();
+    }
+  }
+
+  Stream<QuerySnapshot> productFilteredByLocationAndSortedStreamQuery({
+    required LocationFilterMap locationFilterMap,
+    required SortType sortType,
+  }) {
+    String orderByField = 'price';
+    if (locationFilterMap.district) {
+      return _firestore
+          .collection('products')
+          .where('subCategory',
+              isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
+          .where('isSecondHand', isEqualTo: widget.isSecondHand)
+          .where('district', isEqualTo: userLocation!.district)
+          .orderBy(orderByField, descending: sortType == SortType.descending)
+          .snapshots();
+    } else if (locationFilterMap.taluk) {
+      return _firestore
+          .collection('products')
+          .where('subCategory',
+              isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
+          .where('isSecondHand', isEqualTo: widget.isSecondHand)
+          .where('taluk', isEqualTo: userLocation!.taluk)
+          .orderBy(orderByField, descending: sortType == SortType.descending)
+          .snapshots();
+    } else if (locationFilterMap.gramPanchayat) {
+      return _firestore
+          .collection('products')
+          .where('subCategory',
+              isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
+          .where('isSecondHand', isEqualTo: widget.isSecondHand)
+          .where('gramPanchayat', isEqualTo: userLocation!.gramPanchayat)
+          .orderBy(orderByField, descending: sortType == SortType.descending)
+          .snapshots();
+    } else {
+      return _firestore
+          .collection('products')
+          .where('subCategory',
+              isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
+          .where('isSecondHand', isEqualTo: widget.isSecondHand)
+          .where('village', isEqualTo: userLocation!.village)
+          .orderBy(orderByField, descending: sortType == SortType.descending)
+          .snapshots();
+    }
+  }
+
+  Stream<QuerySnapshot> productAllFiltersAndSortedStreamQuery({
+    required LocationFilterMap locationFilterMap,
+    List<FilterItem>? theSubSubCategoryList,
+    required SortType sortType,
+  }) {
+    String orderByField = 'price';
+
+    List<String> subSubCategoryList = [];
+    for (var item in theSubSubCategoryList!) {
+      if (item.isSelected) {
+        subSubCategoryList.add(item.name);
+      }
+    }
+
+    if (locationFilterMap.district) {
+      return _firestore
+          .collection('products')
+          .where('subCategory',
+              isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
+          .where('isSecondHand', isEqualTo: widget.isSecondHand)
+          .where('subSubCategory',
+              whereIn:
+                  subSubCategoryList.length != 0 ? subSubCategoryList : [''])
+          .where('district', isEqualTo: userLocation!.district)
+          .orderBy(orderByField, descending: sortType == SortType.descending)
+          .snapshots();
+    } else if (locationFilterMap.taluk) {
+      return _firestore
+          .collection('products')
+          .where('subCategory',
+              isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
+          .where('isSecondHand', isEqualTo: widget.isSecondHand)
+          .where('subSubCategory',
+              whereIn:
+                  subSubCategoryList.length != 0 ? subSubCategoryList : [''])
+          .where('taluk', isEqualTo: userLocation!.taluk)
+          .orderBy(orderByField, descending: sortType == SortType.descending)
+          .snapshots();
+    } else if (locationFilterMap.gramPanchayat) {
+      return _firestore
+          .collection('products')
+          .where('subCategory',
+              isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
+          .where('isSecondHand', isEqualTo: widget.isSecondHand)
+          .where('subSubCategory',
+              whereIn:
+                  subSubCategoryList.length != 0 ? subSubCategoryList : [''])
+          .where('gramPanchayat', isEqualTo: userLocation!.gramPanchayat)
+          .orderBy(orderByField, descending: sortType == SortType.descending)
+          .snapshots();
+    } else {
+      return _firestore
+          .collection('products')
+          .where('subCategory',
+              isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
+          .where('isSecondHand', isEqualTo: widget.isSecondHand)
+          .where('subSubCategory',
+              whereIn:
+                  subSubCategoryList.length != 0 ? subSubCategoryList : [''])
+          .where('village', isEqualTo: userLocation!.village)
+          .orderBy(orderByField, descending: sortType == SortType.descending)
+          .snapshots();
+    }
+  }
+
   void goToFilterScreen({
     required BuildContext context,
     required SubCategoryEnum subCategoryEnum,
     required bool isSecondHand,
     required List<FilterItem> theSubSubCategoryList,
-    required List<FilterItem> theLocationsList,
     required SortType? theSortType,
   }) {
     Navigator.of(context).push(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) {
           return FilterScreen(
+            locationFilterMap: LocationFilterMap(
+              district: false,
+              taluk: false,
+              gramPanchayat: false,
+              village: true,
+            ),
             subCategoryEnum: subCategoryEnum,
             isSecondHand: isSecondHand,
             subSubCategoryList: theSubSubCategoryList,
-            locationsList: theLocationsList,
             sortType: theSortType,
           );
         },
@@ -206,273 +439,228 @@ class _BuyProductListState extends State<BuyProductList> {
     return false;
   }
 
-  // late Future<int?> getCountFuture;
-
-  // Future<int?> getCount({
-  //   required int? count,
-  // }) async {
-  //   if (count == null) {
-  //     return null;
-  //   }
-  //   return count;
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Directionality(
-        textDirection:
-            app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
-        child: Scaffold(
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            // elevation: 0,
-            flexibleSpace: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Color(0xff107B28), Color(0xff4C7B10)]),
-              ),
+      textDirection:
+          app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          // elevation: 0,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xff107B28), Color(0xff4C7B10)]),
             ),
-            title: Text(
-              AppLocalizations.of(context)!.all_products_ucf,
-              style: TextStyle(
-                  color: MyTheme.white,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: .5,
-                  fontFamily: 'Poppins'),
-            ),
-            centerTitle: true,
-            actions: [
-              IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(
-                  Icons.keyboard_arrow_left,
-                  size: 35,
-                  color: MyTheme.white,
-                ),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-            ],
           ),
-          body: StreamBuilder(
-              stream: productsStream,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                if (snapshot.hasData) {
-                  var products = snapshot.data!.docs.map((doc) {
-                    var data = doc.data() as Map;
-                    if (!containsItem(
-                        subSubCategoryList, data['subSubCategory'])) {
-                      subSubCategoryList.add(FilterItem(
-                          name: data['subSubCategory'], isSelected: true));
-                    }
-                    return SellProduct(
-                      id: doc.id,
-                      productName: data['name'],
-                      productDescription: data['description'],
-                      productPrice: data['price'],
-                      productQuantity: data['quantity'],
-                      quantityUnit: data['quantityUnit'],
-                      category: data['category'],
-                      subCategory: data['subCategory'],
-                      subSubCategory: data['subSubCategory'],
-                      imageURL: data['imageURL'],
-                      sellerId: data['sellerId'],
-                      isSecondHand: data['isSecondHand'],
+          title: Text(
+            AppLocalizations.of(context)!.all_products_ucf,
+            style: TextStyle(
+                color: MyTheme.white,
+                fontWeight: FontWeight.w500,
+                letterSpacing: .5,
+                fontFamily: 'Poppins'),
+          ),
+          centerTitle: true,
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(
+                Icons.keyboard_arrow_left,
+                size: 35,
+                color: MyTheme.white,
+              ),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+          ],
+        ),
+        body: userLocation == null
+            ? Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      AppLocalizations.of(context)!
+                          .please_add_address_to_see_products,
+                      style: TextStyle(fontSize: 20, color: Colors.black45),
+                      textAlign: TextAlign.center,
+                    ),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: MyTheme.primary_color,
+                        ),
+                        onPressed: () {
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EditProfileScreen()),
+                              (route) => false);
+                        },
+                        child: Text(AppLocalizations.of(context)!.add_address)),
+                  ],
+                ),
+              )
+            : StreamBuilder(
+                stream: productsStream,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(),
                     );
-                  }).toList();
+                  }
+                  if (snapshot.hasData) {
+                    var products = snapshot.data!.docs.map((doc) {
+                      var data = doc.data() as Map;
+                      if (!containsItem(
+                          subSubCategoryList, data['subSubCategory'])) {
+                        subSubCategoryList.add(FilterItem(
+                            name: data['subSubCategory'], isSelected: true));
+                      }
+                      return SellProduct(
+                        id: doc.id,
+                        productName: data['name'],
+                        productDescription: data['description'],
+                        productPrice: data['price'],
+                        productQuantity: data['quantity'],
+                        quantityUnit: data['quantityUnit'],
+                        category: data['category'],
+                        subCategory: data['subCategory'],
+                        subSubCategory: data['subSubCategory'],
+                        imageURL: data['imageURL'],
+                        sellerId: data['sellerId'],
+                        isSecondHand: data['isSecondHand'],
+                      );
+                    }).toList();
 
-                  return Container(
-                    child: products.length == 0
-                        // short circuiting
-                        ? Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(20),
-                              child: Text(
-                                AppLocalizations.of(context)!
-                                    .no_product_is_available,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
+                    return Container(
+                      child: products.length == 0
+                          // short circuiting
+                          ? Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: Text(
+                                  AppLocalizations.of(context)!
+                                      .no_product_is_available,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
-                            ),
-                          )
-                        : Column(
-                            children: [
-                              // filtering menu
-                              Container(
-                                height: 50,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 8),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    // filter by
-                                    GestureDetector(
-                                      onTap: () {
-                                        goToFilterScreen(
-                                            context: context,
-                                            subCategoryEnum:
-                                                widget.subCategoryEnum,
-                                            isSecondHand: widget.isSecondHand,
-                                            theSubSubCategoryList:
-                                                subSubCategoryList,
-                                            theLocationsList: locationsList,
-                                            theSortType: sortType);
-                                      },
-                                      child: Container(
-                                        child: Chip(
-                                          backgroundColor: Colors.grey[200],
-                                          labelPadding: EdgeInsets.symmetric(
-                                              horizontal: 10, vertical: 0),
-                                          label: Text(
-                                              AppLocalizations.of(context)!
-                                                  .show_filters),
-                                          deleteIcon: FaIcon(
-                                            FontAwesomeIcons.sliders,
-                                            size: 15,
-                                          ),
-                                          onDeleted: () {
-                                            goToFilterScreen(
+                            )
+                          : Column(
+                              children: [
+                                // filtering menu
+                                Container(
+                                  height: 50,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 8),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      // filter by
+                                      GestureDetector(
+                                        onTap: () {
+                                          goToFilterScreen(
                                               context: context,
                                               subCategoryEnum:
                                                   widget.subCategoryEnum,
                                               isSecondHand: widget.isSecondHand,
                                               theSubSubCategoryList:
                                                   subSubCategoryList,
-                                              theLocationsList: locationsList,
-                                              theSortType: sortType,
-                                            );
-                                          },
+                                              theSortType: sortType);
+                                        },
+                                        child: Container(
+                                          child: Chip(
+                                            backgroundColor: Colors.grey[200],
+                                            labelPadding: EdgeInsets.symmetric(
+                                                horizontal: 10, vertical: 0),
+                                            label: Text(
+                                                AppLocalizations.of(context)!
+                                                    .show_filters),
+                                            deleteIcon: FaIcon(
+                                              FontAwesomeIcons.sliders,
+                                              size: 15,
+                                            ),
+                                            onDeleted: () {
+                                              goToFilterScreen(
+                                                context: context,
+                                                subCategoryEnum:
+                                                    widget.subCategoryEnum,
+                                                isSecondHand:
+                                                    widget.isSecondHand,
+                                                theSubSubCategoryList:
+                                                    subSubCategoryList,
+                                                theSortType: sortType,
+                                              );
+                                            },
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Expanded(
-                                child: ListView(
-                                  physics: BouncingScrollPhysics(),
-                                  children: [
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    ListView.builder(
+                                Expanded(
+                                  child: ListView(
+                                    physics: BouncingScrollPhysics(),
+                                    children: [
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      ListView.builder(
                                         itemCount: products.length,
                                         shrinkWrap: true,
                                         physics: NeverScrollableScrollPhysics(),
                                         scrollDirection: Axis.vertical,
                                         itemBuilder: (context, index) {
-                                          return StreamBuilder<
-                                                  DocumentSnapshot>(
-                                              stream: FirebaseFirestore.instance
-                                                  .collection(collectionName)
-                                                  .doc(products[index].sellerId)
-                                                  .snapshots(),
-                                              builder:
-                                                  (context, sellerSnapshot) {
-                                                if (sellerSnapshot.hasData &&
-                                                    sellerSnapshot
-                                                        .data!.exists &&
-                                                    sellerSnapshot.data !=
-                                                        null) {
-                                                  var sellerData =
-                                                      sellerSnapshot.data!
-                                                              .data()
-                                                          as Map<String,
-                                                              dynamic>?;
-
-                                                  var villageName =
-                                                      sellerData!['profileData']
-                                                              ['address'][0]
-                                                          ['village'];
-
-                                                  if (!containsItem(
-                                                    locationsList,
-                                                    villageName,
-                                                  )) {
-                                                    locationsList.add(
-                                                      FilterItem(
-                                                          name: villageName,
-                                                          isSelected: true),
-                                                    );
-                                                  }
-                                                  if (locationFilter) {
-                                                    if (containsItemAsSelected(
-                                                      locationsList,
-                                                      villageName,
-                                                    )) {
-                                                      // text = text + 1;
-                                                      // getCountFuture =
-                                                      //     getCount(count: text);
-                                                      return ProductCard(
-                                                          products,
-                                                          index,
-                                                          context,
-                                                          sellerData);
-                                                    }
-                                                  } else {
-                                                    // text = text + 1;
-                                                    // getCountFuture =
-                                                    //     getCount(count: text);
-                                                    return ProductCard(
-                                                        products,
-                                                        index,
-                                                        context,
-                                                        sellerData);
-                                                  }
-                                                }
-                                                return SizedBox.shrink();
-                                              });
-                                        }),
-                                  ],
+                                          return ProductCard(
+                                            products,
+                                            index,
+                                            context,
+                                            {},
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
+                              ],
+                            ),
+                    );
+                  }
+                  if (snapshot.hasError) {
+                    // return Text('Something went wrong. Please try again.');
+                    return SizedBox.shrink();
+                  }
+                  return Center(
+                    child: CircularProgressIndicator(),
                   );
-                }
-                if (snapshot.hasError) {
-                  // return Text('Something went wrong. Please try again.');
-                  return SizedBox.shrink();
-                }
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }),
-        ));
+                },
+              ),
+      ),
+    );
   }
 
-  Column ProductCard(List<SellProduct> products, int index,
-      BuildContext context, Map<String, dynamic> sellerData) {
+  Column ProductCard(
+    List<SellProduct> products,
+    int index,
+    BuildContext context,
+    Map<String, dynamic> sellerData,
+  ) {
     return Column(
       children: [
         InkWell(
           onTap: () {
             if (products[index].subSubCategory == 'On Rent' ||
                 products[index].subSubCategory == 'Sell') {
-              // Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //       builder: (context) => MachineRentForm(
-              //         machineId: products[index].id,
-              //         imageURL: products[index].imageURL,
-              //         machineName: products[index].productName,
-              //         machinePrice: products[index].productPrice,
-              //         machineDescription: products[index].productDescription,
-              //         sellerId: products[index].sellerId,
-              //       ),
-              //     ));
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -494,17 +682,19 @@ class _BuyProductListState extends State<BuyProductList> {
             }
           },
           child: BuyProductTile(
-            context: context,
-            name: products[index].productName,
-            imageURL: products[index].imageURL,
-            price: products[index].productPrice,
-            quantityUnit: products[index].quantityUnit,
-            subSubCategory: products[index].subSubCategory,
-            village:
-                sellerData['profileData']['address'][0]['village'] ?? '---',
-            district:
-                sellerData['profileData']['address'][0]['district'] ?? '---',
-          ),
+              context: context,
+              name: products[index].productName,
+              imageURL: products[index].imageURL,
+              price: products[index].productPrice,
+              quantityUnit: products[index].quantityUnit,
+              subSubCategory: products[index].subSubCategory,
+              village: 'village',
+              district: 'district'
+              // village:
+              //     sellerData['profileData']['address'][0]['village'] ?? '---',
+              // district:
+              //     sellerData['profileData']['address'][0]['district'] ?? '---',
+              ),
         ),
         SizedBox(
           height: 8,

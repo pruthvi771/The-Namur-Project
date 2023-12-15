@@ -295,7 +295,7 @@ class AuthRepository {
           village: addressName,
           district: districtName,
           taluk: addressRegion,
-          hobli: addressCircle,
+          gramPanchayat: addressCircle,
           pincode: pincode,
         );
       }

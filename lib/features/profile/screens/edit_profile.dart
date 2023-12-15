@@ -1324,15 +1324,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ],
                       ),
 
-                    // SizedBox(
-                    //   height: 20,
-                    // ),
-
-                    // Text(districtsDropdownValue.toString()),
-                    // Text(taluksDropdownValue.toString()),
-                    // Text(gramPanchayatsDropdownValue.toString()),
-                    // Text(villageNamesDropdownValue.toString()),
-
                     SizedBox(
                       height: 10,
                     ),
@@ -2027,7 +2018,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Container(
       height: 40,
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      // padding: const EdgeInsets.symmetric(horizontal: 12.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
@@ -2036,9 +2027,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton2<String>(
-          isExpanded: true,
+          isExpanded: false,
+          dropdownStyleData: new DropdownStyleData(
+              maxHeight: 200,
+              // direction: DropdownDirection.textDirection,
+              isOverButton: false,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+              )),
           hint: Text(
             title,
+            maxLines: 1,
             style: TextStyle(
               fontSize: 14,
               color: Theme.of(context).hintColor,
@@ -2062,6 +2061,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           buttonStyleData: const ButtonStyleData(
             height: 40,
             width: 200,
+            padding: EdgeInsets.symmetric(horizontal: 12.0),
           ),
           menuItemStyleData: const MenuItemStyleData(
             height: 40,
@@ -2220,13 +2220,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             icon: Icon(Icons.arrow_drop_down),
             iconSize: 24,
             elevation: 16,
-            underline: SizedBox(), // Remove the underline
+            underline: SizedBox(),
             style: TextStyle(
               fontSize: 16,
-              color: Colors.black, // You can customize the text color here
+              color: Colors.black,
             ),
             onChanged: (String? value) {
-              // This is called when the user selects an item.
               onChanged(value!);
             },
             items: itemList,

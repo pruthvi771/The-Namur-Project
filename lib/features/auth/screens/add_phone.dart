@@ -1,27 +1,14 @@
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
-import 'package:active_ecommerce_flutter/custom/input_decorations.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
-import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_bloc.dart';
-import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_event.dart';
-import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_state.dart';
-import 'package:active_ecommerce_flutter/utils/hive_models/models.dart'
-    as hiveModels;
-import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_bloc.dart';
-import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_event.dart';
-import 'package:active_ecommerce_flutter/features/weather/bloc/weather_bloc.dart';
-import 'package:active_ecommerce_flutter/features/weather/bloc/weather_event.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/screens/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'package:active_ecommerce_flutter/features/profile/address_list.dart'
     as addressList;
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:toast/toast.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -56,8 +43,6 @@ class _AddPhoneState extends State<AddPhone> {
     var theCurrentUser = authRepository.currentUser!;
     return theCurrentUser;
   }
-
-  TextEditingController _phoneController = TextEditingController();
 
   String? newPhone2 = "";
   bool isPhoneNumberEmpty = true;
@@ -147,7 +132,6 @@ class _AddPhoneState extends State<AddPhone> {
             SizedBox(
               height: 20,
             ),
-
             Padding(
               padding: const EdgeInsets.only(bottom: 8.0, right: 20, left: 20),
               child: Container(
@@ -196,10 +180,6 @@ class _AddPhoneState extends State<AddPhone> {
                 ),
               ),
             ),
-
-            // SizedBox(
-            //   height: 10,
-            // ),
             FutureBuilder(
                 future: currentUser,
                 builder: (context, snapshot) {

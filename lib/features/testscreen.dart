@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
+import 'package:active_ecommerce_flutter/utils/globaladdress.dart';
 import 'package:active_ecommerce_flutter/utils/location_repository.dart';
-import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/services.dart';
@@ -20,6 +19,20 @@ class TestWidget extends StatefulWidget {
 }
 
 class _TestWidgetState extends State<TestWidget> {
+  final List<String> items = [
+    'A_Item1',
+    'A_Item2',
+    'A_Item3',
+    'A_Item4',
+    'B_Item1',
+    'B_Item2',
+    'B_Item3',
+    'B_Item4',
+  ];
+
+  String? selectedValue;
+  final TextEditingController textEditingController = TextEditingController();
+
   Future<String?> uploadAssetToFirebase(String key, String assetPath) async {
     try {
       // Convert asset to File
@@ -106,6 +119,10 @@ class _TestWidgetState extends State<TestWidget> {
   var downloadLinks = {};
 
   final AuthRepository authRepository = AuthRepository();
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  List<Map> addresses = globaladdress;
+  List<String> taluks = [];
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +174,6 @@ class _TestWidgetState extends State<TestWidget> {
 
               // Loop through the JSON data and upload to Firestore
               for (Map<String, dynamic> villageData in jsonData) {
-                print(count.toString());
                 // Create a reference to the Firestore collection
                 CollectionReference villagesCollection =
                     firestore.collection('globaladdress');
@@ -170,11 +186,18 @@ class _TestWidgetState extends State<TestWidget> {
                   'district': villageData['district'],
                   'state': villageData['state'],
                 };
-                print(villageData['TALUK']);
+                // print(villageData['TALUK']);
 
                 // Add the data to Firestore
                 await villagesCollection.add(firestoreData);
                 count++;
+                if (count % 100 == 0) {
+                  print(count.toString());
+                }
+
+                if (count == 1001) {
+                  break;
+                }
               }
 
               print('and it\'s done');
@@ -221,33 +244,114 @@ class _TestWidgetState extends State<TestWidget> {
             onPressed: () async {
               print('it starts');
 
-              var userSnapshot = await FirebaseFirestore.instance
-                  .collection('seller')
-                  .doc('BZ90pBJ7O6f2cmk0nwrCRcsvbks2')
-                  .get();
+              List list = await LocationRepository()
+                  .getDistrictsForPincode(pinCode: '585201');
 
-              List<String> products = [];
+              print(list);
 
-              print(userSnapshot.data()!['products'].length.toString());
-              print(
-                  userSnapshot.data()!['secondHandProducts'].length.toString());
+              List list2 = await LocationRepository()
+                  .getTaluksForDistrict(districtName: 'BAGALKOTE');
 
-              for (var product in userSnapshot.data()!['products']) {
-                products.add(product);
-              }
-
-              for (var product in userSnapshot.data()!['secondHandProducts']) {
-                products.add(product);
-              }
-
-              print(products.length);
-
-              // for
+              print(list2);
 
               // print(list);
               print('and it\'s done');
             },
             child: const Text('yet another scam: part 2'),
+          ),
+
+          ElevatedButton(
+            onPressed: () {
+              print('it starts');
+
+              taluks = LocationRepository().getAllDistricts();
+              setState(() {
+                taluks = taluks;
+              });
+
+              print('and it\'s done');
+            },
+            child: const Text('sup'),
+          ),
+
+          DropdownButtonHideUnderline(
+            child: DropdownButton2<String>(
+              isExpanded: true,
+              hint: Text(
+                'Select Item',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Theme.of(context).hintColor,
+                ),
+              ),
+              items: taluks
+                  .map((item) => DropdownMenuItem(
+                        value: item,
+                        child: Text(
+                          item,
+                          style: const TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                      ))
+                  .toList(),
+              value: selectedValue,
+              onChanged: (value) {
+                setState(() {
+                  selectedValue = value;
+                });
+              },
+              buttonStyleData: const ButtonStyleData(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                height: 40,
+                width: 200,
+              ),
+              dropdownStyleData: const DropdownStyleData(
+                maxHeight: 200,
+              ),
+              menuItemStyleData: const MenuItemStyleData(
+                height: 40,
+              ),
+              dropdownSearchData: DropdownSearchData(
+                searchController: textEditingController,
+                searchInnerWidgetHeight: 50,
+                searchInnerWidget: Container(
+                  height: 50,
+                  padding: const EdgeInsets.only(
+                    top: 8,
+                    bottom: 4,
+                    right: 8,
+                    left: 8,
+                  ),
+                  child: TextFormField(
+                    expands: true,
+                    maxLines: null,
+                    controller: textEditingController,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 8,
+                      ),
+                      hintText: 'Search for an item...',
+                      hintStyle: const TextStyle(fontSize: 12),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                ),
+                searchMatchFn: (item, searchValue) {
+                  return item.value.toString().contains(searchValue);
+                },
+              ),
+              //This to clear the search value when you close the menu
+              onMenuStateChange: (isOpen) {
+                if (!isOpen) {
+                  textEditingController.clear();
+                }
+              },
+            ),
           ),
         ],
       ),
