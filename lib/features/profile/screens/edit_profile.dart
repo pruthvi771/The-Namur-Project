@@ -19,6 +19,7 @@ import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/more_details.dart';
 import 'package:active_ecommerce_flutter/utils/location_repository.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -115,6 +116,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   String? villageNamesDropdownValue;
 
   late bool profileDataUpdating;
+
+  String? selectedValue;
+  final TextEditingController textEditingController = TextEditingController();
 
   get console => null;
 
@@ -234,8 +238,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  void _addAddressToHive(
-      {required String pincode, String? locationDropdownValue}) async {
+  void _addAddressToHive({
+    required String? pincode,
+    required String? gramPanchayat,
+    required String? district,
+    required String? villageName,
+    required String? taluk,
+  }) async {
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
 
     var savedData = dataBox.get('profile');
@@ -247,22 +256,37 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           duration: Toast.lengthLong);
       return;
     }
-    if (pincode.isEmpty) {
+    if (pincode == null || pincode.isEmpty) {
       ToastComponent.showDialog(AppLocalizations.of(context)!.enter_pincode,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
-    if (locationDropdownValue == null) {
-      ToastComponent.showDialog(AppLocalizations.of(context)!.select_a_location,
-          gravity: Toast.center, duration: Toast.lengthLong);
-      return;
-    }
+    // if (pincode == null || pincode.isEmpty) {
+    //   ToastComponent.showDialog(AppLocalizations.of(context)!.enter_pincode,
+    //       gravity: Toast.center, duration: Toast.lengthLong);
+    //   return;
+    // }
+    // if (pincode == null || pincode.isEmpty) {
+    //   ToastComponent.showDialog(AppLocalizations.of(context)!.enter_pincode,
+    //       gravity: Toast.center, duration: Toast.lengthLong);
+    //   return;
+    // }
+    // if (pincode == null || pincode.isEmpty) {
+    //   ToastComponent.showDialog(AppLocalizations.of(context)!.enter_pincode,
+    //       gravity: Toast.center, duration: Toast.lengthLong);
+    //   return;
+    // }
+    // if (locationDropdownValue == null) {
+    //   ToastComponent.showDialog(AppLocalizations.of(context)!.select_a_location,
+    //       gravity: Toast.center, duration: Toast.lengthLong);
+    //   return;
+    // }
 
     var address = Address()
-      ..district = districtName!
-      ..taluk = addressRegion!
-      ..hobli = addressCircle!
-      ..village = addressName!
+      ..district = district!
+      ..taluk = taluk!
+      ..gramPanchayat = gramPanchayat!
+      ..village = villageName!
       ..pincode = pincode;
 
     // if (savedData != null) {
@@ -362,6 +386,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void initState() {
+    districtsList = locationRepository.getAllDistricts();
     profileDataUpdating = false;
     super.initState();
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
@@ -1124,206 +1149,159 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         state.profileData.address.length,
                         (index) {
                           var item = state.profileData.address[index];
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
+                          return Container(
+                            height: 130,
+                            width: double.infinity,
+                            margin: EdgeInsets.symmetric(
                                 horizontal: 8.0, vertical: 3),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: MyTheme.green_lighter,
-                              ),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 15, vertical: 5),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(child: Text(item.district)),
-                                  Expanded(child: Text(item.taluk)),
-                                  Expanded(child: Text(item.hobli)),
-                                  Expanded(child: Text(item.village)),
-                                  InkWell(
-                                    onTap: () {
-                                      _deleteDataFromHive(
-                                        DataCollectionType.address,
-                                        index,
-                                      );
-                                    },
-                                    child: CircleAvatar(
-                                      radius: 12,
-                                      backgroundColor: MyTheme.green,
-                                      child: Icon(
-                                        Icons.delete,
-                                        size: 15.0,
-                                        color: Colors.white,
-                                      ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: MyTheme.green_lighter,
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 15),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                        '${AppLocalizations.of(context)!.district}: ${item.district}'),
+                                    Text(
+                                        '${AppLocalizations.of(context)!.taluk}: ${item.taluk}'),
+                                    Text(
+                                        '${AppLocalizations.of(context)!.gram_panchayat}: ${item.gramPanchayat}'),
+                                    Text(
+                                        '${AppLocalizations.of(context)!.village}: ${item.village}'),
+                                    Text('Pincode: ${item.pincode}'),
+                                  ],
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    _deleteDataFromHive(
+                                      DataCollectionType.address,
+                                      index,
+                                    );
+                                  },
+                                  child: CircleAvatar(
+                                    radius: 12,
+                                    backgroundColor: MyTheme.green,
+                                    child: Icon(
+                                      Icons.delete,
+                                      size: 15.0,
+                                      color: Colors.white,
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           );
                         },
                       ),
                     ),
+
                     SizedBox(
                       height: 10,
                     ),
 
-                    // pincode textbox
+                    // address input
                     if (state.profileData.address.length == 0)
                       Column(
                         children: [
-                          BlocListener<AuthBloc, authState.AuthState>(
-                            listener: (context, state) {
-                              if (state
-                                  is authState.LocationsForPincodeReceived) {
-                                ToastComponent.showDialog(
-                                    AppLocalizations.of(context)!
-                                        .locations_fetched,
-                                    gravity: Toast.center,
-                                    duration: Toast.lengthLong);
-                                postOfficeResponse = state.postOfficeResponse;
-                                for (var postOffice
-                                    in state.postOfficeResponse.postOffices) {
-                                  locationsList.add(postOffice.name);
-                                }
-                                isDropdownEnabled = true;
-                                // print(state.postOfficeResponse.postOffices[0].name);
-                                // print(state.postOfficeResponse.message);
-                              }
-                              if (state
-                                  is authState.LocationsForPincodeLoading) {
-                                locationDropdownValue = null;
-                                clearAddressValues();
-                                locationsList.clear();
-                                ToastComponent.showDialog(
-                                    AppLocalizations.of(context)!
-                                        .fetching_locations,
-                                    gravity: Toast.center,
-                                    duration: Toast.lengthLong);
+                          TexiFieldWidgetForDouble(
+                            _pinCodeController,
+                            "Pincode",
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          AddressSearchDropdown(
+                            title:
+                                AppLocalizations.of(context)!.select_district,
+                            hintText: AppLocalizations.of(context)!.search,
+                            context: context,
+                            dropdownValue: districtsDropdownValue,
+                            listOfItems: districtsList,
+                            searchController: textEditingController,
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                taluksDropdownValue = null;
+                                gramPanchayatsDropdownValue = null;
+                                villageNamesDropdownValue = null;
+                                districtsDropdownValue = newValue!;
+                              });
+                              fetchTaluks(
+                                  districtName: districtsDropdownValue!);
+                            },
+                            onMenuStateChange: (p0) {
+                              if (!p0) {
+                                textEditingController.clear();
                               }
                             },
-                            child: BlocBuilder<AuthBloc, authState.AuthState>(
-                              builder: (context, state) {
-                                return Column(
-                                  children: [
-                                    Container(
-                                      height: 40,
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Expanded(
-                                            child: Container(
-                                              // height: 40,
-                                              child: TextField(
-                                                keyboardType: TextInputType
-                                                    .numberWithOptions(
-                                                        decimal: true),
-                                                controller: _pinCodeController,
-                                                autofocus: false,
-                                                decoration: InputDecorations
-                                                    .buildInputDecoration_1(
-                                                        hint_text: "Pincode"),
-                                              ),
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              fetchLocations(context);
-                                            },
-                                            child: Container(
-                                              height: double.infinity,
-                                              color: MyTheme.green_lighter,
-                                              margin: EdgeInsets.only(
-                                                left: 10,
-                                                top: 2,
-                                                bottom: 2,
-                                              ),
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 10),
-                                              child: Center(
-                                                child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .search,
-                                                  style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Container(
-                                      height: 40,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 12.0),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(
-                                          color: Colors
-                                              .grey, // You can customize the border color here
-                                        ),
-                                      ),
-                                      child: DropdownButton<String>(
-                                        isExpanded: true,
-                                        hint: Text(
-                                          AppLocalizations.of(context)!
-                                              .select_a_location,
-                                          style: TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 13,
-                                          ),
-                                        ),
-                                        disabledHint: Text(
-                                          AppLocalizations.of(context)!
-                                              .fetch_locations_first,
-                                          style: TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 13,
-                                          ),
-                                        ),
-                                        value: locationDropdownValue,
-                                        icon: Icon(Icons.arrow_drop_down),
-                                        iconSize: 24,
-                                        elevation: 16,
-                                        underline:
-                                            SizedBox(), // Remove the underline
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors
-                                              .black, // You can customize the text color here
-                                        ),
-                                        onChanged: isDropdownEnabled
-                                            ? (String? newValue) {
-                                                setState(() {
-                                                  locationDropdownValue =
-                                                      newValue!;
-                                                  getAddressValues();
-                                                });
-                                              }
-                                            : null,
-                                        items: locationsList
-                                            .map<DropdownMenuItem<String>>(
-                                                (String value) {
-                                          return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(value),
-                                          );
-                                        }).toList(),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          NewDropdownWidget(
+                            title: AppLocalizations.of(context)!.select_taluk,
+                            context: context,
+                            dropdownValue: taluksDropdownValue,
+                            listOfItems: taluksList,
+                            disabledHint: AppLocalizations.of(context)!
+                                .select_district_first,
+                            isEnabled: isTalukEnabled,
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                gramPanchayatsDropdownValue = null;
+                                villageNamesDropdownValue = null;
+                                taluksDropdownValue = newValue!;
+                              });
+                              fetchGramPanchayats(
+                                  talukName: taluksDropdownValue!);
+                            },
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          NewDropdownWidget(
+                            title: AppLocalizations.of(context)!
+                                .select_gram_panchayat,
+                            context: context,
+                            dropdownValue: gramPanchayatsDropdownValue,
+                            listOfItems: gramPanchayatsList,
+                            disabledHint: AppLocalizations.of(context)!
+                                .select_taluk_first,
+                            isEnabled: isGramPanchayadEnabled,
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                villageNamesDropdownValue = null;
+                                gramPanchayatsDropdownValue = newValue!;
+                              });
+                              fetchVillageNames(
+                                  gramPanchayatName:
+                                      gramPanchayatsDropdownValue!);
+                            },
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          NewDropdownWidget(
+                            title: AppLocalizations.of(context)!.select_village,
+                            context: context,
+                            dropdownValue: villageNamesDropdownValue,
+                            listOfItems: villageNamesList,
+                            disabledHint: AppLocalizations.of(context)!
+                                .select_gram_panchayat_first,
+                            isEnabled: isVillageNameEnabled,
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                villageNamesDropdownValue = newValue!;
+                                // fetchTaluks();
+                              });
+                            },
                           ),
                           Row(
                             children: [
@@ -1334,8 +1312,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 onPressed: () {
                                   _addAddressToHive(
                                     pincode: _pinCodeController.text,
-                                    locationDropdownValue:
-                                        locationDropdownValue,
+                                    gramPanchayat: gramPanchayatsDropdownValue,
+                                    district: districtsDropdownValue,
+                                    villageName: villageNamesDropdownValue,
+                                    taluk: taluksDropdownValue,
                                   );
                                 },
                               ),
@@ -1344,141 +1324,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ],
                       ),
 
-                    Container(
-                      height: 40,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Expanded(
-                            child: Container(
-                              // height: 40,
-                              child: TextField(
-                                keyboardType: TextInputType.numberWithOptions(
-                                    decimal: true),
-                                controller: _pinCodeController,
-                                autofocus: false,
-                                decoration:
-                                    InputDecorations.buildInputDecoration_1(
-                                        hint_text: "Pincode"),
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              fetchDistricts();
-                            },
-                            child: Container(
-                              height: double.infinity,
-                              color: MyTheme.green_lighter,
-                              margin: EdgeInsets.only(
-                                left: 10,
-                                top: 2,
-                                bottom: 2,
-                              ),
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Center(
-                                child: Text(
-                                  AppLocalizations.of(context)!.search,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
+                    // SizedBox(
+                    //   height: 20,
+                    // ),
+
+                    // Text(districtsDropdownValue.toString()),
+                    // Text(taluksDropdownValue.toString()),
+                    // Text(gramPanchayatsDropdownValue.toString()),
+                    // Text(villageNamesDropdownValue.toString()),
 
                     SizedBox(
                       height: 10,
-                    ),
-
-                    NewDropdownWidget(
-                      title: 'Select District',
-                      context: context,
-                      dropdownValue: districtsDropdownValue,
-                      listOfItems: districtsList,
-                      disabledHint: 'Fetch Districts First',
-                      isEnabled: isDistrictEnabled,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          districtsDropdownValue = newValue!;
-                        });
-                        fetchTaluks(districtName: districtsDropdownValue!);
-                      },
-                    ),
-
-                    SizedBox(
-                      height: 10,
-                    ),
-
-                    NewDropdownWidget(
-                      title: 'Select Taluk',
-                      context: context,
-                      dropdownValue: taluksDropdownValue,
-                      listOfItems: taluksList,
-                      disabledHint: 'Fetch Taluk First',
-                      isEnabled: isTalukEnabled,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          taluksDropdownValue = newValue!;
-                        });
-                        fetchGramPanchayats(talukName: taluksDropdownValue!);
-                      },
-                    ),
-
-                    SizedBox(
-                      height: 10,
-                    ),
-
-                    NewDropdownWidget(
-                      title: 'Select Gram Panchayat',
-                      context: context,
-                      dropdownValue: gramPanchayatsDropdownValue,
-                      listOfItems: gramPanchayatsList,
-                      disabledHint: 'Fetch Gram Panchayad First',
-                      isEnabled: isGramPanchayadEnabled,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          gramPanchayatsDropdownValue = newValue!;
-                        });
-                        fetchVillageNames(
-                            gramPanchayatName: gramPanchayatsDropdownValue!);
-                      },
-                    ),
-
-                    SizedBox(
-                      height: 10,
-                    ),
-
-                    NewDropdownWidget(
-                      title: 'Select Village Name',
-                      context: context,
-                      dropdownValue: villageNamesDropdownValue,
-                      listOfItems: villageNamesList,
-                      disabledHint: 'Fetch Gram Panchayad First',
-                      isEnabled: isVillageNameEnabled,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          villageNamesDropdownValue = newValue!;
-                          // fetchTaluks();
-                        });
-                      },
-                    ),
-
-                    SizedBox(
-                      height: 20,
-                    ),
-
-                    Text(districtsDropdownValue.toString()),
-                    Text(talukDropdownEnabled.toString()),
-                    Text(gramPanchayatsDropdownValue.toString()),
-                    Text(villageNamesDropdownValue.toString()),
-
-                    SizedBox(
-                      height: 18,
                     ),
                     Divider(
                       // color: MyTheme.grey_153,
@@ -2153,6 +2009,102 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               );
             },
           ),
+        ),
+      ),
+    );
+  }
+
+  Container AddressSearchDropdown({
+    required BuildContext context,
+    required String title,
+    required String hintText,
+    required String? dropdownValue,
+    required List<String> listOfItems,
+    required Function(String?) onChanged,
+    required TextEditingController searchController,
+    required Function(bool) onMenuStateChange,
+  }) {
+    return Container(
+      height: 40,
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: Colors.grey, // You can customize the border color here
+        ),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton2<String>(
+          isExpanded: true,
+          hint: Text(
+            title,
+            style: TextStyle(
+              fontSize: 14,
+              color: Theme.of(context).hintColor,
+            ),
+          ),
+          items: listOfItems
+              .map((item) => DropdownMenuItem(
+                    value: item,
+                    child: Text(
+                      item,
+                      style: const TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                  ))
+              .toList(),
+          value: dropdownValue,
+          onChanged: (value) {
+            onChanged(value);
+          },
+          buttonStyleData: const ButtonStyleData(
+            height: 40,
+            width: 200,
+          ),
+          menuItemStyleData: const MenuItemStyleData(
+            height: 40,
+          ),
+          dropdownSearchData: DropdownSearchData(
+            searchController: searchController,
+            searchInnerWidgetHeight: 50,
+            searchInnerWidget: Container(
+              height: 50,
+              padding: const EdgeInsets.only(
+                top: 8,
+                bottom: 4,
+                right: 8,
+                left: 8,
+              ),
+              child: TextFormField(
+                expands: true,
+                maxLines: null,
+                controller: searchController,
+                decoration: InputDecoration(
+                  isDense: true,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 8,
+                  ),
+                  hintText: hintText,
+                  hintStyle: const TextStyle(fontSize: 12),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
+            ),
+            searchMatchFn: (item, searchValue) {
+              return item.value
+                  .toString()
+                  .toLowerCase()
+                  .contains(searchValue.toLowerCase());
+            },
+          ),
+          onMenuStateChange: (isOpen) {
+            onMenuStateChange(isOpen);
+          },
         ),
       ),
     );

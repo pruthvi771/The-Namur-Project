@@ -784,5 +784,13 @@
 "no_ratings_yet": "ಇನ್ನೂ ರೇಟಿಂಗ್ಗಳಿಲ್ಲ",
 "friends_and_neighbours": "ಸ್ನೇಹಿತರು ಮತ್ತು ಹೊರಗಿನವರು",
 "add_phone_number_to_your_account": "ನಿಮ್ಮ ಖಾತೆಗೆ ಫೋನ್ ಸಂಖ್ಯೆಯನ್ನು ಸೇರಿಸಿ",
-"add_phone_number": "ಫೋನ್ ಸಂಖ್ಯೆಯನ್ನು ಸೇರಿಸಿ"
+"add_phone_number": "ಫೋನ್ ಸಂಖ್ಯೆಯನ್ನು ಸೇರಿಸಿ",
+"select_gram_panchayat": "ಗ್ರಾಮ ಪಂಚಾಯತಿಯನ್ನು ಆರಿಸಿ",
+"select_taluk": "ತಾಲೂಕುವನ್ನು ಆರಿಸಿ",
+"select_district": "ಜಿಲ್ಲೆಯನ್ನು ಆರಿಸಿ",
+"district": "ಜಿಲ್ಲೆ",
+"taluk": "ತಾಲೂಕು",
+"gram_panchayat": "ಗ್ರಾಮ ಪಂಚಾಯತ್",
+"village": "ಗ್ರಾಮ",
+"locations": "ಸ್ಥಳಗಳು"
 }

@@ -251,7 +251,7 @@ class FirestoreRepository {
           .map((item) => Address()
             ..district = item['district']
             ..taluk = item['taluk']
-            ..hobli = item['hobli']
+            ..gramPanchayat = item['gramPanchayat']
             ..village = item['village']
             ..pincode = item['pincode'])
           .toList();
@@ -314,7 +314,7 @@ class FirestoreRepository {
                 .map((address) => {
                       'district': address.district,
                       'taluk': address.taluk,
-                      'hobli': address.hobli,
+                      'gramPanchayat': address.gramPanchayat,
                       'village': address.village,
                       'pincode': address.pincode
                     })
@@ -355,14 +355,14 @@ class FirestoreRepository {
     bool isAddressAvailable = false,
     String? district,
     String? taluk,
-    String? hobli,
+    String? gramPanchayat,
     String? village,
     String? pincode,
   }) async {
     var address = Address()
       ..district = isAddressAvailable ? district! : ''
       ..taluk = isAddressAvailable ? taluk! : ''
-      ..hobli = isAddressAvailable ? hobli! : ''
+      ..gramPanchayat = isAddressAvailable ? gramPanchayat! : ''
       ..village = isAddressAvailable ? village! : ''
       ..pincode = isAddressAvailable ? pincode! : '';
 

@@ -515,36 +515,6 @@ class _MoreDetailsState extends State<MoreDetails> {
                                         SizedBox(
                                           width: 5,
                                         ),
-                                        // Padding(
-                                        //   padding: const EdgeInsets.only(
-                                        //       top: 5, left: 7, right: 7),
-                                        //   child: Row(
-                                        //     mainAxisAlignment:
-                                        //         MainAxisAlignment
-                                        //             .spaceBetween,
-                                        //     children: [
-                                        //       Expanded(
-                                        //           child: Text(
-                                        //         'Taluk',
-                                        //         style: TextStyle(
-                                        //             fontSize: 13.5,
-                                        //             fontWeight:
-                                        //                 FontWeight.w800),
-                                        //       )),
-                                        //       Expanded(
-                                        //           flex: 2,
-                                        //           child: Text(
-                                        //             item.taluk,
-                                        //             style: TextStyle(
-                                        //               fontSize: 13.5,
-                                        //             ),
-                                        //           )),
-                                        //     ],
-                                        //   ),
-                                        // ),
-                                        // SizedBox(
-                                        //   width: 5,
-                                        // ),
                                         Padding(
                                           padding: const EdgeInsets.only(
                                               top: 5, left: 7, right: 7),
@@ -563,7 +533,7 @@ class _MoreDetailsState extends State<MoreDetails> {
                                               Expanded(
                                                   flex: 2,
                                                   child: Text(
-                                                    item.hobli,
+                                                    item.gramPanchayat,
                                                     style: TextStyle(
                                                       fontSize: 13.5,
                                                     ),

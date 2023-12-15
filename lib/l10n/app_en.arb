@@ -784,5 +784,18 @@
 "no_ratings_yet": "No Ratings Yet",
 "friends_and_neighbours": "friends & neighbours",
 "add_phone_number_to_your_account": "Add phone number to your account",
-"add_phone_number": "Add Phone Number"
+"add_phone_number": "Add Phone Number",
+"select_gram_panchayat": "Select Gram Panchayat",
+"select_taluk": "Select Taluk",
+"select_district": "Select District",
+"district" : "District",
+"taluk" : "Taluk",
+"gram_panchayat" : "Gram Panchayat",
+"village": "Village",
+"locations": "Locations",
+"add_address": "Add Address",
+"please_add_address_to_see_products": "Please add address to see products",
+"select_taluk_first" : "Select Taluk First",
+"select_district_first" : "Select District First",
+"select_gram_panchayat_first" : "Select Gram Panchayat First"
 }

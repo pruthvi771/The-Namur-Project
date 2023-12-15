@@ -11,7 +11,7 @@ class Address {
   late String taluk;
 
   @HiveField(2)
-  late String hobli;
+  late String gramPanchayat;
 
   @HiveField(3)
   late String village;

@@ -148,7 +148,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                       ),
                       child: CachedNetworkImage(
                         imageUrl: fileURL,
-                        fit: BoxFit.contain,
+                        fit: BoxFit.cover,
                         width: MediaQuery.of(context).size.width,
                       ),
                     ),
@@ -524,6 +524,43 @@ class _ProductDetailsState extends State<ProductDetails> {
           ),
         ),
 
+        // description
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                AppLocalizations.of(context)!.description_ucf,
+                // "aksbfkjafknangg englkng lkegnang kegne",
+                style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.grey[600],
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: .5,
+                    fontFamily: 'Poppins'),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 5, bottom: 5, left: 8),
+                child: Text(
+                  widget.sellProduct.productDescription,
+                  style: TextStyle(
+                      fontSize: 15,
+                      height: 1.4,
+                      letterSpacing: .5,
+                      fontFamily: 'Poppins'),
+                ),
+              ),
+            ],
+          ),
+        ),
+
         // seller data
         FutureBuilder(
           future: _getSellerData,
@@ -531,18 +568,22 @@ class _ProductDetailsState extends State<ProductDetails> {
             if (snapshot.hasData)
               return Container(
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                color: Colors.grey[200],
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                  color: MyTheme.green_lighter,
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
                 child: Row(
                   children: [
                     Container(
-                      height: 70,
-                      width: 70,
+                      height: 50,
+                      width: 50,
                       child: snapshot.data!.photoURL == null ||
                               snapshot.data!.photoURL!.isEmpty
                           ? Image.asset('assets/profile_placeholder.png')
                           : ClipRRect(
                               borderRadius: BorderRadius.all(
-                                Radius.circular(10),
+                                Radius.circular(8),
                               ),
                               child: CachedNetworkImage(
                                 imageUrl: snapshot.data!.photoURL!,
@@ -571,54 +612,29 @@ class _ProductDetailsState extends State<ProductDetails> {
                         ],
                       ),
                     ),
-                    IconButton(
-                      icon: FaIcon(
-                        FontAwesomeIcons.whatsapp,
-                        color: Colors.green,
-                        size: 40,
+                    Container(
+                      decoration: BoxDecoration(
+                        color: MyTheme.primary_color,
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
                       ),
-                      onPressed: () {
-                        openWhatsAppChat(snapshot.data!.phoneNumber!);
-                      },
+                      child: Center(
+                        child: IconButton(
+                          icon: FaIcon(
+                            FontAwesomeIcons.whatsapp,
+                            color: Colors.white,
+                            size: 30,
+                          ),
+                          onPressed: () {
+                            openWhatsAppChat(snapshot.data!.phoneNumber!);
+                          },
+                        ),
+                      ),
                     ),
                   ],
                 ),
               );
             return Container();
           },
-        ),
-
-        // description
-        Container(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                AppLocalizations.of(context)!.description_ucf,
-                // "aksbfkjafknangg englkng lkegnang kegne",
-                style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.grey[600],
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: .5,
-                    fontFamily: 'Poppins'),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Text(
-                  widget.sellProduct.productDescription,
-                  // "aksbfkjafknangg englkng lkegnang kegne",
-                  style: TextStyle(
-                      fontSize: 15,
-                      height: 1.4,
-                      letterSpacing: .5,
-                      fontFamily: 'Poppins'),
-                ),
-              ),
-            ],
-          ),
         ),
 
         // rating
@@ -633,80 +649,122 @@ class _ProductDetailsState extends State<ProductDetails> {
                     snapshot.data!['rating'] != null) {
                   if (snapshot.data!['numberOfRatings'] != 0)
                     return Container(
-                      margin: EdgeInsets.symmetric(vertical: 5),
-                      height: 50,
-                      color: Colors.grey[100],
-                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      ),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              RatingBarIndicator(
-                                rating: snapshot.data!['rating'] /
-                                    snapshot.data!['numberOfRatings'],
-                                itemCount: 5,
-                                itemSize: 35.0,
-                                physics: BouncingScrollPhysics(),
-                                itemBuilder: (context, _) => Icon(
-                                  Icons.star,
-                                  color: Colors.amber,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 10,
+                              Text(
+                                'Avg Rating',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(fontWeight: FontWeight.w600),
                               ),
                               Text(
                                 (snapshot.data!['rating'] /
                                         snapshot.data!['numberOfRatings'])
                                     .toString(),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
+                                    fontSize: 18, fontWeight: FontWeight.w500),
+                              ),
+                              Text(
+                                ' ${snapshot.data!['numberOfRatings'].toString()} ${AppLocalizations.of(context)!.ratings}',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                ),
                               ),
                             ],
                           ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                snapshot.data!['numberOfRatings'].toString(),
-                                style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold),
-                              ),
-                              Text(AppLocalizations.of(context)!.ratings),
-                            ],
+                          RatingBarIndicator(
+                            rating: snapshot.data!['rating'] /
+                                snapshot.data!['numberOfRatings'],
+                            itemCount: 5,
+                            itemSize: 30.0,
+                            physics: BouncingScrollPhysics(),
+                            itemBuilder: (context, _) => Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                            ),
                           ),
                         ],
                       ),
                     );
                 } else {
                   return Container(
-                    margin: EdgeInsets.symmetric(vertical: 5),
-                    padding: EdgeInsets.only(left: 20),
-                    height: 50,
-                    color: Colors.grey[100],
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        AppLocalizations.of(context)!.no_ratings_yet,
-                        style: TextStyle(fontSize: 15),
-                      ),
+                    margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.no_ratings_yet,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        RatingBarIndicator(
+                          rating: 0,
+                          itemCount: 5,
+                          itemSize: 30.0,
+                          physics: BouncingScrollPhysics(),
+                          itemBuilder: (context, _) => Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 }
               }
               return Container(
-                margin: EdgeInsets.symmetric(vertical: 5),
-                padding: EdgeInsets.only(left: 20),
-                height: 50,
-                color: Colors.grey[100],
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    AppLocalizations.of(context)!.no_ratings_yet,
-                    style: TextStyle(fontSize: 15),
-                  ),
+                margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      AppLocalizations.of(context)!.no_ratings_yet,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    RatingBarIndicator(
+                      rating: 0,
+                      itemCount: 5,
+                      itemSize: 30.0,
+                      physics: BouncingScrollPhysics(),
+                      itemBuilder: (context, _) => Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                      ),
+                    ),
+                  ],
                 ),
               );
             }),

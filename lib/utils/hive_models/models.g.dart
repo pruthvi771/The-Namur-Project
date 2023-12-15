@@ -19,7 +19,7 @@ class AddressAdapter extends TypeAdapter<Address> {
     return Address()
       ..district = fields[0] as String
       ..taluk = fields[1] as String
-      ..hobli = fields[2] as String
+      ..gramPanchayat = fields[2] as String
       ..village = fields[3] as String
       ..pincode = fields[4] as String;
   }
@@ -33,7 +33,7 @@ class AddressAdapter extends TypeAdapter<Address> {
       ..writeByte(1)
       ..write(obj.taluk)
       ..writeByte(2)
-      ..write(obj.hobli)
+      ..write(obj.gramPanchayat)
       ..writeByte(3)
       ..write(obj.village)
       ..writeByte(4)
