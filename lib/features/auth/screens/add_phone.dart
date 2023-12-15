@@ -116,8 +116,7 @@ class _AddPhoneState extends State<AddPhone> {
             ),
           ),
           title: Text(
-            'More Info',
-            // "new ",
+            AppLocalizations.of(context)!.more_detail_ucf,
             style: TextStyle(
                 color: MyTheme.white,
                 fontWeight: FontWeight.w500,
@@ -134,7 +133,8 @@ class _AddPhoneState extends State<AddPhone> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Add Phone Number to Your Account',
+                  AppLocalizations.of(context)!
+                      .add_phone_number_to_your_account,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 17,
@@ -157,7 +157,7 @@ class _AddPhoneState extends State<AddPhone> {
                   disableLengthCheck: true,
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.all(8),
-                    labelText: 'Mobile Number',
+                    labelText: AppLocalizations.of(context)!.phone_number_ucf,
                     labelStyle: TextStyle(
                       color: Colors.grey,
                       fontSize: 13,
@@ -217,7 +217,7 @@ class _AddPhoneState extends State<AddPhone> {
                                 ),
                               ),
                               child: Text(
-                                'Add Phone Number',
+                                AppLocalizations.of(context)!.add_phone_number,
                                 style: TextStyle(
                                   fontSize: 13.5,
                                   fontWeight: FontWeight.w600,

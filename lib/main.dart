@@ -45,22 +45,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
-// import 'package:active_ecommerce_flutter/screens/splash.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_value/shared_value.dart';
-// import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
-// import 'dart:async';
 import 'app_config.dart';
-// import 'package:active_ecommerce_flutter/services/push_notification_service.dart';
 import 'package:one_context/one_context.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-// import 'package:active_ecommerce_flutter/providers/locale_provider.dart';
 import 'lang_config.dart';
 import 'package:firebase_core/firebase_core.dart';
-
 import 'screens/auction_products.dart';
 import 'screens/auction_products_details.dart';
 import 'screens/brand_products.dart';
@@ -80,8 +74,6 @@ import 'screens/package/packages.dart';
 import 'screens/product_details.dart';
 import 'screens/seller_details.dart';
 import 'screens/seller_products.dart';
-
-// import 'package:bloc/bloc.dart';
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -323,6 +315,7 @@ class _MyAppState extends State<MyApp> {
                 // locale: provider.locale,
                 supportedLocales: LangConfig().supportedLocales(),
                 locale: _currentLocale,
+                // locale: Locale('kn')
                 // localeResolutionCallback: (deviceLocale, supportedLocales) {
                 //   if (AppLocalizations.delegate.isSupported(deviceLocale!)) {
                 //     return deviceLocale;

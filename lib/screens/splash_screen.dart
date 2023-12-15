@@ -1,18 +1,14 @@
 import 'package:active_ecommerce_flutter/app_config.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
-import 'package:active_ecommerce_flutter/helpers/addons_helper.dart';
+import 'package:active_ecommerce_flutter/features/auth/screens/add_phone.dart';
 import 'package:active_ecommerce_flutter/helpers/auth_helper.dart';
-import 'package:active_ecommerce_flutter/helpers/business_setting_helper.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
-import 'package:active_ecommerce_flutter/my_theme.dart';
-import 'package:active_ecommerce_flutter/presenter/currency_presenter.dart';
 import 'package:active_ecommerce_flutter/providers/locale_provider.dart';
 import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
 import 'package:active_ecommerce_flutter/screens/main.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 
@@ -28,18 +24,8 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   late AuthUser? user;
 
-  PackageInfo _packageInfo = PackageInfo(
-    appName: AppConfig.app_name,
-    packageName: 'Unknown',
-    version: 'Unknown',
-    buildNumber: 'Unknown',
-  );
-
   Future<void> _initPackageInfo() async {
     final PackageInfo info = await PackageInfo.fromPlatform();
-    setState(() {
-      _packageInfo = info;
-    });
   }
 
   @override
@@ -48,7 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     _initPackageInfo();
     getSharedValueHelperData().then((value) {
-      Future.delayed(Duration(milliseconds: 1200)).then((value) {
+      Future.delayed(Duration(milliseconds: 1200)).then((value) async {
         Provider.of<LocaleProvider>(context, listen: false)
             .setLocale(app_mobile_language.$!);
 
@@ -56,15 +42,35 @@ class _SplashScreenState extends State<SplashScreen> {
         final FirebaseAuth auth = FirebaseAuth.instance;
         final User? user = auth.currentUser;
         if (user != null) {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                return Main(); // Main(go_back: false,);
-              },
-            ),
-            (newRoute) => false,
-          );
+          DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+              .collection('buyer')
+              .doc(user.uid)
+              .get();
+
+          Map<String, dynamic> data =
+              documentSnapshot.data() as Map<String, dynamic>;
+
+          if (data['phone number'] == null || data['phone number'] == "") {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return AddPhone();
+                },
+              ),
+              (route) => false,
+            );
+          } else {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return Main();
+                },
+              ),
+              (newRoute) => false,
+            );
+          }
         } else {
           Navigator.pushAndRemoveUntil(
             context,
