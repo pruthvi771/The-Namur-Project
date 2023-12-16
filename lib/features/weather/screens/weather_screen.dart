@@ -1,8 +1,8 @@
 // translation done.
 
-import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_bloc.dart';
-import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_event.dart';
-import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_state.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/weather_section_bloc/weather_section_bloc.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/weather_section_bloc/weather_section_event.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/weather_section_bloc/weather_section_state.dart';
 import 'package:active_ecommerce_flutter/features/weather/bloc/weather_bloc.dart';
 import 'package:active_ecommerce_flutter/features/weather/bloc/weather_event.dart';
 import 'package:active_ecommerce_flutter/features/weather/bloc/weather_state.dart';

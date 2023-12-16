@@ -1,9 +1,9 @@
 // translation done.
 
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
-import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_bloc.dart';
-import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_event.dart';
-import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_state.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_bloc.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_event.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_state.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/subSubCategory_filter_item.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/buy_product_list.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';

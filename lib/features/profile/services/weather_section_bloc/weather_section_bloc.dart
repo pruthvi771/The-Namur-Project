@@ -1,5 +1,5 @@
-import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_event.dart';
-import 'package:active_ecommerce_flutter/features/profile/weather_section_bloc/weather_section_state.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/weather_section_bloc/weather_section_event.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/weather_section_bloc/weather_section_state.dart';
 import 'package:active_ecommerce_flutter/features/weather/weather_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
