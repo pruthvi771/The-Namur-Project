@@ -801,5 +801,15 @@
 "add_address_to_post_products": "Please add your address in profile to post products",
 "enter_total_kms": "Enter Total Kms",
 "add_featured_image": "Add Featured Image",
-"group_by": "Group By"
+"group_by": "Group By",
+"login_successful": "Login Successful",
+"enter_otp": "Enter OTP",
+"no_machines_added": "No Machines Added",
+"add_them_here": "Add Them Here",
+"tractor_jcb_tiller_rotovator": "Tractor, JCB, Tiller, Rotovqator",
+"no_crops_added": "No Crops Added",
+"crops_grown_and_planned": "Crops Grown and Planned",
+"no_address_added": "No Address Added",
+"not_added": "Not Added",
+"farmer": "Farmer"
 }

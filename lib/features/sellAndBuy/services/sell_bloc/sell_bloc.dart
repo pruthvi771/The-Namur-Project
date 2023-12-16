@@ -71,6 +71,11 @@ class SellBloc extends Bloc<SellEvent, SellState> {
           productType: event.productType,
         );
 
+        await sellRepository.addProductParentNameToSellerDocument(
+          sellerId: currentUser.userId,
+          parentName: event.parentName,
+        );
+
         emit(ProductAddEditDeleteSuccessfully());
 
         // emit(SellAddProductSuccessState());

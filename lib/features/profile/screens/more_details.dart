@@ -1,3 +1,5 @@
+// translation done.
+
 import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
@@ -223,8 +225,6 @@ class _MoreDetailsState extends State<MoreDetails> {
                                 ),
                               ),
                               Positioned(
-                                // top: 10,
-                                // left: 5,
                                 bottom: 0,
                                 left: 55,
                                 child: ClipRRect(
@@ -351,7 +351,7 @@ class _MoreDetailsState extends State<MoreDetails> {
                                       ))
                                     : Expanded(
                                         child: Text(
-                                        'Not Added',
+                                        AppLocalizations.of(context)!.not_added,
                                         style: TextStyle(
                                           color: Colors.red,
                                           fontSize: 13,
@@ -386,7 +386,7 @@ class _MoreDetailsState extends State<MoreDetails> {
                                       ))
                                     : Expanded(
                                         child: Text(
-                                        'Not Added',
+                                        AppLocalizations.of(context)!.not_added,
                                         style: TextStyle(
                                           color: Colors.red,
                                           fontSize: 13,
@@ -421,7 +421,7 @@ class _MoreDetailsState extends State<MoreDetails> {
                                       ))
                                     : Expanded(
                                         child: Text(
-                                        'Not Added',
+                                        AppLocalizations.of(context)!.not_added,
                                         style: TextStyle(
                                           color: Colors.red,
                                           fontSize: 13,
@@ -441,7 +441,8 @@ class _MoreDetailsState extends State<MoreDetails> {
                   //Address Section
                   ExpandedTileWidget(
                     controller: _addressController,
-                    title: 'Pincode, District, Hobli, Village',
+                    title:
+                        'Pincode, ${AppLocalizations.of(context)!.district}, ${AppLocalizations.of(context)!.gram_panchayat}, ${AppLocalizations.of(context)!.taluk}, ${AppLocalizations.of(context)!.village}',
                     children: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: (profileData!.address.length > 0)
@@ -495,7 +496,8 @@ class _MoreDetailsState extends State<MoreDetails> {
                                             children: [
                                               Expanded(
                                                   child: Text(
-                                                'District',
+                                                AppLocalizations.of(context)!
+                                                    .district,
                                                 style: TextStyle(
                                                     fontSize: 13.5,
                                                     fontWeight:
@@ -524,7 +526,8 @@ class _MoreDetailsState extends State<MoreDetails> {
                                             children: [
                                               Expanded(
                                                   child: Text(
-                                                'Hobli',
+                                                AppLocalizations.of(context)!
+                                                    .gram_panchayat,
                                                 style: TextStyle(
                                                     fontSize: 13.5,
                                                     fontWeight:
@@ -553,7 +556,8 @@ class _MoreDetailsState extends State<MoreDetails> {
                                             children: [
                                               Expanded(
                                                   child: Text(
-                                                'Village',
+                                                AppLocalizations.of(context)!
+                                                    .village,
                                                 style: TextStyle(
                                                     fontSize: 13.5,
                                                     fontWeight:
@@ -580,7 +584,9 @@ class _MoreDetailsState extends State<MoreDetails> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Text('No Address Added',
+                                  child: Text(
+                                      AppLocalizations.of(context)!
+                                          .no_address_is_added,
                                       style: TextStyle(
                                           fontSize: 13, color: Colors.red)),
                                 ),
@@ -607,7 +613,8 @@ class _MoreDetailsState extends State<MoreDetails> {
                       child: Ink(
                         child: ExpandedTileWidget(
                             controller: new ExpandedTileController(),
-                            title: 'Land Details (Village, Syno, Plot size..)',
+                            title: AppLocalizations.of(context)!
+                                .land_details_syno_plot_size_ucf,
                             children: SizedBox.shrink()),
                       ),
                     ),
@@ -619,7 +626,8 @@ class _MoreDetailsState extends State<MoreDetails> {
                   //Crops Section
                   ExpandedTileWidget(
                       controller: _cropsController,
-                      title: 'Crops Grown and Planned',
+                      title:
+                          AppLocalizations.of(context)!.crops_grown_and_planned,
                       children: (CropsList.length == 0)
                           ? Column(
                               children: [
@@ -627,14 +635,17 @@ class _MoreDetailsState extends State<MoreDetails> {
                                   padding: const EdgeInsets.all(10.0),
                                   child: Column(
                                     children: [
-                                      Text('No Crops Added',
+                                      Text(
+                                          AppLocalizations.of(context)!
+                                              .no_crops_added,
                                           style: TextStyle(
                                               fontSize: 13, color: Colors.red)),
                                       SizedBox(
                                         height: 5,
                                       ),
                                       Text(
-                                          'Add them by going to Edit Profile Screen',
+                                          AppLocalizations.of(context)!
+                                              .add_them_here,
                                           style: TextStyle(
                                               fontSize: 13,
                                               color: Colors.grey[600])),
@@ -644,8 +655,6 @@ class _MoreDetailsState extends State<MoreDetails> {
                               ],
                             )
                           : Container(
-                              // padding: const EdgeInsets.symmetric(
-                              //     horizontal: 12),
                               height: 140,
                               child: ListView(
                                 physics: BouncingScrollPhysics(),
@@ -669,7 +678,8 @@ class _MoreDetailsState extends State<MoreDetails> {
                   //Machines Section
                   ExpandedTileWidget(
                     controller: _machinesController,
-                    title: 'Tractor, JCB, Tiller, Rotovotator',
+                    title: AppLocalizations.of(context)!
+                        .tractor_jcb_tiller_rotovator,
                     children: Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: (MachinesList.length == 0)
@@ -679,14 +689,17 @@ class _MoreDetailsState extends State<MoreDetails> {
                                   padding: const EdgeInsets.all(10.0),
                                   child: Column(
                                     children: [
-                                      Text('No Machines Added',
+                                      Text(
+                                          AppLocalizations.of(context)!
+                                              .no_machines_added,
                                           style: TextStyle(
                                               fontSize: 13, color: Colors.red)),
                                       SizedBox(
                                         height: 5,
                                       ),
                                       Text(
-                                          'Add them by going to Edit Profile Screen',
+                                          AppLocalizations.of(context)!
+                                              .add_them_here,
                                           style: TextStyle(
                                               fontSize: 13,
                                               color: Colors.grey[600])),
@@ -696,8 +709,6 @@ class _MoreDetailsState extends State<MoreDetails> {
                               ],
                             )
                           : Container(
-                              // padding: const EdgeInsets.symmetric(
-                              //     horizontal: 12),
                               height: 140,
                               child: ListView(
                                 physics: BouncingScrollPhysics(),
@@ -774,7 +785,7 @@ class _MoreDetailsState extends State<MoreDetails> {
                     color: Colors.white,
                   ),
                   onPressed: () {
-                    Navigator.pushReplacement(context,
+                    Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return EditProfileScreen();
                     }));

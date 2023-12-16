@@ -264,6 +264,7 @@ class _ProductPostState extends State<ProductPost> {
         taluk: userLocation.taluk,
         gramPanchayat: userLocation.gramPanchayat,
         villageName: userLocation.village,
+        parentName: nameForParentEnum[parentEnum]!,
       ),
     );
 

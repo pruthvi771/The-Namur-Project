@@ -7,9 +7,10 @@ import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/product_inv
 import 'package:active_ecommerce_flutter/utils/enums.dart' as enums;
 import 'package:active_ecommerce_flutter/utils/imageLinks.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ParentScreen extends StatefulWidget {
   final enums.ParentEnum parentEnum;
@@ -26,16 +27,8 @@ class ParentScreen extends StatefulWidget {
 }
 
 class _ParentScreenState extends State<ParentScreen> {
-  // HomePresenter homeData = HomePresenter();
   bool isSwitched = false;
-
-  Future<void> _onPageRefresh() async {
-    //reset();
-    // fetchAll();
-  }
-
-  // bool _switchValue = false;
-  // String isvalue = "tractor";
+  late Future<int> totalFarmersCountFuture;
 
   var categoryListForParentEnum = enums.categoryListForParentEnum;
   var nameForParentEnum = enums.nameForParentEnum;
@@ -45,20 +38,24 @@ class _ParentScreenState extends State<ParentScreen> {
 
   var imageForName = imageForNameCloud;
 
-  final stocks = [
-    'assets/onion.png',
-    'assets/coconut 1.png',
-    'assets/bugs.png',
-    'assets/orange (1).png',
-    'assets/onion.png',
-    'assets/coconut 1.png',
-    'assets/bugs.png',
-    'assets/orange (1).png',
-    'assets/onion.png',
-    'assets/coconut 1.png',
-    'assets/bugs.png',
-    'assets/orange (1).png',
-  ];
+  Future<int> getTotalFarmersCount({required String parentName}) async {
+    CollectionReference sellersCollection =
+        FirebaseFirestore.instance.collection('seller');
+
+    QuerySnapshot querySnapshot = await sellersCollection
+        .where('productParentNames', arrayContains: parentName)
+        .get();
+
+    return querySnapshot.size;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    totalFarmersCountFuture =
+        getTotalFarmersCount(parentName: nameForParentEnum[widget.parentEnum]!);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,64 +108,72 @@ class _ParentScreenState extends State<ParentScreen> {
       children: [
         //top bar section
         Container(
-          width: MediaQuery.of(context).size.width,
           height: 80,
+          width: double.infinity,
           color: Colors.blueGrey.shade50,
-          child: Row(
-            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(
-                width: 20,
-              ),
-              Row(
-                children: [
-                  SizedBox(
-                    height: 50,
-                    width: 130,
-                    child: Stack(
-                      children: [
-                        for (var i = 0; i < [1, 2, 3, 4].length; i++)
-                          Positioned(
-                            left: (i * (1 - .4) * 40).toDouble(),
-                            top: 0,
-                            child: CircleAvatar(
-                              radius: 28,
-                              backgroundColor: Colors.transparent,
-                              // Set the background color to transparent
-                              backgroundImage: AssetImage(
-                                  'assets/Ellipse2.png'), // Provide the asset image path
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: FutureBuilder(
+              future: totalFarmersCountFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: LinearProgressIndicator());
+                }
+                if (snapshot.hasData && snapshot.data != null) {
+                  return Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        height: 50,
+                        width: 130,
+                        child: Stack(
+                          children: [
+                            for (var i = 0; i < [1, 2, 3, 4].length; i++)
+                              Positioned(
+                                left: (i * (1 - .4) * 40).toDouble(),
+                                top: 0,
+                                child: CircleAvatar(
+                                  radius: 28,
+                                  backgroundColor: Colors.transparent,
+                                  // Set the background color to transparent
+                                  backgroundImage: AssetImage(
+                                      'assets/Ellipse2.png'), // Provide the asset image path
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        // height: 40,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              snapshot.data.toString(),
+                              style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 15,
+                                  color: Colors.black),
                             ),
-                          ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 40,
-                    child: RichText(
-                        text: TextSpan(children: [
-                      TextSpan(
-                          text: '200+10',
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w600,
-                              fontSize: 15,
-                              color: Colors.black)),
-                      TextSpan(
-                          text: '\nFarmer',
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w600,
-                              fontSize: 15,
-                              color: Colors.black))
-                    ])),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                            Text(
+                              AppLocalizations.of(context)!.farmer,
+                              style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 15,
+                                  color: Colors.black),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                }
+                return Container();
+              }),
         ),
-        // Text(widget.isBuy ? 'Buy' : 'Sell'),
-        // Text(widget.isSecondHand ? 'second hand' : 'first hand'),
+
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Card(

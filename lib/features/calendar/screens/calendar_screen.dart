@@ -273,8 +273,42 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                       showDialog(
                                           context: context,
                                           builder: (context) {
-                                            return ImageDialogPopup(
-                                                docData: docData);
+                                            return AlertDialog(
+                                              contentPadding: EdgeInsets.only(
+                                                  top: 10, left: 10, right: 10),
+                                              // actionsPadding: EdgeInsets.all(0),
+                                              content: Container(
+                                                height: 300,
+                                                child: CachedNetworkImage(
+                                                  imageUrl:
+                                                      docData['costEstimate'],
+                                                  fit: BoxFit.fitWidth,
+                                                  progressIndicatorBuilder:
+                                                      (context, url, progress) {
+                                                    return Center(
+                                                      child: Container(
+                                                        width: 20,
+                                                        height: 20,
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .dismiss)),
+                                              ],
+                                            );
                                           });
                                     },
                                     child: Container(
@@ -666,55 +700,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
             height: 20,
           )
         ],
-      ),
-    );
-  }
-}
-
-class ImageDialogPopup extends StatefulWidget {
-  const ImageDialogPopup({
-    super.key,
-    required this.docData,
-  });
-
-  final docData;
-
-  @override
-  State<ImageDialogPopup> createState() => _ImageDialogPopupState();
-}
-
-class _ImageDialogPopupState extends State<ImageDialogPopup> {
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      shadowColor: Colors.transparent,
-      backgroundColor: Colors.transparent,
-      child: Container(
-        padding: const EdgeInsets.all(8.0),
-        width: double.infinity,
-        child: AspectRatio(
-          aspectRatio: 0.75,
-          child: CachedNetworkImage(
-            imageUrl: widget.docData['costEstimate'],
-            fit: BoxFit.fitWidth,
-            progressIndicatorBuilder: (context, url, progress) {
-              return Center(
-                child: Container(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
       ),
     );
   }

@@ -29,6 +29,7 @@ class AddProductRequested extends SellEvent {
   final String taluk;
   final String gramPanchayat;
   final String villageName;
+  final String parentName;
 
   const AddProductRequested({
     required this.productName,
@@ -50,6 +51,7 @@ class AddProductRequested extends SellEvent {
     required this.taluk,
     required this.gramPanchayat,
     required this.villageName,
+    required this.parentName,
   });
 
   @override
@@ -72,6 +74,7 @@ class AddProductRequested extends SellEvent {
         taluk,
         gramPanchayat,
         villageName,
+        parentName,
       ];
 }
 
@@ -126,6 +129,7 @@ class EditProductRequested extends SellEvent {
         imageList!,
         runningHours!,
         kms!,
+        isMachine,
         // image,
       ];
 }
