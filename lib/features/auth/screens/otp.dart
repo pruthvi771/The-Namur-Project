@@ -19,7 +19,6 @@ import 'package:permission_handler/permission_handler.dart'
 import 'package:toast/toast.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:otp_text_field/otp_text_field.dart';
 
 import 'package:active_ecommerce_flutter/screens/main.dart';
 
@@ -180,12 +179,6 @@ class _OtpState extends State<Otp> {
     AuthRepository _authRepository = AuthRepository();
     FirestoreRepository _firestoreRepository = FirestoreRepository();
 
-    if (widget.signUp) {
-      print('yes yes, Signup is true bro');
-    } else {
-      print('Signup is NOT true');
-    }
-
     return BlocProvider(
       create: (context) => AuthBloc(
           authRepository: _authRepository,
@@ -200,7 +193,7 @@ class _OtpState extends State<Otp> {
           }
           if (state is Authenticated) {
             ToastComponent.showDialog(
-              'Login Successful',
+              AppLocalizations.of(context)!.login_successful,
               gravity: Toast.center,
               duration: Toast.lengthLong,
             );
@@ -272,7 +265,7 @@ class _OtpState extends State<Otp> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 20.0, top: 20),
                     child: Text(
-                      "Enter OTP Code",
+                      AppLocalizations.of(context)!.enter_otp,
                       /*  + (_verify_by == "email"
                                   ? AppLocalizations.of(context)!.email_account_ucf
                                   : AppLocalizations.of(context)!.phone_number_ucf),*/
@@ -291,9 +284,6 @@ class _OtpState extends State<Otp> {
                         Center(
                           child: OTPInputField(
                             onCompleted: (value) {
-                              // setState(() {
-                              //   enteredOTP = value;
-                              // });
                               print('Completed: $value');
                             },
                             onOTPChanged: (otpValue) {
@@ -349,35 +339,6 @@ class _OtpState extends State<Otp> {
       ),
     );
   }
-
-  // Widget otpBoxBuilder(_controller, index) {
-  //   return Container(
-  //     decoration: BoxDecoration(
-  //       borderRadius: BorderRadius.circular(10),
-  //       color: Color(0xffC3FF77),
-  //     ),
-  //     width: 50, // Adjust the width to accommodate 6 digits
-  //     height: 50,
-  //     child: TextFormField(
-  //       controller: _controller,
-  //       textAlign: TextAlign.center,
-  //       keyboardType: TextInputType.number,
-  //       inputFormatters: [LengthLimitingTextInputFormatter(1)],
-  //       decoration: InputDecoration(
-  //         border: InputBorder.none,
-  //         disabledBorder: InputBorder.none,
-  //         counterText: '',
-  //         hintStyle: TextStyle(color: Colors.black, fontSize: 20.0),
-  //       ),
-  //       onChanged: (value) {
-  //         if (value.length == 1) {
-  //           FocusScope.of(context).nextFocus();
-  //         }
-  //         otp[index] = value; // Update the corresponding index in the otp list
-  //       },
-  //     ),
-  //   );
-  // }
 }
 
 class OTPInputField extends StatefulWidget {
@@ -445,11 +406,11 @@ class _OTPInputFieldState extends State<OTPInputField> {
                 filled: true,
                 fillColor: Color(0xffC3FF77),
                 enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(5),
                   borderSide: BorderSide(color: MyTheme.green),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(5),
                   borderSide: BorderSide(color: Colors.black),
                 ),
                 counterText: '',
