@@ -24,6 +24,10 @@ class SellRepository {
     required List imageURL,
     required String userId,
     required bool isSecondHand,
+    required String villageName,
+    required String district,
+    required String taluk,
+    required String gramPanchayat,
   }) async {
     try {
       // Get a reference to the Firestore collection
@@ -45,6 +49,10 @@ class SellRepository {
         'isSecondHand': isSecondHand,
         'rating': 0.0,
         'numberOfRatings': 0,
+        'villageName': villageName,
+        'district': district,
+        'taluk': taluk,
+        'gramPanchayat': gramPanchayat,
       });
       return documentReference.id;
     } catch (e) {
@@ -68,6 +76,10 @@ class SellRepository {
     required bool isSecondHand,
     required int runningHours,
     required int kms,
+    required String villageName,
+    required String district,
+    required String taluk,
+    required String gramPanchayat,
   }) async {
     try {
       // Get a reference to the Firestore collection
@@ -91,6 +103,10 @@ class SellRepository {
         'kms': kms,
         'rating': 0.0,
         'numberOfRatings': 0,
+        'villageName': villageName,
+        'district': district,
+        'taluk': taluk,
+        'gramPanchayat': gramPanchayat,
       });
       return documentReference.id;
     } catch (e) {
@@ -103,8 +119,8 @@ class SellRepository {
     required String sellerId,
     required String district,
     required String gramPanchayat,
-    required double taluk,
-    required int villageName,
+    required String taluk,
+    required String villageName,
   }) async {
     try {
       CollectionReference products = _firestore.collection('products');
@@ -122,7 +138,6 @@ class SellRepository {
           'gramPanchayat': gramPanchayat,
           'district': district,
           'taluk': taluk,
-          // 'imageURL': imageURL,
         });
       }
     } catch (e) {
@@ -152,6 +167,10 @@ class SellRepository {
       }
 
       // print(products.length);
+
+      if (products.length == 0) {
+        return null;
+      }
 
       return products;
     } catch (e) {
@@ -262,6 +281,10 @@ class SellRepository {
         imageURL: data['imageURL'],
         sellerId: data['sellerId'],
         isSecondHand: data['isSecondHand'],
+        village: data['villageName'],
+        gramPanchayat: data['gramPanchayat'],
+        taluk: data['taluk'],
+        district: data['district'],
       );
     }).toList();
     print(products.length);

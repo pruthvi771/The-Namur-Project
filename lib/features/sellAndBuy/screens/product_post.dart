@@ -7,6 +7,8 @@ import 'package:active_ecommerce_flutter/features/sellAndBuy/services/sell_bloc/
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/sell_bloc/sell_event.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart';
+import 'package:active_ecommerce_flutter/utils/functions.dart';
+import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -16,13 +18,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart' as enums;
 import 'package:image_picker/image_picker.dart';
 import 'package:toast/toast.dart';
-
-// const List<String> productList = <String>[
-//   'Product Category',
-//   'Two',
-//   'Three',
-//   'Four'
-// ];
 
 class ProductPost extends StatefulWidget {
   final SubCategoryEnum subCategoryEnum;
@@ -57,44 +52,12 @@ class _ProductPostState extends State<ProductPost> {
   TextEditingController _priceController = TextEditingController();
   TextEditingController _quantityController = TextEditingController();
 
-  Future<void> _onPageRefresh() async {
-    //reset();
-    // fetchAll();
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _dropdownItems = enums.SubSubCategoryList[widget.subCategoryEnum]!;
-    category = enums.nameForCategoryEnum[
-        enums.findCategoryForSubCategory(widget.subCategoryEnum)]!;
-    parentEnum = enums.findParentForCategory(
-        enums.findCategoryForSubCategory(widget.subCategoryEnum)!)!;
-    subCategory = enums.nameForSubCategoryEnum[widget.subCategoryEnum]!;
-    // perPiecePrice = true;
-    if (widget.isProductEditScreen) {
-      _nameController.text = widget.sellProduct!.productName;
-      _additionalController.text = widget.sellProduct!.productDescription;
-      _priceController.text = widget.sellProduct!.productPrice.toString();
-      _quantityController.text = widget.sellProduct!.productQuantity.toString();
-      imageURL = widget.sellProduct!.imageURL;
-      _selectedItem = widget.sellProduct!.subSubCategory;
-      selectedQuantityUnit = widget.sellProduct!.quantityUnit;
-      imagesOnFirebase = widget.sellProduct!.imageURL;
-      // perPiecePrice = widget.sellProduct!.priceType == "Per piece";
-    }
-  }
-
   String? _selectedItem;
 
   late List<String> _dropdownItems;
 
   late String category;
   late String subCategory;
-  // late bool perPiecePrice;
-
-  // List<Uint8List?>? _image;
 
   List<dynamic>? imageURL;
 
@@ -104,13 +67,31 @@ class _ProductPostState extends State<ProductPost> {
   bool hideQuantityBox = false;
 
   List<XFile>? _mediaFileList;
-
   final ImagePicker imagePicker = ImagePicker();
+  List imagesOnFirebase = [];
 
   late ParentEnum parentEnum;
 
-  void printError(String text) {
-    print('\x1B[31m$text\x1B[0m');
+  @override
+  void initState() {
+    super.initState();
+    _dropdownItems = enums.SubSubCategoryList[widget.subCategoryEnum]!;
+    category = enums.nameForCategoryEnum[
+        enums.findCategoryForSubCategory(widget.subCategoryEnum)]!;
+    parentEnum = enums.findParentForCategory(
+        enums.findCategoryForSubCategory(widget.subCategoryEnum)!)!;
+    subCategory = enums.nameForSubCategoryEnum[widget.subCategoryEnum]!;
+
+    if (widget.isProductEditScreen) {
+      _nameController.text = widget.sellProduct!.productName;
+      _additionalController.text = widget.sellProduct!.productDescription;
+      _priceController.text = widget.sellProduct!.productPrice.toString();
+      _quantityController.text = widget.sellProduct!.productQuantity.toString();
+      imageURL = widget.sellProduct!.imageURL;
+      _selectedItem = widget.sellProduct!.subSubCategory;
+      selectedQuantityUnit = widget.sellProduct!.quantityUnit;
+      imagesOnFirebase = widget.sellProduct!.imageURL;
+    }
   }
 
   selectImages() async {
@@ -121,8 +102,6 @@ class _ProductPostState extends State<ProductPost> {
       setState(() {});
     }
   }
-
-  List imagesOnFirebase = [];
 
   onPressedPost(BuildContext buildContext) async {
     // print('login clicked');
@@ -253,6 +232,16 @@ class _ProductPostState extends State<ProductPost> {
       }
     }
 
+    Address? userLocation = getUserLocationFromHive();
+
+    if (userLocation == null) {
+      ToastComponent.showDialog(
+          AppLocalizations.of(context)!.add_address_to_post_products,
+          gravity: Toast.center,
+          duration: Toast.lengthLong);
+      return;
+    }
+
     BlocProvider.of<SellBloc>(buildContext).add(
       AddProductRequested(
         productName: productName,
@@ -271,6 +260,10 @@ class _ProductPostState extends State<ProductPost> {
         runningHours: runningHoursInt,
         kms: kmsInt,
         isMachine: parentEnum == ParentEnum.machine,
+        district: userLocation.district,
+        taluk: userLocation.taluk,
+        gramPanchayat: userLocation.gramPanchayat,
+        villageName: userLocation.village,
       ),
     );
 
@@ -484,7 +477,7 @@ class _ProductPostState extends State<ProductPost> {
           ),
           child: Text(
             widget.isProductEditScreen
-                ? AppLocalizations.of(context)!.edit_product
+                ? AppLocalizations.of(context)!.update_product_ucf
                 : AppLocalizations.of(context)!.add_to_stock,
             style: TextStyle(
                 color: Colors.white, fontSize: 20, fontWeight: FontWeight.w500),
@@ -743,7 +736,7 @@ class _ProductPostState extends State<ProductPost> {
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.only(left: 15),
-                  hintText: 'Running Hours',
+                  hintText: AppLocalizations.of(context)!.enter_running_hours,
                   hintStyle: TextStyle(
                       color: Colors.grey[600],
                       fontWeight: FontWeight.w400,
@@ -765,7 +758,7 @@ class _ProductPostState extends State<ProductPost> {
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.only(left: 15),
-                  hintText: 'Kms',
+                  hintText: AppLocalizations.of(context)!.enter_total_kms,
                   hintStyle: TextStyle(
                       color: Colors.grey[600],
                       fontWeight: FontWeight.w400,
@@ -853,7 +846,8 @@ class _ProductPostState extends State<ProductPost> {
                                         color: MyTheme.primary_color,
                                       ),
                                       Text(
-                                        "Add Featured Image",
+                                        AppLocalizations.of(context)!
+                                            .add_featured_image,
                                         style: TextStyle(
                                             color: MyTheme.primary_color,
                                             fontSize: 17,
@@ -951,7 +945,8 @@ class _ProductPostState extends State<ProductPost> {
                                       color: MyTheme.primary_color,
                                     ),
                                     Text(
-                                      "Add Featured Image",
+                                      AppLocalizations.of(context)!
+                                          .add_featured_image,
                                       style: TextStyle(
                                           color: MyTheme.primary_color,
                                           fontSize: 17,
@@ -993,7 +988,8 @@ class _ProductPostState extends State<ProductPost> {
                                   color: MyTheme.primary_color,
                                 ),
                                 Text(
-                                  "Add Featured Image",
+                                  AppLocalizations.of(context)!
+                                      .add_featured_image,
                                   style: TextStyle(
                                       color: MyTheme.primary_color,
                                       fontSize: 17,

@@ -1,4 +1,4 @@
-// translation done
+// translation done. needs updating
 
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
@@ -133,6 +133,7 @@ class _ProductInventoryState extends State<ProductInventory> {
         builder: (context, state) {
           if (state is ProductsForSubCategoryReceived) {
             return state.products.isEmpty
+                // short circuiting
                 ? Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -197,6 +198,10 @@ class _ProductInventoryState extends State<ProductInventory> {
                         productDescription:
                             state.products[index].productDescription,
                         isSecondHand: state.products[index].isSecondHand,
+                        district: state.products[index].district,
+                        taluk: state.products[index].taluk,
+                        gramPanchayat: state.products[index].gramPanchayat,
+                        village: state.products[index].village,
                       );
                     },
                   );
@@ -235,6 +240,10 @@ class ProductInventoryWidget extends StatelessWidget {
     required this.sellerId,
     required this.productDescription,
     required this.isSecondHand,
+    required this.district,
+    required this.taluk,
+    required this.gramPanchayat,
+    required this.village,
     // required this.
   });
 
@@ -250,6 +259,10 @@ class ProductInventoryWidget extends StatelessWidget {
   // final String priceType;
   final SubCategoryEnum subCategoryEnum;
   final bool isSecondHand;
+  final String district;
+  final String taluk;
+  final String gramPanchayat;
+  final String village;
 
   void onPressedDelete(BuildContext context, String productId) {
     BlocProvider.of<SellBloc>(context).add(DeleteProductRequested(
@@ -388,6 +401,11 @@ class ProductInventoryWidget extends StatelessWidget {
                                                         sellerId: sellerId,
                                                         isSecondHand:
                                                             isSecondHand,
+                                                        district: district,
+                                                        taluk: taluk,
+                                                        gramPanchayat:
+                                                            gramPanchayat,
+                                                        village: village,
                                                       ),
                                                     )));
                                       },

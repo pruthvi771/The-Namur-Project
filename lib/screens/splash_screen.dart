@@ -47,28 +47,40 @@ class _SplashScreenState extends State<SplashScreen> {
               .doc(user.uid)
               .get();
 
-          Map<String, dynamic> data =
-              documentSnapshot.data() as Map<String, dynamic>;
+          try {
+            Map<String, dynamic> data =
+                documentSnapshot.data() as Map<String, dynamic>;
 
-          if (data['phone number'] == null || data['phone number'] == "") {
+            if (data['phone number'] == null || data['phone number'] == "") {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return AddPhone();
+                  },
+                ),
+                (route) => false,
+              );
+            } else {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return Main();
+                  },
+                ),
+                (newRoute) => false,
+              );
+            }
+          } catch (e) {
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  return AddPhone();
+                  return Login(); // Main(go_back: false,);
                 },
               ),
               (route) => false,
-            );
-          } else {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (context) {
-                  return Main();
-                },
-              ),
-              (newRoute) => false,
             );
           }
         } else {

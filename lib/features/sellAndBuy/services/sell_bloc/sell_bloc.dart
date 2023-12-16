@@ -37,6 +37,10 @@ class SellBloc extends Bloc<SellEvent, SellState> {
             isSecondHand: event.isSecondHand,
             runningHours: event.runningHours,
             kms: event.kms,
+            villageName: event.villageName,
+            gramPanchayat: event.gramPanchayat,
+            taluk: event.taluk,
+            district: event.district,
           );
         } else {
           docId = await sellRepository.addProductBuying(
@@ -52,6 +56,10 @@ class SellBloc extends Bloc<SellEvent, SellState> {
             imageURL: [],
             userId: currentUser.userId,
             isSecondHand: event.isSecondHand,
+            villageName: event.villageName,
+            gramPanchayat: event.gramPanchayat,
+            taluk: event.taluk,
+            district: event.district,
           );
         }
 
@@ -71,6 +79,28 @@ class SellBloc extends Bloc<SellEvent, SellState> {
       } catch (e) {
         // emit(SellAddProductErrorState(message: e.toString()));
         print('error happened');
+      }
+    });
+
+    on<UpdateAddressInProductsRequested>((event, emit) async {
+      emit(ProductAddEditDeleteLoading());
+      try {
+        var currentUser = authRepository.currentUser!;
+
+        // await sellRepository.saveProductImage(file: event.image, docId: docId!);
+
+        await sellRepository.editAddressForAllProducts(
+          sellerId: currentUser.userId,
+          district: event.district,
+          taluk: event.taluk,
+          gramPanchayat: event.gramPanchayat,
+          villageName: event.villageName,
+        );
+
+        emit(ProductAddEditDeleteSuccessfully());
+      } catch (e) {
+        // emit(SellAddProductErrorState(message: e.toString()));
+        print('error trying to update address in products');
       }
     });
 

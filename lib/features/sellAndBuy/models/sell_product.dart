@@ -5,13 +5,16 @@ class SellProduct {
   final double productPrice;
   final int productQuantity;
   final String quantityUnit;
-  // final String priceType;
   final String category;
   final String subCategory;
   final String subSubCategory;
   final List<dynamic> imageURL;
   final String sellerId;
   final bool isSecondHand;
+  final String village;
+  final String gramPanchayat;
+  final String taluk;
+  final String district;
 
   SellProduct({
     required this.id,
@@ -26,5 +29,9 @@ class SellProduct {
     required this.imageURL,
     required this.sellerId,
     required this.isSecondHand,
+    required this.village,
+    required this.gramPanchayat,
+    required this.taluk,
+    required this.district,
   });
 }

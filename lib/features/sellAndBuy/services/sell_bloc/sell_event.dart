@@ -25,6 +25,10 @@ class AddProductRequested extends SellEvent {
   final int runningHours;
   final int kms;
   final bool isMachine;
+  final String district;
+  final String taluk;
+  final String gramPanchayat;
+  final String villageName;
 
   const AddProductRequested({
     required this.productName,
@@ -42,6 +46,10 @@ class AddProductRequested extends SellEvent {
     this.runningHours = 0,
     this.kms = 0,
     this.isMachine = false,
+    required this.district,
+    required this.taluk,
+    required this.gramPanchayat,
+    required this.villageName,
   });
 
   @override
@@ -55,6 +63,15 @@ class AddProductRequested extends SellEvent {
         subCategory,
         subSubCategory,
         imageList,
+        isSecondHand,
+        productType,
+        runningHours,
+        kms,
+        isMachine,
+        district,
+        taluk,
+        gramPanchayat,
+        villageName,
       ];
 }
 
@@ -135,4 +152,26 @@ class DeleteProductRequested extends SellEvent {
 
   @override
   List<Object> get props => [productId];
+}
+
+class UpdateAddressInProductsRequested extends SellEvent {
+  final String district;
+  final String taluk;
+  final String gramPanchayat;
+  final String villageName;
+
+  const UpdateAddressInProductsRequested({
+    required this.district,
+    required this.taluk,
+    required this.gramPanchayat,
+    required this.villageName,
+  });
+
+  @override
+  List<Object> get props => [
+        district,
+        taluk,
+        gramPanchayat,
+        villageName,
+      ];
 }

@@ -1,13 +1,15 @@
 // translation done.
 
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:active_ecommerce_flutter/features/profile/screens/edit_profile.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/subSubCategory_filter_item.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/filter_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/machine_details_screen.dart';
-import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/machine_rent_form.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/product_details_screen.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart';
+import 'package:active_ecommerce_flutter/utils/functions.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +18,6 @@ import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 enum FilterType { subSubCategory, location }
 
@@ -56,6 +56,12 @@ class _BuyProductListState extends State<BuyProductList> {
   late Address? userLocation;
 
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  late LocationFilterMap currentLocationFilterMap;
+
+  final String villageNameField = 'villageName';
+  final String gramPanchayatField = 'gramPanchayat';
+  final String talukField = 'taluk';
+  final String districtField = 'district';
 
   @override
   void initState() {
@@ -63,6 +69,17 @@ class _BuyProductListState extends State<BuyProductList> {
     if (userLocation == null) {
       super.initState();
       return;
+    }
+
+    if (widget.locationFilterMap != null) {
+      currentLocationFilterMap = widget.locationFilterMap!;
+    } else {
+      currentLocationFilterMap = LocationFilterMap(
+        district: false,
+        taluk: false,
+        gramPanchayat: false,
+        village: true,
+      );
     }
 
     subSubCategoryList =
@@ -77,39 +94,27 @@ class _BuyProductListState extends State<BuyProductList> {
     } catch (e) {}
 
     if (sortType != null && subSubCategoryList.length == 0) {
-      productsStream = allProductSortedStreamQuery(sortType: sortType!);
+      productsStream = productFilteredByLocationAndSortedStreamQuery(
+        locationFilterMap: currentLocationFilterMap,
+        sortType: sortType!,
+      );
     } else if (subSubCategoryList.length != 0 && sortType == null) {
-      productsStream = productFilteredStreamQuery(
+      productsStream = productFilteredByLocationAndSubSubCategoryStreamQuery(
+        locationFilterMap: currentLocationFilterMap,
         theSubSubCategoryList: subSubCategoryList,
       );
     } else if (subSubCategoryList.length != 0 && sortType != null) {
-      productsStream = productFilteredAndSortedStreamQuery(
-          sortType: sortType!, theSubSubCategoryList: subSubCategoryList);
+      productsStream = productAllFiltersAndSortedStreamQuery(
+        locationFilterMap: currentLocationFilterMap,
+        sortType: sortType!,
+        theSubSubCategoryList: subSubCategoryList,
+      );
     } else {
-      productsStream = allProductStreamQuery();
+      productsStream = productFilteredByLocationStreamQuery(
+        locationFilterMap: currentLocationFilterMap,
+      );
     }
     super.initState();
-  }
-
-  Address? getUserLocationFromHive() {
-    var dataBox = Hive.box<ProfileData>('profileDataBox3');
-
-    var savedData = dataBox.get('profile');
-
-    if (savedData != null) {
-      if (savedData.address.length == 0) {
-        return null;
-      }
-      if (savedData.address[0].district == "" ||
-          savedData.address[0].village == "" ||
-          savedData.address[0].gramPanchayat == "" ||
-          savedData.address[0].taluk == "") {
-        return null;
-      }
-      return savedData.address[0];
-    } else {
-      return null;
-    }
   }
 
   Stream<QuerySnapshot> allProductStreamQuery() {
@@ -185,7 +190,7 @@ class _BuyProductListState extends State<BuyProductList> {
           .where('subCategory',
               isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
           .where('isSecondHand', isEqualTo: widget.isSecondHand)
-          .where('district', isEqualTo: userLocation!.district)
+          .where(districtField, isEqualTo: userLocation!.district)
           .snapshots();
     } else if (locationFilterMap.taluk) {
       return _firestore
@@ -193,7 +198,7 @@ class _BuyProductListState extends State<BuyProductList> {
           .where('subCategory',
               isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
           .where('isSecondHand', isEqualTo: widget.isSecondHand)
-          .where('taluk', isEqualTo: userLocation!.taluk)
+          .where(talukField, isEqualTo: userLocation!.taluk)
           .snapshots();
     } else if (locationFilterMap.gramPanchayat) {
       return _firestore
@@ -201,7 +206,7 @@ class _BuyProductListState extends State<BuyProductList> {
           .where('subCategory',
               isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
           .where('isSecondHand', isEqualTo: widget.isSecondHand)
-          .where('gramPanchayat', isEqualTo: userLocation!.gramPanchayat)
+          .where(gramPanchayatField, isEqualTo: userLocation!.gramPanchayat)
           .snapshots();
     } else {
       return _firestore
@@ -209,7 +214,7 @@ class _BuyProductListState extends State<BuyProductList> {
           .where('subCategory',
               isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
           .where('isSecondHand', isEqualTo: widget.isSecondHand)
-          .where('village', isEqualTo: userLocation!.village)
+          .where(villageNameField, isEqualTo: userLocation!.village)
           .snapshots();
     }
   }
@@ -234,7 +239,7 @@ class _BuyProductListState extends State<BuyProductList> {
           .where('subSubCategory',
               whereIn:
                   subSubCategoryList.length != 0 ? subSubCategoryList : [''])
-          .where('district', isEqualTo: userLocation!.district)
+          .where(districtField, isEqualTo: userLocation!.district)
           .snapshots();
     } else if (locationFilterMap.taluk) {
       return _firestore
@@ -245,7 +250,7 @@ class _BuyProductListState extends State<BuyProductList> {
           .where('subSubCategory',
               whereIn:
                   subSubCategoryList.length != 0 ? subSubCategoryList : [''])
-          .where('taluk', isEqualTo: userLocation!.taluk)
+          .where(talukField, isEqualTo: userLocation!.taluk)
           .snapshots();
     } else if (locationFilterMap.gramPanchayat) {
       return _firestore
@@ -256,7 +261,7 @@ class _BuyProductListState extends State<BuyProductList> {
           .where('subSubCategory',
               whereIn:
                   subSubCategoryList.length != 0 ? subSubCategoryList : [''])
-          .where('gramPanchayat', isEqualTo: userLocation!.gramPanchayat)
+          .where(gramPanchayatField, isEqualTo: userLocation!.gramPanchayat)
           .snapshots();
     } else {
       return _firestore
@@ -267,7 +272,7 @@ class _BuyProductListState extends State<BuyProductList> {
           .where('subSubCategory',
               whereIn:
                   subSubCategoryList.length != 0 ? subSubCategoryList : [''])
-          .where('village', isEqualTo: userLocation!.village)
+          .where(villageNameField, isEqualTo: userLocation!.village)
           .snapshots();
     }
   }
@@ -283,7 +288,7 @@ class _BuyProductListState extends State<BuyProductList> {
           .where('subCategory',
               isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
           .where('isSecondHand', isEqualTo: widget.isSecondHand)
-          .where('district', isEqualTo: userLocation!.district)
+          .where(districtField, isEqualTo: userLocation!.district)
           .orderBy(orderByField, descending: sortType == SortType.descending)
           .snapshots();
     } else if (locationFilterMap.taluk) {
@@ -292,7 +297,7 @@ class _BuyProductListState extends State<BuyProductList> {
           .where('subCategory',
               isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
           .where('isSecondHand', isEqualTo: widget.isSecondHand)
-          .where('taluk', isEqualTo: userLocation!.taluk)
+          .where(talukField, isEqualTo: userLocation!.taluk)
           .orderBy(orderByField, descending: sortType == SortType.descending)
           .snapshots();
     } else if (locationFilterMap.gramPanchayat) {
@@ -301,7 +306,7 @@ class _BuyProductListState extends State<BuyProductList> {
           .where('subCategory',
               isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
           .where('isSecondHand', isEqualTo: widget.isSecondHand)
-          .where('gramPanchayat', isEqualTo: userLocation!.gramPanchayat)
+          .where(gramPanchayatField, isEqualTo: userLocation!.gramPanchayat)
           .orderBy(orderByField, descending: sortType == SortType.descending)
           .snapshots();
     } else {
@@ -310,7 +315,7 @@ class _BuyProductListState extends State<BuyProductList> {
           .where('subCategory',
               isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
           .where('isSecondHand', isEqualTo: widget.isSecondHand)
-          .where('village', isEqualTo: userLocation!.village)
+          .where(villageNameField, isEqualTo: userLocation!.village)
           .orderBy(orderByField, descending: sortType == SortType.descending)
           .snapshots();
     }
@@ -339,7 +344,7 @@ class _BuyProductListState extends State<BuyProductList> {
           .where('subSubCategory',
               whereIn:
                   subSubCategoryList.length != 0 ? subSubCategoryList : [''])
-          .where('district', isEqualTo: userLocation!.district)
+          .where(districtField, isEqualTo: userLocation!.district)
           .orderBy(orderByField, descending: sortType == SortType.descending)
           .snapshots();
     } else if (locationFilterMap.taluk) {
@@ -351,7 +356,7 @@ class _BuyProductListState extends State<BuyProductList> {
           .where('subSubCategory',
               whereIn:
                   subSubCategoryList.length != 0 ? subSubCategoryList : [''])
-          .where('taluk', isEqualTo: userLocation!.taluk)
+          .where(talukField, isEqualTo: userLocation!.taluk)
           .orderBy(orderByField, descending: sortType == SortType.descending)
           .snapshots();
     } else if (locationFilterMap.gramPanchayat) {
@@ -363,7 +368,7 @@ class _BuyProductListState extends State<BuyProductList> {
           .where('subSubCategory',
               whereIn:
                   subSubCategoryList.length != 0 ? subSubCategoryList : [''])
-          .where('gramPanchayat', isEqualTo: userLocation!.gramPanchayat)
+          .where(gramPanchayatField, isEqualTo: userLocation!.gramPanchayat)
           .orderBy(orderByField, descending: sortType == SortType.descending)
           .snapshots();
     } else {
@@ -375,7 +380,7 @@ class _BuyProductListState extends State<BuyProductList> {
           .where('subSubCategory',
               whereIn:
                   subSubCategoryList.length != 0 ? subSubCategoryList : [''])
-          .where('village', isEqualTo: userLocation!.village)
+          .where(villageNameField, isEqualTo: userLocation!.village)
           .orderBy(orderByField, descending: sortType == SortType.descending)
           .snapshots();
     }
@@ -392,12 +397,7 @@ class _BuyProductListState extends State<BuyProductList> {
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) {
           return FilterScreen(
-            locationFilterMap: LocationFilterMap(
-              district: false,
-              taluk: false,
-              gramPanchayat: false,
-              village: true,
-            ),
+            locationFilterMap: currentLocationFilterMap,
             subCategoryEnum: subCategoryEnum,
             isSecondHand: isSecondHand,
             subSubCategoryList: theSubSubCategoryList,
@@ -537,24 +537,84 @@ class _BuyProductListState extends State<BuyProductList> {
                         imageURL: data['imageURL'],
                         sellerId: data['sellerId'],
                         isSecondHand: data['isSecondHand'],
+                        village: data['villageName'],
+                        gramPanchayat: data['gramPanchayat'],
+                        taluk: data['taluk'],
+                        district: data['district'],
                       );
                     }).toList();
 
                     return Container(
                       child: products.length == 0
                           // short circuiting
-                          ? Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(20),
-                                child: Text(
-                                  AppLocalizations.of(context)!
-                                      .no_product_is_available,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  height: 50,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 8),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      // filter by
+                                      GestureDetector(
+                                        onTap: () {
+                                          goToFilterScreen(
+                                              context: context,
+                                              subCategoryEnum:
+                                                  widget.subCategoryEnum,
+                                              isSecondHand: widget.isSecondHand,
+                                              theSubSubCategoryList:
+                                                  subSubCategoryList,
+                                              theSortType: sortType);
+                                        },
+                                        child: Container(
+                                          child: Chip(
+                                            backgroundColor: Colors.grey[200],
+                                            labelPadding: EdgeInsets.symmetric(
+                                                horizontal: 10, vertical: 0),
+                                            label: Text(
+                                                AppLocalizations.of(context)!
+                                                    .show_filters),
+                                            deleteIcon: FaIcon(
+                                              FontAwesomeIcons.sliders,
+                                              size: 15,
+                                            ),
+                                            onDeleted: () {
+                                              goToFilterScreen(
+                                                context: context,
+                                                subCategoryEnum:
+                                                    widget.subCategoryEnum,
+                                                isSecondHand:
+                                                    widget.isSecondHand,
+                                                theSubSubCategoryList:
+                                                    subSubCategoryList,
+                                                theSortType: sortType,
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ),
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        AppLocalizations.of(context)!
+                                            .no_product_found,
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.black45),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             )
                           : Column(
                               children: [
@@ -625,7 +685,6 @@ class _BuyProductListState extends State<BuyProductList> {
                                             products,
                                             index,
                                             context,
-                                            {},
                                           );
                                         },
                                       ),
@@ -653,7 +712,6 @@ class _BuyProductListState extends State<BuyProductList> {
     List<SellProduct> products,
     int index,
     BuildContext context,
-    Map<String, dynamic> sellerData,
   ) {
     return Column(
       children: [
@@ -682,19 +740,15 @@ class _BuyProductListState extends State<BuyProductList> {
             }
           },
           child: BuyProductTile(
-              context: context,
-              name: products[index].productName,
-              imageURL: products[index].imageURL,
-              price: products[index].productPrice,
-              quantityUnit: products[index].quantityUnit,
-              subSubCategory: products[index].subSubCategory,
-              village: 'village',
-              district: 'district'
-              // village:
-              //     sellerData['profileData']['address'][0]['village'] ?? '---',
-              // district:
-              //     sellerData['profileData']['address'][0]['district'] ?? '---',
-              ),
+            context: context,
+            name: products[index].productName,
+            imageURL: products[index].imageURL,
+            price: products[index].productPrice,
+            quantityUnit: products[index].quantityUnit,
+            subSubCategory: products[index].subSubCategory,
+            village: products[index].village,
+            district: products[index].district,
+          ),
         ),
         SizedBox(
           height: 8,

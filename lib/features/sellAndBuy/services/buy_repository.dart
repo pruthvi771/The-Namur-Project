@@ -33,6 +33,10 @@ class BuyRepository {
         imageURL: data['imageURL'],
         sellerId: data['sellerId'],
         isSecondHand: data['isSecondHand'],
+        village: data['villageName'],
+        gramPanchayat: data['gramPanchayat'],
+        taluk: data['taluk'],
+        district: data['district'],
       );
     }).toList();
     print(products.length);
@@ -70,6 +74,10 @@ class BuyRepository {
         imageURL: data['imageURL'],
         sellerId: data['sellerId'],
         isSecondHand: data['isSecondHand'],
+        village: data['villageName'],
+        gramPanchayat: data['gramPanchayat'],
+        taluk: data['taluk'],
+        district: data['district'],
       );
     }).toList();
     print(products.length);
@@ -194,6 +202,10 @@ class BuyRepository {
         imageURL: data['imageURL'],
         sellerId: data['sellerId'],
         isSecondHand: data['isSecondHand'],
+        village: data['villageName'],
+        gramPanchayat: data['gramPanchayat'],
+        taluk: data['taluk'],
+        district: data['district'],
       );
     }).toList();
     print(products.length);

@@ -12,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:toast/toast.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../../../custom/device_info.dart';
 
 enum FilterSection {
   price,
@@ -342,57 +341,77 @@ class _FilterScreenState extends State<FilterScreen> {
                                 // color: Colors.red[300],
                                 padding:
                                     EdgeInsets.only(left: 8, right: 8, top: 20),
-                                child: ListView.builder(
-                                    itemCount: subSubCategoryList.length,
-                                    shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    scrollDirection: Axis.vertical,
-                                    itemBuilder: (context, index) {
-                                      return Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Container(
-                                          color: Colors.grey[50],
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8, vertical: 0),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Expanded(
-                                                child: Text(
-                                                  subSubCategoryList[index]
-                                                      .name,
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                ),
-                                              ),
-                                              Checkbox(
-                                                  activeColor:
-                                                      MyTheme.primary_color,
-                                                  value:
-                                                      subSubCategoryList[index]
-                                                          .isSelected,
-                                                  onChanged: (value) {
-                                                    setState(() {
-                                                      subSubCategoryList[index]
-                                                          .isSelected = value!;
-                                                    });
-                                                  }),
-                                            ],
+                                child: subSubCategoryList.length == 0
+                                    ? Container(
+                                        child: Text(
+                                          AppLocalizations.of(context)!
+                                              .no_data_is_available,
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.black45,
                                           ),
                                         ),
-                                      );
-                                    }))
+                                      )
+                                    : ListView.builder(
+                                        itemCount: subSubCategoryList.length,
+                                        shrinkWrap: true,
+                                        physics: NeverScrollableScrollPhysics(),
+                                        scrollDirection: Axis.vertical,
+                                        itemBuilder: (context, index) {
+                                          return Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Container(
+                                              color: Colors.grey[50],
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 8,
+                                                      vertical: 0),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Expanded(
+                                                    child: Text(
+                                                      subSubCategoryList[index]
+                                                          .name,
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.w600),
+                                                    ),
+                                                  ),
+                                                  Checkbox(
+                                                      activeColor:
+                                                          MyTheme.primary_color,
+                                                      value: subSubCategoryList[
+                                                              index]
+                                                          .isSelected,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          subSubCategoryList[
+                                                                      index]
+                                                                  .isSelected =
+                                                              value!;
+                                                        });
+                                                      }),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        }))
                             : BlocBuilder<HiveBloc, HiveState>(
                                 builder: (context, state) {
                                   if (state is HiveDataReceived) {
                                     return Column(
                                       children: [
+                                        SizedBox(
+                                          height: 20,
+                                        ),
                                         Expanded(
                                           child: ListView.builder(
                                             itemCount: state
@@ -403,6 +422,10 @@ class _FilterScreenState extends State<FilterScreen> {
                                               return Column(
                                                 children: [
                                                   CheckboxButton(
+                                                    heading:
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .district,
                                                     title:
                                                         addressObject.district,
                                                     checkValue:
@@ -417,6 +440,10 @@ class _FilterScreenState extends State<FilterScreen> {
                                                     },
                                                   ),
                                                   CheckboxButton(
+                                                    heading:
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .taluk,
                                                     title: addressObject.taluk,
                                                     checkValue:
                                                         newLocationFilterMap
@@ -430,6 +457,10 @@ class _FilterScreenState extends State<FilterScreen> {
                                                     },
                                                   ),
                                                   CheckboxButton(
+                                                    heading:
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .gram_panchayat,
                                                     title: addressObject
                                                         .gramPanchayat,
                                                     checkValue:
@@ -444,6 +475,10 @@ class _FilterScreenState extends State<FilterScreen> {
                                                     },
                                                   ),
                                                   CheckboxButton(
+                                                    heading:
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .village,
                                                     title:
                                                         addressObject.village,
                                                     checkValue:
@@ -466,7 +501,8 @@ class _FilterScreenState extends State<FilterScreen> {
                                     );
                                   }
                                   return Container(
-                                    child: Text('error'),
+                                    child: Text(AppLocalizations.of(context)!
+                                        .no_data_is_available),
                                   );
                                 },
                               ))
@@ -489,25 +525,16 @@ class _FilterScreenState extends State<FilterScreen> {
                   height: 40,
                   child: ElevatedButton(
                     onPressed: () {
-                      // if (!containsAtLeastOneSelected(
-                      //     list: subSubCategoryList)) {
-                      //   ToastComponent.showDialog(
-                      //       AppLocalizations.of(context)!
-                      //           .select_at_leart_one_category,
-                      //       gravity: Toast.center,
-                      //       duration: Toast.lengthLong);
-                      //   return;
-                      // } else if (!containsAtLeastOneSelected(
-                      //     list: locationsList)) {
-                      //   ToastComponent.showDialog(
-                      //       AppLocalizations.of(context)!
-                      //           .select_at_leart_one_location,
-                      //       gravity: Toast.center,
-                      //       duration: Toast.lengthLong);
-                      //   return;
-                      // }
+                      if (!containsAtLeastOneSelected(
+                          list: subSubCategoryList)) {
+                        ToastComponent.showDialog(
+                            AppLocalizations.of(context)!
+                                .select_at_leart_one_category,
+                            gravity: Toast.center,
+                            duration: Toast.lengthLong);
+                        return;
+                      }
                       // pop until BuyProductList
-
                       Navigator.pop(context);
                       Navigator.pop(context);
 
@@ -519,7 +546,7 @@ class _FilterScreenState extends State<FilterScreen> {
                               subCategoryEnum: widget.subCategoryEnum,
                               isSecondHand: widget.isSecondHand,
                               subSubCategoryList: subSubCategoryList,
-                              // locationsList: locationsList,
+                              locationFilterMap: newLocationFilterMap,
                               sortType: sortType,
                             );
                           },
@@ -561,28 +588,43 @@ class _FilterScreenState extends State<FilterScreen> {
     required String title,
     required bool checkValue,
     required void Function(bool?) onChanged,
+    required String heading,
   }) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      color: Colors.grey[50],
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Text(
-              title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: Text(heading.toUpperCase()),
+          ),
+          SizedBox(
+            height: 3,
+          ),
+          Container(
+            color: Colors.grey[50],
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                  ),
+                ),
+                Checkbox(
+                    activeColor: MyTheme.primary_color,
+                    value: checkValue,
+                    onChanged: (value) {
+                      onChanged(value);
+                    }),
+              ],
             ),
           ),
-          Checkbox(
-              activeColor: MyTheme.primary_color,
-              value: checkValue,
-              onChanged: (value) {
-                onChanged(value);
-              }),
         ],
       ),
     );
