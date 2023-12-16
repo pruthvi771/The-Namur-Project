@@ -9,13 +9,15 @@ import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_e
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_state.dart'
     as authState;
 import 'package:active_ecommerce_flutter/features/profile/enum.dart';
-import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_bloc.dart';
-import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_event.dart';
-import 'package:active_ecommerce_flutter/features/profile/hive_bloc/hive_state.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_bloc.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_event.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_state.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_event.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_state.dart'
     as profileState;
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/sell_bloc/sell_bloc.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/sell_bloc/sell_event.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/more_details.dart';
 import 'package:active_ecommerce_flutter/utils/location_repository.dart';
@@ -120,6 +122,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   String? selectedValue;
   final TextEditingController textEditingController = TextEditingController();
 
+  late var localContext;
+
   get console => null;
 
   getAddressValues() {
@@ -161,10 +165,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void fetchLocations(BuildContext buildContext) {
     if (_pinCodeController.text.toString().isEmpty ||
         _pinCodeController.text.toString().length != 6) {
-      ToastComponent.showDialog(
-          AppLocalizations.of(context)!.enter_valid_pincode,
-          gravity: Toast.center,
-          duration: Toast.lengthLong);
+      ToastComponent.showDialog(localContext.enter_valid_pincode,
+          gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
     BlocProvider.of<AuthBloc>(buildContext).add(
@@ -175,10 +177,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void fetchDistricts() async {
     if (_pinCodeController.text.toString().isEmpty ||
         _pinCodeController.text.toString().length != 6) {
-      ToastComponent.showDialog(
-          AppLocalizations.of(context)!.enter_valid_pincode,
-          gravity: Toast.center,
-          duration: Toast.lengthLong);
+      ToastComponent.showDialog(localContext.enter_valid_pincode,
+          gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
 
@@ -192,9 +192,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   void fetchTaluks({
     required String districtName,
-  }) async {
-    List<String> temp = await locationRepository.getTaluksForDistrict(
-        districtName: 'BAGALKOTE');
+  }) {
+    List<String> temp =
+        locationRepository.getTaluksForDistrict(districtName: districtName);
     setState(() {
       taluksList = temp;
       isTalukEnabled = true;
@@ -203,9 +203,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   void fetchGramPanchayats({
     required String talukName,
-  }) async {
+  }) {
     List<String> temp =
-        await locationRepository.getGramPanchayatsForTaluk(taluk: talukName);
+        locationRepository.getGramPanchayatsForTaluk(taluk: talukName);
     setState(() {
       gramPanchayatsList = temp;
       isGramPanchayadEnabled = true;
@@ -214,8 +214,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   void fetchVillageNames({
     required String gramPanchayatName,
-  }) async {
-    List<String> temp = await locationRepository.getVillagesForGramPanchayat(
+  }) {
+    List<String> temp = locationRepository.getVillagesForGramPanchayat(
         gramPanchayat: gramPanchayatName);
     setState(() {
       villageNamesList = temp;
@@ -226,10 +226,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void fetchLocationsForLand(BuildContext buildContext) {
     if (_pinCodeControllerForLand.text.toString().isEmpty ||
         _pinCodeControllerForLand.text.toString().length != 6) {
-      ToastComponent.showDialog(
-          AppLocalizations.of(context)!.enter_valid_pincode,
-          gravity: Toast.center,
-          duration: Toast.lengthLong);
+      ToastComponent.showDialog(localContext.enter_valid_pincode,
+          gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
     BlocProvider.of<AuthBloc>(buildContext).add(
@@ -250,43 +248,41 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     var savedData = dataBox.get('profile');
 
     if (savedData!.address.length != 0) {
-      ToastComponent.showDialog(
-          AppLocalizations.of(context)!.already_added_address,
-          gravity: Toast.center,
-          duration: Toast.lengthLong);
-      return;
-    }
-    if (pincode == null || pincode.isEmpty) {
-      ToastComponent.showDialog(AppLocalizations.of(context)!.enter_pincode,
+      ToastComponent.showDialog(localContext.already_added_address,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
-    // if (pincode == null || pincode.isEmpty) {
-    //   ToastComponent.showDialog(AppLocalizations.of(context)!.enter_pincode,
-    //       gravity: Toast.center, duration: Toast.lengthLong);
-    //   return;
-    // }
-    // if (pincode == null || pincode.isEmpty) {
-    //   ToastComponent.showDialog(AppLocalizations.of(context)!.enter_pincode,
-    //       gravity: Toast.center, duration: Toast.lengthLong);
-    //   return;
-    // }
-    // if (pincode == null || pincode.isEmpty) {
-    //   ToastComponent.showDialog(AppLocalizations.of(context)!.enter_pincode,
-    //       gravity: Toast.center, duration: Toast.lengthLong);
-    //   return;
-    // }
-    // if (locationDropdownValue == null) {
-    //   ToastComponent.showDialog(AppLocalizations.of(context)!.select_a_location,
-    //       gravity: Toast.center, duration: Toast.lengthLong);
-    //   return;
-    // }
+    if (pincode == null || pincode.isEmpty) {
+      ToastComponent.showDialog(localContext.enter_pincode,
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+    if (district == null || district.isEmpty) {
+      ToastComponent.showDialog(localContext.select_district,
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+    if (taluk == null || taluk.isEmpty) {
+      ToastComponent.showDialog(localContext.select_taluk,
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+    if (gramPanchayat == null || gramPanchayat.isEmpty) {
+      ToastComponent.showDialog(localContext.select_gram_panchayat,
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+    if (villageName == null || villageName.isEmpty) {
+      ToastComponent.showDialog(localContext.select_village,
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
 
     var address = Address()
-      ..district = district!
-      ..taluk = taluk!
-      ..gramPanchayat = gramPanchayat!
-      ..village = villageName!
+      ..district = district
+      ..taluk = taluk
+      ..gramPanchayat = gramPanchayat
+      ..village = villageName
       ..pincode = pincode;
 
     // if (savedData != null) {
@@ -305,7 +301,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     BlocProvider.of<HiveBloc>(context).add(
       SyncHiveToFirestoreRequested(profileData: newData),
     );
-    // }
+
+    BlocProvider.of<SellBloc>(context).add(
+      UpdateAddressInProductsAndSellerDocumentRequested(
+        district: district,
+        taluk: taluk,
+        gramPanchayat: gramPanchayat,
+        villageName: villageName,
+      ),
+    );
 
     _hobliController.clear();
     _villageController.clear();
@@ -317,19 +321,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   void _addLandToHive(area, syno, village) async {
     if (village == null) {
-      ToastComponent.showDialog(AppLocalizations.of(context)!.select_village,
+      ToastComponent.showDialog(localContext.select_village,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
 
     if (syno.isEmpty) {
-      ToastComponent.showDialog('${AppLocalizations.of(context)!.enter} Sy No',
+      ToastComponent.showDialog('${localContext.enter} Sy No',
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
 
     if (area.isEmpty) {
-      ToastComponent.showDialog(AppLocalizations.of(context)!.enter_area_name,
+      ToastComponent.showDialog(localContext.enter_area_name,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
@@ -338,10 +342,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     try {
       areaDouble = double.parse(area);
     } catch (e) {
-      ToastComponent.showDialog(
-          AppLocalizations.of(context)!.enter_valid_area_name,
-          gravity: Toast.center,
-          duration: Toast.lengthLong);
+      ToastComponent.showDialog(localContext.enter_valid_area_name,
+          gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
 
@@ -422,10 +424,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   void _saveKycToHive(aadhar, pan, gst) async {
     if (aadhar.length != 12) {
-      ToastComponent.showDialog(
-          AppLocalizations.of(context)!.enter_valid_aadhar_number,
-          gravity: Toast.center,
-          duration: Toast.lengthLong);
+      ToastComponent.showDialog(localContext.enter_valid_aadhar_number,
+          gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
 
@@ -495,6 +495,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     if (dataCollectionType == DataCollectionType.address) {
       savedData!.address.removeAt(index);
+      BlocProvider.of<SellBloc>(context).add(
+        UpdateAddressInProductsAndSellerDocumentRequested(
+          district: "",
+          taluk: "",
+          gramPanchayat: "",
+          villageName: "",
+        ),
+      );
     } else if (dataCollectionType == DataCollectionType.land) {
       landDropdownValue = null;
       savedData!.land.removeAt(index);
@@ -521,19 +529,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   void _addCropToHive(landSyno, crop, yieldOfCrop) async {
     if (landSyno.isEmpty) {
-      ToastComponent.showDialog(AppLocalizations.of(context)!.select_land,
+      ToastComponent.showDialog(localContext.select_land,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
 
     if (crop.isEmpty) {
-      ToastComponent.showDialog(AppLocalizations.of(context)!.select_crop,
+      ToastComponent.showDialog(localContext.select_crop,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
 
     if (yieldOfCrop.isEmpty) {
-      ToastComponent.showDialog(AppLocalizations.of(context)!.enter_yield,
+      ToastComponent.showDialog(localContext.enter_yield,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
@@ -542,7 +550,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     try {
       yieldOfCropDouble = double.parse(yieldOfCrop);
     } catch (e) {
-      ToastComponent.showDialog(AppLocalizations.of(context)!.enter_valid_yield,
+      ToastComponent.showDialog(localContext.enter_valid_yield,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
@@ -609,7 +617,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void _addAnimalToHive(landSyno, name, quantity) async {
     if (name.isEmpty) {
       ToastComponent.showDialog(
-        AppLocalizations.of(context)!.enter_animal_name,
+        localContext.enter_animal_name,
         gravity: Toast.center,
         duration: Toast.lengthLong,
       );
@@ -618,7 +626,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     if (quantity.isEmpty) {
       ToastComponent.showDialog(
-        AppLocalizations.of(context)!.enter_count,
+        localContext.enter_count,
         gravity: Toast.center,
         duration: Toast.lengthLong,
       );
@@ -629,7 +637,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     try {
       quantityInt = int.parse(quantity);
     } catch (e) {
-      ToastComponent.showDialog(AppLocalizations.of(context)!.enter_valid_count,
+      ToastComponent.showDialog(localContext.enter_valid_count,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
@@ -723,13 +731,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   void _addEquipmentToHive(landSyno, equipment) async {
     if (landSyno.isEmpty) {
-      ToastComponent.showDialog(AppLocalizations.of(context)!.select_land,
+      ToastComponent.showDialog(localContext.select_land,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
 
     if (equipment.isEmpty) {
-      ToastComponent.showDialog(AppLocalizations.of(context)!.select_crop,
+      ToastComponent.showDialog(localContext.select_crop,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
@@ -801,12 +809,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    localContext = AppLocalizations.of(context)!;
     return Container(
       color: Colors.white,
       height: DeviceInfo(context).height,
       child: Scaffold(
-        // key: homeData.scaffoldKey,
-        // drawer: const MainDrawer(),
         backgroundColor: Colors.transparent,
         appBar: buildCustomAppBar(context),
         body: BlocListener<HiveBloc, HiveState>(
@@ -848,8 +855,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               // Text(state.buyerProfileData.name),
-                              HeadingTextWidget(
-                                  AppLocalizations.of(context)!.account_ucf),
+                              HeadingTextWidget(localContext.account_ucf),
                               !profileDataUpdating
                                   ? Padding(
                                       padding: const EdgeInsets.symmetric(
@@ -874,13 +880,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                                   padding:
                                                       const EdgeInsets.all(8.0),
                                                   child: Text(
-                                                      '${AppLocalizations.of(context)!.name_ucf}: ${state.buyerProfileData.name}'),
+                                                      '${localContext.name_ucf}: ${state.buyerProfileData.name}'),
                                                 ),
                                                 Padding(
                                                   padding:
                                                       const EdgeInsets.all(8.0),
                                                   child: Text(
-                                                      "${AppLocalizations.of(context)!.phone_ucf}: ${state.buyerProfileData.phoneNumber}"),
+                                                      "${localContext.phone_ucf}: ${state.buyerProfileData.phoneNumber}"),
                                                 ),
                                               ],
                                             ),
@@ -937,7 +943,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                                           const EdgeInsets.all(
                                                               8.0),
                                                       child: Text(
-                                                          "${AppLocalizations.of(context)!.phone_ucf}: ${state.buyerProfileData.phoneNumber}"),
+                                                          "${localContext.phone_ucf}: ${state.buyerProfileData.phoneNumber}"),
                                                     ),
                                                   ],
                                                 ),
@@ -974,15 +980,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         TextFieldWidget(
                                           'Aadhar Card',
                                           _nameControllerForAccount,
-                                          AppLocalizations.of(context)!.enter,
+                                          localContext.enter,
                                         ),
                                         Row(
                                           children: [
                                             Expanded(child: SizedBox()),
                                             TextButton(
-                                              child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .save_ucf),
+                                              child:
+                                                  Text(localContext.save_ucf),
                                               onPressed: () {
                                                 BlocProvider.of<ProfileBloc>(
                                                         context)
@@ -1088,7 +1093,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       Column(
                         children: [
                           TextFieldWidget('Aadhar Card', _aadharController,
-                              '${AppLocalizations.of(context)!.enter} Aadhar Card'),
+                              '${localContext.enter} Aadhar Card'),
                           Row(
                             children: [
                               Expanded(child: SizedBox.shrink()),
@@ -1112,15 +1117,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             height: 10,
                           ),
                           TextFieldWidget('PAN Card', _panController,
-                              '${AppLocalizations.of(context)!.enter} PAN Card'),
+                              '${localContext.enter} PAN Card'),
                           TextFieldWidget('GST', _gstController,
-                              '${AppLocalizations.of(context)!.enter} GST Number'),
+                              '${localContext.enter} GST Number'),
                           Row(
                             children: [
                               Expanded(child: SizedBox()),
                               TextButton(
-                                child: Text(
-                                    AppLocalizations.of(context)!.save_ucf),
+                                child: Text(localContext.save_ucf),
                                 onPressed: () {
                                   _saveKycToHive(_aadharController.text,
                                       _panController.text, _gstController.text);
@@ -1142,8 +1146,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       height: 12,
                     ),
 
-                    HeadingTextWidget(
-                        AppLocalizations.of(context)!.address_details),
+                    HeadingTextWidget(localContext.address_details),
                     Column(
                       children: List.generate(
                         state.profileData.address.length,
@@ -1169,13 +1172,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                        '${AppLocalizations.of(context)!.district}: ${item.district}'),
+                                        '${localContext.district}: ${item.district}'),
                                     Text(
-                                        '${AppLocalizations.of(context)!.taluk}: ${item.taluk}'),
+                                        '${localContext.taluk}: ${item.taluk}'),
                                     Text(
-                                        '${AppLocalizations.of(context)!.gram_panchayat}: ${item.gramPanchayat}'),
+                                        '${localContext.gram_panchayat}: ${item.gramPanchayat}'),
                                     Text(
-                                        '${AppLocalizations.of(context)!.village}: ${item.village}'),
+                                        '${localContext.village}: ${item.village}'),
                                     Text('Pincode: ${item.pincode}'),
                                   ],
                                 ),
@@ -1219,22 +1222,49 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             height: 15,
                           ),
                           AddressSearchDropdown(
-                            title:
-                                AppLocalizations.of(context)!.select_district,
-                            hintText: AppLocalizations.of(context)!.search,
+                              title: localContext.select_district,
+                              hintText: localContext.search,
+                              context: context,
+                              dropdownValue: districtsDropdownValue,
+                              listOfItems: districtsList,
+                              searchController: textEditingController,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  taluksDropdownValue = null;
+                                  gramPanchayatsDropdownValue = null;
+                                  villageNamesDropdownValue = null;
+                                  districtsDropdownValue = newValue!;
+                                });
+                                fetchTaluks(
+                                    districtName: districtsDropdownValue!);
+                              },
+                              onMenuStateChange: (p0) {
+                                if (!p0) {
+                                  textEditingController.clear();
+                                }
+                              },
+                              isEnabled: true,
+                              disabledHint: localContext.district),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          AddressSearchDropdown(
+                            isEnabled: isTalukEnabled,
+                            disabledHint: localContext.select_district_first,
+                            title: localContext.select_taluk,
+                            hintText: localContext.search,
                             context: context,
-                            dropdownValue: districtsDropdownValue,
-                            listOfItems: districtsList,
+                            dropdownValue: taluksDropdownValue,
+                            listOfItems: taluksList,
                             searchController: textEditingController,
                             onChanged: (String? newValue) {
                               setState(() {
-                                taluksDropdownValue = null;
                                 gramPanchayatsDropdownValue = null;
                                 villageNamesDropdownValue = null;
-                                districtsDropdownValue = newValue!;
+                                taluksDropdownValue = newValue!;
                               });
-                              fetchTaluks(
-                                  districtName: districtsDropdownValue!);
+                              fetchGramPanchayats(
+                                  talukName: taluksDropdownValue!);
                             },
                             onMenuStateChange: (p0) {
                               if (!p0) {
@@ -1245,35 +1275,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           SizedBox(
                             height: 10,
                           ),
-                          NewDropdownWidget(
-                            title: AppLocalizations.of(context)!.select_taluk,
-                            context: context,
-                            dropdownValue: taluksDropdownValue,
-                            listOfItems: taluksList,
-                            disabledHint: AppLocalizations.of(context)!
-                                .select_district_first,
-                            isEnabled: isTalukEnabled,
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                gramPanchayatsDropdownValue = null;
-                                villageNamesDropdownValue = null;
-                                taluksDropdownValue = newValue!;
-                              });
-                              fetchGramPanchayats(
-                                  talukName: taluksDropdownValue!);
-                            },
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          NewDropdownWidget(
-                            title: AppLocalizations.of(context)!
-                                .select_gram_panchayat,
+                          AddressSearchDropdown(
+                            searchController: textEditingController,
+                            hintText: localContext.search,
+                            title: localContext.select_gram_panchayat,
                             context: context,
                             dropdownValue: gramPanchayatsDropdownValue,
                             listOfItems: gramPanchayatsList,
-                            disabledHint: AppLocalizations.of(context)!
-                                .select_taluk_first,
+                            disabledHint: localContext.select_taluk_first,
                             isEnabled: isGramPanchayadEnabled,
                             onChanged: (String? newValue) {
                               setState(() {
@@ -1284,31 +1293,41 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   gramPanchayatName:
                                       gramPanchayatsDropdownValue!);
                             },
+                            onMenuStateChange: (p0) {
+                              if (!p0) {
+                                textEditingController.clear();
+                              }
+                            },
                           ),
                           SizedBox(
                             height: 10,
                           ),
-                          NewDropdownWidget(
-                            title: AppLocalizations.of(context)!.select_village,
+                          AddressSearchDropdown(
+                            searchController: textEditingController,
+                            hintText: localContext.search,
+                            title: localContext.select_village,
                             context: context,
                             dropdownValue: villageNamesDropdownValue,
                             listOfItems: villageNamesList,
-                            disabledHint: AppLocalizations.of(context)!
-                                .select_gram_panchayat_first,
+                            disabledHint:
+                                localContext.select_gram_panchayat_first,
                             isEnabled: isVillageNameEnabled,
                             onChanged: (String? newValue) {
                               setState(() {
                                 villageNamesDropdownValue = newValue!;
-                                // fetchTaluks();
                               });
+                            },
+                            onMenuStateChange: (p0) {
+                              if (!p0) {
+                                textEditingController.clear();
+                              }
                             },
                           ),
                           Row(
                             children: [
                               Expanded(child: SizedBox()),
                               TextButton(
-                                child: Text(
-                                    AppLocalizations.of(context)!.save_ucf),
+                                child: Text(localContext.save_ucf),
                                 onPressed: () {
                                   _addAddressToHive(
                                     pincode: _pinCodeController.text,
@@ -1324,23 +1343,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ],
                       ),
 
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Divider(
-                      // color: MyTheme.grey_153,
-                      thickness: 2,
-                    ),
-                    SizedBox(
-                      height: 12,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Divider(
+                        // color: MyTheme.grey_153,
+                        thickness: 2,
+                      ),
                     ),
 
                     // land details
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        HeadingTextWidget(
-                            AppLocalizations.of(context)!.land_details),
+                        HeadingTextWidget(localContext.land_details),
 
                         Column(
                           children: List.generate(
@@ -1400,8 +1415,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             if (state
                                 is authState.LandLocationsForPincodeReceived) {
                               ToastComponent.showDialog(
-                                  AppLocalizations.of(context)!
-                                      .locations_fetched,
+                                  localContext.locations_fetched,
                                   gravity: Toast.center,
                                   duration: Toast.lengthLong);
                               postOfficeResponseForLand =
@@ -1420,8 +1434,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               clearAddressValuesForLand();
                               locationsListForLand.clear();
                               ToastComponent.showDialog(
-                                  AppLocalizations.of(context)!
-                                      .fetching_locations,
+                                  localContext.fetching_locations,
                                   gravity: Toast.center,
                                   duration: Toast.lengthLong);
                             }
@@ -1469,8 +1482,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                                 horizontal: 10),
                                             child: Center(
                                               child: Text(
-                                                AppLocalizations.of(context)!
-                                                    .search,
+                                                localContext.search,
                                                 style: TextStyle(
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w600,
@@ -1499,16 +1511,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     child: DropdownButton<String>(
                                       isExpanded: true,
                                       hint: Text(
-                                        AppLocalizations.of(context)!
-                                            .select_village,
+                                        localContext.select_village,
                                         style: TextStyle(
                                           color: Colors.grey,
                                           fontSize: 13,
                                         ),
                                       ),
                                       disabledHint: Text(
-                                        AppLocalizations.of(context)!
-                                            .enter_pincode_first,
+                                        localContext.enter_pincode_first,
                                         style: TextStyle(
                                           color: Colors.grey,
                                           fontSize: 13,
@@ -1555,13 +1565,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ),
 
                         TextFieldWidget('Syno', _synoController,
-                            '${AppLocalizations.of(context)!.enter} Syno'),
+                            '${localContext.enter} Syno'),
 
                         //custom Area text field for accepting double values
                         TexiFieldWidgetForDouble(
                           // 'Area',
                           _areaController,
-                          AppLocalizations.of(context)!.enter_area_in_acres,
+                          localContext.enter_area_in_acres,
                         ),
 
                         //Add Land to Hive
@@ -1569,8 +1579,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           children: [
                             Expanded(child: SizedBox()),
                             TextButton(
-                              child:
-                                  Text(AppLocalizations.of(context)!.save_ucf),
+                              child: Text(localContext.save_ucf),
                               onPressed: () {
                                 _addLandToHive(
                                   _areaController.text,
@@ -1600,8 +1609,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        HeadingTextWidget(
-                            AppLocalizations.of(context)!.farm_details),
+                        HeadingTextWidget(localContext.farm_details),
                         SizedBox(
                           height: 10,
                         ),
@@ -1611,8 +1619,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 child: Align(
                                   alignment: Alignment.center,
                                   child: Text(
-                                    AppLocalizations.of(context)!
-                                        .add_land_first,
+                                    localContext.add_land_first,
                                     style: TextStyle(
                                       color: Colors.red,
                                       fontSize: 18,
@@ -1626,8 +1633,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             : Column(
                                 children: [
                                   DropdownButtonWidget(
-                                      AppLocalizations.of(context)!.land,
-                                      AppLocalizations.of(context)!.select_land,
+                                      localContext.land,
+                                      localContext.select_land,
                                       List.generate(
                                         state.profileData.land.length,
                                         (index) {
@@ -1666,7 +1673,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     child: Align(
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        AppLocalizations.of(context)!.add_crop,
+                                        localContext.add_crop,
                                         style: TextStyle(
                                             // color: MyTheme.accent_color,
                                             fontSize: 15,
@@ -1721,13 +1728,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     child: Column(
                                       children: [
                                         Row(
+                                          // :
+                                          // CrossAxisAlignment.center,
                                           children: [
                                             Expanded(
                                               flex: 3,
                                               child: DropdownButtonWidget(
                                                   '',
-                                                  AppLocalizations.of(context)!
-                                                      .select_crop,
+                                                  localContext.select_crop,
                                                   cropsList.map<
                                                           DropdownMenuItem<
                                                               String>>(
@@ -1752,7 +1760,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                               child: TexiFieldWidgetForDouble(
                                                   // 'Yield',
                                                   _yieldController,
-                                                  AppLocalizations.of(context)!
+                                                  localContext
                                                       .enter_crop_yield),
                                             ),
                                           ],
@@ -1761,9 +1769,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           children: [
                                             Expanded(child: SizedBox()),
                                             TextButton(
-                                              child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .save_ucf),
+                                              child:
+                                                  Text(localContext.save_ucf),
                                               onPressed: () {
                                                 _addCropToHive(
                                                   landDropdownValue,
@@ -1788,8 +1795,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     child: Align(
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        AppLocalizations.of(context)!
-                                            .add_machines,
+                                        localContext.add_machines,
                                         style: TextStyle(
                                             // color: MyTheme.accent_color,
                                             fontSize: 15,
@@ -1844,8 +1850,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       children: [
                                         DropdownButtonWidget(
                                             '',
-                                            AppLocalizations.of(context)!
-                                                .select_equipments,
+                                            localContext.select_equipments,
                                             equipmentsList
                                                 .map<DropdownMenuItem<String>>(
                                                     (String value) {
@@ -1863,9 +1868,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           children: [
                                             Expanded(child: SizedBox()),
                                             TextButton(
-                                              child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .save_ucf),
+                                              child:
+                                                  Text(localContext.save_ucf),
                                               onPressed: () {
                                                 _addEquipmentToHive(
                                                   landDropdownValue,
@@ -1886,8 +1890,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     child: Align(
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        AppLocalizations.of(context)!
-                                            .add_animal,
+                                        localContext.add_animal,
                                         style: TextStyle(
                                             // color: MyTheme.accent_color,
                                             fontSize: 15,
@@ -1945,11 +1948,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             Expanded(
                                               flex: 3,
                                               child: TextFieldWidget(
-                                                AppLocalizations.of(context)!
-                                                    .animal,
+                                                localContext.animal,
                                                 _animalNameController,
-                                                AppLocalizations.of(context)!
-                                                    .enter_animal_name,
+                                                localContext.enter_animal_name,
                                               ),
                                             ),
                                             SizedBox(
@@ -1960,8 +1961,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                               child: TexiFieldWidgetForDouble(
                                                 // 'Quantity',
                                                 _animalQuantityController,
-                                                AppLocalizations.of(context)!
-                                                    .enter_count,
+                                                localContext.enter_count,
                                               ),
                                             ),
                                           ],
@@ -1970,9 +1970,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           children: [
                                             Expanded(child: SizedBox()),
                                             TextButton(
-                                              child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .save_ucf),
+                                              child:
+                                                  Text(localContext.save_ucf),
                                               onPressed: () {
                                                 _addAnimalToHive(
                                                   landDropdownValue,
@@ -1996,7 +1995,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 );
               return Container(
                 color: Colors.white30,
-                child: Text(AppLocalizations.of(context)!.something_went_wrong),
+                child: Text(localContext.something_went_wrong),
               );
             },
           ),
@@ -2005,7 +2004,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Container AddressSearchDropdown({
+  DropdownButtonHideUnderline AddressSearchDropdown({
     required BuildContext context,
     required String title,
     required String hintText,
@@ -2014,98 +2013,105 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     required Function(String?) onChanged,
     required TextEditingController searchController,
     required Function(bool) onMenuStateChange,
+    required String disabledHint,
+    required bool isEnabled,
   }) {
-    return Container(
-      height: 40,
-      width: double.infinity,
-      // padding: const EdgeInsets.symmetric(horizontal: 12.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: Colors.grey, // You can customize the border color here
+    return DropdownButtonHideUnderline(
+      child: DropdownButton2<String>(
+        disabledHint: Text(
+          disabledHint,
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 13,
+          ),
         ),
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton2<String>(
-          isExpanded: false,
-          dropdownStyleData: new DropdownStyleData(
-              maxHeight: 200,
-              // direction: DropdownDirection.textDirection,
-              isOverButton: false,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-              )),
-          hint: Text(
-            title,
-            maxLines: 1,
-            style: TextStyle(
-              fontSize: 14,
-              color: Theme.of(context).hintColor,
+        isExpanded: false,
+        dropdownStyleData: new DropdownStyleData(
+            maxHeight: 400,
+            // width: double.infinity,
+            // direction: DropdownDirection.textDirection,
+            isOverButton: false,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+            )),
+        hint: Text(
+          title,
+          maxLines: 1,
+          style: TextStyle(
+            fontSize: 14,
+            color: Theme.of(context).hintColor,
+          ),
+        ),
+        items: listOfItems
+            .map((item) => DropdownMenuItem(
+                  value: item,
+                  child: Text(
+                    item,
+                    style: const TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                ))
+            .toList(),
+        value: dropdownValue,
+        onChanged: !isEnabled
+            ? null
+            : (value) {
+                onChanged(value);
+              },
+        buttonStyleData: ButtonStyleData(
+          height: 40,
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(horizontal: 12.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: Colors.grey, // You can customize the border color here
             ),
           ),
-          items: listOfItems
-              .map((item) => DropdownMenuItem(
-                    value: item,
-                    child: Text(
-                      item,
-                      style: const TextStyle(
-                        fontSize: 14,
-                      ),
-                    ),
-                  ))
-              .toList(),
-          value: dropdownValue,
-          onChanged: (value) {
-            onChanged(value);
-          },
-          buttonStyleData: const ButtonStyleData(
-            height: 40,
-            width: 200,
-            padding: EdgeInsets.symmetric(horizontal: 12.0),
-          ),
-          menuItemStyleData: const MenuItemStyleData(
-            height: 40,
-          ),
-          dropdownSearchData: DropdownSearchData(
-            searchController: searchController,
-            searchInnerWidgetHeight: 50,
-            searchInnerWidget: Container(
-              height: 50,
-              padding: const EdgeInsets.only(
-                top: 8,
-                bottom: 4,
-                right: 8,
-                left: 8,
-              ),
-              child: TextFormField(
-                expands: true,
-                maxLines: null,
-                controller: searchController,
-                decoration: InputDecoration(
-                  isDense: true,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 8,
-                  ),
-                  hintText: hintText,
-                  hintStyle: const TextStyle(fontSize: 12),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+        ),
+        menuItemStyleData: const MenuItemStyleData(
+          height: 40,
+        ),
+        dropdownSearchData: DropdownSearchData(
+          searchController: searchController,
+          searchInnerWidgetHeight: 50,
+          searchInnerWidget: Container(
+            height: 50,
+            padding: const EdgeInsets.only(
+              top: 8,
+              bottom: 4,
+              right: 8,
+              left: 8,
+            ),
+            child: TextFormField(
+              expands: true,
+              maxLines: null,
+              controller: searchController,
+              decoration: InputDecoration(
+                isDense: true,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 8,
+                ),
+                hintText: hintText,
+                hintStyle: const TextStyle(fontSize: 12),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
             ),
-            searchMatchFn: (item, searchValue) {
-              return item.value
-                  .toString()
-                  .toLowerCase()
-                  .contains(searchValue.toLowerCase());
-            },
           ),
-          onMenuStateChange: (isOpen) {
-            onMenuStateChange(isOpen);
+          searchMatchFn: (item, searchValue) {
+            return item.value
+                .toString()
+                .toLowerCase()
+                .contains(searchValue.toLowerCase());
           },
         ),
+        onMenuStateChange: (isOpen) {
+          onMenuStateChange(isOpen);
+        },
       ),
     );
   }
@@ -2189,52 +2195,45 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Column DropdownButtonWidget(
+  Container DropdownButtonWidget(
       String title,
       String hintText,
       List<DropdownMenuItem<String>>? itemList,
       String? dropdownValue,
       Function(String) onChanged) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          height: 40,
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: Colors.grey, // You can customize the border color here
-            ),
-          ),
-          child: DropdownButton<String>(
-            hint: Text(
-              hintText,
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 14,
-              ),
-            ),
-            isExpanded: true,
-            value: dropdownValue,
-            icon: Icon(Icons.arrow_drop_down),
-            iconSize: 24,
-            elevation: 16,
-            underline: SizedBox(),
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.black,
-            ),
-            onChanged: (String? value) {
-              onChanged(value!);
-            },
-            items: itemList,
+    return Container(
+      height: 40,
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      margin: EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: Colors.grey, // You can customize the border color here
+        ),
+      ),
+      child: DropdownButton<String>(
+        hint: Text(
+          hintText,
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 14,
           ),
         ),
-        SizedBox(
-          height: 10,
-        )
-      ],
+        isExpanded: true,
+        value: dropdownValue,
+        icon: Icon(Icons.arrow_drop_down),
+        iconSize: 24,
+        elevation: 16,
+        underline: SizedBox(),
+        style: TextStyle(
+          fontSize: 16,
+          color: Colors.black,
+        ),
+        onChanged: (String? value) {
+          onChanged(value!);
+        },
+        items: itemList,
+      ),
     );
   }
 
@@ -2314,7 +2313,9 @@ PreferredSize buildCustomAppBar(context) {
                   child: InkWell(
                     //padding: EdgeInsets.zero,
                     onTap: () {
-                      Navigator.pushReplacement(context,
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return MoreDetails();
                       }));
