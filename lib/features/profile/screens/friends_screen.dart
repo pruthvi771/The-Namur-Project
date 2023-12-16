@@ -4,6 +4,8 @@ import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
 import 'package:active_ecommerce_flutter/features/auth/models/seller_group_item.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/bloc/friends_bloc.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/models/subSubCategory_filter_item.dart';
 import 'package:active_ecommerce_flutter/utils/functions.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
@@ -12,6 +14,7 @@ import 'package:active_ecommerce_flutter/utils/imageLinks.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -35,17 +38,40 @@ class _FriendsState extends State<Friends> {
   final String image = "assets/onion.png";
   late Future<SellerDataForFriendsScreen> _sellerUserDataFuture;
   late Future<List<String>?> _getSubCategoryListFuture;
-  late Future<List<SellerGroupItem>?> _getOtherSellersFuture;
   int selectedGroupIndex = 0;
   int indexForSellers = 0;
   var imageLinks = imageForNameCloud;
+  LocationFilterType locationFilterType = LocationFilterType.village;
+
+  Address? userAddress;
+
+  List<String> locationTypeString = [
+    'district',
+    'taluk',
+    'gramPanchayat',
+    'village',
+  ];
+
+  late Map<String, String> locationTypeStringMap;
+
+  String? locationTypeStringSelected = 'village';
 
   @override
   void initState() {
+    userAddress = getUserLocationFromHive();
+    if (userAddress == null) {
+      super.initState();
+      return;
+    }
+    locationTypeStringMap = {
+      'district': userAddress!.district,
+      'taluk': userAddress!.taluk,
+      'gramPanchayat': userAddress!.gramPanchayat,
+      'village': userAddress!.village,
+    };
     currentUser = AuthRepository().currentUser!;
     _sellerUserDataFuture = _getSellerUserData();
     _getSubCategoryListFuture = getSubCategoryList(productIDs: null);
-    _getOtherSellersFuture = getOtherSellers(subCategory: null);
     super.initState();
   }
 
@@ -115,20 +141,6 @@ class _FriendsState extends State<Friends> {
     return categoryList;
   }
 
-  Future<List<SellerGroupItem>?> getOtherSellers(
-      {required String? subCategory}) async {
-    if (subCategory == null) {
-      return null;
-    }
-
-    List<SellerGroupItem>? sellers = await firestoreRepository
-        .getOtherSellersForSubCategory(subCategory: subCategory);
-    // setState(() {
-    //   loading = false;
-    // });
-    return sellers;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -137,259 +149,342 @@ class _FriendsState extends State<Friends> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: buildCustomAppBar(context),
-        body: FutureBuilder(
-            future: _sellerUserDataFuture,
-            builder: (context, snapshot) {
-              if (snapshot.hasData && snapshot.data != null) {
-                var sellerData = snapshot.data as SellerDataForFriendsScreen;
-                _getSubCategoryListFuture =
-                    getSubCategoryList(productIDs: sellerData.products);
+        body: userAddress == null
+            ? Center(
+                child: Text(
+                  AppLocalizations.of(context)!.add_address_to_see_this,
+                  style: TextStyle(fontSize: 17, color: Colors.black45),
+                ),
+              )
+            : FutureBuilder(
+                future: _sellerUserDataFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData && snapshot.data != null) {
+                    var sellerData =
+                        snapshot.data as SellerDataForFriendsScreen;
+                    _getSubCategoryListFuture =
+                        getSubCategoryList(productIDs: sellerData.products);
 
-                return ListView(
-                  padding: EdgeInsets.all(8),
-                  physics: BouncingScrollPhysics(),
-                  children: [
-                    // Top Bar
-                    Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Container(
-                        padding: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                            color: MyTheme.green_lighter,
-                            borderRadius: BorderRadius.circular(15)),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                padding: EdgeInsets.all(3),
-                                child: Align(
-                                  alignment: Alignment.center,
-                                  child: Stack(
-                                    children: [
-                                      ClipRRect(
-                                        child: CircleAvatar(
-                                          backgroundColor: MyTheme.white,
-                                          radius: 45,
-                                        ),
-                                      ),
-                                      Positioned(
-                                        top: 5,
-                                        left: 5,
-                                        child: Container(
-                                          width:
-                                              80, // Set your desired width for the circular avatar
-                                          height: 80, //=
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            border: null,
-                                          ),
-                                          child: ClipOval(
-                                            child: (sellerData.photoURL ==
-                                                        null ||
-                                                    sellerData.photoURL == '')
-                                                ? Image.asset(
-                                                    "assets/default_profile2.png",
-                                                    fit: BoxFit.cover,
-                                                  )
-                                                : CachedNetworkImage(
-                                                    imageUrl:
-                                                        sellerData.photoURL!,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                          ),
-                                        ),
-                                      ),
-                                      Positioned(
-                                        bottom: 0,
-                                        left: 55,
-                                        child: ClipRRect(
-                                          child: CircleAvatar(
-                                            radius: 12,
-                                            backgroundColor: MyTheme.green,
-                                            child: Icon(
-                                              Icons.check,
-                                              size: 17.0,
-                                              color: Colors.white,
+                    return ListView(
+                      padding: EdgeInsets.all(8),
+                      physics: BouncingScrollPhysics(),
+                      children: [
+                        // Top Bar
+                        Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Container(
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                color: MyTheme.green_lighter,
+                                borderRadius: BorderRadius.circular(15)),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    padding: EdgeInsets.all(3),
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: Stack(
+                                        children: [
+                                          ClipRRect(
+                                            child: CircleAvatar(
+                                              backgroundColor: MyTheme.white,
+                                              radius: 45,
                                             ),
                                           ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              // TODO: group number and beyond
-                              child: FutureBuilder(
-                                  future: getNumberOfFriends(),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.hasData) {
-                                      return Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                              '${snapshot.data![2]} ${AppLocalizations.of(context)!.friends_and_neighbours}',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w700,
-                                                  fontSize: 13.0,
-                                                  color: Colors.black)),
-                                          SizedBox(
-                                            height: 5,
+                                          Positioned(
+                                            top: 5,
+                                            left: 5,
+                                            child: Container(
+                                              width:
+                                                  80, // Set your desired width for the circular avatar
+                                              height: 80, //=
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                border: null,
+                                              ),
+                                              child: ClipOval(
+                                                child: (sellerData.photoURL ==
+                                                            null ||
+                                                        sellerData.photoURL ==
+                                                            '')
+                                                    ? Image.asset(
+                                                        "assets/default_profile2.png",
+                                                        fit: BoxFit.cover,
+                                                      )
+                                                    : CachedNetworkImage(
+                                                        imageUrl: sellerData
+                                                            .photoURL!,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                              ),
+                                            ),
                                           ),
-                                          Text(
-                                              '0 ${AppLocalizations.of(context)!.groups}',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w700,
-                                                  fontSize: 13.0,
-                                                  color: Colors.black)),
-                                          SizedBox(
-                                            height: 5,
+                                          Positioned(
+                                            bottom: 0,
+                                            left: 55,
+                                            child: ClipRRect(
+                                              child: CircleAvatar(
+                                                radius: 12,
+                                                backgroundColor: MyTheme.green,
+                                                child: Icon(
+                                                  Icons.check,
+                                                  size: 17.0,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
                                           ),
-                                          Text(
-                                              '${AppLocalizations.of(context)!.society}: ${snapshot.data![0]} ${snapshot.data![1]}',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w700,
-                                                  fontSize: 13.0,
-                                                  color: Colors.black)),
                                         ],
-                                      );
-                                    }
-                                    if (snapshot.hasError) {
-                                      return Text(
-                                        AppLocalizations.of(context)!
-                                            .add_address_to_see_this,
-                                        style: TextStyle(
-                                            fontFamily: 'Poppins',
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 15,
-                                            color: Colors.red),
-                                      );
-                                    }
-                                    return Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  }),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    // Group Widgets
-                    FutureBuilder(
-                        future: _getSubCategoryListFuture,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData && snapshot.data != null) {
-                            var categoryList = snapshot.data;
-                            if (categoryList == null || categoryList.isEmpty) {
-                              return Container(
-                                height: 200,
-                                // color: Colors.red,
-                                padding: EdgeInsets.symmetric(horizontal: 20),
-                                child: Align(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      AppLocalizations.of(context)!
-                                          .add_products_to_see_this_screen,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        height: 1.4,
                                       ),
-                                    )),
-                              );
-                            }
-                            _getOtherSellersFuture = getOtherSellers(
-                                subCategory: categoryList[indexForSellers]);
-                            return Column(
-                              children: [
-                                // Groups Text
-                                Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                        AppLocalizations.of(context)!.groups,
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                          letterSpacing: .5,
-                                          fontFamily: 'Poppins',
-                                          decoration: TextDecoration.underline,
-                                        )),
-                                  ),
-                                ),
-
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 0),
-                                  child: Container(
-                                    height: 115,
-                                    child: ListView.builder(
-                                      physics: BouncingScrollPhysics(),
-                                      itemCount: categoryList.length,
-                                      scrollDirection: Axis.horizontal,
-                                      itemBuilder: (context, index) {
-                                        return GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              selectedGroupIndex = index;
-                                              indexForSellers = index;
-                                            });
-                                          },
-                                          child: GroupWidget2(
-                                            title: categoryList[index],
-                                            // name: 'hello',
-                                            image: imageLinks[
-                                                    categoryList[index]
-                                                        .toLowerCase()] ??
-                                                imageLinks['placeholder']!,
-                                            isSelected:
-                                                selectedGroupIndex == index
-                                                    ? true
-                                                    : false,
-                                          ),
-                                        );
-                                      },
                                     ),
                                   ),
                                 ),
+                                Expanded(
+                                  // TODO: group number and beyond
+                                  child: FutureBuilder(
+                                      future: getNumberOfFriends(),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData) {
+                                          return Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                  '${snapshot.data![2]} ${AppLocalizations.of(context)!.friends_and_neighbours}',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      fontSize: 13.0,
+                                                      color: Colors.black)),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Text(
+                                                  '0 ${AppLocalizations.of(context)!.groups}',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      fontSize: 13.0,
+                                                      color: Colors.black)),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Text(
+                                                  '${AppLocalizations.of(context)!.society}: ${snapshot.data![0]} ${snapshot.data![1]}',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      fontSize: 13.0,
+                                                      color: Colors.black)),
+                                            ],
+                                          );
+                                        }
+                                        if (snapshot.hasError) {
+                                          return Text(
+                                            AppLocalizations.of(context)!
+                                                .add_address_to_see_this,
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins',
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 15,
+                                                color: Colors.red),
+                                          );
+                                        }
+                                        return Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
 
-                                // People in your area text
-                                Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                        AppLocalizations.of(context)!
-                                            .people_in_your_area,
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                          letterSpacing: .5,
-                                          fontFamily: 'Poppins',
-                                          decoration: TextDecoration.underline,
+                        // Group Widgets
+                        FutureBuilder(
+                            future: _getSubCategoryListFuture,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData && snapshot.data != null) {
+                                var categoryList = snapshot.data;
+                                if (categoryList == null ||
+                                    categoryList.isEmpty) {
+                                  return Container(
+                                    height: 200,
+                                    // color: Colors.red,
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 20),
+                                    child: Align(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          AppLocalizations.of(context)!
+                                              .add_products_to_see_this_screen,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                            height: 1.4,
+                                          ),
                                         )),
+                                  );
+                                }
+
+                                BlocProvider.of<FriendsBloc>(context).add(
+                                  FriendsRequested(
+                                    subCategory: categoryList[indexForSellers],
+                                    locationFilterType: locationFilterType,
+                                    userAddress: userAddress!,
                                   ),
-                                ),
+                                  // HiveAppendAddress(context: context),
+                                );
+                                return Column(
+                                  children: [
+                                    // Groups Text
+                                    Padding(
+                                      padding: EdgeInsets.all(8),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                            AppLocalizations.of(context)!
+                                                .groups,
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                              letterSpacing: .5,
+                                              fontFamily: 'Poppins',
+                                              decoration:
+                                                  TextDecoration.underline,
+                                            )),
+                                      ),
+                                    ),
 
-                                SizedBox(
-                                  height: 10,
-                                ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 0),
+                                      child: Container(
+                                        height: 115,
+                                        child: ListView.builder(
+                                          physics: BouncingScrollPhysics(),
+                                          itemCount: categoryList.length,
+                                          scrollDirection: Axis.horizontal,
+                                          itemBuilder: (context, index) {
+                                            return GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  selectedGroupIndex = index;
+                                                  indexForSellers = index;
+                                                });
+                                              },
+                                              child: GroupWidget2(
+                                                title: categoryList[index],
+                                                // name: 'hello',
+                                                image: imageLinks[
+                                                        categoryList[index]
+                                                            .toLowerCase()] ??
+                                                    imageLinks['placeholder']!,
+                                                isSelected:
+                                                    selectedGroupIndex == index
+                                                        ? true
+                                                        : false,
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
 
-                                // showing sellers
-                                FutureBuilder(
-                                    future: _getOtherSellersFuture,
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
+                                    // People in your area text
+                                    Container(
+                                      height: 50,
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                                AppLocalizations.of(context)!
+                                                    .people_in_your_area,
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                  letterSpacing: .5,
+                                                  fontFamily: 'Poppins',
+                                                  decoration:
+                                                      TextDecoration.underline,
+                                                )),
+                                          ),
+                                          Expanded(
+                                            child: DropdownButtonWidget(
+                                                '',
+                                                AppLocalizations.of(context)!
+                                                    .group_by,
+                                                locationTypeString.map<
+                                                        DropdownMenuItem<
+                                                            String>>(
+                                                    (String value) {
+                                                  return DropdownMenuItem<
+                                                      String>(
+                                                    value: value,
+                                                    child: Text(
+                                                        locationTypeStringMap[
+                                                            value]!),
+                                                  );
+                                                }).toList(),
+                                                locationTypeStringSelected,
+                                                (value) {
+                                              setState(
+                                                () {
+                                                  locationTypeStringSelected =
+                                                      value;
+                                                  if (value == 'district') {
+                                                    locationFilterType =
+                                                        LocationFilterType
+                                                            .district;
+                                                  } else if (value == 'taluk') {
+                                                    locationFilterType =
+                                                        LocationFilterType
+                                                            .taluk;
+                                                  } else if (value ==
+                                                      'gramPanchayat') {
+                                                    locationFilterType =
+                                                        LocationFilterType
+                                                            .gramPanchayat;
+                                                  } else if (value ==
+                                                      'village') {
+                                                    locationFilterType =
+                                                        LocationFilterType
+                                                            .village;
+                                                  }
+                                                  BlocProvider.of<FriendsBloc>(
+                                                          context)
+                                                      .add(
+                                                    FriendsRequested(
+                                                      subCategory: categoryList[
+                                                          indexForSellers],
+                                                      locationFilterType:
+                                                          locationFilterType,
+                                                      userAddress: userAddress!,
+                                                    ),
+                                                    // HiveAppendAddress(context: context),
+                                                  );
+                                                },
+                                              );
+                                            }),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+
+                                    BlocBuilder<FriendsBloc, FriendsState>(
+                                        builder: (context, state) {
+                                      if (state is FriendsLoadInProgress) {
                                         return Container(
                                           height: 200,
                                           child: Center(
@@ -398,10 +493,9 @@ class _FriendsState extends State<Friends> {
                                           )),
                                         );
                                       }
-                                      if (snapshot.hasData &&
-                                          snapshot.data != null) {
+                                      if (state is FriendsLoadSuccess) {
                                         List<SellerGroupItem> sellersList =
-                                            snapshot.data!;
+                                            state.sellers;
                                         sellersList.removeWhere((item) =>
                                             item.sellerId ==
                                             currentUser.userId);
@@ -593,6 +687,7 @@ class _FriendsState extends State<Friends> {
                                                 },
                                               );
                                       }
+                                      print(state);
                                       return Container(
                                         height: 200,
                                         child: Center(
@@ -601,22 +696,63 @@ class _FriendsState extends State<Friends> {
                                         )),
                                       );
                                     }),
-                              ],
-                            );
-                          }
-                          return SizedBox();
-                        }),
+                                  ],
+                                );
+                              }
+                              return SizedBox();
+                            }),
 
-                    SizedBox(
-                      height: 10,
-                    ),
-                  ],
-                );
-              }
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }),
+                        SizedBox(
+                          height: 10,
+                        ),
+                      ],
+                    );
+                  }
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }),
+      ),
+    );
+  }
+
+  Container DropdownButtonWidget(
+      String title,
+      String hintText,
+      List<DropdownMenuItem<String>>? itemList,
+      String? dropdownValue,
+      Function(String) onChanged) {
+    return Container(
+      height: 40,
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: Colors.grey, // You can customize the border color here
+        ),
+      ),
+      child: DropdownButton<String>(
+        hint: Text(
+          hintText,
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 14,
+          ),
+        ),
+        isExpanded: true,
+        value: dropdownValue,
+        icon: Icon(Icons.arrow_drop_down),
+        iconSize: 24,
+        elevation: 16,
+        underline: SizedBox(),
+        style: TextStyle(
+          fontSize: 14,
+          color: Colors.black,
+        ),
+        onChanged: (String? value) {
+          onChanged(value!);
+        },
+        items: itemList,
       ),
     );
   }
@@ -763,7 +899,7 @@ class GroupWidget2 extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 2),
               child: CachedNetworkImage(
-                imageUrl: image!,
+                imageUrl: image,
                 fit: BoxFit.fitWidth,
                 placeholder: (context, url) => Center(
                   child: Container(

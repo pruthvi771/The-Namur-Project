@@ -800,5 +800,6 @@
 "select_gram_panchayat_first" : "Select Gram Panchayat First",
 "add_address_to_post_products": "Please add your address in profile to post products",
 "enter_total_kms": "Enter Total Kms",
-"add_featured_image": "Add Featured Image"
+"add_featured_image": "Add Featured Image",
+"group_by": "Group By"
 }

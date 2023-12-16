@@ -154,13 +154,13 @@ class DeleteProductRequested extends SellEvent {
   List<Object> get props => [productId];
 }
 
-class UpdateAddressInProductsRequested extends SellEvent {
+class UpdateAddressInProductsAndSellerDocumentRequested extends SellEvent {
   final String district;
   final String taluk;
   final String gramPanchayat;
   final String villageName;
 
-  const UpdateAddressInProductsRequested({
+  const UpdateAddressInProductsAndSellerDocumentRequested({
     required this.district,
     required this.taluk,
     required this.gramPanchayat,

@@ -11,9 +11,7 @@ class SellBloc extends Bloc<SellEvent, SellState> {
 
   SellBloc({required this.authRepository, required this.sellRepository})
       : super(SellInitial()) {
-    on<SellEvent>((event, emit) {
-      // TODO: implement event handler
-    });
+    on<SellEvent>((event, emit) {});
 
     on<AddProductRequested>((event, emit) async {
       emit(ProductAddEditDeleteLoading());
@@ -82,14 +80,14 @@ class SellBloc extends Bloc<SellEvent, SellState> {
       }
     });
 
-    on<UpdateAddressInProductsRequested>((event, emit) async {
+    on<UpdateAddressInProductsAndSellerDocumentRequested>((event, emit) async {
       emit(ProductAddEditDeleteLoading());
       try {
         var currentUser = authRepository.currentUser!;
 
         // await sellRepository.saveProductImage(file: event.image, docId: docId!);
 
-        await sellRepository.editAddressForAllProducts(
+        await sellRepository.editAddressForAllProductsAndSellerDocument(
           sellerId: currentUser.userId,
           district: event.district,
           taluk: event.taluk,

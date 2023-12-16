@@ -121,31 +121,39 @@ class _CategoryListState extends State<CategoryList> {
           app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
       child: Stack(children: [
         Scaffold(
-            key: homeData.scaffoldKey,
-            drawer: const MainDrawer(),
-            backgroundColor: Colors.transparent,
-            appBar: AppBar(
-              // elevation: 0,
-              // backgroundColor: MyTheme.primary_color,
-              flexibleSpace: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [Color(0xff107B28), Color(0xff4C7B10)]),
-                ),
+          key: homeData.scaffoldKey,
+          drawer: const MainDrawer(),
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            // elevation: 0,
+            // backgroundColor: MyTheme.primary_color,
+            flexibleSpace: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(0xff107B28), Color(0xff4C7B10)]),
               ),
-              title: Text(
-                AppLocalizations.of(context)!.home_ucf,
-                style: TextStyle(
-                    color: MyTheme.white,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: .5,
-                    fontFamily: 'Poppins'),
-              ),
-              centerTitle: true,
             ),
-            body: buildBody()),
+            title: Text(
+              AppLocalizations.of(context)!.home_ucf,
+              style: TextStyle(
+                  color: MyTheme.white,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: .5,
+                  fontFamily: 'Poppins'),
+            ),
+            centerTitle: true,
+          ),
+          // body: RefreshIndicator(
+          //   child: buildBody(),
+          //   onRefresh: () async {
+          //     // Add a return statement at the end
+          //     _getProfileDataFuture = _getProfileData();
+          //   },
+          // ),
+          body: buildBody(),
+        ),
         Align(
           alignment: Alignment.bottomCenter,
           child: widget.is_base_category || widget.is_top_category
@@ -177,14 +185,14 @@ class _CategoryListState extends State<CategoryList> {
                         // TitleBar(),
 
                         // screen database button
-                        TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => TestWidget()));
-                            },
-                            child: Text('Test Widget')),
+                        // TextButton(
+                        //     onPressed: () {
+                        //       Navigator.push(
+                        //           context,
+                        //           MaterialPageRoute(
+                        //               builder: (context) => TestWidget()));
+                        //     },
+                        //     child: Text('Test Widget')),
 
                         SizedBox(height: 10),
 

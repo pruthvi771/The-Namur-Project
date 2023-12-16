@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:active_ecommerce_flutter/features/auth/models/seller_group_item.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/models/subSubCategory_filter_item.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -140,8 +141,11 @@ class FirestoreRepository {
     }
   }
 
-  Future<List<SellerGroupItem>?> getOtherSellersForSubCategory(
-      {required String subCategory}) async {
+  Future<List<SellerGroupItem>?> getOtherSellersForSubCategory({
+    required String subCategory,
+    required LocationFilterType locationFilterType,
+    required Address userAddress,
+  }) async {
     try {
       QuerySnapshot<Map<String, dynamic>> querySnapshot =
           await FirebaseFirestore.instance
@@ -173,6 +177,24 @@ class FirestoreRepository {
                 .collection('seller')
                 .doc(sellerId)
                 .get();
+        if (locationFilterType == LocationFilterType.district) {
+          if (productDoc.data()!['district'] != userAddress.district) {
+            continue;
+          }
+        } else if (locationFilterType == LocationFilterType.taluk) {
+          if (productDoc.data()!['taluk'] != userAddress.taluk) {
+            continue;
+          }
+        } else if (locationFilterType == LocationFilterType.gramPanchayat) {
+          if (productDoc.data()!['gramPanchayat'] !=
+              userAddress.gramPanchayat) {
+            continue;
+          }
+        } else if (locationFilterType == LocationFilterType.village) {
+          if (productDoc.data()!['villageName'] != userAddress.village) {
+            continue;
+          }
+        }
         sellerDetails.add(
           SellerGroupItem(
             name: productDoc.data()!['name'],

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:active_ecommerce_flutter/dummy_data/single_product.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -115,7 +116,7 @@ class SellRepository {
     }
   }
 
-  Future<void> editAddressForAllProducts({
+  Future<void> editAddressForAllProductsAndSellerDocument({
     required String sellerId,
     required String district,
     required String gramPanchayat,
@@ -124,6 +125,14 @@ class SellRepository {
   }) async {
     try {
       CollectionReference products = _firestore.collection('products');
+
+      await saveAddressToSellerDocument(
+        sellerId: sellerId,
+        district: district,
+        gramPanchayat: gramPanchayat,
+        taluk: taluk,
+        villageName: villageName,
+      );
 
       List<String>? productsForSeller =
           await getAllProductIdsForSeller(sellerId: sellerId);
@@ -140,6 +149,44 @@ class SellRepository {
           'taluk': taluk,
         });
       }
+    } catch (e) {
+      print('Error updating product: $e');
+      // Handle the error according to your application's requirements
+    }
+  }
+
+  Future<void> saveAddressToSellerDocument({
+    required String sellerId,
+    required String district,
+    required String gramPanchayat,
+    required String taluk,
+    required String villageName,
+  }) async {
+    try {
+      CollectionReference sellerCollection = _firestore.collection('seller');
+
+      await sellerCollection.doc(sellerId).update({
+        'villageName': villageName,
+        'gramPanchayat': gramPanchayat,
+        'district': district,
+        'taluk': taluk,
+      });
+    } catch (e) {
+      print('Error updating product: $e');
+      // Handle the error according to your application's requirements
+    }
+  }
+
+  Future<void> addProductParentNameToSellerDocument({
+    required String sellerId,
+    required String parentName,
+  }) async {
+    try {
+      CollectionReference sellerCollection = _firestore.collection('seller');
+
+      await sellerCollection.doc(sellerId).update({
+        'productParentNames': FieldValue.arrayUnion([parentName])
+      });
     } catch (e) {
       print('Error updating product: $e');
       // Handle the error according to your application's requirements
