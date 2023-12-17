@@ -823,5 +823,9 @@
 "no_land_added_yet": "No Land Added Yet",
 "crop_already_added": "Crop Already Added",
 "pest_control": "Pest Control",
-"schedule": "Schedule"
+"schedule": "Schedule",
+"yield": "Yield",
+"not_tracked": "Not Tracked",
+"go_to_crop_calendar": "Go to Crop Calendar",
+"crops": "Crops" 
 }

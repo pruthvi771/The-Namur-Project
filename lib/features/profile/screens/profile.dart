@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
+import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_screen.dart';
 import 'package:active_ecommerce_flutter/features/profile/address_list.dart';
 import 'package:active_ecommerce_flutter/features/profile/enum.dart';
 import 'package:active_ecommerce_flutter/features/profile/models/updates_data.dart';
@@ -564,11 +565,22 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                   builder: (context, state) {
                                     if (state is HiveDataReceived) {
                                       print(state.profileData.land.length);
-                                      // List<<Crop, String>> cropsData = [];
-                                      // return state.profileData.land[0].crops.length == 0
 
                                       List<CropProfileDisplay> cropsToDisplay =
                                           [];
+
+                                      List<String> machinesToDisplay = [];
+
+                                      for (Land currentLand
+                                          in state.profileData.land) {
+                                        currentLand.equipments
+                                            .forEach((element) {
+                                          if (!machinesToDisplay
+                                              .contains(element)) {
+                                            machinesToDisplay.add(element);
+                                          }
+                                        });
+                                      }
 
                                       for (Land currentLand
                                           in state.profileData.land) {
@@ -608,91 +620,506 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                           );
                                         }
                                       }
-
-                                      // ? Center(
-                                      //     child: Text(
-                                      //       AppLocalizations.of(context)!
-                                      //           .no_data_is_available,
-                                      //       style: TextStyle(
-                                      //           fontSize: 16,
-                                      //           fontWeight: FontWeight.w500,
-                                      //           fontFamily: 'Poppins'),
-                                      //     ),
-                                      //   )
-                                      return SingleChildScrollView(
-                                        child: MasonryGridView.count(
-                                          crossAxisCount: 3,
-                                          mainAxisSpacing: 16,
-                                          crossAxisSpacing: 16,
-                                          itemCount: cropsToDisplay.length,
-                                          shrinkWrap: true,
-                                          padding: EdgeInsets.only(
-                                              top: 10.0, left: 18, right: 18),
-                                          physics:
-                                              NeverScrollableScrollPhysics(),
-                                          scrollDirection: Axis.vertical,
-                                          itemBuilder: (context, index) {
-                                            return InkWell(
-                                              onTap: () {
-                                                print(cropsToDisplay[index]
-                                                    .cropName);
-                                                print(cropsToDisplay[index]
-                                                    .landSyno);
-                                              },
-                                              child: Container(
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: 8),
-                                                decoration: BoxDecoration(
-                                                  color: MyTheme.green_lighter
-                                                      .withOpacity(0.2),
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 18),
+                                        child: Column(
+                                          children: [
+                                            Column(
+                                              children: [
+                                                Align(
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  child: Text(
+                                                    AppLocalizations.of(
+                                                            context)!
+                                                        .crops
+                                                        .toUpperCase(),
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontFamily: 'Poppins'),
+                                                  ),
                                                 ),
-                                                child: Column(
-                                                  children: [
-                                                    Container(
-                                                      margin: EdgeInsets.only(
-                                                          top: 8.0, bottom: 8),
-                                                      height: 50,
-                                                      width: 50,
-                                                      child: CachedNetworkImage(
-                                                          imageUrl: imageLinks[
-                                                                  cropsToDisplay[
-                                                                          index]
-                                                                      .cropName
-                                                                      .toLowerCase()] ??
-                                                              imageLinks[
-                                                                  'placeholder']!),
-                                                    ),
-                                                    Text(
-                                                      cropsToDisplay[index]
-                                                          .cropName,
-                                                      maxLines: 1,
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w500),
-                                                    ),
-                                                    Text(cropsToDisplay[index]
-                                                        .landSyno),
-                                                    Text(cropsToDisplay[index]
-                                                        .beingTracked
-                                                        .toString()),
-                                                    Text(cropsToDisplay[index]
-                                                        .plantingDate
-                                                        .toString()),
-                                                    Text(cropsToDisplay[index]
-                                                        .yieldOfCrop
-                                                        .toString()),
-                                                  ],
+                                                cropsToDisplay.length == 0
+                                                    ? Center(
+                                                        child: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .no_data_is_available,
+                                                          style: TextStyle(
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontFamily:
+                                                                  'Poppins'),
+                                                        ),
+                                                      )
+                                                    : SingleChildScrollView(
+                                                        child: MasonryGridView
+                                                            .count(
+                                                          crossAxisCount: 3,
+                                                          mainAxisSpacing: 16,
+                                                          crossAxisSpacing: 16,
+                                                          itemCount:
+                                                              cropsToDisplay
+                                                                  .length,
+                                                          shrinkWrap: true,
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  top: 10),
+                                                          physics:
+                                                              NeverScrollableScrollPhysics(),
+                                                          scrollDirection:
+                                                              Axis.vertical,
+                                                          itemBuilder:
+                                                              (context, index) {
+                                                            return InkWell(
+                                                              onTap: () {
+                                                                showDialog(
+                                                                    context:
+                                                                        context,
+                                                                    builder:
+                                                                        (dialogContext) {
+                                                                      return AlertDialog(
+                                                                        contentPadding: EdgeInsets.only(
+                                                                            top:
+                                                                                10,
+                                                                            left:
+                                                                                10,
+                                                                            right:
+                                                                                10),
+                                                                        actionsPadding:
+                                                                            EdgeInsets.all(0),
+                                                                        buttonPadding:
+                                                                            EdgeInsets.all(0),
+                                                                        content:
+                                                                            Container(
+                                                                          height:
+                                                                              330,
+                                                                          child:
+                                                                              Column(
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.spaceBetween,
+                                                                            children: [
+                                                                              SizedBox(
+                                                                                height: 10,
+                                                                              ),
+                                                                              Expanded(
+                                                                                child: Container(
+                                                                                  width: double.infinity,
+                                                                                  child: CachedNetworkImage(imageUrl: imageLinks[cropsToDisplay[index].cropName.toLowerCase()] ?? imageLinks['placeholder']!, fit: BoxFit.fitHeight),
+                                                                                ),
+                                                                              ),
+                                                                              SizedBox(
+                                                                                height: 20,
+                                                                              ),
+                                                                              Padding(
+                                                                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                                                                child: Align(
+                                                                                  alignment: Alignment.centerLeft,
+                                                                                  child: Text(
+                                                                                    cropsToDisplay[index].cropName,
+                                                                                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                              SizedBox(
+                                                                                height: 10,
+                                                                              ),
+                                                                              Container(
+                                                                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                                                                color: Colors.grey.withOpacity(0.1),
+                                                                                width: double.infinity,
+                                                                                child: Row(
+                                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                  children: [
+                                                                                    Text(
+                                                                                      '${AppLocalizations.of(context)!.yield}: ${cropsToDisplay[index].yieldOfCrop.toString()}',
+                                                                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                              ),
+                                                                              SizedBox(
+                                                                                height: 10,
+                                                                              ),
+                                                                              Container(
+                                                                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                                                                color: Colors.grey.withOpacity(0.1),
+                                                                                width: double.infinity,
+                                                                                child: Row(
+                                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                  children: [
+                                                                                    Text(
+                                                                                      '${AppLocalizations.of(dialogContext)!.land} Syno: ${cropsToDisplay[index].landSyno}',
+                                                                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                              ),
+                                                                              SizedBox(
+                                                                                height: 10,
+                                                                              ),
+                                                                              Container(
+                                                                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                                                                color: Colors.grey.withOpacity(0.1),
+                                                                                width: double.infinity,
+                                                                                child: Row(
+                                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                  children: [
+                                                                                    Text(
+                                                                                      '${AppLocalizations.of(dialogContext)!.planting_date}: ${cropsToDisplay[index].beingTracked ? cropsToDisplay[index].plantingDate!.day.toString() + '/' + cropsToDisplay[index].plantingDate!.month.toString() + '/' + cropsToDisplay[index].plantingDate!.year.toString() : AppLocalizations.of(dialogContext)!.not_tracked}',
+                                                                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                        actions: [
+                                                                          Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.symmetric(horizontal: 10),
+                                                                            child:
+                                                                                Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                              children: [
+                                                                                TextButton(
+                                                                                    onPressed: cropsToDisplay[index].beingTracked
+                                                                                        ? () {
+                                                                                            Navigator.pop(dialogContext);
+                                                                                            Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                                              return CalendarScreen();
+                                                                                            }));
+                                                                                          }
+                                                                                        : null,
+                                                                                    child: Text(AppLocalizations.of(dialogContext)!.go_to_crop_calendar)),
+                                                                                TextButton(
+                                                                                    onPressed: () {
+                                                                                      Navigator.pop(dialogContext);
+                                                                                    },
+                                                                                    child: Text(AppLocalizations.of(dialogContext)!.dismiss)),
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      );
+                                                                    });
+                                                              },
+                                                              child: Container(
+                                                                padding: EdgeInsets
+                                                                    .symmetric(
+                                                                        vertical:
+                                                                            8),
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  color: MyTheme
+                                                                      .green_lighter
+                                                                      .withOpacity(
+                                                                          0.2),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              15),
+                                                                ),
+                                                                child: Column(
+                                                                  children: [
+                                                                    Container(
+                                                                      margin: EdgeInsets.only(
+                                                                          top:
+                                                                              8.0,
+                                                                          bottom:
+                                                                              8),
+                                                                      height:
+                                                                          50,
+                                                                      width: 50,
+                                                                      child: CachedNetworkImage(
+                                                                          imageUrl:
+                                                                              imageLinks[cropsToDisplay[index].cropName.toLowerCase()] ?? imageLinks['placeholder']!),
+                                                                    ),
+                                                                    Text(
+                                                                      cropsToDisplay[
+                                                                              index]
+                                                                          .cropName,
+                                                                      maxLines:
+                                                                          1,
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              16,
+                                                                          fontWeight:
+                                                                              FontWeight.w500),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                      ),
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: 15,
+                                            ),
+                                            Column(
+                                              children: [
+                                                Align(
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  child: Text(
+                                                    AppLocalizations.of(
+                                                            context)!
+                                                        .machine
+                                                        .toUpperCase(),
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontFamily: 'Poppins'),
+                                                  ),
                                                 ),
-                                              ),
-                                            );
-                                          },
+                                                machinesToDisplay.length == 0
+                                                    ? Center(
+                                                        child: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .no_data_is_available,
+                                                          style: TextStyle(
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              fontFamily:
+                                                                  'Poppins'),
+                                                        ),
+                                                      )
+                                                    : SingleChildScrollView(
+                                                        child: MasonryGridView
+                                                            .count(
+                                                          crossAxisCount: 3,
+                                                          mainAxisSpacing: 16,
+                                                          crossAxisSpacing: 16,
+                                                          itemCount:
+                                                              machinesToDisplay
+                                                                  .length,
+                                                          shrinkWrap: true,
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  top: 15),
+                                                          physics:
+                                                              NeverScrollableScrollPhysics(),
+                                                          scrollDirection:
+                                                              Axis.vertical,
+                                                          itemBuilder:
+                                                              (context, index) {
+                                                            return InkWell(
+                                                              onTap: () {
+                                                                // showDialog(
+                                                                //     context:
+                                                                //         context,
+                                                                //     builder:
+                                                                //         (dialogContext) {
+                                                                //       return AlertDialog(
+                                                                //         contentPadding: EdgeInsets.only(
+                                                                //             top:
+                                                                //                 10,
+                                                                //             left:
+                                                                //                 10,
+                                                                //             right:
+                                                                //                 10),
+                                                                //         actionsPadding:
+                                                                //             EdgeInsets.all(0),
+                                                                //         buttonPadding:
+                                                                //             EdgeInsets.all(0),
+                                                                //         content:
+                                                                //             Container(
+                                                                //           height:
+                                                                //               330,
+                                                                //           child:
+                                                                //               Column(
+                                                                //             mainAxisAlignment:
+                                                                //                 MainAxisAlignment.spaceBetween,
+                                                                //             children: [
+                                                                //               SizedBox(
+                                                                //                 height: 10,
+                                                                //               ),
+                                                                //               Expanded(
+                                                                //                 child: Container(
+                                                                //                   width: double.infinity,
+                                                                //                   child: CachedNetworkImage(imageUrl: imageLinks[cropsToDisplay[index].cropName.toLowerCase()] ?? imageLinks['placeholder']!, fit: BoxFit.fitHeight),
+                                                                //                 ),
+                                                                //               ),
+                                                                //               SizedBox(
+                                                                //                 height: 20,
+                                                                //               ),
+                                                                //               Padding(
+                                                                //                 padding: const EdgeInsets.symmetric(horizontal: 10),
+                                                                //                 child: Align(
+                                                                //                   alignment: Alignment.centerLeft,
+                                                                //                   child: Text(
+                                                                //                     cropsToDisplay[index].cropName,
+                                                                //                     style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                                                                //                   ),
+                                                                //                 ),
+                                                                //               ),
+                                                                //               SizedBox(
+                                                                //                 height: 10,
+                                                                //               ),
+                                                                //               Container(
+                                                                //                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                                                //                 color: Colors.grey.withOpacity(0.1),
+                                                                //                 width: double.infinity,
+                                                                //                 child: Row(
+                                                                //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                //                   crossAxisAlignment: CrossAxisAlignment.center,
+                                                                //                   children: [
+                                                                //                     Text(
+                                                                //                       '${AppLocalizations.of(context)!.yield}: ${cropsToDisplay[index].yieldOfCrop.toString()}',
+                                                                //                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                                                                //                     ),
+                                                                //                   ],
+                                                                //                 ),
+                                                                //               ),
+                                                                //               SizedBox(
+                                                                //                 height: 10,
+                                                                //               ),
+                                                                //               Container(
+                                                                //                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                                                //                 color: Colors.grey.withOpacity(0.1),
+                                                                //                 width: double.infinity,
+                                                                //                 child: Row(
+                                                                //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                //                   crossAxisAlignment: CrossAxisAlignment.center,
+                                                                //                   children: [
+                                                                //                     Text(
+                                                                //                       '${AppLocalizations.of(dialogContext)!.land} Syno: ${cropsToDisplay[index].landSyno}',
+                                                                //                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                                                                //                     ),
+                                                                //                   ],
+                                                                //                 ),
+                                                                //               ),
+                                                                //               SizedBox(
+                                                                //                 height: 10,
+                                                                //               ),
+                                                                //               Container(
+                                                                //                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                                                //                 color: Colors.grey.withOpacity(0.1),
+                                                                //                 width: double.infinity,
+                                                                //                 child: Row(
+                                                                //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                //                   crossAxisAlignment: CrossAxisAlignment.center,
+                                                                //                   children: [
+                                                                //                     Text(
+                                                                //                       '${AppLocalizations.of(dialogContext)!.planting_date}: ${cropsToDisplay[index].beingTracked ? cropsToDisplay[index].plantingDate!.day.toString() + '/' + cropsToDisplay[index].plantingDate!.month.toString() + '/' + cropsToDisplay[index].plantingDate!.year.toString() : AppLocalizations.of(dialogContext)!.not_tracked}',
+                                                                //                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                                                                //                     ),
+                                                                //                   ],
+                                                                //                 ),
+                                                                //               ),
+                                                                //             ],
+                                                                //           ),
+                                                                //         ),
+                                                                //         actions: [
+                                                                //           Padding(
+                                                                //             padding:
+                                                                //                 const EdgeInsets.symmetric(horizontal: 10),
+                                                                //             child:
+                                                                //                 Row(
+                                                                //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                //               children: [
+                                                                //                 TextButton(
+                                                                //                     onPressed: cropsToDisplay[index].beingTracked
+                                                                //                         ? () {
+                                                                //                             Navigator.pop(dialogContext);
+                                                                //                             Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                //                               return CalendarScreen();
+                                                                //                             }));
+                                                                //                           }
+                                                                //                         : null,
+                                                                //                     child: Text(AppLocalizations.of(dialogContext)!.go_to_crop_calendar)),
+                                                                //                 TextButton(
+                                                                //                     onPressed: () {
+                                                                //                       Navigator.pop(dialogContext);
+                                                                //                     },
+                                                                //                     child: Text(AppLocalizations.of(dialogContext)!.dismiss)),
+                                                                //               ],
+                                                                //             ),
+                                                                //           ),
+                                                                //         ],
+                                                                //       );
+                                                                //     });
+                                                              },
+                                                              child: Container(
+                                                                padding: EdgeInsets
+                                                                    .symmetric(
+                                                                        vertical:
+                                                                            8),
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  color: MyTheme
+                                                                      .green_lighter
+                                                                      .withOpacity(
+                                                                          0.2),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              15),
+                                                                ),
+                                                                child: Column(
+                                                                  children: [
+                                                                    Container(
+                                                                      margin: EdgeInsets.only(
+                                                                          top:
+                                                                              8.0,
+                                                                          bottom:
+                                                                              8),
+                                                                      height:
+                                                                          50,
+                                                                      width: 50,
+                                                                      child: CachedNetworkImage(
+                                                                          imageUrl:
+                                                                              imageLinks[machinesToDisplay[index].toLowerCase()] ?? imageLinks['placeholder']!),
+                                                                    ),
+                                                                    Text(
+                                                                      machinesToDisplay[
+                                                                          index],
+                                                                      maxLines:
+                                                                          1,
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              16,
+                                                                          fontWeight:
+                                                                              FontWeight.w500),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                      ),
+                                              ],
+                                            )
+                                          ],
                                         ),
                                       );
                                     }
