@@ -117,7 +117,6 @@ class _TestWidgetState extends State<TestWidget> {
   var downloadLinks = {};
 
   final AuthRepository authRepository = AuthRepository();
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   List<Map> addresses = globaladdress;
   List<String> taluks = [];

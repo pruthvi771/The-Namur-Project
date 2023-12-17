@@ -3,8 +3,12 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
+import 'package:active_ecommerce_flutter/features/profile/address_list.dart';
 import 'package:active_ecommerce_flutter/features/profile/enum.dart';
 import 'package:active_ecommerce_flutter/features/profile/models/updates_data.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_bloc.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_event.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_state.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/more_details.dart';
@@ -22,6 +26,7 @@ import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:toast/toast.dart';
@@ -43,9 +48,10 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
 
   ProfileSection _profileSection = ProfileSection.updates;
   late Future<List<UpdatesData>> updatesDataFuture;
-  late Future<List<Crop>> cropsDataFuture;
+  late Future<List<CropCalendarItem>> cropCalendarDataFuture;
 
   var imageLinks = imageForNameCloud;
+  Uint8List? _image;
 
   @override
   void initState() {
@@ -54,8 +60,11 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
     BlocProvider.of<ProfileBloc>(context).add(
       ProfileDataRequested(),
     );
+    BlocProvider.of<HiveBloc>(context).add(
+      HiveDataRequested(),
+    );
     updatesDataFuture = getUpdatesDate();
-    cropsDataFuture = getCropsDate();
+    cropCalendarDataFuture = getCropCalendarData();
   }
 
   Future<List<UpdatesData>> getUpdatesDate() async {
@@ -75,31 +84,27 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
     return updatesData;
   }
 
-  Future<List<Crop>> getCropsDate() async {
-    List<Crop> cropsData = [];
+  Future<List<CropCalendarItem>> getCropCalendarData() async {
+    List<CropCalendarItem> cropCalendarData = [];
 
-    var dataBox = Hive.box<ProfileData>('profileDataBox3');
-    var savedData = dataBox.get('profile');
+    var dataBox = Hive.box<CropCalendarData>('cropCalendarDataBox');
+    var savedData = dataBox.get('calendar');
 
     if (savedData == null) {
       return [];
     }
 
-    for (Land land in savedData.land) {
-      for (Crop crop in land.crops) {
-        cropsData.add(crop);
-      }
+    for (CropCalendarItem crop in savedData.cropCalendarItems) {
+      cropCalendarData.add(crop);
     }
 
-    return cropsData;
+    return cropCalendarData;
   }
 
   void dispose() {
     _mainScrollController.dispose();
     super.dispose();
   }
-
-  Uint8List? _image;
 
   selectImage() async {
     Uint8List img = await pickImage(ImageSource.gallery);
@@ -164,76 +169,69 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
   }
 
   Widget buildView(context, _profileSection) {
-    return Container(
-      color: Colors.white,
-      height: DeviceInfo(context).height,
-      child: Stack(
-        children: [
-          Scaffold(
-            // appBar: buildCustomAppBar(context),
-            appBar: AppBar(
-              leading: IconButton(
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(
+                Icons.keyboard_arrow_left,
+                size: 35,
+                color: MyTheme.white,
+              ),
+            ),
+            automaticallyImplyLeading: false,
+            flexibleSpace: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(0xff107B28), Color(0xff4C7B10)]),
+              ),
+            ),
+            title: Text(AppLocalizations.of(context)!.profile_ucf,
+                style: TextStyle(
+                    color: MyTheme.white,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: .5,
+                    fontFamily: 'Poppins')),
+            centerTitle: true,
+            actions: [
+              IconButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return MoreDetails();
+                  }));
                 },
                 icon: Icon(
-                  Icons.keyboard_arrow_left,
-                  size: 35,
+                  Icons.settings,
+                  // size: 35,
                   color: MyTheme.white,
                 ),
               ),
-              automaticallyImplyLeading: false,
-              flexibleSpace: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [Color(0xff107B28), Color(0xff4C7B10)]),
-                ),
+              SizedBox(
+                width: 10,
               ),
-              title: Text(AppLocalizations.of(context)!.profile_ucf,
-                  style: TextStyle(
-                      color: MyTheme.white,
-                      fontWeight: FontWeight.w500,
-                      letterSpacing: .5,
-                      fontFamily: 'Poppins')),
-              centerTitle: true,
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return MoreDetails();
-                    }));
-                  },
-                  icon: Icon(
-                    Icons.settings,
-                    // size: 35,
-                    color: MyTheme.white,
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-              ],
-            ),
-            key: homeData.scaffoldKey,
-            // drawer: const MainDrawer(),
-
-            backgroundColor: Colors.transparent,
-            body: RefreshIndicator(
-              child: buildBodyChildren(_profileSection),
-              onRefresh: () async {
-                BlocProvider.of<ProfileBloc>(context).add(
-                  ProfileDataRequested(),
-                );
-                updatesDataFuture = getUpdatesDate();
-                cropsDataFuture = getCropsDate();
-              },
-            ),
+            ],
           ),
-        ],
-      ),
+          body: RefreshIndicator(
+            child: buildBodyChildren(_profileSection),
+            onRefresh: () async {
+              BlocProvider.of<ProfileBloc>(context).add(
+                ProfileDataRequested(),
+              );
+              BlocProvider.of<HiveBloc>(context).add(
+                HiveDataRequested(),
+              );
+              updatesDataFuture = getUpdatesDate();
+              cropCalendarDataFuture = getCropCalendarData();
+            },
+          ),
+        ),
+      ],
     );
   }
 
@@ -256,15 +254,9 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
       slivers: [
         BlocListener<ProfileBloc, ProfileState>(
           listener: (context, state) {
-            if (state is Error) {
-              ToastComponent.showDialog(state.error,
-                  gravity: Toast.center, duration: Toast.lengthLong);
-              Navigator.pop(context);
-              return;
-            }
             if (state is ProfileDataNotReceived) {
               ToastComponent.showDialog(
-                  'Could Not Retrieve Profile Data. Please Try Again.',
+                  AppLocalizations.of(context)!.could_not_fetch_data_try_again,
                   gravity: Toast.center,
                   duration: Toast.lengthLong);
               Navigator.pop(context);
@@ -272,17 +264,6 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
             }
             if (state is ProfileDataReceived) {
               print('STATE: ProfileDataReceived');
-            }
-            if (state is ProfileImageUpdated) {
-              print('STATE: ProfileImageUpdated');
-
-              ToastComponent.showDialog('Profile Image Updated',
-                  gravity: Toast.center, duration: Toast.lengthLong);
-
-              BlocProvider.of<ProfileBloc>(context).add(
-                ProfileDataRequested(),
-              );
-              return;
             }
           },
           child:
@@ -466,6 +447,265 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                     child: TabBarView(
                       controller: tabController,
                       children: [
+                        // FutureBuilder(
+                        //     future: cropsDataFuture,
+                        //     builder: (context, snapshot) {
+                        //       if (snapshot.connectionState ==
+                        //           ConnectionState.waiting) {
+                        //         return Center(
+                        //           child: CircularProgressIndicator(),
+                        //         );
+                        //       }
+                        //       if (snapshot.hasData && snapshot.data != null) {
+                        //         return snapshot.data!.length == 0
+                        //             ? Center(
+                        //                 child: Text(
+                        //                   AppLocalizations.of(context)!
+                        //                       .no_data_is_available,
+                        //                   style: TextStyle(
+                        //                       fontSize: 16,
+                        //                       fontWeight: FontWeight.w500,
+                        //                       fontFamily: 'Poppins'),
+                        //                 ),
+                        //               )
+                        //             : SingleChildScrollView(
+                        //                 child: MasonryGridView.count(
+                        //                   crossAxisCount: 3,
+                        //                   mainAxisSpacing: 16,
+                        //                   crossAxisSpacing: 16,
+                        //                   itemCount: snapshot.data!.length,
+                        //                   shrinkWrap: true,
+                        //                   padding: EdgeInsets.only(
+                        //                       top: 10.0, left: 18, right: 18),
+                        //                   physics:
+                        //                       NeverScrollableScrollPhysics(),
+                        //                   scrollDirection: Axis.vertical,
+                        //                   itemBuilder: (context, index) {
+                        //                     //
+                        //                     return Container(
+                        //                       //  height: 100,
+                        //                       decoration: BoxDecoration(
+                        //                         color: MyTheme.green_lighter
+                        //                             .withOpacity(0.2),
+                        //                         borderRadius:
+                        //                             BorderRadius.circular(15),
+                        //                       ),
+                        //                       child: Column(
+                        //                         children: [
+                        //                           Padding(
+                        //                             padding:
+                        //                                 const EdgeInsets.only(
+                        //                                     top: 8.0),
+                        //                             child: Container(
+                        //                               height: 50,
+                        //                               width: 50,
+                        //                               // child: Image.asset(
+                        //                               //   stocks[index],
+                        //                               //   fit: BoxFit.cover,
+                        //                               // ),
+                        //                               child: CachedNetworkImage(
+                        //                                   imageUrl: imageLinks[
+                        //                                           snapshot
+                        //                                               .data![
+                        //                                                   index]
+                        //                                               .name
+                        //                                               .toLowerCase()] ??
+                        //                                       imageLinks[
+                        //                                           'placeholder']!),
+                        //                             ),
+                        //                           ),
+                        //                           Padding(
+                        //                             padding:
+                        //                                 const EdgeInsets.only(
+                        //                                     top: 8.0,
+                        //                                     bottom: 8.0,
+                        //                                     left: 5,
+                        //                                     right: 5),
+                        //                             child: Align(
+                        //                               alignment:
+                        //                                   Alignment.center,
+                        //                               child: Text(
+                        //                                 snapshot
+                        //                                     .data![index].name,
+                        //                                 maxLines: 1,
+                        //                                 overflow: TextOverflow
+                        //                                     .ellipsis,
+                        //                                 style: TextStyle(
+                        //                                     fontSize: 16,
+                        //                                     fontWeight:
+                        //                                         FontWeight
+                        //                                             .w500),
+                        //                               ),
+                        //                             ),
+                        //                           )
+                        //                         ],
+                        //                       ),
+                        //                     );
+                        //                   },
+                        //                 ),
+                        //               );
+                        //       }
+                        //       return Center(
+                        //         child: CircularProgressIndicator(),
+                        //       );
+                        //     }),
+                        FutureBuilder(
+                            future: cropCalendarDataFuture,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                              if (snapshot.hasData && snapshot.data != null) {
+                                print(snapshot.data![0].cropName);
+                                return BlocBuilder<HiveBloc, HiveState>(
+                                  builder: (context, state) {
+                                    if (state is HiveDataReceived) {
+                                      print(state.profileData.land.length);
+                                      // List<<Crop, String>> cropsData = [];
+                                      // return state.profileData.land[0].crops.length == 0
+
+                                      List<CropProfileDisplay> cropsToDisplay =
+                                          [];
+
+                                      for (Land currentLand
+                                          in state.profileData.land) {
+                                        for (Crop currentCrop
+                                            in currentLand.crops) {
+                                          CropCalendarItem?
+                                              currentCropCalendarItem;
+
+                                          for (CropCalendarItem cropCalendarItem
+                                              in snapshot.data!) {
+                                            if (cropCalendarItem.cropName ==
+                                                    currentCrop.name &&
+                                                cropCalendarItem.landSyno ==
+                                                    currentLand.syno) {
+                                              currentCropCalendarItem =
+                                                  cropCalendarItem;
+                                              break;
+                                            }
+                                          }
+
+                                          cropsToDisplay.add(
+                                            CropProfileDisplay(
+                                              cropName: currentCrop.name,
+                                              landSyno: currentLand.syno,
+                                              yieldOfCrop:
+                                                  currentCrop.yieldOfCrop,
+                                              beingTracked:
+                                                  currentCropCalendarItem !=
+                                                      null,
+                                              plantingDate:
+                                                  currentCropCalendarItem !=
+                                                          null
+                                                      ? currentCropCalendarItem
+                                                          .plantingDate
+                                                      : null,
+                                            ),
+                                          );
+                                        }
+                                      }
+
+                                      // ? Center(
+                                      //     child: Text(
+                                      //       AppLocalizations.of(context)!
+                                      //           .no_data_is_available,
+                                      //       style: TextStyle(
+                                      //           fontSize: 16,
+                                      //           fontWeight: FontWeight.w500,
+                                      //           fontFamily: 'Poppins'),
+                                      //     ),
+                                      //   )
+                                      return SingleChildScrollView(
+                                        child: MasonryGridView.count(
+                                          crossAxisCount: 3,
+                                          mainAxisSpacing: 16,
+                                          crossAxisSpacing: 16,
+                                          itemCount: cropsToDisplay.length,
+                                          shrinkWrap: true,
+                                          padding: EdgeInsets.only(
+                                              top: 10.0, left: 18, right: 18),
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          scrollDirection: Axis.vertical,
+                                          itemBuilder: (context, index) {
+                                            return InkWell(
+                                              onTap: () {
+                                                print(cropsToDisplay[index]
+                                                    .cropName);
+                                                print(cropsToDisplay[index]
+                                                    .landSyno);
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 8),
+                                                decoration: BoxDecoration(
+                                                  color: MyTheme.green_lighter
+                                                      .withOpacity(0.2),
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                ),
+                                                child: Column(
+                                                  children: [
+                                                    Container(
+                                                      margin: EdgeInsets.only(
+                                                          top: 8.0, bottom: 8),
+                                                      height: 50,
+                                                      width: 50,
+                                                      child: CachedNetworkImage(
+                                                          imageUrl: imageLinks[
+                                                                  cropsToDisplay[
+                                                                          index]
+                                                                      .cropName
+                                                                      .toLowerCase()] ??
+                                                              imageLinks[
+                                                                  'placeholder']!),
+                                                    ),
+                                                    Text(
+                                                      cropsToDisplay[index]
+                                                          .cropName,
+                                                      maxLines: 1,
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w500),
+                                                    ),
+                                                    Text(cropsToDisplay[index]
+                                                        .landSyno),
+                                                    Text(cropsToDisplay[index]
+                                                        .beingTracked
+                                                        .toString()),
+                                                    Text(cropsToDisplay[index]
+                                                        .plantingDate
+                                                        .toString()),
+                                                    Text(cropsToDisplay[index]
+                                                        .yieldOfCrop
+                                                        .toString()),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    }
+                                    return Container(
+                                      child: Text('My Stock'),
+                                    );
+                                  },
+                                );
+                              }
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }),
                         FutureBuilder(
                             future: updatesDataFuture,
                             builder: (context, snapshot) {
@@ -528,108 +768,6 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                 child: CircularProgressIndicator(),
                               );
                             }),
-                        FutureBuilder(
-                            future: cropsDataFuture,
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              }
-                              if (snapshot.hasData && snapshot.data != null) {
-                                return snapshot.data!.length == 0
-                                    ? Center(
-                                        child: Text(
-                                          AppLocalizations.of(context)!
-                                              .no_data_is_available,
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
-                                              fontFamily: 'Poppins'),
-                                        ),
-                                      )
-                                    : SingleChildScrollView(
-                                        child: MasonryGridView.count(
-                                          crossAxisCount: 3,
-                                          mainAxisSpacing: 16,
-                                          crossAxisSpacing: 16,
-                                          itemCount: snapshot.data!.length,
-                                          shrinkWrap: true,
-                                          padding: EdgeInsets.only(
-                                              top: 10.0, left: 18, right: 18),
-                                          physics:
-                                              NeverScrollableScrollPhysics(),
-                                          scrollDirection: Axis.vertical,
-                                          itemBuilder: (context, index) {
-                                            //
-                                            return Container(
-                                              //  height: 100,
-                                              decoration: BoxDecoration(
-                                                color: MyTheme.green_lighter
-                                                    .withOpacity(0.2),
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                              ),
-                                              child: Column(
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 8.0),
-                                                    child: Container(
-                                                      height: 50,
-                                                      width: 50,
-                                                      // child: Image.asset(
-                                                      //   stocks[index],
-                                                      //   fit: BoxFit.cover,
-                                                      // ),
-                                                      child: CachedNetworkImage(
-                                                          imageUrl: imageLinks[
-                                                                  snapshot
-                                                                      .data![
-                                                                          index]
-                                                                      .name
-                                                                      .toLowerCase()] ??
-                                                              imageLinks[
-                                                                  'placeholder']!),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 8.0,
-                                                            bottom: 8.0,
-                                                            left: 5,
-                                                            right: 5),
-                                                    child: Align(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: Text(
-                                                        snapshot
-                                                            .data![index].name,
-                                                        maxLines: 1,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        style: TextStyle(
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
-                                                      ),
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      );
-                              }
-                              return Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            }),
                       ],
                     ),
                   ),
@@ -651,4 +789,20 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
       ],
     );
   }
+}
+
+class CropProfileDisplay {
+  final String cropName;
+  final String landSyno;
+  final bool beingTracked;
+  final DateTime? plantingDate;
+  final double yieldOfCrop;
+
+  CropProfileDisplay({
+    required this.cropName,
+    required this.landSyno,
+    this.plantingDate,
+    required this.yieldOfCrop,
+    required this.beingTracked,
+  });
 }

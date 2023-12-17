@@ -805,7 +805,7 @@
 "login_successful": "Login Successful",
 "enter_otp": "Enter OTP",
 "no_machines_added": "No Machines Added",
-"add_them_here": "Add Them Here",
+"add_them_here": "Add Them first",
 "tractor_jcb_tiller_rotovator": "Tractor, JCB, Tiller, Rotovqator",
 "no_crops_added": "No Crops Added",
 "crops_grown_and_planned": "Crops Grown and Planned",
@@ -814,5 +814,7 @@
 "farmer": "Farmer",
 "my_account": "My Account",
 "updates": "Updates",
-"my_stock": "My Stock"
+"my_stock": "My Stock",
+"could_not_fetch_data_try_again": "Could not fetch data. Please try again.",
+"profile_image_updated": "Profile Image Updated"
 }

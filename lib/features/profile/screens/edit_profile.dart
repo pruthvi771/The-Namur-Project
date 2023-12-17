@@ -1,7 +1,6 @@
 // translation done.
 
 import 'dart:typed_data';
-
 import 'package:active_ecommerce_flutter/custom/input_decorations.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/auth/models/postoffice_response_model.dart';
@@ -896,257 +895,282 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                   HeadingTextWidget(localContext.account_ucf),
 
-                  BlocBuilder<ProfileBloc, profileState.ProfileState>(
-                    builder: (context, state) {
-                      if (state is profileState.Loading) {
-                        return LinearProgressIndicator();
+                  BlocListener<ProfileBloc, profileState.ProfileState>(
+                    listener: (context, state) {
+                      if (state is profileState.ProfileImageUpdated) {
+                        ToastComponent.showDialog(
+                            AppLocalizations.of(context)!.profile_image_updated,
+                            gravity: Toast.center,
+                            duration: Toast.lengthLong);
+
+                        BlocProvider.of<ProfileBloc>(context).add(
+                          ProfileDataRequested(),
+                        );
+                        return;
                       }
-                      if (state is profileState.ProfileDataReceived) {
-                        return Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0, vertical: 3),
-                          // height: 100,
-                          width: double.infinity,
-                          child: Column(
-                            // crossAxisAlignment: CrossAxisAlignment.starta,
-                            children: [
-                              Stack(
-                                alignment: AlignmentDirectional.bottomEnd,
-                                children: [
-                                  Container(
-                                    height: 250,
-                                    margin: EdgeInsets.only(
-                                        bottom: 20, left: 20, right: 20),
-                                    width: double.infinity,
-                                    child: ClipRRect(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(10)),
-                                      child: (state.buyerProfileData.photoURL ==
-                                                  null ||
-                                              state.buyerProfileData.photoURL ==
-                                                  '')
-                                          ? Image.asset(
-                                              "assets/default_profile2.png",
-                                              fit: BoxFit.cover,
-                                            )
-                                          : CachedNetworkImage(
-                                              imageUrl: state
-                                                  .buyerProfileData.photoURL!,
-                                              fit: BoxFit.cover,
-                                              progressIndicatorBuilder: (context,
-                                                      url, downloadProgress) =>
-                                                  Center(
-                                                      child: CircularProgressIndicator(
-                                                          value:
-                                                              downloadProgress
-                                                                  .progress)),
-                                            ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    bottom: 20,
-                                    right: 15,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          bottom: 5, right: 10),
-                                      child: InkWell(
-                                        onTap: () {
-                                          saveProfileImage();
-                                        },
-                                        child: Container(
-                                            padding: EdgeInsets.all(11),
-                                            decoration: BoxDecoration(
-                                                color: Colors.black
-                                                    .withOpacity(0.5),
-                                                borderRadius:
-                                                    BorderRadius.circular(50)),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Icon(
-                                                  Icons.image,
-                                                  color: Colors.white,
-                                                ),
-                                                Icon(
-                                                  Icons.edit,
-                                                  color: Colors.white,
-                                                ),
-                                              ],
-                                            )),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              !profileDataUpdating
-                                  ? Container(
-                                      height: 80,
+                    },
+                    child: BlocBuilder<ProfileBloc, profileState.ProfileState>(
+                      builder: (context, state) {
+                        if (state is profileState.Loading) {
+                          return LinearProgressIndicator();
+                        }
+                        if (state is profileState.ProfileDataReceived) {
+                          return Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8.0, vertical: 3),
+                            // height: 100,
+                            width: double.infinity,
+                            child: Column(
+                              // crossAxisAlignment: CrossAxisAlignment.starta,
+                              children: [
+                                Stack(
+                                  alignment: AlignmentDirectional.bottomEnd,
+                                  children: [
+                                    Container(
+                                      height: 250,
+                                      margin: EdgeInsets.only(
+                                          bottom: 20, left: 20, right: 20),
                                       width: double.infinity,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: MyTheme.green_lighter,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10)),
+                                        child:
+                                            (state.buyerProfileData.photoURL ==
+                                                        null ||
+                                                    state.buyerProfileData
+                                                            .photoURL ==
+                                                        '')
+                                                ? Image.asset(
+                                                    "assets/default_profile2.png",
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                : CachedNetworkImage(
+                                                    imageUrl: state
+                                                        .buyerProfileData
+                                                        .photoURL!,
+                                                    fit: BoxFit.cover,
+                                                    progressIndicatorBuilder: (context,
+                                                            url,
+                                                            downloadProgress) =>
+                                                        Center(
+                                                            child: CircularProgressIndicator(
+                                                                value: downloadProgress
+                                                                    .progress)),
+                                                  ),
                                       ),
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 15, vertical: 5),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Expanded(
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Text(
-                                                    '${localContext.name_ucf}: ${state.buyerProfileData.name}',
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
+                                    ),
+                                    Positioned(
+                                      bottom: 20,
+                                      right: 15,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            bottom: 5, right: 10),
+                                        child: InkWell(
+                                          onTap: () {
+                                            saveProfileImage();
+                                          },
+                                          child: Container(
+                                              padding: EdgeInsets.all(11),
+                                              decoration: BoxDecoration(
+                                                  color: Colors.black
+                                                      .withOpacity(0.5),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          50)),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Icon(
+                                                    Icons.image,
+                                                    color: Colors.white,
                                                   ),
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Text(
-                                                    "${localContext.phone_ucf}: ${state.buyerProfileData.phoneNumber}",
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
+                                                  Icon(
+                                                    Icons.edit,
+                                                    color: Colors.white,
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              )),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                !profileDataUpdating
+                                    ? Container(
+                                        height: 80,
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: MyTheme.green_lighter,
+                                        ),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 15, vertical: 5),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Text(
+                                                      '${localContext.name_ucf}: ${state.buyerProfileData.name}',
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Text(
+                                                      "${localContext.phone_ucf}: ${state.buyerProfileData.phoneNumber}",
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                          // Expanded(child: Text('PAN')),
-                                          Container(
-                                            width: 30,
-                                            child: InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  _nameControllerForAccount
-                                                          .text =
-                                                      state.buyerProfileData
-                                                          .name;
-                                                  profileDataUpdating =
-                                                      !profileDataUpdating;
-                                                });
-                                              },
-                                              child: CircleAvatar(
-                                                radius: 12,
-                                                backgroundColor: MyTheme.green,
-                                                child: Icon(
-                                                  Icons.edit,
-                                                  size: 15.0,
-                                                  color: Colors.white,
+                                            // Expanded(child: Text('PAN')),
+                                            Container(
+                                              width: 30,
+                                              child: InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    _nameControllerForAccount
+                                                            .text =
+                                                        state.buyerProfileData
+                                                            .name;
+                                                    profileDataUpdating =
+                                                        !profileDataUpdating;
+                                                  });
+                                                },
+                                                child: CircleAvatar(
+                                                  radius: 12,
+                                                  backgroundColor:
+                                                      MyTheme.green,
+                                                  child: Icon(
+                                                    Icons.edit,
+                                                    size: 15.0,
+                                                    color: Colors.white,
+                                                  ),
                                                 ),
                                               ),
                                             ),
+                                          ],
+                                        ),
+                                      )
+                                    : Column(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 8.0, vertical: 3),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                color: MyTheme.green_lighter,
+                                              ),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 15, vertical: 5),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Text(
+                                                            "${localContext.phone_ucf}: ${state.buyerProfileData.phoneNumber}"),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  // Expanded(child: Text('PAN')),
+                                                  // InkWell(
+                                                  //   onTap: () {
+                                                  //     setState(() {
+                                                  //       _nameControllerForAccount
+                                                  //               .text =
+                                                  //           state.buyerProfileData
+                                                  //               .name;
+                                                  //       profileDataUpdating =
+                                                  //           !profileDataUpdating;
+                                                  //     });
+                                                  //   },
+                                                  //   child: CircleAvatar(
+                                                  //     radius: 12,
+                                                  //     backgroundColor:
+                                                  //         MyTheme.green,
+                                                  //     child: Icon(
+                                                  //       Icons.edit,
+                                                  //       size: 15.0,
+                                                  //       color: Colors.white,
+                                                  //     ),
+                                                  //   ),
+                                                  // ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 8,
+                                          ),
+                                          TextFieldWidget(
+                                            'Aadhar Card',
+                                            _nameControllerForAccount,
+                                            localContext.enter,
+                                          ),
+                                          Row(
+                                            children: [
+                                              Expanded(child: SizedBox()),
+                                              TextButton(
+                                                child:
+                                                    Text(localContext.save_ucf),
+                                                onPressed: () {
+                                                  BlocProvider.of<ProfileBloc>(
+                                                          context)
+                                                      .add(
+                                                    UserNameUpdateRequested(
+                                                        name:
+                                                            _nameControllerForAccount
+                                                                .text),
+                                                  );
+                                                  setState(() {
+                                                    profileDataUpdating = false;
+                                                  });
+                                                },
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
-                                    )
-                                  : Column(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8.0, vertical: 3),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              color: MyTheme.green_lighter,
-                                            ),
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 15, vertical: 5),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      child: Text(
-                                                          "${localContext.phone_ucf}: ${state.buyerProfileData.phoneNumber}"),
-                                                    ),
-                                                  ],
-                                                ),
-                                                // Expanded(child: Text('PAN')),
-                                                // InkWell(
-                                                //   onTap: () {
-                                                //     setState(() {
-                                                //       _nameControllerForAccount
-                                                //               .text =
-                                                //           state.buyerProfileData
-                                                //               .name;
-                                                //       profileDataUpdating =
-                                                //           !profileDataUpdating;
-                                                //     });
-                                                //   },
-                                                //   child: CircleAvatar(
-                                                //     radius: 12,
-                                                //     backgroundColor:
-                                                //         MyTheme.green,
-                                                //     child: Icon(
-                                                //       Icons.edit,
-                                                //       size: 15.0,
-                                                //       color: Colors.white,
-                                                //     ),
-                                                //   ),
-                                                // ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 8,
-                                        ),
-                                        TextFieldWidget(
-                                          'Aadhar Card',
-                                          _nameControllerForAccount,
-                                          localContext.enter,
-                                        ),
-                                        Row(
-                                          children: [
-                                            Expanded(child: SizedBox()),
-                                            TextButton(
-                                              child:
-                                                  Text(localContext.save_ucf),
-                                              onPressed: () {
-                                                BlocProvider.of<ProfileBloc>(
-                                                        context)
-                                                    .add(
-                                                  UserNameUpdateRequested(
-                                                      name:
-                                                          _nameControllerForAccount
-                                                              .text),
-                                                );
-                                                setState(() {
-                                                  profileDataUpdating = false;
-                                                });
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                            ],
-                          ),
-                        );
-                      }
-                      return SizedBox.shrink();
-                    },
+                              ],
+                            ),
+                          );
+                        }
+                        return SizedBox.shrink();
+                      },
+                    ),
                   ),
 
                   SizedBox(
