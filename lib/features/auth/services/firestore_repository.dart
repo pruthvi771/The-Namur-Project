@@ -291,7 +291,8 @@ class FirestoreRepository {
             ..crops = (item['crops'] as List)
                 .map((cropItem) => Crop()
                   ..name = cropItem['name']
-                  ..yieldOfCrop = cropItem['yieldOfCrop'])
+                  ..yieldOfCrop = cropItem['yieldOfCrop']
+                  ..id = cropItem['id'])
                 .toList()
             ..animals = (item['animals'] as List)
                 .map((animalItem) => Animal()
@@ -355,6 +356,7 @@ class FirestoreRepository {
                           .map((crop) => {
                                 'name': crop.name,
                                 'yieldOfCrop': crop.yieldOfCrop,
+                                'id': crop.id,
                               })
                           .toList(),
                       'equipments': land.equipments,

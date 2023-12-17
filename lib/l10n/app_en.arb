@@ -816,5 +816,12 @@
 "updates": "Updates",
 "my_stock": "My Stock",
 "could_not_fetch_data_try_again": "Could not fetch data. Please try again.",
-"profile_image_updated": "Profile Image Updated"
+"profile_image_updated": "Profile Image Updated",
+"select_land_to_see_crops": "Select Land to See Crops",
+"no_crops_added_for_this_land": "No Crops Added for this Land",
+"crop_selection": "Crop Selection",
+"no_land_added_yet": "No Land Added Yet",
+"crop_already_added": "Crop Already Added",
+"pest_control": "Pest Control",
+"schedule": "Schedule"
 }

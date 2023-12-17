@@ -566,9 +566,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     int index = savedData!.land.indexWhere((land) => land.syno == landSyno);
 
     if (index != -1) {
-      savedData.land[index].crops.add(Crop()
-        ..name = crop
-        ..yieldOfCrop = yieldOfCropDouble);
+      savedData.land[index].crops.add(
+        Crop()
+          ..name = crop
+          ..yieldOfCrop = yieldOfCropDouble
+          ..id = DateTime.now().millisecondsSinceEpoch.toString(),
+      );
 
       dataBox.put(savedData.id, savedData);
 

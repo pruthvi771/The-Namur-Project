@@ -78,6 +78,9 @@ class Crop {
 
   @HiveField(1)
   late double yieldOfCrop;
+
+  @HiveField(2)
+  late String id;
 }
 
 @HiveType(typeId: 5)
@@ -117,6 +120,9 @@ class CropCalendarItem {
 
   @HiveField(2)
   late DateTime plantingDate;
+
+  @HiveField(3)
+  late String id;
 }
 
 @HiveType(typeId: 8)

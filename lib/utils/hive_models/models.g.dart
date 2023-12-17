@@ -195,17 +195,20 @@ class CropAdapter extends TypeAdapter<Crop> {
     };
     return Crop()
       ..name = fields[0] as String
-      ..yieldOfCrop = fields[1] as double;
+      ..yieldOfCrop = fields[1] as double
+      ..id = fields[2] as String;
   }
 
   @override
   void write(BinaryWriter writer, Crop obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
-      ..write(obj.yieldOfCrop);
+      ..write(obj.yieldOfCrop)
+      ..writeByte(2)
+      ..write(obj.id);
   }
 
   @override
@@ -313,19 +316,22 @@ class CropCalendarItemAdapter extends TypeAdapter<CropCalendarItem> {
     return CropCalendarItem()
       ..cropName = fields[0] as String
       ..landSyno = fields[1] as String
-      ..plantingDate = fields[2] as DateTime;
+      ..plantingDate = fields[2] as DateTime
+      ..id = fields[3] as String;
   }
 
   @override
   void write(BinaryWriter writer, CropCalendarItem obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.cropName)
       ..writeByte(1)
       ..write(obj.landSyno)
       ..writeByte(2)
-      ..write(obj.plantingDate);
+      ..write(obj.plantingDate)
+      ..writeByte(3)
+      ..write(obj.id);
   }
 
   @override

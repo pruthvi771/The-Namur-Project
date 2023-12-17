@@ -1,3 +1,5 @@
+// translation done.
+
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_screen.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
@@ -10,7 +12,6 @@ import 'package:toast/toast.dart';
 import '../../../custom/device_info.dart';
 import 'package:active_ecommerce_flutter/features/profile/address_list.dart'
     as addressList;
-
 import 'package:time_range_picker/time_range_picker.dart';
 
 class CalendarAddCrop extends StatefulWidget {
@@ -34,9 +35,19 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
 
   int? selectedIndex;
   String? selectedCropName;
+  String? idOfCrop;
+
+  List<String> usedIDs = [];
 
   @override
   void initState() {
+    var dataBox = Hive.box<CropCalendarData>('cropCalendarDataBox');
+    var savedData = dataBox.get('calendar');
+    if (savedData != null) {
+      savedData.cropCalendarItems.forEach((element) {
+        usedIDs.add(element.id);
+      });
+    }
     landList = getLandList();
     cropListFuture = getCropsList(landSyno: null);
     super.initState();
@@ -95,39 +106,32 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
     var dataBox = Hive.box<CropCalendarData>('cropCalendarDataBox');
     var savedData = dataBox.get('calendar');
 
-    //  if (savedData != null) {
-    //   var kyc = KYC()
-    //     ..aadhar = ''
-    //     ..pan = ''
-    //     ..gst = '';
-
-    //   var newData = ProfileData()
-    //     ..id = savedData.id
-    //     ..updated = savedData.updated
-    //     ..address = savedData.address
-    //     ..kyc = kyc
-    //     ..land = savedData.land;
-
-    //   await dataBox.put(newData.id, newData);
-
     var cropCalendarItem = CropCalendarItem()
       ..cropName = selectedCropName!
       ..landSyno = landDropdownValue!
+      ..id = idOfCrop!
       ..plantingDate = dateOfRenting!;
 
     if (savedData == null) {
-      print('null');
       var newData = CropCalendarData()..cropCalendarItems = [cropCalendarItem];
       await dataBox.put('calendar', newData);
-      print('null data to added');
     } else {
+      savedData.cropCalendarItems.forEach((element) {
+        usedIDs.add(element.id);
+      });
+      if (usedIDs.contains(cropCalendarItem.id)) {
+        ToastComponent.showDialog(
+            AppLocalizations.of(context)!.crop_already_added,
+            gravity: Toast.center,
+            duration: Toast.lengthLong);
+        return;
+      }
       var newData = CropCalendarData()
         ..cropCalendarItems = [
           ...savedData.cropCalendarItems,
           cropCalendarItem
         ];
       await dataBox.put('calendar', newData);
-      print('not null data to added');
     }
 
     print(landDropdownValue);
@@ -193,7 +197,7 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
                       borderRadius: BorderRadius.circular(0))),
             ),
             child: Text(
-              'Add Crop for Tracking',
+              AppLocalizations.of(context)!.add_crop_for_tracking,
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 20,
@@ -209,7 +213,7 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
               height: 10,
             ),
 
-            TitleWidget(text: 'Land'),
+            TitleWidget(text: AppLocalizations.of(context)!.land),
 
             SizedBox(
               height: 20,
@@ -225,7 +229,7 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
                             height: 100,
                             child: Center(
                                 child: Text(
-                              'No lands added yet',
+                              AppLocalizations.of(context)!.no_land_added_yet,
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -236,7 +240,8 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
                         : Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15),
                             child: DropdownButtonWidget(
-                              hintText: 'Select Land',
+                              hintText:
+                                  AppLocalizations.of(context)!.select_land,
                               itemList: List.generate(
                                   snapshot.data!.length,
                                   (index) => DropdownMenuItem<String>(
@@ -273,7 +278,7 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
               height: 10,
             ),
 
-            TitleWidget(text: 'Crop Selection'),
+            TitleWidget(text: AppLocalizations.of(context)!.crop_selection),
 
             SizedBox(
               height: 15,
@@ -287,19 +292,16 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
                       height: 100,
                       child: Center(child: CircularProgressIndicator()),
                     );
-                    // } else if (cropSnapshot.hasError) {
-                    //   return Text('Error: ${cropSnapshot.error}');
                   } else if (cropSnapshot.hasData &&
                       cropSnapshot.data != null) {
-                    // print(cropSnapshot.data);
-                    // return Center(child: Text('has data '));
                     List<Crop> cropList = cropSnapshot.data!;
                     return cropList.length == 0
                         ? Container(
                             height: 100,
                             child: Center(
                                 child: Text(
-                              'No crops added for this land yet',
+                              AppLocalizations.of(context)!
+                                  .no_crops_added_for_this_land,
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
@@ -315,19 +317,24 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
                               itemCount: cropList.length,
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      selectedIndex = index;
-                                      selectedCropName = cropList[index].name;
-                                    });
-                                  },
-                                  child: EquipmentWidget(
-                                    image: imageForCrop[cropList[index].name]!,
-                                    title: cropList[index].name,
-                                    isSelected: selectedIndex == index,
-                                  ),
-                                );
+                                return usedIDs.contains(cropList[index].id)
+                                    ? SizedBox.shrink()
+                                    : GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            selectedIndex = index;
+                                            selectedCropName =
+                                                cropList[index].name;
+                                            idOfCrop = cropList[index].id;
+                                          });
+                                        },
+                                        child: EquipmentWidget(
+                                          image: imageForCrop[
+                                              cropList[index].name]!,
+                                          title: cropList[index].name,
+                                          isSelected: selectedIndex == index,
+                                        ),
+                                      );
                               },
                             ),
                           );
@@ -336,7 +343,7 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
                     height: 100,
                     child: Center(
                         child: Text(
-                      'Select Land to see crops',
+                      AppLocalizations.of(context)!.select_land_to_see_crops,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -353,7 +360,7 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
             SizedBox(
               height: 20,
             ),
-            TitleWidget(text: 'Planting Date'),
+            TitleWidget(text: AppLocalizations.of(context)!.planting_date),
 
             SizedBox(
               height: 10,
@@ -361,13 +368,10 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
 
             // Planting Date
             Container(
-              // height: 50,
-              // color: Colors.amber,
               padding: EdgeInsets.symmetric(horizontal: 4),
               child: Row(
                 children: [
                   Expanded(
-                    // flex: 4,
                     child: Container(
                       height: 60,
                       padding: EdgeInsets.all(8),
@@ -388,7 +392,7 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
                         child: Text(
                           dateOfRenting != null
                               ? '${dateOfRenting!.day}/${dateOfRenting!.month}/${dateOfRenting!.year}'
-                              : 'Date',
+                              : AppLocalizations.of(context)!.date_ucf,
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.w800,
@@ -408,84 +412,6 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
                       ),
                     ),
                   ),
-                  // Expanded(
-                  //   flex: 6,
-                  //   child: Container(
-                  //     height: 60,
-                  //     padding: EdgeInsets.all(8),
-                  //     child: ElevatedButton(
-                  //       onPressed: () async {
-                  //         TimeRange result = await showTimeRangePicker(
-                  //           context: context,
-                  //           start: const TimeOfDay(hour: 22, minute: 9),
-                  //           interval: const Duration(minutes: 30),
-                  //           minDuration: const Duration(minutes: 30),
-                  //           use24HourFormat: false,
-                  //           padding: 30,
-                  //           strokeWidth: 12,
-                  //           handlerRadius: 9,
-                  //           strokeColor: MyTheme.primary_color,
-                  //           handlerColor: MyTheme.green_light,
-                  //           selectedColor: MyTheme.primary_color,
-                  //           backgroundColor: Colors.black.withOpacity(0.3),
-                  //           ticks: 12,
-                  //           ticksColor: Colors.white,
-                  //           snap: true,
-                  //           labels: [
-                  //             "12 am",
-                  //             "3 am",
-                  //             "6 am",
-                  //             "9 am",
-                  //             "12 pm",
-                  //             "3 pm",
-                  //             "6 pm",
-                  //             "9 pm"
-                  //           ].asMap().entries.map((e) {
-                  //             return ClockLabel.fromIndex(
-                  //                 idx: e.key, length: 8, text: e.value);
-                  //           }).toList(),
-                  //           labelOffset: -30,
-                  //           labelStyle: const TextStyle(
-                  //               fontSize: 15,
-                  //               color: Colors.grey,
-                  //               fontWeight: FontWeight.bold),
-                  //           timeTextStyle: TextStyle(
-                  //               color: MyTheme.primary_color,
-                  //               fontSize: 24,
-                  //               fontWeight: FontWeight.w900),
-                  //           activeTimeTextStyle: TextStyle(
-                  //               color: MyTheme.primary_color,
-                  //               fontSize: 26,
-                  //               fontWeight: FontWeight.bold),
-                  //         );
-                  //         print("result " + result.toString());
-                  //         setState(() {
-                  //           timeRangeOfRenting = result;
-                  //         });
-                  //       },
-                  //       child: Text(
-                  //         timeRangeOfRenting != null
-                  //             ? '${rentStartTime!.hourOfPeriod}:${rentStartTime.minute == 0 ? '00' : rentStartTime.minute} ${rentStartTime.period.name} - ${rentEndTime!.hourOfPeriod}:${rentEndTime.minute == 0 ? '00' : rentEndTime.minute} ${rentEndTime.period.name}'
-                  //             : 'Time',
-                  //         style: TextStyle(
-                  //           color: Colors.black,
-                  //           fontWeight: FontWeight.w800,
-                  //           fontSize: 15,
-                  //         ),
-                  //       ),
-                  //       style: ButtonStyle(
-                  //           elevation: MaterialStateProperty.all(0),
-                  //           shape: MaterialStateProperty.all<
-                  //                   RoundedRectangleBorder>(
-                  //               RoundedRectangleBorder(
-                  //                   borderRadius: BorderRadius.circular(12),
-                  //                   side: BorderSide(
-                  //                       color: Colors.transparent, width: 0))),
-                  //           backgroundColor: MaterialStateProperty.all(
-                  //               const Color.fromARGB(255, 255, 243, 131))),
-                  //     ),
-                  //   ),
-                  // ),
                 ],
               ),
             ),
@@ -538,12 +464,6 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
               // This is called when the user selects an item.
               onChanged(value!);
             },
-            // items: itemList.map<DropdownMenuItem<String>>((String value) {
-            //   return DropdownMenuItem<String>(
-            //     value: value,
-            //     child: Text(value),
-            //   );
-            // }).toList(),
             items: itemList,
           ),
         ),

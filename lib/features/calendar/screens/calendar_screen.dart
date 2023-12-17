@@ -1,3 +1,5 @@
+// translation done.
+
 import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_add_crop.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/screens/calender/cultivation_tip.dart';
@@ -185,8 +187,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 .cropCalendarItems[selectedIndex].cropName);
                             return GestureDetector(
                               onTap: () => setState(() {
-                                // print(parentSnapshot.data!
-                                //     .cropCalendarItems[selectedIndex].cropName);
                                 selectedIndex = index;
                                 cropDocumentForInfoFuture = getCropDocForInfo(
                                     cropName: parentSnapshot
@@ -279,9 +279,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                                         width: 20,
                                                         height: 20,
                                                         child:
-                                                            CircularProgressIndicator(
-                                                          color: Colors.white,
-                                                        ),
+                                                            CircularProgressIndicator(),
                                                       ),
                                                     );
                                                   },
@@ -317,7 +315,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                           ),
                                           SizedBox(height: 3),
                                           Text(
-                                            "Cost Estimate",
+                                            AppLocalizations.of(context)!
+                                                .cost_estimate,
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w500,
                                                 fontFamily: "Poppins"),
@@ -351,7 +350,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                         ),
                                         SizedBox(height: 3),
                                         Text(
-                                          "Schedule",
+                                          AppLocalizations.of(context)!
+                                              .schedule,
                                           style: TextStyle(
                                               fontWeight: FontWeight.w500,
                                               fontFamily: "Poppins"),
@@ -384,7 +384,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                         ),
                                         SizedBox(height: 3),
                                         Text(
-                                          "Pests Control",
+                                          AppLocalizations.of(context)!
+                                              .pest_control,
                                           style: TextStyle(
                                               fontWeight: FontWeight.w500,
                                               fontFamily: "Poppins"),
