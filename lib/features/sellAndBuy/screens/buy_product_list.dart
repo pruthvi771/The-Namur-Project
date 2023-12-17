@@ -498,11 +498,11 @@ class _BuyProductListState extends State<BuyProductList> {
                           backgroundColor: MyTheme.primary_color,
                         ),
                         onPressed: () {
-                          Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => EditProfileScreen()),
-                              (route) => false);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => EditProfileScreen()),
+                          );
                         },
                         child: Text(AppLocalizations.of(context)!.add_address)),
                   ],

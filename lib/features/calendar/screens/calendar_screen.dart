@@ -19,11 +19,6 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
-  // HomePresenter homeData = HomePresenter();
-
-  // final DateTime currentDateTime = DateTime.now();
-  // late DateTime tenDaysAhead = currentDateTime.add(Duration(days: 10));
-
   late Future<CropCalendarData?> cropsForTrackingFuture;
   late Future cropDocumentForInfoFuture;
 
@@ -62,11 +57,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
     // cropDocumentForInfoFuture = getCropDocForInfo(cropName: 'onion');
     // tenDaysAhead = currentDateTime.add(Duration(days: 10));
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override
@@ -238,7 +228,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 ),
 
                 // cost estimate, schedule, pest control, cultivation tips
-
                 FutureBuilder(
                     future: cropDocumentForInfoFuture,
                     builder: (context, cropDocSnapshot) {

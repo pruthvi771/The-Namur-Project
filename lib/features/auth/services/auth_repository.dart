@@ -140,7 +140,7 @@ class AuthRepository {
           userId: userCredential.user!.uid,
           name: userCredential.user!.displayName!,
           email: userCredential.user!.email!,
-          photoURL: userCredential.user!.photoURL!,
+          // photoURL: userCredential.user!.photoURL!,
           googleSignIn: true,
         );
 

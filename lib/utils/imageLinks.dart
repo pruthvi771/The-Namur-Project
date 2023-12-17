@@ -1,4 +1,6 @@
 var imageForNameCloud = {
+  'farmers':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmore%2Ffarmers.png?alt=media&token=663f050d-24b2-43c5-9196-b43800a5a725',
   'placeholder':
       'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmore%2Fplaceholder.png?alt=media&token=788c151e-2624-4866-b3a2-4cb75ccb84e4',
 

@@ -167,9 +167,50 @@ class _MoreDetailsState extends State<MoreDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // key: homeData.scaffoldKey,
-      // drawer: const MainDrawer(),
-      appBar: buildCustomAppBar(context),
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            Icons.keyboard_arrow_left,
+            size: 35,
+            color: MyTheme.white,
+          ),
+        ),
+        automaticallyImplyLeading: false,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xff107B28), Color(0xff4C7B10)]),
+          ),
+        ),
+        title: Text(AppLocalizations.of(context)!.settings_ucf,
+            style: TextStyle(
+                color: MyTheme.white,
+                fontWeight: FontWeight.w500,
+                letterSpacing: .5,
+                fontFamily: 'Poppins')),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.edit,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return EditProfileScreen();
+              }));
+            },
+          ),
+          SizedBox(
+            width: 10,
+          ),
+        ],
+      ),
       body: FutureBuilder(
           future: _buyerUserDataFuture,
           builder: (context, snapshot) {
@@ -734,68 +775,6 @@ class _MoreDetailsState extends State<MoreDetails> {
               child: CircularProgressIndicator(),
             );
           }),
-    );
-  }
-
-  PreferredSize buildCustomAppBar(context) {
-    return PreferredSize(
-      preferredSize: Size(DeviceInfo(context).width!, 80),
-      child: Container(
-        height: 92,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xff107B28), Color(0xff4C7B10)])),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20.0, right: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  margin: EdgeInsets.only(right: 0),
-                  height: 30,
-                  child: Container(
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Icon(
-                        Icons.keyboard_arrow_left,
-                        size: 35,
-                        color: MyTheme.white,
-                      ),
-                    ),
-                  ),
-                ),
-                Center(
-                  child: Text(AppLocalizations.of(context)!.settings_ucf,
-                      style: TextStyle(
-                          color: MyTheme.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: .5,
-                          fontFamily: 'Poppins')),
-                ),
-                IconButton(
-                  icon: Icon(
-                    Icons.edit,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return EditProfileScreen();
-                    }));
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

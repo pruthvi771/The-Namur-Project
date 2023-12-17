@@ -6,15 +6,12 @@ import 'package:active_ecommerce_flutter/custom/box_decorations.dart';
 import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_screen.dart';
-import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/my_purchases.dart';
-import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/seller_orderlist.dart';
 import 'package:active_ecommerce_flutter/features/testscreen.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/parent_screen.dart';
 import 'package:active_ecommerce_flutter/helpers/shimmer_helper.dart';
 import 'package:active_ecommerce_flutter/presenter/bottom_appbar_index.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/drawer/drawer.dart';
@@ -185,14 +182,14 @@ class _CategoryListState extends State<CategoryList> {
                         // TitleBar(),
 
                         // screen database button
-                        // TextButton(
-                        //     onPressed: () {
-                        //       Navigator.push(
-                        //           context,
-                        //           MaterialPageRoute(
-                        //               builder: (context) => TestWidget()));
-                        //     },
-                        //     child: Text('Test Widget')),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => TestWidget()));
+                            },
+                            child: Text('Test Widget')),
 
                         SizedBox(height: 10),
 
@@ -344,14 +341,12 @@ class _CategoryListState extends State<CategoryList> {
                                                                       .primary_color,
                                                             ),
                                                             onPressed: () {
-                                                              Navigator.pushAndRemoveUntil(
+                                                              Navigator.push(
                                                                   context,
                                                                   MaterialPageRoute(
                                                                       builder:
                                                                           (context) =>
-                                                                              EditProfileScreen()),
-                                                                  (route) =>
-                                                                      false);
+                                                                              EditProfileScreen()));
                                                             },
                                                             child: Text(
                                                                 AppLocalizations.of(

@@ -4,8 +4,6 @@ import 'package:active_ecommerce_flutter/utils/globaladdress.dart';
 import 'package:active_ecommerce_flutter/utils/location_repository.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/services.dart';
@@ -261,97 +259,24 @@ class _TestWidgetState extends State<TestWidget> {
           ),
 
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               print('it starts');
 
-              taluks = LocationRepository().getAllDistricts();
-              setState(() {
-                taluks = taluks;
-              });
+              CollectionReference sellersCollection =
+                  FirebaseFirestore.instance.collection('seller');
+
+              // Query to find sellers with the specified parent in the 'parents' array
+              QuerySnapshot querySnapshot = await sellersCollection
+                  .where('parents', arrayContains: 'b')
+                  .get();
+
+              // Return the count of sellers
+              // return querySnapshot.size;
+              print(querySnapshot.size);
 
               print('and it\'s done');
             },
             child: const Text('sup'),
-          ),
-
-          DropdownButtonHideUnderline(
-            child: DropdownButton2<String>(
-              isExpanded: true,
-              hint: Text(
-                'Select Item',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Theme.of(context).hintColor,
-                ),
-              ),
-              items: taluks
-                  .map((item) => DropdownMenuItem(
-                        value: item,
-                        child: Text(
-                          item,
-                          style: const TextStyle(
-                            fontSize: 14,
-                          ),
-                        ),
-                      ))
-                  .toList(),
-              value: selectedValue,
-              onChanged: (value) {
-                setState(() {
-                  selectedValue = value;
-                });
-              },
-              buttonStyleData: const ButtonStyleData(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                height: 40,
-                width: 200,
-              ),
-              dropdownStyleData: const DropdownStyleData(
-                maxHeight: 200,
-              ),
-              menuItemStyleData: const MenuItemStyleData(
-                height: 40,
-              ),
-              dropdownSearchData: DropdownSearchData(
-                searchController: textEditingController,
-                searchInnerWidgetHeight: 50,
-                searchInnerWidget: Container(
-                  height: 50,
-                  padding: const EdgeInsets.only(
-                    top: 8,
-                    bottom: 4,
-                    right: 8,
-                    left: 8,
-                  ),
-                  child: TextFormField(
-                    expands: true,
-                    maxLines: null,
-                    controller: textEditingController,
-                    decoration: InputDecoration(
-                      isDense: true,
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 8,
-                      ),
-                      hintText: 'Search for an item...',
-                      hintStyle: const TextStyle(fontSize: 12),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                ),
-                searchMatchFn: (item, searchValue) {
-                  return item.value.toString().contains(searchValue);
-                },
-              ),
-              //This to clear the search value when you close the menu
-              onMenuStateChange: (isOpen) {
-                if (!isOpen) {
-                  textEditingController.clear();
-                }
-              },
-            ),
           ),
         ],
       ),

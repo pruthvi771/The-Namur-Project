@@ -1,6 +1,7 @@
 // translation done.
 
 import 'package:active_ecommerce_flutter/drawer/drawer.dart';
+import 'package:active_ecommerce_flutter/features/profile/screens/friends_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/buy_product_list.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/product_inventory.dart';
@@ -107,71 +108,72 @@ class _ParentScreenState extends State<ParentScreen> {
     return Column(
       children: [
         //top bar section
-        Container(
-          height: 80,
-          width: double.infinity,
-          color: Colors.blueGrey.shade50,
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: FutureBuilder(
-              future: totalFarmersCountFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: LinearProgressIndicator());
-                }
-                if (snapshot.hasData && snapshot.data != null) {
-                  return Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        height: 50,
-                        width: 130,
-                        child: Stack(
-                          children: [
-                            for (var i = 0; i < [1, 2, 3, 4].length; i++)
-                              Positioned(
-                                left: (i * (1 - .4) * 40).toDouble(),
-                                top: 0,
-                                child: CircleAvatar(
-                                  radius: 28,
-                                  backgroundColor: Colors.transparent,
-                                  // Set the background color to transparent
-                                  backgroundImage: AssetImage(
-                                      'assets/Ellipse2.png'), // Provide the asset image path
-                                ),
+        InkWell(
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return Friends();
+            }));
+          },
+          child: Container(
+            height: 80,
+            width: double.infinity,
+            color: Colors.blueGrey.shade50,
+            padding: EdgeInsets.symmetric(horizontal: 30),
+            child: FutureBuilder(
+                future: totalFarmersCountFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: LinearProgressIndicator());
+                  }
+                  if (snapshot.hasData && snapshot.data != null) {
+                    return Row(
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CachedNetworkImage(
+                          imageUrl: imageForNameCloud['farmers']!,
+                          imageBuilder: (context, imageProvider) => Container(
+                            height: 50,
+                            width: 50,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
                               ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        // height: 40,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              snapshot.data.toString(),
-                              style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15,
-                                  color: Colors.black),
                             ),
-                            Text(
-                              AppLocalizations.of(context)!.farmer,
-                              style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15,
-                                  color: Colors.black),
-                            )
-                          ],
+                          ),
                         ),
-                      ),
-                    ],
-                  );
-                }
-                return Container();
-              }),
+                        Container(
+                          // height: 40,
+                          margin: EdgeInsets.only(left: 20),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                snapshot.data.toString(),
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 15,
+                                    color: Colors.black),
+                              ),
+                              Text(
+                                AppLocalizations.of(context)!.farmer,
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 15,
+                                    color: Colors.black),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                  return Container();
+                }),
+          ),
         ),
 
         Padding(

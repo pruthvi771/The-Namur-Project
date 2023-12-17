@@ -300,21 +300,21 @@ class _WeatherScreenState extends State<WeatherScreen> {
               );
             },
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 25, top: 5, bottom: 5),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                AppLocalizations.of(context)!.forecast,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                  color: MyTheme.dark_font_grey,
-                  decoration: TextDecoration.underline,
-                ),
-              ),
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(left: 25, top: 5, bottom: 5),
+          //   child: Align(
+          //     alignment: Alignment.centerLeft,
+          //     child: Text(
+          //       AppLocalizations.of(context)!.forecast,
+          //       style: TextStyle(
+          //         fontWeight: FontWeight.bold,
+          //         fontSize: 15,
+          //         color: MyTheme.dark_font_grey,
+          //         decoration: TextDecoration.underline,
+          //       ),
+          //     ),
+          //   ),
+          // ),
           BlocListener<WeatherBloc, WeatherState>(
             listener: (context, state) {
               if (state is WeatherSreenDataReceived) {
@@ -322,18 +322,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 setState(() {
                   showFloatingActionButton = true;
                 });
-              } else if (state is Loading) {
-                // print('state is LOADING');
-              } else {
-                // print('state: $state');
-                // BlocProvider.of<WeatherBloc>(context).add(
-                //   WeatherSectionInfoRequested(),
-                // );
               }
-              // if (state is ScreenNoLocationDataFound) {
-              //   ToastComponent.showDialog('No Location Data Found',
-              //       gravity: Toast.center, duration: Toast.lengthLong);
-              // }
             },
             child: BlocBuilder<WeatherBloc, WeatherState>(
               builder: (context, state) {
@@ -597,7 +586,7 @@ class CurrentWeatherWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(8),
       child: Container(
         width: double.infinity,
         height: 130,
@@ -732,7 +721,7 @@ class WeatherDayCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(9),
         color: MyTheme.light_grey,
       ),
       height: MediaQuery.of(context).size.height / 5.5,
@@ -746,7 +735,7 @@ class WeatherDayCard extends StatelessWidget {
             decoration: BoxDecoration(
               color: Color(0xff4C7B10),
               borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+                  topLeft: Radius.circular(9), topRight: Radius.circular(9)),
             ),
             padding: const EdgeInsets.all(6),
             child: Center(

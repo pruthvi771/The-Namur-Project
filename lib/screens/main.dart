@@ -191,7 +191,7 @@ class _MainState extends State<Main> {
                     // ),
                     child: Icon(Icons.person_outlined),
                   ),
-                  label: AppLocalizations.of(context)!.profile_ucf,
+                  label: AppLocalizations.of(context)!.my_account,
                 ),
                 BottomNavigationBarItem(
                     icon: Padding(

@@ -20,7 +20,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
-import 'package:active_ecommerce_flutter/drawer/drawer.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 // import 'package:active_ecommerce_flutter/app_config.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
@@ -174,9 +173,56 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
       child: Stack(
         children: [
           Scaffold(
-            appBar: buildCustomAppBar(context),
+            // appBar: buildCustomAppBar(context),
+            appBar: AppBar(
+              leading: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: Icon(
+                  Icons.keyboard_arrow_left,
+                  size: 35,
+                  color: MyTheme.white,
+                ),
+              ),
+              automaticallyImplyLeading: false,
+              flexibleSpace: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Color(0xff107B28), Color(0xff4C7B10)]),
+                ),
+              ),
+              title: Text(AppLocalizations.of(context)!.profile_ucf,
+                  style: TextStyle(
+                      color: MyTheme.white,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: .5,
+                      fontFamily: 'Poppins')),
+              centerTitle: true,
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return MoreDetails();
+                    }));
+                  },
+                  icon: Icon(
+                    Icons.settings,
+                    // size: 35,
+                    color: MyTheme.white,
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+              ],
+            ),
             key: homeData.scaffoldKey,
-            drawer: const MainDrawer(),
+            // drawer: const MainDrawer(),
+
             backgroundColor: Colors.transparent,
             body: RefreshIndicator(
               child: buildBodyChildren(_profileSection),
@@ -195,24 +241,6 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
   }
 
   CustomScrollView buildBodyChildren(profileSection) {
-    final stocks = [
-      'assets/onion.png',
-      'assets/coconut 1.png',
-      'assets/bugs.png',
-      'assets/orange (1).png',
-      'assets/onion.png',
-      'assets/coconut 1.png',
-      'assets/bugs.png',
-      'assets/orange (1).png',
-      'assets/onion.png',
-      'assets/coconut 1.png',
-      'assets/bugs.png',
-      'assets/orange (1).png',
-      'assets/coconut 1.png',
-      'assets/bugs.png',
-      'assets/orange (1).png',
-    ];
-
     _launchYouTubeVideo(url) async {
       print('clicked');
       final Uri _url = Uri.parse(url);
@@ -294,36 +322,36 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                 fit: BoxFit.cover,
                               ),
                       ),
-                      Positioned(
-                        bottom: 10,
-                        right: 4,
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 5, right: 10),
-                          child: InkWell(
-                            onTap: () {
-                              saveProfileImage();
-                            },
-                            child: Container(
-                                padding: EdgeInsets.all(11),
-                                decoration: BoxDecoration(
-                                    color: Colors.black.withOpacity(0.7),
-                                    borderRadius: BorderRadius.circular(50)),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.image,
-                                      color: Colors.white,
-                                    ),
-                                    Icon(
-                                      Icons.edit,
-                                      color: Colors.white,
-                                    ),
-                                  ],
-                                )),
-                          ),
-                        ),
-                      ),
+                      // Positioned(
+                      //   bottom: 10,
+                      //   right: 4,
+                      //   child: Padding(
+                      //     padding: const EdgeInsets.only(bottom: 5, right: 10),
+                      //     child: InkWell(
+                      //       onTap: () {
+                      //         saveProfileImage();
+                      //       },
+                      //       child: Container(
+                      //           padding: EdgeInsets.all(11),
+                      //           decoration: BoxDecoration(
+                      //               color: Colors.black.withOpacity(0.7),
+                      //               borderRadius: BorderRadius.circular(50)),
+                      //           child: Row(
+                      //             mainAxisAlignment: MainAxisAlignment.center,
+                      //             children: [
+                      //               Icon(
+                      //                 Icons.image,
+                      //                 color: Colors.white,
+                      //               ),
+                      //               Icon(
+                      //                 Icons.edit,
+                      //                 color: Colors.white,
+                      //               ),
+                      //             ],
+                      //           )),
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
 
@@ -669,74 +697,6 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
           }),
         ),
       ],
-    );
-  }
-
-  PreferredSize buildCustomAppBar(context) {
-    return PreferredSize(
-      preferredSize: Size(DeviceInfo(context).width!, 80),
-      child: Container(
-        height: 92,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xff107B28), Color(0xff4C7B10)])),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20.0, right: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: 30,
-                  height: double.infinity,
-                  child: InkWell(
-                      //padding: EdgeInsets.zero,
-                      onTap: () {
-                        homeData.scaffoldKey.currentState?.openDrawer();
-                      },
-                      child: Icon(
-                        Icons.menu,
-                        color: Colors.white,
-                        size: 25,
-                      )),
-                ),
-                Center(
-                  child: Text('My Account',
-                      style: TextStyle(
-                          color: MyTheme.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: .5,
-                          fontFamily: 'Poppins')),
-                ),
-                Container(
-                  margin: EdgeInsets.only(right: 0),
-                  height: 30,
-                  child: Container(
-                    child: InkWell(
-                      //padding: EdgeInsets.zero,
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return MoreDetails();
-                        }));
-                      },
-                      child: Icon(
-                        Icons.settings,
-                        size: 25,
-                        color: MyTheme.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

@@ -595,21 +595,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                       width: 20,
                     ),
                     Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            AppLocalizations.of(context)!.seller_ucf,
-                            style: TextStyle(fontSize: 15),
-                          ),
-                          Text(
-                            snapshot.data!.name,
-                            // "aksbfkjafknangg englkng lkegnang kegne",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 18),
-                          ),
-                        ],
+                      child: Text(
+                        snapshot.data!.name,
+                        // "aksbfkjafknangg englkng lkegnang kegne",
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
                       ),
                     ),
                     Container(

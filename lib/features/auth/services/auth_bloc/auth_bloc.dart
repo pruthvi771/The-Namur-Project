@@ -27,7 +27,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SignUpWithEmailRequested>((event, emit) async {
       emit(Loading());
       try {
-        var userCredentials = await authRepository.createUserWithEmail(
+        await authRepository.createUserWithEmail(
           email: event.email, password: event.password, name: event.name,
           // firstName: event.firstName,
           // lastName: event.lastName,
@@ -134,7 +134,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SignInWithPhoneNumberRequested>((event, emit) async {
       emit(Loading());
       try {
-        var user = await authRepository.loginWithPhone(
+        await authRepository.loginWithPhone(
             verificationId: event.verificationId, otp: event.otp);
         emit(Authenticated());
       } catch (e) {
