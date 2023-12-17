@@ -981,7 +981,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               ),
                               !profileDataUpdating
                                   ? Container(
-                                      height: 70,
+                                      height: 80,
                                       width: double.infinity,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
@@ -995,6 +995,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         children: [
                                           Expanded(
                                             child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [

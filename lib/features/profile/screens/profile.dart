@@ -1,3 +1,5 @@
+// translation done.
+
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
@@ -13,15 +15,10 @@ import 'package:active_ecommerce_flutter/features/profile/utils.dart';
 import 'package:active_ecommerce_flutter/presenter/home_presenter.dart';
 import 'package:active_ecommerce_flutter/utils/imageLinks.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-// import 'package:active_ecommerce_flutter/screens/setting/setting.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:flutter/cupertino.dart';
-// import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
-// import 'package:active_ecommerce_flutter/app_config.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -296,63 +293,19 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                   TabController(length: 2, vsync: this);
               return SliverList(
                 delegate: SliverChildListDelegate([
-                  // ElevatedButton(
-                  //     onPressed: () async {
-                  //       var userSnapshot = await FirebaseFirestore.instance
-                  //           .collection('updates')
-                  //           .get();
-                  //       print(userSnapshot.docs[0].data()!['imageURL']);
-                  //     },
-                  //     child: Text('get data')),
-
-                  Stack(
-                    alignment: AlignmentDirectional.bottomEnd,
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height / 2,
-                        child: (buyerUserData.photoURL == null ||
-                                buyerUserData.photoURL == '')
-                            ? Image.asset(
-                                "assets/default_profile2.png",
-                                fit: BoxFit.cover,
-                              )
-                            : CachedNetworkImage(
-                                imageUrl: buyerUserData.photoURL!,
-                                fit: BoxFit.cover,
-                              ),
-                      ),
-                      // Positioned(
-                      //   bottom: 10,
-                      //   right: 4,
-                      //   child: Padding(
-                      //     padding: const EdgeInsets.only(bottom: 5, right: 10),
-                      //     child: InkWell(
-                      //       onTap: () {
-                      //         saveProfileImage();
-                      //       },
-                      //       child: Container(
-                      //           padding: EdgeInsets.all(11),
-                      //           decoration: BoxDecoration(
-                      //               color: Colors.black.withOpacity(0.7),
-                      //               borderRadius: BorderRadius.circular(50)),
-                      //           child: Row(
-                      //             mainAxisAlignment: MainAxisAlignment.center,
-                      //             children: [
-                      //               Icon(
-                      //                 Icons.image,
-                      //                 color: Colors.white,
-                      //               ),
-                      //               Icon(
-                      //                 Icons.edit,
-                      //                 color: Colors.white,
-                      //               ),
-                      //             ],
-                      //           )),
-                      //     ),
-                      //   ),
-                      // ),
-                    ],
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height / 2,
+                    child: (buyerUserData.photoURL == null ||
+                            buyerUserData.photoURL == '')
+                        ? Image.asset(
+                            "assets/default_profile2.png",
+                            fit: BoxFit.cover,
+                          )
+                        : CachedNetworkImage(
+                            imageUrl: buyerUserData.photoURL!,
+                            fit: BoxFit.cover,
+                          ),
                   ),
 
                   SizedBox(
@@ -364,8 +317,6 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                     padding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 25),
                     child: Text(
-                      // "${user_name.$}",
-                      // "Chiranthana",
                       buyerUserData.name,
                       style: TextStyle(
                           fontSize: 25,
@@ -429,7 +380,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
 
                                         //Friends and Neighbors text
                                         Text(
-                                          '${snapshot.data![2]} Friends & Neighbors',
+                                          '${snapshot.data![2]} ${AppLocalizations.of(context)!.friends_and_neighbours}',
                                           style: TextStyle(
                                               fontFamily: 'Poppins',
                                               fontWeight: FontWeight.w500,
@@ -441,7 +392,8 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                   }
                                   if (snapshot.hasError) {
                                     return Text(
-                                      'Add Address To See This',
+                                      AppLocalizations.of(context)!
+                                          .add_address_to_see_this,
                                       style: TextStyle(
                                           fontFamily: 'Poppins',
                                           fontWeight: FontWeight.w500,
@@ -488,7 +440,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                             tabs: [
                               Tab(
                                 child: Text(
-                                  'Updates',
+                                  AppLocalizations.of(context)!.updates,
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
@@ -497,7 +449,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                               ),
                               Tab(
                                 child: Text(
-                                  'My Stock',
+                                  AppLocalizations.of(context)!.my_stock,
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
