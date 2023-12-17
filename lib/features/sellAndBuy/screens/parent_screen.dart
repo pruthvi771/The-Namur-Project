@@ -52,7 +52,6 @@ class _ParentScreenState extends State<ParentScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     totalFarmersCountFuture =
         getTotalFarmersCount(parentName: nameForParentEnum[widget.parentEnum]!);
     super.initState();
@@ -141,6 +140,13 @@ class _ParentScreenState extends State<ParentScreen> {
                               ),
                             ),
                           ),
+                          progressIndicatorBuilder: (context, url, progress) {
+                            return Container(
+                              height: 50,
+                              width: 50,
+                              child: Center(child: CircularProgressIndicator()),
+                            );
+                          },
                         ),
                         Container(
                           // height: 40,
