@@ -21,6 +21,7 @@ class SellBloc extends Bloc<SellEvent, SellState> {
         var docId;
         if (event.isMachine) {
           docId = await sellRepository.addMachineBuying(
+            hiveMachineName: event.hiveMachineName,
             productName: event.productName,
             productDescription: event.productDescription,
             productPrice: event.productPrice,
@@ -143,6 +144,7 @@ class SellBloc extends Bloc<SellEvent, SellState> {
       try {
         if (event.isMachine) {
           await sellRepository.editMachineBuying(
+            hiveMachineName: event.hiveMachineName,
             productId: event.productId,
             productName: event.productName,
             productDescription: event.productDescription,

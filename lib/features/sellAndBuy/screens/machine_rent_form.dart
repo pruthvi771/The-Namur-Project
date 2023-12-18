@@ -266,7 +266,7 @@ class _MachineRentFormState extends State<MachineRentForm> {
             price: widget.machinePrice,
             quantity: 1,
             sellerID: widget.sellerId,
-            rating: 0,
+            rating: null,
           ),
         ],
         numberOfHalfHours: checkerBookedSlotsBroken.length,

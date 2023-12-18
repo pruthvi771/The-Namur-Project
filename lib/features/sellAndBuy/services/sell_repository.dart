@@ -81,6 +81,7 @@ class SellRepository {
     required String district,
     required String taluk,
     required String gramPanchayat,
+    required String hiveMachineName,
   }) async {
     try {
       // Get a reference to the Firestore collection
@@ -108,6 +109,7 @@ class SellRepository {
         'district': district,
         'taluk': taluk,
         'gramPanchayat': gramPanchayat,
+        'hiveMachineName': hiveMachineName,
       });
       return documentReference.id;
     } catch (e) {
@@ -271,6 +273,7 @@ class SellRepository {
     required String subSubCategory,
     required int runningHours,
     required int kms,
+    required String hiveMachineName,
     // required String imageURL,
     // required String userId,
   }) async {
@@ -288,6 +291,7 @@ class SellRepository {
         'subSubCategory': subSubCategory,
         'runningHours': runningHours,
         'kms': kms,
+        'hiveMachineName': hiveMachineName,
         // 'imageURL': imageURL,
       });
     } catch (e) {

@@ -827,5 +827,10 @@
 "yield": "Yield",
 "not_tracked": "Not Tracked",
 "go_to_crop_calendar": "Go to Crop Calendar",
-"crops": "Crops" 
+"crops": "Crops",
+"please_first_add_machine_in_settings_screen": "Please first add machine in settings screen",
+"select_machine": "Select Machine",
+"running_hours": "Running Hours",
+"kms": "Kms",
+"rating": "Rating"
 }

@@ -213,30 +213,34 @@ class _MachineDetailsState extends State<MachineDetails> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       SmallInfoBox(
-                        title: 'Running Hours',
+                        title: AppLocalizations.of(context)!.running_hours,
                         value: Text(
                           snapshot.data!['runningHours'].toString() + ' Hrs',
                           style: TextStyle(fontSize: 13),
                         ),
                         color: Colors.red.shade200,
                       ),
-                      if (snapshot.data!['numberOfRatings'] != 0)
-                        SmallInfoBox(
-                            title: 'Rating',
-                            value: RatingBarIndicator(
-                              rating: snapshot.data!['rating'] /
-                                  snapshot.data!['numberOfRatings'],
-                              itemCount: 5,
-                              itemSize: 15.0,
-                              physics: BouncingScrollPhysics(),
-                              itemBuilder: (context, _) => Icon(
-                                Icons.star,
-                                color: Colors.amber,
+                      snapshot.data!['numberOfRatings'] == 0
+                          ? SmallInfoBox(
+                              title: AppLocalizations.of(context)!.rating,
+                              value: Text('No rating'),
+                              color: Colors.blue.shade200)
+                          : SmallInfoBox(
+                              title: AppLocalizations.of(context)!.rating,
+                              value: RatingBarIndicator(
+                                rating: snapshot.data!['rating'] /
+                                    snapshot.data!['numberOfRatings'],
+                                itemCount: 5,
+                                itemSize: 15.0,
+                                physics: BouncingScrollPhysics(),
+                                itemBuilder: (context, _) => Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                ),
                               ),
-                            ),
-                            color: Colors.blue.shade200),
+                              color: Colors.blue.shade200),
                       SmallInfoBox(
-                        title: 'Kms',
+                        title: AppLocalizations.of(context)!.kms,
                         value: Text(
                           snapshot.data!['kms'].toString() + ' Kms',
                           style: TextStyle(fontSize: 13),
@@ -678,10 +682,10 @@ class _MachineDetailsState extends State<MachineDetails> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            AppLocalizations.of(context)!.seller_ucf,
-                            style: TextStyle(fontSize: 15),
-                          ),
+                          // Text(
+                          //   AppLocalizations.of(context)!.seller_ucf,
+                          //   style: TextStyle(fontSize: 15),
+                          // ),
                           Text(
                             snapshot.data!.name,
                             // "aksbfkjafknangg englkng lkegnang kegne",

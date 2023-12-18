@@ -50,6 +50,7 @@ class _BuyProductListState extends State<BuyProductList> {
   List<String> selectedCategories = [];
   late Stream<QuerySnapshot> productsStream;
   late List<FilterItem> subSubCategoryList;
+  late List<String> bareSubSubCategoryList;
   late SortType? sortType;
   final String collectionName = 'buyer';
   int text = 0;
@@ -71,6 +72,16 @@ class _BuyProductListState extends State<BuyProductList> {
       return;
     }
 
+    List<FilterItem> temp = [];
+    bareSubSubCategoryList = SubSubCategoryList[widget.subCategoryEnum]!;
+
+    bareSubSubCategoryList.forEach((element) {
+      temp.add(FilterItem(name: element, isSelected: true));
+    });
+
+    subSubCategoryList =
+        widget.subSubCategoryList != null ? widget.subSubCategoryList! : temp;
+
     if (widget.locationFilterMap != null) {
       currentLocationFilterMap = widget.locationFilterMap!;
     } else {
@@ -82,16 +93,7 @@ class _BuyProductListState extends State<BuyProductList> {
       );
     }
 
-    subSubCategoryList =
-        widget.subSubCategoryList != null ? widget.subSubCategoryList! : [];
     sortType = widget.sortType != null ? widget.sortType! : null;
-
-    try {
-      print(subSubCategoryList[0].name);
-      print(subSubCategoryList[0].isSelected);
-      print(subSubCategoryList[1].name);
-      print(subSubCategoryList[1].isSelected);
-    } catch (e) {}
 
     if (sortType != null && subSubCategoryList.length == 0) {
       productsStream = productFilteredByLocationAndSortedStreamQuery(
@@ -519,11 +521,11 @@ class _BuyProductListState extends State<BuyProductList> {
                   if (snapshot.hasData) {
                     var products = snapshot.data!.docs.map((doc) {
                       var data = doc.data() as Map;
-                      if (!containsItem(
-                          subSubCategoryList, data['subSubCategory'])) {
-                        subSubCategoryList.add(FilterItem(
-                            name: data['subSubCategory'], isSelected: true));
-                      }
+                      // if (!containsItem(
+                      //     subSubCategoryList, data['subSubCategory'])) {
+                      //   subSubCategoryList.add(FilterItem(
+                      //       name: data['subSubCategory'], isSelected: true));
+                      // }
                       return SellProduct(
                         id: doc.id,
                         productName: data['name'],
@@ -864,7 +866,9 @@ class _BuyProductListState extends State<BuyProductList> {
                                   ),
                                 ),
                                 Text(
-                                  ' per ${quantityUnit == "Units" ? 'unit' : quantityUnit}',
+                                  subSubCategory == 'On Rent'
+                                      ? '/ 30 mins'
+                                      : ' per ${quantityUnit == "Units" ? 'unit' : quantityUnit}',
                                   style: TextStyle(
                                     fontSize: 14,
                                     // fontWeight: FontWeight.w600,

@@ -4,12 +4,12 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_screen.dart';
-import 'package:active_ecommerce_flutter/features/profile/address_list.dart';
 import 'package:active_ecommerce_flutter/features/profile/enum.dart';
 import 'package:active_ecommerce_flutter/features/profile/models/updates_data.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_event.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_state.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/hive_machine_details.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/more_details.dart';
@@ -27,7 +27,6 @@ import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:toast/toast.dart';
@@ -927,140 +926,17 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                                               (context, index) {
                                                             return InkWell(
                                                               onTap: () {
-                                                                // showDialog(
-                                                                //     context:
-                                                                //         context,
-                                                                //     builder:
-                                                                //         (dialogContext) {
-                                                                //       return AlertDialog(
-                                                                //         contentPadding: EdgeInsets.only(
-                                                                //             top:
-                                                                //                 10,
-                                                                //             left:
-                                                                //                 10,
-                                                                //             right:
-                                                                //                 10),
-                                                                //         actionsPadding:
-                                                                //             EdgeInsets.all(0),
-                                                                //         buttonPadding:
-                                                                //             EdgeInsets.all(0),
-                                                                //         content:
-                                                                //             Container(
-                                                                //           height:
-                                                                //               330,
-                                                                //           child:
-                                                                //               Column(
-                                                                //             mainAxisAlignment:
-                                                                //                 MainAxisAlignment.spaceBetween,
-                                                                //             children: [
-                                                                //               SizedBox(
-                                                                //                 height: 10,
-                                                                //               ),
-                                                                //               Expanded(
-                                                                //                 child: Container(
-                                                                //                   width: double.infinity,
-                                                                //                   child: CachedNetworkImage(imageUrl: imageLinks[cropsToDisplay[index].cropName.toLowerCase()] ?? imageLinks['placeholder']!, fit: BoxFit.fitHeight),
-                                                                //                 ),
-                                                                //               ),
-                                                                //               SizedBox(
-                                                                //                 height: 20,
-                                                                //               ),
-                                                                //               Padding(
-                                                                //                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                                                                //                 child: Align(
-                                                                //                   alignment: Alignment.centerLeft,
-                                                                //                   child: Text(
-                                                                //                     cropsToDisplay[index].cropName,
-                                                                //                     style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-                                                                //                   ),
-                                                                //                 ),
-                                                                //               ),
-                                                                //               SizedBox(
-                                                                //                 height: 10,
-                                                                //               ),
-                                                                //               Container(
-                                                                //                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                                                                //                 color: Colors.grey.withOpacity(0.1),
-                                                                //                 width: double.infinity,
-                                                                //                 child: Row(
-                                                                //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                //                   crossAxisAlignment: CrossAxisAlignment.center,
-                                                                //                   children: [
-                                                                //                     Text(
-                                                                //                       '${AppLocalizations.of(context)!.yield}: ${cropsToDisplay[index].yieldOfCrop.toString()}',
-                                                                //                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                                                                //                     ),
-                                                                //                   ],
-                                                                //                 ),
-                                                                //               ),
-                                                                //               SizedBox(
-                                                                //                 height: 10,
-                                                                //               ),
-                                                                //               Container(
-                                                                //                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                                                                //                 color: Colors.grey.withOpacity(0.1),
-                                                                //                 width: double.infinity,
-                                                                //                 child: Row(
-                                                                //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                //                   crossAxisAlignment: CrossAxisAlignment.center,
-                                                                //                   children: [
-                                                                //                     Text(
-                                                                //                       '${AppLocalizations.of(dialogContext)!.land} Syno: ${cropsToDisplay[index].landSyno}',
-                                                                //                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                                                                //                     ),
-                                                                //                   ],
-                                                                //                 ),
-                                                                //               ),
-                                                                //               SizedBox(
-                                                                //                 height: 10,
-                                                                //               ),
-                                                                //               Container(
-                                                                //                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                                                                //                 color: Colors.grey.withOpacity(0.1),
-                                                                //                 width: double.infinity,
-                                                                //                 child: Row(
-                                                                //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                //                   crossAxisAlignment: CrossAxisAlignment.center,
-                                                                //                   children: [
-                                                                //                     Text(
-                                                                //                       '${AppLocalizations.of(dialogContext)!.planting_date}: ${cropsToDisplay[index].beingTracked ? cropsToDisplay[index].plantingDate!.day.toString() + '/' + cropsToDisplay[index].plantingDate!.month.toString() + '/' + cropsToDisplay[index].plantingDate!.year.toString() : AppLocalizations.of(dialogContext)!.not_tracked}',
-                                                                //                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                                                                //                     ),
-                                                                //                   ],
-                                                                //                 ),
-                                                                //               ),
-                                                                //             ],
-                                                                //           ),
-                                                                //         ),
-                                                                //         actions: [
-                                                                //           Padding(
-                                                                //             padding:
-                                                                //                 const EdgeInsets.symmetric(horizontal: 10),
-                                                                //             child:
-                                                                //                 Row(
-                                                                //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                //               children: [
-                                                                //                 TextButton(
-                                                                //                     onPressed: cropsToDisplay[index].beingTracked
-                                                                //                         ? () {
-                                                                //                             Navigator.pop(dialogContext);
-                                                                //                             Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                                                //                               return CalendarScreen();
-                                                                //                             }));
-                                                                //                           }
-                                                                //                         : null,
-                                                                //                     child: Text(AppLocalizations.of(dialogContext)!.go_to_crop_calendar)),
-                                                                //                 TextButton(
-                                                                //                     onPressed: () {
-                                                                //                       Navigator.pop(dialogContext);
-                                                                //                     },
-                                                                //                     child: Text(AppLocalizations.of(dialogContext)!.dismiss)),
-                                                                //               ],
-                                                                //             ),
-                                                                //           ),
-                                                                //         ],
-                                                                //       );
-                                                                //     });
+                                                                Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) {
+                                                                  return HiveMachineDetails(
+                                                                    machineName:
+                                                                        machinesToDisplay[
+                                                                            index],
+                                                                  );
+                                                                }));
                                                               },
                                                               child: Container(
                                                                 padding: EdgeInsets

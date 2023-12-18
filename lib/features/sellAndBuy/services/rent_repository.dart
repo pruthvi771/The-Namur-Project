@@ -30,7 +30,6 @@ class RentRepository {
           'items': orderItems.map((item) => item.toMap()).toList(),
           'bookedSlot': bookedSlot,
           'bookedDate': bookedDate,
-          // 'bookedSlotBroken': bookedSlotBroken,
           'status': 'Confirmed',
         },
       );
