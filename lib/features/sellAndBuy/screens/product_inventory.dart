@@ -28,20 +28,12 @@ class ProductInventory extends StatefulWidget {
 }
 
 class _ProductInventoryState extends State<ProductInventory> {
-  // HomePresenter homeData = HomePresenter();
-
-  Future<void> _onPageRefresh() async {
-    //reset();
-    // fetchAll();
-  }
-
   void initState() {
     BlocProvider.of<SellBloc>(context).add(ProductsForSubCategoryRequested(
       subCategory: nameForSubCategoryEnum[widget.subCategoryEnum]!,
       isSecondHand: widget.isSecondHand,
     ));
     super.initState();
-    // fetchAll();
   }
 
   Future<void> getProductsFromFirebase() async {}
@@ -164,14 +156,15 @@ class _ProductInventoryState extends State<ProductInventory> {
                           ),
                           onPressed: () {
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ProductPost(
-                                          subCategoryEnum:
-                                              widget.subCategoryEnum,
-                                          alreadyExistingProductNames: [],
-                                          isSecondHand: widget.isSecondHand,
-                                        )));
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProductPost(
+                                  subCategoryEnum: widget.subCategoryEnum,
+                                  alreadyExistingProductNames: [],
+                                  isSecondHand: widget.isSecondHand,
+                                ),
+                              ),
+                            );
                           },
                         ),
                       ],
@@ -363,116 +356,128 @@ class ProductInventoryWidget extends StatelessWidget {
                                 ),
                               ),
                               Column(
-                                // mainAxisAlignment:
-                                //     MainAxisAlignment.spaceAround,
                                 children: [
                                   Expanded(
-                                    child: IconButton(
-                                      splashRadius: 20,
-                                      onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ProductPost(
-                                                      subCategoryEnum:
-                                                          subCategoryEnum,
-                                                      alreadyExistingProductNames: [],
-                                                      isProductEditScreen: true,
-                                                      isSecondHand:
-                                                          isSecondHand,
-                                                      sellProduct: SellProduct(
-                                                        id: productId,
-                                                        productName:
-                                                            productName,
-                                                        productDescription:
-                                                            productDescription,
-                                                        productPrice:
-                                                            productPrice,
-                                                        productQuantity:
-                                                            productQuantity,
-                                                        quantityUnit:
-                                                            quantityUnit,
-                                                        category: "",
-                                                        subCategory: "",
-                                                        subSubCategory:
-                                                            productSubSubCategory,
-                                                        imageURL: imageURL,
-                                                        sellerId: sellerId,
+                                    child: CircleAvatar(
+                                      backgroundColor: MyTheme.green_lighter,
+                                      child: IconButton(
+                                        splashRadius: 20,
+                                        onPressed: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ProductPost(
+                                                        subCategoryEnum:
+                                                            subCategoryEnum,
+                                                        alreadyExistingProductNames: [],
+                                                        isProductEditScreen:
+                                                            true,
                                                         isSecondHand:
                                                             isSecondHand,
-                                                        district: district,
-                                                        taluk: taluk,
-                                                        gramPanchayat:
-                                                            gramPanchayat,
-                                                        village: village,
-                                                      ),
-                                                    )));
-                                      },
-                                      icon: Image.asset(
-                                        "assets/edit1.png",
+                                                        sellProduct:
+                                                            SellProduct(
+                                                          id: productId,
+                                                          productName:
+                                                              productName,
+                                                          productDescription:
+                                                              productDescription,
+                                                          productPrice:
+                                                              productPrice,
+                                                          productQuantity:
+                                                              productQuantity,
+                                                          quantityUnit:
+                                                              quantityUnit,
+                                                          category: "",
+                                                          subCategory: "",
+                                                          subSubCategory:
+                                                              productSubSubCategory,
+                                                          imageURL: imageURL,
+                                                          sellerId: sellerId,
+                                                          isSecondHand:
+                                                              isSecondHand,
+                                                          district: district,
+                                                          taluk: taluk,
+                                                          gramPanchayat:
+                                                              gramPanchayat,
+                                                          village: village,
+                                                        ),
+                                                      )));
+                                        },
+                                        icon: Image.asset(
+                                          "assets/edit1.png",
+                                        ),
                                       ),
                                     ),
                                   ),
+                                  SizedBox(
+                                    height: 3,
+                                  ),
                                   Expanded(
-                                    child: IconButton(
-                                      splashRadius: 20,
-                                      onPressed: () {
-                                        showAdaptiveDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                title: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .delete_product,
-                                                  style: TextStyle(
-                                                    color:
-                                                        MyTheme.primary_color,
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.w800,
-                                                  ),
-                                                ),
-                                                content: Text(
-                                                    '${AppLocalizations.of(context)!.are_you_sure_to_delete} $productName'),
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child: Text(
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .cancel,
-                                                      style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 15,
-                                                      ),
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.red[100],
+                                      child: IconButton(
+                                        splashRadius: 20,
+                                        onPressed: () {
+                                          showAdaptiveDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  title: Text(
+                                                    AppLocalizations.of(
+                                                            context)!
+                                                        .delete_product,
+                                                    style: TextStyle(
+                                                      color:
+                                                          MyTheme.primary_color,
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.w800,
                                                     ),
                                                   ),
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      onPressedDelete(
-                                                          context, productId);
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child: Text(
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .cancel,
-                                                      style: TextStyle(
-                                                        color: Colors.red,
-                                                        fontSize: 15,
-                                                        fontWeight:
-                                                            FontWeight.w700,
+                                                  content: Text(
+                                                      '${AppLocalizations.of(context)!.are_you_sure_to_delete} $productName'),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .cancel,
+                                                        style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 15,
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                ],
-                                              );
-                                            });
-                                      },
-                                      icon: Image.asset(
-                                        "assets/delet1.png",
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        onPressedDelete(
+                                                            context, productId);
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .cancel,
+                                                        style: TextStyle(
+                                                          color: Colors.red,
+                                                          fontSize: 15,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                );
+                                              });
+                                        },
+                                        icon: Icon(
+                                          Icons.delete,
+                                          color: Colors.black,
+                                        ),
                                       ),
                                     ),
                                   ),
