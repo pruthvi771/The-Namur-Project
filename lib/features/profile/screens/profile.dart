@@ -866,141 +866,145 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                                         fontFamily: 'Poppins'),
                                                   ),
                                                 ),
-                                                Column(
-                                                  children: List.generate(
-                                                    state.profileData.land
-                                                        .length,
-                                                    (landIndex) {
-                                                      return Column(
-                                                        children: [
-                                                          SizedBox(
-                                                            height: 5,
-                                                          ),
-                                                          Align(
-                                                            alignment: Alignment
-                                                                .centerLeft,
-                                                            child: Text(
-                                                              state
-                                                                      .profileData
-                                                                      .land[
-                                                                          landIndex]
-                                                                      .village +
-                                                                  ' (${state.profileData.land[landIndex].syno})',
-                                                              style: TextStyle(
+                                                state.profileData.land.length ==
+                                                        0
+                                                    ? Container(
+                                                        height: 100,
+                                                        child: Center(
+                                                          child: Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .no_data_is_available,
+                                                            style: TextStyle(
                                                                 fontSize: 16,
-                                                              ),
-                                                            ),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                fontFamily:
+                                                                    'Poppins'),
                                                           ),
-                                                          state
-                                                                      .profileData
-                                                                      .land[
-                                                                          landIndex]
-                                                                      .equipments
-                                                                      .length ==
-                                                                  0
-                                                              ? Container(
-                                                                  height: 100,
-                                                                  child: Center(
-                                                                    child: Text(
-                                                                      AppLocalizations.of(
-                                                                              context)!
-                                                                          .no_data_is_available,
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              16,
-                                                                          fontWeight: FontWeight
-                                                                              .w500,
-                                                                          fontFamily:
-                                                                              'Poppins'),
+                                                        ),
+                                                      )
+                                                    : Column(
+                                                        children: List.generate(
+                                                          state.profileData.land
+                                                              .length,
+                                                          (landIndex) {
+                                                            return Column(
+                                                              children: [
+                                                                SizedBox(
+                                                                  height: 5,
+                                                                ),
+                                                                Align(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .centerLeft,
+                                                                  child: Text(
+                                                                    state
+                                                                            .profileData
+                                                                            .land[landIndex]
+                                                                            .village +
+                                                                        ' (${state.profileData.land[landIndex].syno})',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          16,
                                                                     ),
                                                                   ),
-                                                                )
-                                                              : MasonryGridView
-                                                                  .count(
-                                                                  crossAxisCount:
-                                                                      3,
-                                                                  mainAxisSpacing:
-                                                                      16,
-                                                                  crossAxisSpacing:
-                                                                      16,
-                                                                  itemCount: state
-                                                                      .profileData
-                                                                      .land[
-                                                                          landIndex]
-                                                                      .equipments
-                                                                      .length,
-                                                                  shrinkWrap:
-                                                                      true,
-                                                                  padding:
-                                                                      EdgeInsets
-                                                                          .only(
-                                                                              top: 15),
-                                                                  physics:
-                                                                      NeverScrollableScrollPhysics(),
-                                                                  scrollDirection:
-                                                                      Axis.vertical,
-                                                                  itemBuilder:
-                                                                      (context,
-                                                                          machineIndex) {
-                                                                    String machine = state
-                                                                        .profileData
-                                                                        .land[
-                                                                            landIndex]
-                                                                        .equipments[machineIndex];
-                                                                    return InkWell(
-                                                                      onTap:
-                                                                          () {
-                                                                        Navigator.push(
-                                                                            context,
-                                                                            MaterialPageRoute(builder:
-                                                                                (context) {
-                                                                          return HiveMachineDetails(
-                                                                            machineName:
-                                                                                machine,
-                                                                            landSynoValue:
-                                                                                state.profileData.land[landIndex].syno,
-                                                                          );
-                                                                        }));
-                                                                      },
-                                                                      child:
-                                                                          Container(
-                                                                        padding:
-                                                                            EdgeInsets.symmetric(vertical: 8),
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          color: MyTheme
-                                                                              .green_lighter
-                                                                              .withOpacity(0.2),
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(15),
-                                                                        ),
-                                                                        child:
-                                                                            Column(
-                                                                          children: [
-                                                                            Container(
-                                                                              margin: EdgeInsets.only(top: 8.0, bottom: 8),
-                                                                              height: 50,
-                                                                              width: 50,
-                                                                              child: CachedNetworkImage(imageUrl: imageLinks[machine.toLowerCase()] ?? imageLinks['placeholder']!),
-                                                                            ),
-                                                                            Text(
-                                                                              machine,
-                                                                              maxLines: 1,
-                                                                              textAlign: TextAlign.center,
-                                                                              overflow: TextOverflow.ellipsis,
-                                                                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                    );
-                                                                  },
                                                                 ),
-                                                        ],
-                                                      );
-                                                    },
-                                                  ),
-                                                ),
+                                                                state
+                                                                            .profileData
+                                                                            .land[
+                                                                                landIndex]
+                                                                            .equipments
+                                                                            .length ==
+                                                                        0
+                                                                    ? Container(
+                                                                        height:
+                                                                            100,
+                                                                        child:
+                                                                            Center(
+                                                                          child:
+                                                                              Text(
+                                                                            AppLocalizations.of(context)!.no_data_is_available,
+                                                                            style: TextStyle(
+                                                                                fontSize: 16,
+                                                                                fontWeight: FontWeight.w500,
+                                                                                fontFamily: 'Poppins'),
+                                                                          ),
+                                                                        ),
+                                                                      )
+                                                                    : MasonryGridView
+                                                                        .count(
+                                                                        crossAxisCount:
+                                                                            3,
+                                                                        mainAxisSpacing:
+                                                                            16,
+                                                                        crossAxisSpacing:
+                                                                            16,
+                                                                        itemCount: state
+                                                                            .profileData
+                                                                            .land[landIndex]
+                                                                            .equipments
+                                                                            .length,
+                                                                        shrinkWrap:
+                                                                            true,
+                                                                        padding:
+                                                                            EdgeInsets.only(top: 15),
+                                                                        physics:
+                                                                            NeverScrollableScrollPhysics(),
+                                                                        scrollDirection:
+                                                                            Axis.vertical,
+                                                                        itemBuilder:
+                                                                            (context,
+                                                                                machineIndex) {
+                                                                          String machine = state
+                                                                              .profileData
+                                                                              .land[landIndex]
+                                                                              .equipments[machineIndex];
+                                                                          return InkWell(
+                                                                            onTap:
+                                                                                () {
+                                                                              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                                return HiveMachineDetails(
+                                                                                  machineName: machine,
+                                                                                  landSynoValue: state.profileData.land[landIndex].syno,
+                                                                                );
+                                                                              }));
+                                                                            },
+                                                                            child:
+                                                                                Container(
+                                                                              padding: EdgeInsets.symmetric(vertical: 8),
+                                                                              decoration: BoxDecoration(
+                                                                                color: MyTheme.green_lighter.withOpacity(0.2),
+                                                                                borderRadius: BorderRadius.circular(15),
+                                                                              ),
+                                                                              child: Column(
+                                                                                children: [
+                                                                                  Container(
+                                                                                    margin: EdgeInsets.only(top: 8.0, bottom: 8),
+                                                                                    height: 50,
+                                                                                    width: 50,
+                                                                                    child: CachedNetworkImage(imageUrl: imageLinks[machine.toLowerCase()] ?? imageLinks['placeholder']!),
+                                                                                  ),
+                                                                                  Text(
+                                                                                    machine,
+                                                                                    maxLines: 1,
+                                                                                    textAlign: TextAlign.center,
+                                                                                    overflow: TextOverflow.ellipsis,
+                                                                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                          );
+                                                                        },
+                                                                      ),
+                                                              ],
+                                                            );
+                                                          },
+                                                        ),
+                                                      ),
                                               ],
                                             )
                                           ],
