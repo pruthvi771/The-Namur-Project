@@ -31,6 +31,7 @@ class AddProductRequested extends SellEvent {
   final String villageName;
   final String parentName;
   final String hiveMachineName;
+  final String landSynoValue;
 
   const AddProductRequested({
     required this.productName,
@@ -48,6 +49,7 @@ class AddProductRequested extends SellEvent {
     this.runningHours = 0,
     this.kms = 0,
     this.isMachine = false,
+    this.landSynoValue = "",
     this.hiveMachineName = "",
     required this.district,
     required this.taluk,
@@ -73,6 +75,7 @@ class AddProductRequested extends SellEvent {
         kms,
         isMachine,
         hiveMachineName,
+        landSynoValue,
         district,
         taluk,
         gramPanchayat,
@@ -97,6 +100,7 @@ class EditProductRequested extends SellEvent {
   final int? runningHours;
   final int? kms;
   final bool isMachine;
+  final String landSynoValue;
   final String hiveMachineName;
   // final Uint8List image;
 
@@ -115,6 +119,7 @@ class EditProductRequested extends SellEvent {
     this.kms,
     this.runningHours,
     this.isMachine = false,
+    this.landSynoValue = "",
     this.hiveMachineName = "",
     // required this.image,
   });
@@ -135,6 +140,7 @@ class EditProductRequested extends SellEvent {
         runningHours!,
         kms!,
         isMachine,
+        landSynoValue,
         // image,
       ];
 }

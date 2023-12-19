@@ -55,40 +55,47 @@ class _TitleBarState extends State<TitleBar> {
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
 
     var savedData = dataBox.get('profile');
-
-    if (savedData!.address[0].pincode.isEmpty) {
-      throw Exception('Failed to load data');
+    if (savedData == null) {
+      return [0, 0];
     }
+    try {
+      if (savedData.address[0].pincode.isEmpty) {
+        throw Exception('Failed to load data');
+      }
 
-    int count = 0;
-    int cropCount = 0;
+      int count = 0;
+      int cropCount = 0;
 
-    for (Land land in savedData.land) {
-      cropCount += land.crops.length;
-    }
+      for (Land land in savedData.land) {
+        cropCount += land.crops.length;
+      }
 
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
-        .instance
-        .collection('buyer')
-        .where(FieldPath.documentId, isNotEqualTo: null)
-        .where('profileData', isNotEqualTo: null)
-        .get();
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await FirebaseFirestore.instance
+              .collection('buyer')
+              .where(FieldPath.documentId, isNotEqualTo: null)
+              .where('profileData', isNotEqualTo: null)
+              .get();
 
-    List<DocumentSnapshot<Map<String, dynamic>>> documents = querySnapshot.docs;
+      List<DocumentSnapshot<Map<String, dynamic>>> documents =
+          querySnapshot.docs;
 
-    for (var document in documents) {
-      Map<String, dynamic> data = document.data()!;
-      if (data['profileData']['address'].isNotEmpty) {
+      for (var document in documents) {
         Map<String, dynamic> data = document.data()!;
-        if (data['profileData']['address'][0]['pincode'] ==
-            savedData.address[0].pincode) {
-          count++;
-          print('count incremented');
+        if (data['profileData']['address'].isNotEmpty) {
+          Map<String, dynamic> data = document.data()!;
+          if (data['profileData']['address'][0]['pincode'] ==
+              savedData.address[0].pincode) {
+            count++;
+            print('count incremented');
+          }
         }
       }
-    }
 
-    return [cropCount, count - 1];
+      return [cropCount, count - 1];
+    } catch (e) {
+      return [0, 0];
+    }
   }
 
   Future<BuyerData> _getUserData() async {

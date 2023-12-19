@@ -54,7 +54,7 @@ class FirestoreRepository {
         // add other fields as needed
       });
     } catch (_) {
-      print(_);
+      // print(_);
       throw Exception('Something went wrong. Please try again.');
     }
   }
@@ -69,7 +69,7 @@ class FirestoreRepository {
           .get();
       return BuyerData.fromJson(userSnapshot.data() as Map<String, dynamic>);
     } catch (_) {
-      print(_);
+      // print(_);
       throw Exception('Something went wrong. Please try again.');
     }
   }
@@ -100,7 +100,7 @@ class FirestoreRepository {
           .get();
       return BuyerData.fromJson(userSnapshot.data() as Map<String, dynamic>);
     } catch (_) {
-      print(_);
+      // print(_);
       throw Exception('Something went wrong. Please try again.');
     }
   }
@@ -116,7 +116,7 @@ class FirestoreRepository {
       return SellerDataForFriendsScreen.fromJson(
           userSnapshot.data() as Map<String, dynamic>);
     } catch (_) {
-      print(_);
+      // print(_);
       throw Exception('Something went wrong. Please try again.');
     }
   }
@@ -234,7 +234,7 @@ class FirestoreRepository {
         'photoURL': photoURL,
       });
     } catch (_) {
-      print(_);
+      // print(_);
       throw Exception('Something went wrong. Please try again.');
     }
   }
@@ -374,7 +374,7 @@ class FirestoreRepository {
         .catchError((error) => print("Failed to add ProfileData: $error"));
   }
 
-  Future<void> createEmptyHiveDataInstance({
+  Future<ProfileData> createEmptyHiveDataInstance({
     required String userId,
     bool isAddressAvailable = false,
     String? district,
@@ -410,6 +410,7 @@ class FirestoreRepository {
     await dataBox.put(emptyProfileData.id, emptyProfileData);
 
     saveProfileDataToFirestore(profileData: emptyProfileData, userId: userId);
+    return emptyProfileData;
   }
 
   Future<int> countUsersWithPincode(String pincode) async {

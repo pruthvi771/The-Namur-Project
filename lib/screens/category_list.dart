@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:active_ecommerce_flutter/custom/box_decorations.dart';
 import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_screen.dart';
 import 'package:active_ecommerce_flutter/features/testscreen.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
@@ -12,6 +13,7 @@ import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/parent_scre
 import 'package:active_ecommerce_flutter/helpers/shimmer_helper.dart';
 import 'package:active_ecommerce_flutter/presenter/bottom_appbar_index.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/drawer/drawer.dart';
@@ -22,6 +24,7 @@ import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../controller/sub_category_controller.dart';
+import '../features/auth/services/auth_repository.dart';
 import '../features/profile/screens/edit_profile.dart';
 import '../presenter/home_presenter.dart';
 import '../features/profile/title_bar_widget.dart';
@@ -68,7 +71,9 @@ class _CategoryListState extends State<CategoryList> {
 
     var savedData = dataBox.get('profile');
     if (savedData == null) {
-      throw Exception('No data found');
+      User? user = FirebaseAuth.instance.currentUser;
+      return FirestoreRepository()
+          .createEmptyHiveDataInstance(userId: user!.uid);
     }
     return savedData;
   }
@@ -168,8 +173,14 @@ class _CategoryListState extends State<CategoryList> {
         future: _getProfileDataFuture,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            profileProgress =
-                calculatingProfileProgress(profileData: snapshot.data!);
+            printError(info: 'hello');
+            if (snapshot.data == null) {
+              profileProgress = 0;
+            } else {
+              profileProgress =
+                  calculatingProfileProgress(profileData: snapshot.data!);
+            }
+
             return Column(
               children: [
                 TitleBar(),
@@ -417,10 +428,10 @@ class _CategoryListState extends State<CategoryList> {
               ],
             );
           }
-          if (snapshot.hasError) {
-            _getProfileDataFuture = _getProfileData();
-            return Text('Error');
-          }
+          // if (snapshot.hasError) {
+          //   _getProfileDataFuture = _getProfileData();
+          //   return Text('Error');
+          // }
           return buildShimmer();
         });
   }

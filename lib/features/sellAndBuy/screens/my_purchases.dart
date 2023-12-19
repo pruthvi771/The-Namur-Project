@@ -36,6 +36,7 @@ class _PurchaseHistoryScreenState extends State<PurchaseHistoryScreen> {
     return _firestore
         .collection('orders')
         .where('buyer', isEqualTo: buyerId)
+        .orderBy('orderDate', descending: true)
         // .orderBy('status', descending: true)
         .snapshots();
   }

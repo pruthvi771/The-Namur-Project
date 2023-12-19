@@ -10,10 +10,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HiveMachineDetails extends StatefulWidget {
   final String machineName;
+  final String landSynoValue;
 
   const HiveMachineDetails({
     Key? key,
     required this.machineName,
+    required this.landSynoValue,
   }) : super(key: key);
 
   @override
@@ -70,6 +72,7 @@ class HiveMachineDetailsState extends State<HiveMachineDetails> {
           stream: FirebaseFirestore.instance
               .collection('products')
               .where('hiveMachineName', isEqualTo: widget.machineName)
+              .where('landSynoValue', isEqualTo: widget.landSynoValue)
               .where('subSubCategory', isEqualTo: 'On Rent')
               .snapshots(),
           builder: (context, snapshot) {

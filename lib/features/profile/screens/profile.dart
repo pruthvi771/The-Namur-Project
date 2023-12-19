@@ -119,41 +119,48 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
     );
   }
 
-  Future<List<Object?>> getNumberOfFriends() async {
+  Future<List<Object?>?> getNumberOfFriends() async {
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
 
     var savedData = dataBox.get('profile');
-
-    if (savedData!.address[0].pincode.isEmpty) {
-      throw Exception('Failed to load data');
+    if (savedData == null) {
+      return null;
     }
+    try {
+      if (savedData.address[0].pincode.isEmpty) {
+        return null;
+      }
 
-    int count = 0;
-    String villageName = savedData.address[0].village;
-    String pincode = savedData.address[0].pincode;
+      int count = 0;
+      String villageName = savedData.address[0].village;
+      String pincode = savedData.address[0].pincode;
 
-    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
-        .instance
-        .collection('buyer')
-        .where(FieldPath.documentId, isNotEqualTo: null)
-        .where('profileData', isNotEqualTo: null)
-        .get();
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await FirebaseFirestore.instance
+              .collection('buyer')
+              .where(FieldPath.documentId, isNotEqualTo: null)
+              .where('profileData', isNotEqualTo: null)
+              .get();
 
-    List<DocumentSnapshot<Map<String, dynamic>>> documents = querySnapshot.docs;
+      List<DocumentSnapshot<Map<String, dynamic>>> documents =
+          querySnapshot.docs;
 
-    for (var document in documents) {
-      Map<String, dynamic> data = document.data()!;
-      if (data['profileData']['address'].isNotEmpty) {
+      for (var document in documents) {
         Map<String, dynamic> data = document.data()!;
-        if (data['profileData']['address'][0]['pincode'] ==
-            savedData.address[0].pincode) {
-          count++;
-          print('count incremented');
+        if (data['profileData']['address'].isNotEmpty) {
+          Map<String, dynamic> data = document.data()!;
+          if (data['profileData']['address'][0]['pincode'] ==
+              savedData.address[0].pincode) {
+            count++;
+            print('count incremented');
+          }
         }
       }
-    }
 
-    return [villageName, pincode, count - 1];
+      return [villageName, pincode, count - 1];
+    } catch (e) {
+      return null;
+    }
   }
 
   @override
@@ -341,6 +348,17 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                 future: getNumberOfFriends(),
                                 builder: (context, snapshot) {
                                   if (snapshot.hasData) {
+                                    if (snapshot.data == null) {
+                                      return Text(
+                                        AppLocalizations.of(context)!
+                                            .add_address_to_see_this,
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 15,
+                                            color: Colors.red),
+                                      );
+                                    }
                                     return Column(
                                       children: [
                                         //Region text
@@ -382,8 +400,14 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                           color: Colors.red),
                                     );
                                   }
-                                  return Center(
-                                    child: CircularProgressIndicator(),
+                                  return Text(
+                                    AppLocalizations.of(context)!
+                                        .add_address_to_see_this,
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 15,
+                                        color: Colors.red),
                                   );
                                 }),
                           )
@@ -447,568 +471,6 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                     child: TabBarView(
                       controller: tabController,
                       children: [
-                        // FutureBuilder(
-                        //     future: cropsDataFuture,
-                        //     builder: (context, snapshot) {
-                        //       if (snapshot.connectionState ==
-                        //           ConnectionState.waiting) {
-                        //         return Center(
-                        //           child: CircularProgressIndicator(),
-                        //         );
-                        //       }
-                        //       if (snapshot.hasData && snapshot.data != null) {
-                        //         return snapshot.data!.length == 0
-                        //             ? Center(
-                        //                 child: Text(
-                        //                   AppLocalizations.of(context)!
-                        //                       .no_data_is_available,
-                        //                   style: TextStyle(
-                        //                       fontSize: 16,
-                        //                       fontWeight: FontWeight.w500,
-                        //                       fontFamily: 'Poppins'),
-                        //                 ),
-                        //               )
-                        //             : SingleChildScrollView(
-                        //                 child: MasonryGridView.count(
-                        //                   crossAxisCount: 3,
-                        //                   mainAxisSpacing: 16,
-                        //                   crossAxisSpacing: 16,
-                        //                   itemCount: snapshot.data!.length,
-                        //                   shrinkWrap: true,
-                        //                   padding: EdgeInsets.only(
-                        //                       top: 10.0, left: 18, right: 18),
-                        //                   physics:
-                        //                       NeverScrollableScrollPhysics(),
-                        //                   scrollDirection: Axis.vertical,
-                        //                   itemBuilder: (context, index) {
-                        //                     //
-                        //                     return Container(
-                        //                       //  height: 100,
-                        //                       decoration: BoxDecoration(
-                        //                         color: MyTheme.green_lighter
-                        //                             .withOpacity(0.2),
-                        //                         borderRadius:
-                        //                             BorderRadius.circular(15),
-                        //                       ),
-                        //                       child: Column(
-                        //                         children: [
-                        //                           Padding(
-                        //                             padding:
-                        //                                 const EdgeInsets.only(
-                        //                                     top: 8.0),
-                        //                             child: Container(
-                        //                               height: 50,
-                        //                               width: 50,
-                        //                               // child: Image.asset(
-                        //                               //   stocks[index],
-                        //                               //   fit: BoxFit.cover,
-                        //                               // ),
-                        //                               child: CachedNetworkImage(
-                        //                                   imageUrl: imageLinks[
-                        //                                           snapshot
-                        //                                               .data![
-                        //                                                   index]
-                        //                                               .name
-                        //                                               .toLowerCase()] ??
-                        //                                       imageLinks[
-                        //                                           'placeholder']!),
-                        //                             ),
-                        //                           ),
-                        //                           Padding(
-                        //                             padding:
-                        //                                 const EdgeInsets.only(
-                        //                                     top: 8.0,
-                        //                                     bottom: 8.0,
-                        //                                     left: 5,
-                        //                                     right: 5),
-                        //                             child: Align(
-                        //                               alignment:
-                        //                                   Alignment.center,
-                        //                               child: Text(
-                        //                                 snapshot
-                        //                                     .data![index].name,
-                        //                                 maxLines: 1,
-                        //                                 overflow: TextOverflow
-                        //                                     .ellipsis,
-                        //                                 style: TextStyle(
-                        //                                     fontSize: 16,
-                        //                                     fontWeight:
-                        //                                         FontWeight
-                        //                                             .w500),
-                        //                               ),
-                        //                             ),
-                        //                           )
-                        //                         ],
-                        //                       ),
-                        //                     );
-                        //                   },
-                        //                 ),
-                        //               );
-                        //       }
-                        //       return Center(
-                        //         child: CircularProgressIndicator(),
-                        //       );
-                        //     }),
-                        FutureBuilder(
-                            future: cropCalendarDataFuture,
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              }
-                              if (snapshot.hasData && snapshot.data != null) {
-                                print(snapshot.data![0].cropName);
-                                return BlocBuilder<HiveBloc, HiveState>(
-                                  builder: (context, state) {
-                                    if (state is HiveDataReceived) {
-                                      print(state.profileData.land.length);
-
-                                      List<CropProfileDisplay> cropsToDisplay =
-                                          [];
-
-                                      List<String> machinesToDisplay = [];
-
-                                      for (Land currentLand
-                                          in state.profileData.land) {
-                                        currentLand.equipments
-                                            .forEach((element) {
-                                          if (!machinesToDisplay
-                                              .contains(element)) {
-                                            machinesToDisplay.add(element);
-                                          }
-                                        });
-                                      }
-
-                                      for (Land currentLand
-                                          in state.profileData.land) {
-                                        for (Crop currentCrop
-                                            in currentLand.crops) {
-                                          CropCalendarItem?
-                                              currentCropCalendarItem;
-
-                                          for (CropCalendarItem cropCalendarItem
-                                              in snapshot.data!) {
-                                            if (cropCalendarItem.cropName ==
-                                                    currentCrop.name &&
-                                                cropCalendarItem.landSyno ==
-                                                    currentLand.syno) {
-                                              currentCropCalendarItem =
-                                                  cropCalendarItem;
-                                              break;
-                                            }
-                                          }
-
-                                          cropsToDisplay.add(
-                                            CropProfileDisplay(
-                                              cropName: currentCrop.name,
-                                              landSyno: currentLand.syno,
-                                              yieldOfCrop:
-                                                  currentCrop.yieldOfCrop,
-                                              beingTracked:
-                                                  currentCropCalendarItem !=
-                                                      null,
-                                              plantingDate:
-                                                  currentCropCalendarItem !=
-                                                          null
-                                                      ? currentCropCalendarItem
-                                                          .plantingDate
-                                                      : null,
-                                            ),
-                                          );
-                                        }
-                                      }
-                                      return Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 18),
-                                        child: Column(
-                                          children: [
-                                            Column(
-                                              children: [
-                                                Align(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  child: Text(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .crops
-                                                        .toUpperCase(),
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        fontFamily: 'Poppins'),
-                                                  ),
-                                                ),
-                                                cropsToDisplay.length == 0
-                                                    ? Center(
-                                                        child: Text(
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .no_data_is_available,
-                                                          style: TextStyle(
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              fontFamily:
-                                                                  'Poppins'),
-                                                        ),
-                                                      )
-                                                    : SingleChildScrollView(
-                                                        child: MasonryGridView
-                                                            .count(
-                                                          crossAxisCount: 3,
-                                                          mainAxisSpacing: 16,
-                                                          crossAxisSpacing: 16,
-                                                          itemCount:
-                                                              cropsToDisplay
-                                                                  .length,
-                                                          shrinkWrap: true,
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  top: 10),
-                                                          physics:
-                                                              NeverScrollableScrollPhysics(),
-                                                          scrollDirection:
-                                                              Axis.vertical,
-                                                          itemBuilder:
-                                                              (context, index) {
-                                                            return InkWell(
-                                                              onTap: () {
-                                                                showDialog(
-                                                                    context:
-                                                                        context,
-                                                                    builder:
-                                                                        (dialogContext) {
-                                                                      return AlertDialog(
-                                                                        contentPadding: EdgeInsets.only(
-                                                                            top:
-                                                                                10,
-                                                                            left:
-                                                                                10,
-                                                                            right:
-                                                                                10),
-                                                                        actionsPadding:
-                                                                            EdgeInsets.all(0),
-                                                                        buttonPadding:
-                                                                            EdgeInsets.all(0),
-                                                                        content:
-                                                                            Container(
-                                                                          height:
-                                                                              330,
-                                                                          child:
-                                                                              Column(
-                                                                            mainAxisAlignment:
-                                                                                MainAxisAlignment.spaceBetween,
-                                                                            children: [
-                                                                              SizedBox(
-                                                                                height: 10,
-                                                                              ),
-                                                                              Expanded(
-                                                                                child: Container(
-                                                                                  width: double.infinity,
-                                                                                  child: CachedNetworkImage(imageUrl: imageLinks[cropsToDisplay[index].cropName.toLowerCase()] ?? imageLinks['placeholder']!, fit: BoxFit.fitHeight),
-                                                                                ),
-                                                                              ),
-                                                                              SizedBox(
-                                                                                height: 20,
-                                                                              ),
-                                                                              Padding(
-                                                                                padding: const EdgeInsets.symmetric(horizontal: 10),
-                                                                                child: Align(
-                                                                                  alignment: Alignment.centerLeft,
-                                                                                  child: Text(
-                                                                                    cropsToDisplay[index].cropName,
-                                                                                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-                                                                                  ),
-                                                                                ),
-                                                                              ),
-                                                                              SizedBox(
-                                                                                height: 10,
-                                                                              ),
-                                                                              Container(
-                                                                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                                                                                color: Colors.grey.withOpacity(0.1),
-                                                                                width: double.infinity,
-                                                                                child: Row(
-                                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                                                  children: [
-                                                                                    Text(
-                                                                                      '${AppLocalizations.of(context)!.yield}: ${cropsToDisplay[index].yieldOfCrop.toString()}',
-                                                                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
-                                                                              ),
-                                                                              SizedBox(
-                                                                                height: 10,
-                                                                              ),
-                                                                              Container(
-                                                                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                                                                                color: Colors.grey.withOpacity(0.1),
-                                                                                width: double.infinity,
-                                                                                child: Row(
-                                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                                                  children: [
-                                                                                    Text(
-                                                                                      '${AppLocalizations.of(dialogContext)!.land} Syno: ${cropsToDisplay[index].landSyno}',
-                                                                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
-                                                                              ),
-                                                                              SizedBox(
-                                                                                height: 10,
-                                                                              ),
-                                                                              Container(
-                                                                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                                                                                color: Colors.grey.withOpacity(0.1),
-                                                                                width: double.infinity,
-                                                                                child: Row(
-                                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                                                  children: [
-                                                                                    Text(
-                                                                                      '${AppLocalizations.of(dialogContext)!.planting_date}: ${cropsToDisplay[index].beingTracked ? cropsToDisplay[index].plantingDate!.day.toString() + '/' + cropsToDisplay[index].plantingDate!.month.toString() + '/' + cropsToDisplay[index].plantingDate!.year.toString() : AppLocalizations.of(dialogContext)!.not_tracked}',
-                                                                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
-                                                                              ),
-                                                                            ],
-                                                                          ),
-                                                                        ),
-                                                                        actions: [
-                                                                          Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.symmetric(horizontal: 10),
-                                                                            child:
-                                                                                Row(
-                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                              children: [
-                                                                                TextButton(
-                                                                                    onPressed: cropsToDisplay[index].beingTracked
-                                                                                        ? () {
-                                                                                            Navigator.pop(dialogContext);
-                                                                                            Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                                                                              return CalendarScreen();
-                                                                                            }));
-                                                                                          }
-                                                                                        : null,
-                                                                                    child: Text(AppLocalizations.of(dialogContext)!.go_to_crop_calendar)),
-                                                                                TextButton(
-                                                                                    onPressed: () {
-                                                                                      Navigator.pop(dialogContext);
-                                                                                    },
-                                                                                    child: Text(AppLocalizations.of(dialogContext)!.dismiss)),
-                                                                              ],
-                                                                            ),
-                                                                          ),
-                                                                        ],
-                                                                      );
-                                                                    });
-                                                              },
-                                                              child: Container(
-                                                                padding: EdgeInsets
-                                                                    .symmetric(
-                                                                        vertical:
-                                                                            8),
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  color: MyTheme
-                                                                      .green_lighter
-                                                                      .withOpacity(
-                                                                          0.2),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              15),
-                                                                ),
-                                                                child: Column(
-                                                                  children: [
-                                                                    Container(
-                                                                      margin: EdgeInsets.only(
-                                                                          top:
-                                                                              8.0,
-                                                                          bottom:
-                                                                              8),
-                                                                      height:
-                                                                          50,
-                                                                      width: 50,
-                                                                      child: CachedNetworkImage(
-                                                                          imageUrl:
-                                                                              imageLinks[cropsToDisplay[index].cropName.toLowerCase()] ?? imageLinks['placeholder']!),
-                                                                    ),
-                                                                    Text(
-                                                                      cropsToDisplay[
-                                                                              index]
-                                                                          .cropName,
-                                                                      maxLines:
-                                                                          1,
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .center,
-                                                                      overflow:
-                                                                          TextOverflow
-                                                                              .ellipsis,
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              16,
-                                                                          fontWeight:
-                                                                              FontWeight.w500),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            );
-                                                          },
-                                                        ),
-                                                      ),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              height: 15,
-                                            ),
-                                            Column(
-                                              children: [
-                                                Align(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  child: Text(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .machine
-                                                        .toUpperCase(),
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        fontFamily: 'Poppins'),
-                                                  ),
-                                                ),
-                                                machinesToDisplay.length == 0
-                                                    ? Center(
-                                                        child: Text(
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .no_data_is_available,
-                                                          style: TextStyle(
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              fontFamily:
-                                                                  'Poppins'),
-                                                        ),
-                                                      )
-                                                    : SingleChildScrollView(
-                                                        child: MasonryGridView
-                                                            .count(
-                                                          crossAxisCount: 3,
-                                                          mainAxisSpacing: 16,
-                                                          crossAxisSpacing: 16,
-                                                          itemCount:
-                                                              machinesToDisplay
-                                                                  .length,
-                                                          shrinkWrap: true,
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  top: 15),
-                                                          physics:
-                                                              NeverScrollableScrollPhysics(),
-                                                          scrollDirection:
-                                                              Axis.vertical,
-                                                          itemBuilder:
-                                                              (context, index) {
-                                                            return InkWell(
-                                                              onTap: () {
-                                                                Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                        builder:
-                                                                            (context) {
-                                                                  return HiveMachineDetails(
-                                                                    machineName:
-                                                                        machinesToDisplay[
-                                                                            index],
-                                                                  );
-                                                                }));
-                                                              },
-                                                              child: Container(
-                                                                padding: EdgeInsets
-                                                                    .symmetric(
-                                                                        vertical:
-                                                                            8),
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  color: MyTheme
-                                                                      .green_lighter
-                                                                      .withOpacity(
-                                                                          0.2),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              15),
-                                                                ),
-                                                                child: Column(
-                                                                  children: [
-                                                                    Container(
-                                                                      margin: EdgeInsets.only(
-                                                                          top:
-                                                                              8.0,
-                                                                          bottom:
-                                                                              8),
-                                                                      height:
-                                                                          50,
-                                                                      width: 50,
-                                                                      child: CachedNetworkImage(
-                                                                          imageUrl:
-                                                                              imageLinks[machinesToDisplay[index].toLowerCase()] ?? imageLinks['placeholder']!),
-                                                                    ),
-                                                                    Text(
-                                                                      machinesToDisplay[
-                                                                          index],
-                                                                      maxLines:
-                                                                          1,
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .center,
-                                                                      overflow:
-                                                                          TextOverflow
-                                                                              .ellipsis,
-                                                                      style: TextStyle(
-                                                                          fontSize:
-                                                                              16,
-                                                                          fontWeight:
-                                                                              FontWeight.w500),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            );
-                                                          },
-                                                        ),
-                                                      ),
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      );
-                                    }
-                                    return Container(
-                                      child: Text('My Stock'),
-                                    );
-                                  },
-                                );
-                              }
-                              return Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            }),
                         FutureBuilder(
                             future: updatesDataFuture,
                             builder: (context, snapshot) {
@@ -1071,6 +533,492 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                 child: CircularProgressIndicator(),
                               );
                             }),
+                        FutureBuilder(
+                          future: cropCalendarDataFuture,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                            if (snapshot.hasData && snapshot.data != null) {
+                              // print(snapshot.data![0].cropName);
+                              return BlocBuilder<HiveBloc, HiveState>(
+                                builder: (context, state) {
+                                  if (state is HiveDataReceived) {
+                                    print(state.profileData.land.length);
+
+                                    List<CropProfileDisplay> cropsToDisplay =
+                                        [];
+
+                                    for (Land currentLand
+                                        in state.profileData.land) {
+                                      for (Crop currentCrop
+                                          in currentLand.crops) {
+                                        CropCalendarItem?
+                                            currentCropCalendarItem;
+
+                                        for (CropCalendarItem cropCalendarItem
+                                            in snapshot.data!) {
+                                          if (cropCalendarItem.cropName ==
+                                                  currentCrop.name &&
+                                              cropCalendarItem.landSyno ==
+                                                  currentLand.syno) {
+                                            currentCropCalendarItem =
+                                                cropCalendarItem;
+                                            break;
+                                          }
+                                        }
+
+                                        cropsToDisplay.add(
+                                          CropProfileDisplay(
+                                            cropName: currentCrop.name,
+                                            landSyno: currentLand.syno,
+                                            yieldOfCrop:
+                                                currentCrop.yieldOfCrop,
+                                            beingTracked:
+                                                currentCropCalendarItem != null,
+                                            plantingDate:
+                                                currentCropCalendarItem != null
+                                                    ? currentCropCalendarItem
+                                                        .plantingDate
+                                                    : null,
+                                          ),
+                                        );
+                                      }
+                                    }
+                                    return SingleChildScrollView(
+                                      physics: BouncingScrollPhysics(),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 18),
+                                        child: Column(
+                                          children: [
+                                            // crops
+                                            Column(
+                                              children: [
+                                                Align(
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  child: Text(
+                                                    AppLocalizations.of(
+                                                            context)!
+                                                        .crops
+                                                        .toUpperCase(),
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontFamily: 'Poppins'),
+                                                  ),
+                                                ),
+                                                cropsToDisplay.length == 0
+                                                    ? Container(
+                                                        height: 100,
+                                                        child: Center(
+                                                          child: Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .no_data_is_available,
+                                                            style: TextStyle(
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                fontFamily:
+                                                                    'Poppins'),
+                                                          ),
+                                                        ),
+                                                      )
+                                                    : MasonryGridView.count(
+                                                        crossAxisCount: 3,
+                                                        mainAxisSpacing: 16,
+                                                        crossAxisSpacing: 16,
+                                                        itemCount:
+                                                            cropsToDisplay
+                                                                .length,
+                                                        shrinkWrap: true,
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                top: 10),
+                                                        physics:
+                                                            NeverScrollableScrollPhysics(),
+                                                        scrollDirection:
+                                                            Axis.vertical,
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          return InkWell(
+                                                            onTap: () {
+                                                              showDialog(
+                                                                  context:
+                                                                      context,
+                                                                  builder:
+                                                                      (dialogContext) {
+                                                                    return AlertDialog(
+                                                                      contentPadding: EdgeInsets.only(
+                                                                          top:
+                                                                              10,
+                                                                          left:
+                                                                              10,
+                                                                          right:
+                                                                              10),
+                                                                      actionsPadding:
+                                                                          EdgeInsets.all(
+                                                                              0),
+                                                                      buttonPadding:
+                                                                          EdgeInsets.all(
+                                                                              0),
+                                                                      content:
+                                                                          Container(
+                                                                        height:
+                                                                            330,
+                                                                        child:
+                                                                            Column(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.spaceBetween,
+                                                                          children: [
+                                                                            SizedBox(
+                                                                              height: 10,
+                                                                            ),
+                                                                            Expanded(
+                                                                              child: Container(
+                                                                                width: double.infinity,
+                                                                                child: CachedNetworkImage(imageUrl: imageLinks[cropsToDisplay[index].cropName.toLowerCase()] ?? imageLinks['placeholder']!, fit: BoxFit.fitHeight),
+                                                                              ),
+                                                                            ),
+                                                                            SizedBox(
+                                                                              height: 20,
+                                                                            ),
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                                                                              child: Align(
+                                                                                alignment: Alignment.centerLeft,
+                                                                                child: Text(
+                                                                                  cropsToDisplay[index].cropName,
+                                                                                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                            SizedBox(
+                                                                              height: 10,
+                                                                            ),
+                                                                            Container(
+                                                                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                                                              color: Colors.grey.withOpacity(0.1),
+                                                                              width: double.infinity,
+                                                                              child: Row(
+                                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                children: [
+                                                                                  Text(
+                                                                                    '${AppLocalizations.of(context)!.yield}: ${cropsToDisplay[index].yieldOfCrop.toString()}',
+                                                                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                            SizedBox(
+                                                                              height: 10,
+                                                                            ),
+                                                                            Container(
+                                                                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                                                              color: Colors.grey.withOpacity(0.1),
+                                                                              width: double.infinity,
+                                                                              child: Row(
+                                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                children: [
+                                                                                  Text(
+                                                                                    '${AppLocalizations.of(dialogContext)!.land} Syno: ${cropsToDisplay[index].landSyno}',
+                                                                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                            SizedBox(
+                                                                              height: 10,
+                                                                            ),
+                                                                            Container(
+                                                                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                                                              color: Colors.grey.withOpacity(0.1),
+                                                                              width: double.infinity,
+                                                                              child: Row(
+                                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                children: [
+                                                                                  Text(
+                                                                                    '${AppLocalizations.of(dialogContext)!.planting_date}: ${cropsToDisplay[index].beingTracked ? cropsToDisplay[index].plantingDate!.day.toString() + '/' + cropsToDisplay[index].plantingDate!.month.toString() + '/' + cropsToDisplay[index].plantingDate!.year.toString() : AppLocalizations.of(dialogContext)!.not_tracked}',
+                                                                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                      actions: [
+                                                                        Padding(
+                                                                          padding: const EdgeInsets
+                                                                              .symmetric(
+                                                                              horizontal: 10),
+                                                                          child:
+                                                                              Row(
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.spaceBetween,
+                                                                            children: [
+                                                                              TextButton(
+                                                                                  onPressed: cropsToDisplay[index].beingTracked
+                                                                                      ? () {
+                                                                                          Navigator.pop(dialogContext);
+                                                                                          Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                                            return CalendarScreen();
+                                                                                          }));
+                                                                                        }
+                                                                                      : null,
+                                                                                  child: Text(AppLocalizations.of(dialogContext)!.go_to_crop_calendar)),
+                                                                              TextButton(
+                                                                                  onPressed: () {
+                                                                                    Navigator.pop(dialogContext);
+                                                                                  },
+                                                                                  child: Text(AppLocalizations.of(dialogContext)!.dismiss)),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    );
+                                                                  });
+                                                            },
+                                                            child: Container(
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                      vertical:
+                                                                          8),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: MyTheme
+                                                                    .green_lighter
+                                                                    .withOpacity(
+                                                                        0.2),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            15),
+                                                              ),
+                                                              child: Column(
+                                                                children: [
+                                                                  Container(
+                                                                    margin: EdgeInsets.only(
+                                                                        top:
+                                                                            8.0,
+                                                                        bottom:
+                                                                            8),
+                                                                    height: 50,
+                                                                    width: 50,
+                                                                    child: CachedNetworkImage(
+                                                                        imageUrl:
+                                                                            imageLinks[cropsToDisplay[index].cropName.toLowerCase()] ??
+                                                                                imageLinks['placeholder']!),
+                                                                  ),
+                                                                  Text(
+                                                                    cropsToDisplay[
+                                                                            index]
+                                                                        .cropName,
+                                                                    maxLines: 1,
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontWeight:
+                                                                            FontWeight.w500),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                      ),
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: 15,
+                                            ),
+                                            // machines
+                                            Column(
+                                              children: [
+                                                Align(
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  child: Text(
+                                                    AppLocalizations.of(
+                                                            context)!
+                                                        .machine
+                                                        .toUpperCase(),
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontFamily: 'Poppins'),
+                                                  ),
+                                                ),
+                                                Column(
+                                                  children: List.generate(
+                                                    state.profileData.land
+                                                        .length,
+                                                    (landIndex) {
+                                                      return Column(
+                                                        children: [
+                                                          SizedBox(
+                                                            height: 5,
+                                                          ),
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Text(
+                                                              state
+                                                                      .profileData
+                                                                      .land[
+                                                                          landIndex]
+                                                                      .village +
+                                                                  ' (${state.profileData.land[landIndex].syno})',
+                                                              style: TextStyle(
+                                                                fontSize: 16,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          state
+                                                                      .profileData
+                                                                      .land[
+                                                                          landIndex]
+                                                                      .equipments
+                                                                      .length ==
+                                                                  0
+                                                              ? Container(
+                                                                  height: 100,
+                                                                  child: Center(
+                                                                    child: Text(
+                                                                      AppLocalizations.of(
+                                                                              context)!
+                                                                          .no_data_is_available,
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              16,
+                                                                          fontWeight: FontWeight
+                                                                              .w500,
+                                                                          fontFamily:
+                                                                              'Poppins'),
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              : MasonryGridView
+                                                                  .count(
+                                                                  crossAxisCount:
+                                                                      3,
+                                                                  mainAxisSpacing:
+                                                                      16,
+                                                                  crossAxisSpacing:
+                                                                      16,
+                                                                  itemCount: state
+                                                                      .profileData
+                                                                      .land[
+                                                                          landIndex]
+                                                                      .equipments
+                                                                      .length,
+                                                                  shrinkWrap:
+                                                                      true,
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .only(
+                                                                              top: 15),
+                                                                  physics:
+                                                                      NeverScrollableScrollPhysics(),
+                                                                  scrollDirection:
+                                                                      Axis.vertical,
+                                                                  itemBuilder:
+                                                                      (context,
+                                                                          machineIndex) {
+                                                                    String machine = state
+                                                                        .profileData
+                                                                        .land[
+                                                                            landIndex]
+                                                                        .equipments[machineIndex];
+                                                                    return InkWell(
+                                                                      onTap:
+                                                                          () {
+                                                                        Navigator.push(
+                                                                            context,
+                                                                            MaterialPageRoute(builder:
+                                                                                (context) {
+                                                                          return HiveMachineDetails(
+                                                                            machineName:
+                                                                                machine,
+                                                                            landSynoValue:
+                                                                                state.profileData.land[landIndex].syno,
+                                                                          );
+                                                                        }));
+                                                                      },
+                                                                      child:
+                                                                          Container(
+                                                                        padding:
+                                                                            EdgeInsets.symmetric(vertical: 8),
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color: MyTheme
+                                                                              .green_lighter
+                                                                              .withOpacity(0.2),
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(15),
+                                                                        ),
+                                                                        child:
+                                                                            Column(
+                                                                          children: [
+                                                                            Container(
+                                                                              margin: EdgeInsets.only(top: 8.0, bottom: 8),
+                                                                              height: 50,
+                                                                              width: 50,
+                                                                              child: CachedNetworkImage(imageUrl: imageLinks[machine.toLowerCase()] ?? imageLinks['placeholder']!),
+                                                                            ),
+                                                                            Text(
+                                                                              machine,
+                                                                              maxLines: 1,
+                                                                              textAlign: TextAlign.center,
+                                                                              overflow: TextOverflow.ellipsis,
+                                                                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    );
+                                                                  },
+                                                                ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                  return Container(
+                                    child: Text('My Stock'),
+                                  );
+                                },
+                              );
+                            }
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          },
+                        ),
                       ],
                     ),
                   ),

@@ -756,6 +756,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     int index = savedData!.land.indexWhere((land) => land.syno == landSyno);
 
     if (index != -1) {
+      if (savedData.land[index].equipments.contains(equipment)) {
+        ToastComponent.showDialog(localContext.already_added_machine,
+            gravity: Toast.center, duration: Toast.lengthLong);
+        return;
+      }
       savedData.land[index].equipments.add(equipment);
 
       dataBox.put(savedData.id, savedData);
@@ -857,10 +862,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
             onPressed: () {
               Navigator.pop(context);
-              Navigator.pop(context);
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return MoreDetails();
-              }));
+              // Navigator.pop(context);
+              // Navigator.push(context, MaterialPageRoute(builder: (context) {
+              //   return MoreDetails();
+              // }));
             },
           ),
           SizedBox(

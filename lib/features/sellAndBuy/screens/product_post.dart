@@ -75,7 +75,9 @@ class _ProductPostState extends State<ProductPost> {
   List imagesOnFirebase = [];
 
   late ParentEnum parentEnum;
+
   String? hiveMachineDropdown;
+  String? landDropdownValue;
 
   @override
   void initState() {
@@ -219,6 +221,14 @@ class _ProductPostState extends State<ProductPost> {
       }
       if (kms == "") {
         ToastComponent.showDialog(AppLocalizations.of(context)!.enter_total_kms,
+            gravity: Toast.center, duration: Toast.lengthLong);
+        // ToastComponent.showDialog(AppLocalizations.of(context)!.enter,
+        //     gravity: Toast.center, duration: Toast.lengthLong);
+        return;
+      }
+
+      if (landDropdownValue == null) {
+        ToastComponent.showDialog(AppLocalizations.of(context)!.select_land,
             gravity: Toast.center, duration: Toast.lengthLong);
         // ToastComponent.showDialog(AppLocalizations.of(context)!.enter,
         //     gravity: Toast.center, duration: Toast.lengthLong);
@@ -400,6 +410,13 @@ class _ProductPostState extends State<ProductPost> {
         //     gravity: Toast.center, duration: Toast.lengthLong);
         return;
       }
+      if (landDropdownValue == null) {
+        ToastComponent.showDialog(AppLocalizations.of(context)!.select_land,
+            gravity: Toast.center, duration: Toast.lengthLong);
+        // ToastComponent.showDialog(AppLocalizations.of(context)!.enter,
+        //     gravity: Toast.center, duration: Toast.lengthLong);
+        return;
+      }
 
       if (hiveMachineDropdown == null) {
         ToastComponent.showDialog(AppLocalizations.of(context)!.select_machine,
@@ -445,6 +462,7 @@ class _ProductPostState extends State<ProductPost> {
         imageList: _mediaFileList,
         runningHours: runningHoursInt,
         kms: kmsInt,
+        landSynoValue: landDropdownValue ?? "",
         hiveMachineName: hiveMachineDropdown ?? "",
         // image: _image!,
       ),
@@ -801,71 +819,164 @@ class _ProductPostState extends State<ProductPost> {
 
                     print(machines);
 
-                    return machines.length == 0
-                        ? Container(
-                            padding: const EdgeInsets.only(
-                                top: 20.0, left: 20.0, right: 20.0, bottom: 10),
-                            child: Column(
-                              children: [
-                                Container(
-                                  height: 50,
-                                  width: double.infinity,
-                                  margin: const EdgeInsets.only(bottom: 10),
-                                  padding: EdgeInsets.symmetric(horizontal: 12),
-                                  decoration: BoxDecoration(
-                                      color: MyTheme.field_color,
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          AppLocalizations.of(context)!
-                                              .no_machines_added,
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.grey[600],
-                                              fontWeight: FontWeight.w400,
-                                              fontFamily: 'Poppins'),
-                                        ),
+                    return Column(
+                      children: [
+                        state.profileData.land.length == 0
+                            ? Container(
+                                padding: const EdgeInsets.only(
+                                    top: 20.0,
+                                    left: 20.0,
+                                    right: 20.0,
+                                    bottom: 10),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height: 50,
+                                      width: double.infinity,
+                                      margin: const EdgeInsets.only(bottom: 10),
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 12),
+                                      decoration: BoxDecoration(
+                                          color: MyTheme.field_color,
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .no_land_added_yet,
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.grey[600],
+                                                  fontWeight: FontWeight.w400,
+                                                  fontFamily: 'Poppins'),
+                                            ),
+                                          ),
+                                          Icon(Icons.block)
+                                        ],
                                       ),
-                                      Icon(Icons.block)
-                                    ],
-                                  ),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        AppLocalizations.of(context)!
+                                            .add_land_first,
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey[600],
+                                            fontWeight: FontWeight.w400,
+                                            fontFamily: 'Poppins'),
+                                      ),
+                                    )
+                                  ],
                                 ),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
+                              )
+                            : DropdownButtonWidget(
+                                '',
+                                AppLocalizations.of(context)!.select_land,
+                                state.profileData.land
+                                    .map((e) => DropdownMenuItem<String>(
+                                          child: Text(e.village),
+                                          value: e.syno,
+                                        ))
+                                    .toList(),
+                                landDropdownValue,
+                                (value) {
+                                  setState(() {
+                                    hiveMachineDropdown = null;
+                                    landDropdownValue = value;
+                                  });
+                                },
+                              ),
+                        landDropdownValue == null
+                            ? Container()
+                            : state.profileData.land
+                                        .firstWhere((element) =>
+                                            element.syno == landDropdownValue)
+                                        .equipments
+                                        .length ==
+                                    0
+                                ? Container(
+                                    padding: const EdgeInsets.only(
+                                        top: 20.0,
+                                        left: 20.0,
+                                        right: 20.0,
+                                        bottom: 10),
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          height: 50,
+                                          width: double.infinity,
+                                          margin:
+                                              const EdgeInsets.only(bottom: 10),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 12),
+                                          decoration: BoxDecoration(
+                                              color: MyTheme.field_color,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .no_machines_added,
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      color: Colors.grey[600],
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      fontFamily: 'Poppins'),
+                                                ),
+                                              ),
+                                              Icon(Icons.block)
+                                            ],
+                                          ),
+                                        ),
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            AppLocalizations.of(context)!
+                                                .please_first_add_machine_in_settings_screen,
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.grey[600],
+                                                fontWeight: FontWeight.w400,
+                                                fontFamily: 'Poppins'),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                : DropdownButtonWidget(
+                                    '',
                                     AppLocalizations.of(context)!
-                                        .please_first_add_machine_in_settings_screen,
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey[600],
-                                        fontWeight: FontWeight.w400,
-                                        fontFamily: 'Poppins'),
+                                        .select_machine,
+                                    state.profileData.land
+                                        .firstWhere((element) =>
+                                            element.syno == landDropdownValue)
+                                        .equipments
+                                        .map((e) => DropdownMenuItem<String>(
+                                              child: Text(e),
+                                              value: e,
+                                            ))
+                                        .toList(),
+                                    hiveMachineDropdown,
+                                    (value) {
+                                      setState(() {
+                                        hiveMachineDropdown = value;
+                                      });
+                                    },
                                   ),
-                                )
-                              ],
-                            ),
-                          )
-                        : DropdownButtonWidget(
-                            '',
-                            AppLocalizations.of(context)!.select_machine,
-                            machines
-                                .map((e) => DropdownMenuItem<String>(
-                                      child: Text(e),
-                                      value: e,
-                                    ))
-                                .toList(),
-                            hiveMachineDropdown,
-                            (value) {
-                              setState(() {
-                                hiveMachineDropdown = value;
-                              });
-                            },
-                          );
+                      ],
+                    );
                   } else {
                     return Container();
                   }
