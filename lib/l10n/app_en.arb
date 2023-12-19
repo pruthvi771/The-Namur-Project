@@ -764,7 +764,7 @@
 "track_another_crop": "Track Another Crop",
 "calendar_events": "Calendar Events",
 "cost_estimate": "Cost Estimate",
-"planting_date": "Planting Date: ",
+"planting_date": "Planting Date",
 "stage_for_calendar" : "Stage",
 "search": "Search",
 "enter_animal_name" : "Enter Animal Name",
@@ -832,5 +832,8 @@
 "select_machine": "Select Machine",
 "running_hours": "Running Hours",
 "kms": "Kms",
-"rating": "Rating"
+"rating": "Rating",
+"stop_tracking": "Stop Tracking",
+"all_crops_are_already_being_tracked": "All Crops are Already Being Tracked",
+"already_added_machine": "This machine is already added"
 }

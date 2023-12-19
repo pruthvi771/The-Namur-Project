@@ -28,13 +28,30 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   int selectedIndex = 0;
 
+  void stopTrackingCrop(index) async {
+    var dataBox = Hive.box<CropCalendarData>('cropCalendarDataBox');
+
+    var savedData = dataBox.get('calendar');
+
+    savedData!.cropCalendarItems.removeAt(index);
+
+    if (savedData.cropCalendarItems.length == 0) {
+      dataBox.delete('calendar');
+    } else
+      dataBox.put('calendar', savedData);
+    setState(() {
+      // selectedIndex = null;
+      cropsForTrackingFuture = getCropsForTracking();
+    });
+  }
+
   Future<CropCalendarData?> getCropsForTracking() async {
     var dataBox = Hive.box<CropCalendarData>('cropCalendarDataBox');
 
     var savedData = dataBox.get('calendar');
 
     if (savedData == null) {
-      throw Exception('No data found in the box');
+      return null;
     }
 
     return savedData;
@@ -184,7 +201,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               parentSnapshot.data!.cropCalendarItems.length,
                           itemBuilder: (context, index) {
                             print(parentSnapshot.data!
-                                .cropCalendarItems[selectedIndex].cropName);
+                                .cropCalendarItems[selectedIndex!].cropName);
                             return GestureDetector(
                               onTap: () => setState(() {
                                 selectedIndex = index;
@@ -244,7 +261,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           cropDocSnapshot.data != null) {
                         var docData = cropDocSnapshot.data;
                         var currentCrop = parentSnapshot
-                            .data!.cropCalendarItems[selectedIndex];
+                            .data!.cropCalendarItems[selectedIndex!];
                         return Column(
                           children: [
                             // Text(docData['stages'].toString()),
@@ -471,7 +488,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                           fontFamily: "Poppins"),
                                     ),
                                     Text(
-                                      '${currentCrop.plantingDate.day}/${currentCrop.plantingDate.month}/${currentCrop.plantingDate.year}',
+                                      ': ${currentCrop.plantingDate.day}/${currentCrop.plantingDate.month}/${currentCrop.plantingDate.year}',
                                       style: TextStyle(
                                           fontSize: 16, fontFamily: "Poppins"),
                                     ),
@@ -528,8 +545,37 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       );
                     }),
 
-                SizedBox(
-                  height: 40,
+                Text(selectedIndex.toString()),
+                Padding(
+                  padding: const EdgeInsets.only(right: 20),
+                  child: Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          // backgroundColor: MyTheme.accent_color,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            side: BorderSide(
+                              color: Colors.grey[200]!,
+                              width: 2,
+                            ),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                        ),
+                        onPressed: () {
+                          stopTrackingCrop(selectedIndex);
+                        },
+                        child: Text(
+                          AppLocalizations.of(context)!.stop_tracking,
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: .5,
+                            fontFamily: 'Poppins',
+                          ),
+                        ),
+                      )),
                 ),
               ],
             );
@@ -585,15 +631,54 @@ class _CalendarScreenState extends State<CalendarScreen> {
               ),
             );
           }
-          print(parentSnapshot.hashCode);
           return Center(
-            child: Text(AppLocalizations.of(context)!.something_went_wrong,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: .5,
-                  fontFamily: 'Poppins',
-                )),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  AppLocalizations.of(context)!.no_crop_for_tracking,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: .5,
+                    fontFamily: 'Poppins',
+                  ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: MyTheme.accent_color,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Text(
+                    AppLocalizations.of(context)!.add_crop_for_tracking,
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: .5,
+                      fontFamily: 'Poppins',
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CalendarAddCrop()));
+                  },
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+              ],
+            ),
           );
         });
   }

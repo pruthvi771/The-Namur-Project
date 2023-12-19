@@ -317,24 +317,22 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
                               itemCount: cropList.length,
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (context, index) {
-                                return usedIDs.contains(cropList[index].id)
-                                    ? SizedBox.shrink()
-                                    : GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            selectedIndex = index;
-                                            selectedCropName =
-                                                cropList[index].name;
-                                            idOfCrop = cropList[index].id;
-                                          });
-                                        },
-                                        child: EquipmentWidget(
-                                          image: imageForCrop[
-                                              cropList[index].name]!,
-                                          title: cropList[index].name,
-                                          isSelected: selectedIndex == index,
-                                        ),
-                                      );
+                                // return usedIDs.contains(cropList[index].id)
+                                //     ? SizedBox.shrink()
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      selectedIndex = index;
+                                      selectedCropName = cropList[index].name;
+                                      idOfCrop = cropList[index].id;
+                                    });
+                                  },
+                                  child: EquipmentWidget(
+                                    image: imageForCrop[cropList[index].name]!,
+                                    title: cropList[index].name,
+                                    isSelected: selectedIndex == index,
+                                  ),
+                                );
                               },
                             ),
                           );
