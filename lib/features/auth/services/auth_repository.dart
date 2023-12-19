@@ -347,7 +347,7 @@ class AuthRepository {
       // if (postOfficeResponse.statusCode == 200) {
       var jsonResponse = json.decode(postOfficeResponse.body);
 
-      print(jsonResponse);
+      // print(jsonResponse);
       if (jsonResponse[0]['Status'] == 'Success') {
         print('success');
         // return PostOfficeResponse.fromJson(jsonResponse);

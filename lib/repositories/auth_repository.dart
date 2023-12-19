@@ -34,15 +34,26 @@ class AuthRepository {
     return loginResponseFromJson(response.body);
   }
 
-  Future<LoginResponse> getSocialLoginResponse(@required String social_provider,
-      @required String? name, @required String? email, @required String? provider,
-      {access_token = "",secret_token = "",}) async {
+  Future<LoginResponse> getSocialLoginResponse(
+    @required String social_provider,
+    @required String? name,
+    @required String? email,
+    @required String? provider, {
+    access_token = "",
+    secret_token = "",
+  }) async {
     email = email == ("null") ? "" : email;
 
-    var post_body = jsonEncode(
-        {"name": name, "email": email, "provider": "$provider","social_provider":"$social_provider","access_token":"$access_token","secret_token":"$secret_token"});
+    var post_body = jsonEncode({
+      "name": name,
+      "email": email,
+      "provider": "$provider",
+      "social_provider": "$social_provider",
+      "access_token": "$access_token",
+      "secret_token": "$secret_token"
+    });
 
-    print(post_body);
+    // // print(post_body);
     Uri url = Uri.parse("${AppConfig.BASE_URL}/auth/social-login");
     final response = await http.post(url,
         headers: {
@@ -50,12 +61,10 @@ class AuthRepository {
           "App-Language": app_language.$!,
         },
         body: post_body);
-    print(post_body);
-    print(response.body.toString());
+    // // // print(post_body);
+    // // print(response.body.toString());
     return loginResponseFromJson(response.body);
   }
-
-
 
   Future<LogoutResponse> getLogoutResponse() async {
     Uri url = Uri.parse("${AppConfig.BASE_URL}/auth/logout");
@@ -67,7 +76,7 @@ class AuthRepository {
       },
     );
 
-    print(response.body);
+    // print(response.body);
 
     return logoutResponseFromJson(response.body);
   }
@@ -75,9 +84,9 @@ class AuthRepository {
   Future<CommonResponse> getAccountDeleteResponse() async {
     Uri url = Uri.parse("${AppConfig.BASE_URL}/auth/account-deletion");
 
-    print(url.toString());
+    // print(url.toString());
 
-    print("Bearer ${access_token.$}");
+    // print("Bearer ${access_token.$}");
     final response = await http.get(
       url,
       headers: {
@@ -85,16 +94,18 @@ class AuthRepository {
         "App-Language": app_language.$!,
       },
     );
-    print(response.body);
+    // print(response.body);
     return commonResponseFromJson(response.body);
   }
 
   Future<SignupResponse> getSignupResponse(
-      @required String name,
-      @required String? email_or_phone,
-      @required String password,
-      @required String passowrd_confirmation,
-      @required String register_by,@required String capchaKey,) async {
+    @required String name,
+    @required String? email_or_phone,
+    @required String password,
+    @required String passowrd_confirmation,
+    @required String register_by,
+    @required String capchaKey,
+  ) async {
     var post_body = jsonEncode({
       "name": "$name",
       "email_or_phone": "${email_or_phone}",
@@ -102,9 +113,7 @@ class AuthRepository {
       "password_confirmation": "${passowrd_confirmation}",
       "register_by": "$register_by",
       "g-recaptcha-response": "$capchaKey",
-
     });
-
 
     Uri url = Uri.parse("${AppConfig.BASE_URL}/auth/signup");
     final response = await http.post(url,
@@ -113,7 +122,7 @@ class AuthRepository {
           "App-Language": app_language.$!,
         },
         body: post_body);
-    print(response.body);
+    // print(response.body);
 
     return signupResponseFromJson(response.body);
   }
@@ -159,8 +168,8 @@ class AuthRepository {
       "${AppConfig.BASE_URL}/auth/password/forget_request",
     );
 
-    print(url.toString());
-    print(post_body.toString());
+    // print(url.toString());
+    // print(post_body.toString());
 
     final response = await http.post(url,
         headers: {
@@ -169,7 +178,7 @@ class AuthRepository {
         },
         body: post_body);
 
-    //print(response.body.toString());
+    //// print(response.body.toString());
 
     return passwordForgetResponseFromJson(response.body);
   }
@@ -192,7 +201,6 @@ class AuthRepository {
     return passwordConfirmResponseFromJson(response.body);
   }
 
-
   Future<ResendCodeResponse> getPasswordResendCodeResponse(
       @required String? email_or_code, @required String verify_by) async {
     var post_body = jsonEncode(
@@ -209,12 +217,11 @@ class AuthRepository {
     return resendCodeResponseFromJson(response.body);
   }
 
-
   Future<UserByTokenResponse> getUserByTokenResponse() async {
     var post_body = jsonEncode({"access_token": "${access_token.$}"});
 
     Uri url = Uri.parse("${AppConfig.BASE_URL}/get-user-by-access_token");
-    if(access_token.$!.isNotEmpty) {
+    if (access_token.$!.isNotEmpty) {
       final response = await http.post(url,
           headers: {
             "Content-Type": "application/json",
@@ -226,6 +233,4 @@ class AuthRepository {
     }
     return UserByTokenResponse();
   }
-
-
 }

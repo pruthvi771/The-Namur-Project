@@ -14,17 +14,16 @@ class OrderRepository {
       {page = 1, payment_status = "", delivery_status = ""}) async {
     Uri url = Uri.parse("${AppConfig.BASE_URL}/purchase-history" +
         "?page=${page}&payment_status=${payment_status}&delivery_status=${delivery_status}");
-    print("url:" +url.toString());
-    print("token:" +access_token.$!);
-    final response = await http.get(url,headers: {
+    // print("url:" +url.toString());
+    // print("token:" +access_token.$!);
+    final response = await http.get(url, headers: {
       "Authorization": "Bearer ${access_token.$}",
       "App-Language": app_language.$!,
-        });
+    });
 
     bool checkResult = ResponseCheck.apply(response.body);
 
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return orderMiniResponseFromJson(response.body);
   }
@@ -33,14 +32,13 @@ class OrderRepository {
     Uri url = Uri.parse(
         "${AppConfig.BASE_URL}/purchase-history-details/" + id.toString());
 
-    final response = await http.get(url,headers: {
+    final response = await http.get(url, headers: {
       "Authorization": "Bearer ${access_token.$}",
-          "App-Language": app_language.$!,
-        });
+      "App-Language": app_language.$!,
+    });
     bool checkResult = ResponseCheck.apply(response.body);
 
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return orderDetailResponseFromJson(response.body);
   }
@@ -48,24 +46,23 @@ class OrderRepository {
   Future<dynamic> getOrderItems({@required int? id = 0}) async {
     Uri url = Uri.parse(
         "${AppConfig.BASE_URL}/purchase-history-items/" + id.toString());
-    final response = await http.get(url,headers: {
+    final response = await http.get(url, headers: {
       "Authorization": "Bearer ${access_token.$}",
       "App-Language": app_language.$!,
-        });
+    });
     bool checkResult = ResponseCheck.apply(response.body);
 
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return orderItemlResponseFromJson(response.body);
   }
 
-  Future<dynamic> getPurchasedDigitalProducts(
-      {
-        page = 1,
-      }) async {
-    Uri url = Uri.parse("${AppConfig.BASE_URL}/digital/purchased-list?page=$page");
-    print(url.toString());
+  Future<dynamic> getPurchasedDigitalProducts({
+    page = 1,
+  }) async {
+    Uri url =
+        Uri.parse("${AppConfig.BASE_URL}/digital/purchased-list?page=$page");
+    // print(url.toString());
 
     final response = await http.get(url, headers: {
       "App-Language": app_language.$!,
@@ -74,8 +71,7 @@ class OrderRepository {
 
     bool checkResult = ResponseCheck.apply(response.body);
 
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
+    if (!checkResult) return responseCheckModelFromJson(response.body);
     return purchasedDigitalProductResponseFromJson(response.body);
   }
 }

@@ -21,8 +21,7 @@ import 'package:flutter/foundation.dart';
 
 class AddressRepository {
   Future<dynamic> getAddressList() async {
-    Uri url =
-        Uri.parse("${AppConfig.BASE_URL}/user/shipping/address");
+    Uri url = Uri.parse("${AppConfig.BASE_URL}/user/shipping/address");
     final response = await http.get(
       url,
       headers: {
@@ -32,17 +31,14 @@ class AddressRepository {
       },
     );
     bool checkResult = ResponseCheck.apply(response.body);
-    print("Bearer ${access_token.$}");
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
-
+    // print("Bearer ${access_token.$}");
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return addressResponseFromJson(response.body);
   }
 
   Future<dynamic> getHomeDeliveryAddress() async {
-    Uri url =
-        Uri.parse("${AppConfig.BASE_URL}/get-home-delivery-address");
+    Uri url = Uri.parse("${AppConfig.BASE_URL}/get-home-delivery-address");
     final response = await http.get(
       url,
       headers: {
@@ -52,11 +48,9 @@ class AddressRepository {
       },
     );
     bool checkResult = ResponseCheck.apply(response.body);
-   print("Bearer ${access_token.$}");
+    //  print("Bearer ${access_token.$}");
 
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
-
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return addressResponseFromJson(response.body);
   }
@@ -89,10 +83,7 @@ class AddressRepository {
 
     bool checkResult = ResponseCheck.apply(response.body);
 
-
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
-
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return addressAddResponseFromJson(response.body);
   }
@@ -127,10 +118,7 @@ class AddressRepository {
 
     bool checkResult = ResponseCheck.apply(response.body);
 
-
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
-
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return addressUpdateResponseFromJson(response.body);
   }
@@ -158,10 +146,7 @@ class AddressRepository {
 
     bool checkResult = ResponseCheck.apply(response.body);
 
-
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
-
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return addressUpdateLocationResponseFromJson(response.body);
   }
@@ -183,10 +168,7 @@ class AddressRepository {
         body: post_body);
     bool checkResult = ResponseCheck.apply(response.body);
 
-
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
-
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return addressMakeDefaultResponseFromJson(response.body);
   }
@@ -205,9 +187,7 @@ class AddressRepository {
 
     bool checkResult = ResponseCheck.apply(response.body);
 
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
-
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return addressDeleteResponseFromJson(response.body);
   }
@@ -219,26 +199,19 @@ class AddressRepository {
 
     bool checkResult = ResponseCheck.apply(response.body);
 
-
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
-
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return cityResponseFromJson(response.body);
   }
 
-  Future<dynamic> getStateListByCountry(
-      {country_id = 0, name = ""}) async {
+  Future<dynamic> getStateListByCountry({country_id = 0, name = ""}) async {
     Uri url = Uri.parse(
         "${AppConfig.BASE_URL}/states-by-country/${country_id}?name=${name}");
     final response = await http.get(url);
 
     bool checkResult = ResponseCheck.apply(response.body);
 
-
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
-
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return myStateResponseFromJson(response.body);
   }
@@ -249,18 +222,13 @@ class AddressRepository {
 
     bool checkResult = ResponseCheck.apply(response.body);
 
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return countryResponseFromJson(response.body);
   }
 
-  Future<dynamic> getShippingCostResponse(
-      {
-       shipping_type =""}) async {
-    var post_body = jsonEncode({
-      "seller_list": shipping_type
-    });
+  Future<dynamic> getShippingCostResponse({shipping_type = ""}) async {
+    var post_body = jsonEncode({"seller_list": shipping_type});
 
     Uri url = Uri.parse("${AppConfig.BASE_URL}/shipping_cost");
 
@@ -269,14 +237,14 @@ class AddressRepository {
           "Content-Type": "application/json",
           "Authorization": "Bearer ${access_token.$}",
           "App-Language": app_language.$!,
-          "Currency-Code":SystemConfig.systemCurrency!.code!,
-          "Currency-Exchange-Rate":SystemConfig.systemCurrency!.exchangeRate.toString(),
+          "Currency-Code": SystemConfig.systemCurrency!.code!,
+          "Currency-Exchange-Rate":
+              SystemConfig.systemCurrency!.exchangeRate.toString(),
         },
         body: post_body);
     bool checkResult = ResponseCheck.apply(response.body);
 
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return shippingCostResponseFromJson(response.body);
   }
@@ -300,27 +268,23 @@ class AddressRepository {
 
     bool checkResult = ResponseCheck.apply(response.body);
 
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
-
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return addressUpdateInCartResponseFromJson(response.body);
   }
 
-
   Future<dynamic> getShippingTypeUpdateInCartResponse(
-      { required int shipping_id, shipping_type = "home_delivery"}) async {
+      {required int shipping_id, shipping_type = "home_delivery"}) async {
     var post_body = jsonEncode({
       "shipping_id": "${shipping_id}",
       "shipping_type": "$shipping_type",
     });
 
-
     Uri url = Uri.parse("${AppConfig.BASE_URL}/update-shipping-type-in-cart");
 
-    print(url.toString());
-    print(post_body.toString());
-    print(access_token.$.toString());
+    // print(url.toString());
+    // print(post_body.toString());
+    // print(access_token.$.toString());
     final response = await http.post(url,
         headers: {
           "Content-Type": "application/json",
@@ -331,12 +295,8 @@ class AddressRepository {
 
     bool checkResult = ResponseCheck.apply(response.body);
 
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
-
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return addressUpdateInCartResponseFromJson(response.body);
   }
-
-
 }

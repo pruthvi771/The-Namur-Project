@@ -58,7 +58,7 @@ class HomePresenter extends ChangeNotifier {
 
   fetchTodayDealData() async {
     var deal = await ProductRepository().getTodaysDealProducts();
-    print(deal.products!.length);
+    // print(deal.products!.length);
     if (deal.success! && deal.products!.isNotEmpty) {
       isTodayDeal = true;
       notifyListeners();

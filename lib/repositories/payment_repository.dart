@@ -20,12 +20,11 @@ import 'package:active_ecommerce_flutter/data_model/nagad_payment_process_respon
 import 'package:active_ecommerce_flutter/data_model/sslcommerz_begin_response.dart';
 
 class PaymentRepository {
-  Future<dynamic> getPaymentResponseList(
-      {mode = "", list = "both"}) async {
+  Future<dynamic> getPaymentResponseList({mode = "", list = "both"}) async {
     Uri url = Uri.parse(
         "${AppConfig.BASE_URL}/payment-types?mode=${mode}&list=${list}");
 
-    print("getPaymentResponseList url " + url.toString());
+    // print("getPaymentResponseList url " + url.toString());
 
     final response = await http.get(url, headers: {
       "App-Language": app_language.$!,
@@ -35,15 +34,12 @@ class PaymentRepository {
 
     bool checkResult = ResponseCheck.apply(response.body);
 
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
-
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return paymentTypeResponseFromJson(response.body);
   }
 
-  Future<dynamic> getOrderCreateResponse(
-      @required payment_method) async {
+  Future<dynamic> getOrderCreateResponse(@required payment_method) async {
     var post_body = jsonEncode({"payment_type": "${payment_method}"});
 
     Uri url = Uri.parse("${AppConfig.BASE_URL}/order/store");
@@ -57,14 +53,16 @@ class PaymentRepository {
 
     bool checkResult = ResponseCheck.apply(response.body);
 
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return orderCreateResponseFromJson(response.body);
   }
 
-  Future<PaypalUrlResponse> getPaypalUrlResponse(@required String payment_type,
-      @required int? combined_order_id, @required var package_id, @required double? amount) async {
+  Future<PaypalUrlResponse> getPaypalUrlResponse(
+      @required String payment_type,
+      @required int? combined_order_id,
+      @required var package_id,
+      @required double? amount) async {
     Uri url = Uri.parse(
       "${AppConfig.BASE_URL}/paypal/payment/url?payment_type=${payment_type}&combined_order_id=${combined_order_id}&amount=${amount}&user_id=${user_id.$}&package_id=$package_id",
     );
@@ -72,7 +70,7 @@ class PaymentRepository {
       "App-Language": app_language.$!,
     });
 
-    //print(response.body.toString());
+    //// print(response.body.toString());
     return paypalUrlResponseFromJson(response.body);
   }
 
@@ -88,8 +86,8 @@ class PaymentRepository {
       "App-Language": app_language.$!,
     });
 
-    //print(url);
-    //print(response.body.toString());
+    //// print(url);
+    //// print(response.body.toString());
     return flutterwaveUrlResponseFromJson(response.body);
   }
 
@@ -113,8 +111,7 @@ class PaymentRepository {
 
     bool checkResult = ResponseCheck.apply(response.body);
 
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return orderCreateResponseFromJson(response.body);
   }
@@ -135,8 +132,7 @@ class PaymentRepository {
 
     bool checkResult = ResponseCheck.apply(response.body);
 
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return orderCreateResponseFromJson(response.body);
   }
@@ -158,8 +154,7 @@ class PaymentRepository {
 
     bool checkResult = ResponseCheck.apply(response.body);
 
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return orderCreateResponseFromJson(response.body);
   }
@@ -177,7 +172,7 @@ class PaymentRepository {
       "payment_details": "${payment_details}"
     });
 
-    //print(post_body.toString());
+    //// print(post_body.toString());
 
     Uri url = Uri.parse("${AppConfig.BASE_URL}/razorpay/success");
 
@@ -189,7 +184,7 @@ class PaymentRepository {
         },
         body: post_body);
 
-    //print(response.body.toString());
+    //// print(response.body.toString());
     return razorpayPaymentSuccessResponseFromJson(response.body);
   }
 
@@ -214,7 +209,7 @@ class PaymentRepository {
         },
         body: post_body);
 
-    //print(response.body.toString());
+    //// print(response.body.toString());
     return paystackPaymentSuccessResponseFromJson(response.body);
   }
 
@@ -239,7 +234,7 @@ class PaymentRepository {
         },
         body: post_body);
 
-    //print(response.body.toString());
+    //// print(response.body.toString());
     return iyzicoPaymentSuccessResponseFromJson(response.body);
   }
 
@@ -251,18 +246,17 @@ class PaymentRepository {
     Uri url = Uri.parse(
         "${AppConfig.BASE_URL}/bkash/begin?payment_type=${payment_type}&combined_order_id=${combined_order_id}&amount=${amount}&user_id=${user_id.$}&package_id=${package_id}");
 
-    print(url.toString());
+    // print(url.toString());
     final response = await http.get(
       url,
       headers: {"Authorization": "Bearer ${access_token.$}"},
     );
 
-    print(response.body.toString());
+    // print(response.body.toString());
     return bkashBeginResponseFromJson(response.body);
   }
 
-  Future<BkashPaymentProcessResponse> getBkashPaymentProcessResponse(
-      {
+  Future<BkashPaymentProcessResponse> getBkashPaymentProcessResponse({
     required payment_type,
     required double? amount,
     required int? combined_order_id,
@@ -289,7 +283,7 @@ class PaymentRepository {
         },
         body: post_body);
 
-    //print(response.body.toString());
+    //// print(response.body.toString());
     return bkashPaymentProcessResponseFromJson(response.body);
   }
 
@@ -309,7 +303,7 @@ class PaymentRepository {
       },
     );
 
-    print(response.body.toString());
+    // print(response.body.toString());
     return sslcommerzBeginResponseFromJson(response.body);
   }
 
@@ -329,7 +323,7 @@ class PaymentRepository {
       },
     );
 
-    print(response.body.toString());
+    // print(response.body.toString());
     return nagadBeginResponseFromJson(response.body);
   }
 
@@ -356,7 +350,7 @@ class PaymentRepository {
         },
         body: post_body);
 
-    //print(response.body.toString());
+    //// print(response.body.toString());
     return nagadPaymentProcessResponseFromJson(response.body);
   }
 }

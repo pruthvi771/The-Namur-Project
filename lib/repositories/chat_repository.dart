@@ -11,10 +11,9 @@ import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:flutter/foundation.dart';
 
 class ChatRepository {
-  Future<dynamic> getConversationResponse(
-      {@required page = 1}) async {
-    Uri url = Uri.parse(
-        "${AppConfig.BASE_URL}/chat/conversations?page=${page}");
+  Future<dynamic> getConversationResponse({@required page = 1}) async {
+    Uri url =
+        Uri.parse("${AppConfig.BASE_URL}/chat/conversations?page=${page}");
     final response = await http.get(
       url,
       headers: {
@@ -25,8 +24,7 @@ class ChatRepository {
 
     bool checkResult = ResponseCheck.apply(response.body);
 
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return conversationResponseFromJson(response.body);
   }
@@ -45,8 +43,7 @@ class ChatRepository {
 
     bool checkResult = ResponseCheck.apply(response.body);
 
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return messageResponseFromJson(response.body);
   }
@@ -69,8 +66,7 @@ class ChatRepository {
         body: post_body);
     bool checkResult = ResponseCheck.apply(response.body);
 
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return messageResponseFromJson(response.body);
   }
@@ -88,8 +84,7 @@ class ChatRepository {
     );
     bool checkResult = ResponseCheck.apply(response.body);
 
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return messageResponseFromJson(response.body);
   }
@@ -105,10 +100,10 @@ class ChatRepository {
       "message": "${message}"
     });
 
-    print(post_body);
+    // print(post_body);
 
     Uri url = Uri.parse("${AppConfig.BASE_URL}/chat/create-conversation");
-    print("Bearer ${access_token.$}");
+    // print("Bearer ${access_token.$}");
     final response = await http.post(url,
         headers: {
           "Content-Type": "application/json",
@@ -118,10 +113,9 @@ class ChatRepository {
         body: post_body);
     bool checkResult = ResponseCheck.apply(response.body);
 
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
-    print(response.body);
+    // print(response.body);
     return conversationCreateResponseFromJson(response.body);
   }
 }

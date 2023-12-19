@@ -15,10 +15,11 @@ class SubCategoryController extends GetxController {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         subcategoryList.value = SubCategoryModel.fromJson(data);
-        print("${subcategoryList.value.data?.length}");
-        print("${response.body}");
+        // print("${subcategoryList.value.data?.length}");
+        // print("${response.body}");
       } else {
-        throw Exception("error in sub category controller");
+        print("error in sub category controller (not my file)");
+        // throw Exception("error in sub category controller");
       }
     } catch (e) {
       print("error in sub category controller (not my file)");
