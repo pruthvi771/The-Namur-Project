@@ -40,7 +40,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     } else
       dataBox.put('calendar', savedData);
     setState(() {
-      // selectedIndex = null;
+      selectedIndex = 0;
       cropsForTrackingFuture = getCropsForTracking();
     });
   }
@@ -73,8 +73,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   void initState() {
     cropsForTrackingFuture = getCropsForTracking();
-    // cropDocumentForInfoFuture = getCropDocForInfo(cropName: 'onion');
-    // tenDaysAhead = currentDateTime.add(Duration(days: 10));
     super.initState();
   }
 

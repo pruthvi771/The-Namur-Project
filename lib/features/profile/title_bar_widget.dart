@@ -1,9 +1,6 @@
 import 'dart:async';
 
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
-import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
-import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
-import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_event.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_bloc.dart';
@@ -11,7 +8,6 @@ import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_state.dart'
     as profileState;
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
-import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/friends_screen.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/profile.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/weather_section_bloc/weather_section_bloc.dart';
