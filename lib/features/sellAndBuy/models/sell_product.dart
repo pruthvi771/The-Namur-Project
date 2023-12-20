@@ -15,6 +15,7 @@ class SellProduct {
   final String gramPanchayat;
   final String taluk;
   final String district;
+  final DateTime createdAt;
 
   SellProduct({
     required this.id,
@@ -33,5 +34,6 @@ class SellProduct {
     required this.gramPanchayat,
     required this.taluk,
     required this.district,
+    required this.createdAt,
   });
 }

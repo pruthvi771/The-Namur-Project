@@ -74,6 +74,7 @@ class HiveMachineDetailsState extends State<HiveMachineDetails> {
               .where('hiveMachineName', isEqualTo: widget.machineName)
               .where('landSynoValue', isEqualTo: widget.landSynoValue)
               .where('subSubCategory', isEqualTo: 'On Rent')
+              .where('isDeleted', isNotEqualTo: true)
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -106,6 +107,7 @@ class HiveMachineDetailsState extends State<HiveMachineDetails> {
                   gramPanchayat: data['gramPanchayat'],
                   taluk: data['taluk'],
                   district: data['district'],
+                  createdAt: data['createdAt'].toDate(),
                 );
               }).toList();
 

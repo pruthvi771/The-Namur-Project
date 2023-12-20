@@ -401,6 +401,8 @@ class ProductInventoryWidget extends StatelessWidget {
                                                           gramPanchayat:
                                                               gramPanchayat,
                                                           village: village,
+                                                          createdAt:
+                                                              DateTime.now(),
                                                         ),
                                                       )));
                                         },

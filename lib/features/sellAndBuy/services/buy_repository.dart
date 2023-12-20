@@ -14,6 +14,7 @@ class BuyRepository {
         .collection('products')
         .where(FieldPath.documentId, isNotEqualTo: null)
         .where('subSubCategory', isEqualTo: subSubCategory)
+        .where('isDeleted', isNotEqualTo: true)
         .get();
 
     var products = querySnapshot.docs.map((doc) {
@@ -37,6 +38,7 @@ class BuyRepository {
         gramPanchayat: data['gramPanchayat'],
         taluk: data['taluk'],
         district: data['district'],
+        createdAt: data['createdAt'].toDate(),
       );
     }).toList();
     print(products.length);
@@ -55,6 +57,7 @@ class BuyRepository {
         .where(FieldPath.documentId, isNotEqualTo: null)
         .where('subCategory', isEqualTo: subCategory)
         .where('isSecondHand', isEqualTo: false)
+        .where('isDeleted', isNotEqualTo: true)
         .get();
 
     var products = querySnapshot.docs.map((doc) {
@@ -78,6 +81,7 @@ class BuyRepository {
         gramPanchayat: data['gramPanchayat'],
         taluk: data['taluk'],
         district: data['district'],
+        createdAt: data['createdAt'].toDate(),
       );
     }).toList();
     print(products.length);
@@ -183,6 +187,7 @@ class BuyRepository {
         .where(FieldPath.documentId, isNotEqualTo: null)
         .where('subCategory', isEqualTo: subCategory)
         .where('isSecondHand', isEqualTo: true)
+        .where('isDeleted', isNotEqualTo: true)
         .get();
 
     var products = querySnapshot.docs.map((doc) {
@@ -206,6 +211,7 @@ class BuyRepository {
         gramPanchayat: data['gramPanchayat'],
         taluk: data['taluk'],
         district: data['district'],
+        createdAt: data['createdAt'].toDate(),
       );
     }).toList();
     print(products.length);

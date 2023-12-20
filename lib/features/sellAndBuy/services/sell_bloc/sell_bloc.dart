@@ -129,7 +129,8 @@ class SellBloc extends Bloc<SellEvent, SellState> {
       try {
         emit(ProductAddEditDeleteLoading());
         var currentUser = authRepository.currentUser!;
-        await sellRepository.deleteProduct(productId: event.productId);
+        // await sellRepository.deleteProduct(productId: event.productId);
+        await sellRepository.setProductToDelete(productId: event.productId);
         await sellRepository.removeProductFromSellerDocument(
             productId: event.productId, sellerId: currentUser.userId);
         emit(ProductAddEditDeleteSuccessfully());

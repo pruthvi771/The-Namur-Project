@@ -152,6 +152,7 @@ class FirestoreRepository {
               .collection('products')
               .where(FieldPath.documentId, isNotEqualTo: null)
               .where('subCategory', isEqualTo: subCategory)
+              .where('isDeleted', isNotEqualTo: true)
               .get();
 
       List<DocumentSnapshot<Map<String, dynamic>>> documents =

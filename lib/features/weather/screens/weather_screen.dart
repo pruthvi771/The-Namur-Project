@@ -7,6 +7,7 @@ import 'package:active_ecommerce_flutter/features/weather/bloc/weather_bloc.dart
 import 'package:active_ecommerce_flutter/features/weather/bloc/weather_event.dart';
 import 'package:active_ecommerce_flutter/features/weather/bloc/weather_state.dart';
 import 'package:active_ecommerce_flutter/features/weather/screens/add_location.dart';
+import 'package:active_ecommerce_flutter/utils/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -48,42 +49,21 @@ class _WeatherScreenState extends State<WeatherScreen> {
     }
   }
 
-  String formatDate(String inputDate) {
-    // Parse inputDate into a DateTime object
-    DateTime parsedDate = DateTime.parse(inputDate);
-    // print('input: $inputDate');
-
-    // Define month weatherImages
-    List<String> months = [
-      '', // Empty string to make months list 1-indexed
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct',
-      'Nov', 'Dec'
-    ];
-
-    // Extract day, month, and year components
-    int day = parsedDate.day;
-    int month = parsedDate.month;
-
-    // Format the output string as '2 Oct'
-    String formattedDate = '$day ${months[month]}';
-
-    return formattedDate;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
       height: DeviceInfo(context).height,
       child: Scaffold(
-          // key: homeData.scaffoldKey,
-          // drawer: const MainDrawer(),
           backgroundColor: Colors.transparent,
           appBar: buildCustomAppBar(context),
           body: bodycontent(),
           floatingActionButton: (showFloatingActionButton)
               ? FloatingActionButton(
-                  child: Icon(Icons.add),
+                  child: Image.asset(
+                    "assets/add 2.png",
+                    // height: 50,
+                  ),
                   backgroundColor: MyTheme.accent_color,
                   onPressed: () {
                     setState(() {

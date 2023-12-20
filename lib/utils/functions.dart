@@ -47,3 +47,43 @@ Address? getUserLocationFromHive() {
 void printError(String text) {
   print('\x1B[31m$text\x1B[0m');
 }
+
+String formatDate(String inputDate) {
+  // Parse inputDate into a DateTime object
+  DateTime parsedDate = DateTime.parse(inputDate);
+
+  List<String> months = [
+    '', // Empty string to make months list 1-indexed
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct',
+    'Nov', 'Dec'
+  ];
+
+  // Extract day, month, and year components
+  int day = parsedDate.day;
+  int month = parsedDate.month;
+
+  // Format the output string as '2 Oct'
+  String formattedDate = '$day ${months[month]}';
+
+  return formattedDate;
+}
+
+String formatDateWithYear(String inputDate) {
+  // Parse inputDate into a DateTime object
+  DateTime parsedDate = DateTime.parse(inputDate);
+
+  List<String> months = [
+    '', // Empty string to make months list 1-indexed
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct',
+    'Nov', 'Dec'
+  ];
+
+  // Extract day, month, and year components
+  int day = parsedDate.day;
+  int month = parsedDate.month;
+
+  // Format the output string as '2 Oct'
+  String formattedDate = '$day ${months[month]}, ${parsedDate.year}';
+
+  return formattedDate;
+}

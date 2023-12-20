@@ -54,6 +54,8 @@ class SellRepository {
         'district': district,
         'taluk': taluk,
         'gramPanchayat': gramPanchayat,
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
       });
       return documentReference.id;
     } catch (e) {
@@ -112,6 +114,8 @@ class SellRepository {
         'gramPanchayat': gramPanchayat,
         'hiveMachineName': hiveMachineName,
         'landSynoValue': landSynoValue,
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
       });
       return documentReference.id;
     } catch (e) {
@@ -255,6 +259,7 @@ class SellRepository {
         'category': category,
         'subCategory': subCategory,
         'subSubCategory': subSubCategory,
+        'updatedAt': FieldValue.serverTimestamp(),
         // 'imageURL': imageURL,
       });
     } catch (e) {
@@ -296,6 +301,7 @@ class SellRepository {
         'kms': kms,
         'hiveMachineName': hiveMachineName,
         'landSynoValue': landSynoValue,
+        'updatedAt': FieldValue.serverTimestamp(),
         // 'imageURL': imageURL,
       });
     } catch (e) {
@@ -317,6 +323,7 @@ class SellRepository {
         .where('subCategory', isEqualTo: subCategory)
         .where('sellerId', isEqualTo: _firebaseAuth.currentUser!.uid)
         .where('isSecondHand', isEqualTo: isSecondHand)
+        .where('isDeleted', isNotEqualTo: true)
         .get();
 
     var products = querySnapshot.docs.map((doc) {
@@ -340,6 +347,7 @@ class SellRepository {
         gramPanchayat: data['gramPanchayat'],
         taluk: data['taluk'],
         district: data['district'],
+        createdAt: data['createdAt'].toDate(),
       );
     }).toList();
     print(products.length);
@@ -355,6 +363,21 @@ class SellRepository {
     } catch (_) {
       print(_);
       throw Exception('Something went wrong. Please try again.');
+    }
+  }
+
+  Future<void> setProductToDelete({
+    required String productId,
+  }) async {
+    CollectionReference products = _firestore.collection('products');
+
+    try {
+      await products.doc(productId).update({
+        'isDeleted': true,
+      });
+    } catch (e) {
+      print('Error updating product: $e');
+      // Handle the error according to your application's requirements
     }
   }
 
