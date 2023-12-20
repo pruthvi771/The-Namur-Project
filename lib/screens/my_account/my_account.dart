@@ -5,6 +5,9 @@ import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/misc_bloc/misc_bloc.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_bloc.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_state.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/cart.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/my_purchases.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/seller_orderlist.dart';
@@ -14,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/drawer/drawer.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -100,34 +104,30 @@ class _MyAccountState extends State<MyAccount> {
                       borderRadius: BorderRadius.circular(25),
                       border: Border.all(color: MyTheme.white, width: 1),
                     ),
-                    child: FutureBuilder(
-                        future: _sellerUserDataFuture,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData && snapshot.data != null) {
-                            var sellerData =
-                                snapshot.data as SellerDataForFriendsScreen;
-                            return ClipRRect(
-                              clipBehavior: Clip.hardEdge,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(25.0)),
-                              child: (sellerData.photoURL == null ||
-                                      sellerData.photoURL == '')
-                                  ? Image.asset(
-                                      "assets/default_profile2.png",
-                                      fit: BoxFit.cover,
-                                    )
-                                  : CachedNetworkImage(
-                                      imageUrl: sellerData.photoURL!,
-                                      fit: BoxFit.cover,
-                                    ),
-                            );
-                          }
-                          return Center(
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                            ),
-                          );
-                        }),
+                    child: BlocBuilder<ProfileBloc, ProfileState>(
+                        builder: (context, state) {
+                      if (state is ProfileDataReceived) {
+                        return ClipRRect(
+                          clipBehavior: Clip.hardEdge,
+                          borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                          child: (state.buyerProfileData.photoURL == null ||
+                                  state.buyerProfileData.photoURL == '')
+                              ? Image.asset(
+                                  "assets/default_profile2.png",
+                                  fit: BoxFit.cover,
+                                )
+                              : CachedNetworkImage(
+                                  imageUrl: state.buyerProfileData.photoURL!,
+                                  fit: BoxFit.cover,
+                                ),
+                        );
+                      }
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                      );
+                    }),
                   ),
                 ),
               ),
