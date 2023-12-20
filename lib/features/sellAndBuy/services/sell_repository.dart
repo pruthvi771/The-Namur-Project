@@ -56,6 +56,7 @@ class SellRepository {
         'gramPanchayat': gramPanchayat,
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
+        'isDeleted': false,
       });
       return documentReference.id;
     } catch (e) {
@@ -116,6 +117,7 @@ class SellRepository {
         'landSynoValue': landSynoValue,
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
+        'isDeleted': false,
       });
       return documentReference.id;
     } catch (e) {
@@ -426,6 +428,7 @@ class SellRepository {
     } catch (e) {
       print('Error uploading images: $e');
     }
+    return null;
   }
 
   Future<void> saveProductImages({
@@ -466,7 +469,7 @@ class SellRepository {
     }
   }
 
-  Future<String?> addProductToSellerDocument({
+  Future<void> addProductToSellerDocument({
     required String productDocId,
     required ProductType productType,
     required String sellerId,
