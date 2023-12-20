@@ -12,6 +12,7 @@ import 'package:active_ecommerce_flutter/features/profile/enum.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_event.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_state.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/misc_bloc/misc_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_event.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_state.dart'
@@ -577,6 +578,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
       dataBox.put(savedData.id, savedData);
 
+      BlocProvider.of<MiscBloc>(context).add(
+        MiscDataRequested(),
+      );
+
       BlocProvider.of<HiveBloc>(context).add(
         SyncHiveToFirestoreRequested(profileData: savedData),
       );
@@ -609,6 +614,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
       // print('Crop removed');
       dataBox.put(savedData.id, savedData);
+
+      BlocProvider.of<MiscBloc>(context).add(
+        MiscDataRequested(),
+      );
 
       BlocProvider.of<HiveBloc>(context).add(
         SyncHiveToFirestoreRequested(profileData: savedData),

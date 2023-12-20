@@ -1,14 +1,10 @@
 // translation done.
 
-import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
-import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
-import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/expanded_tile_widget.dart';
-import 'package:active_ecommerce_flutter/features/profile/screens/profile.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/misc_bloc/misc_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_state.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
-import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/edit_profile.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/land_screen.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
@@ -18,11 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive/hive.dart';
-import '../../../custom/device_info.dart';
-
 import 'package:flutter_expanded_tile/flutter_expanded_tile.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-
 import 'package:active_ecommerce_flutter/features/profile/address_list.dart'
     as addressList;
 
@@ -88,7 +81,6 @@ class _MoreDetailsState extends State<MoreDetails> {
   @override
   void initState() {
     super.initState();
-    _buyerUserDataFuture = _getUserData();
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
     var savedData = dataBox.get('profile');
 
@@ -121,14 +113,6 @@ class _MoreDetailsState extends State<MoreDetails> {
     }
 
     calculatingProgress(profileData);
-  }
-
-  late Future<BuyerData> _buyerUserDataFuture;
-
-  Future<BuyerData> _getUserData() async {
-    AuthUser user = AuthRepository().currentUser!;
-    // var userId = FirebaseAuth.instance.currentUser!.uid;
-    return FirestoreRepository().getBuyerData(userId: user.userId);
   }
 
   Future<List<Object?>> getNumberOfFriends() async {
@@ -250,7 +234,6 @@ class _MoreDetailsState extends State<MoreDetails> {
             }
           }
           setState(() {
-            _buyerUserDataFuture = _getUserData();
             calculatingProgress(profileData);
           });
         },
@@ -349,54 +332,52 @@ class _MoreDetailsState extends State<MoreDetails> {
                     ),
                   ),
                   Expanded(
-                    child: FutureBuilder(
-                        future: getNumberOfFriends(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData && snapshot.data != null) {
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                    '${snapshot.data![2]} ${AppLocalizations.of(context)!.friends_and_neighbours}',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 13.0,
-                                        color: Colors.black)),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Text(
-                                    '0 ${AppLocalizations.of(context)!.groups}',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 13.0,
-                                        color: Colors.black)),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Text(
-                                    '${AppLocalizations.of(context)!.society}: ${snapshot.data![0]} ${snapshot.data![1]}',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 13.0,
-                                        color: Colors.black)),
-                              ],
-                            );
-                          }
-                          if (snapshot.hasError) {
-                            return Text(
-                                AppLocalizations.of(context)!
-                                    .add_address_to_see_this,
+                    child: BlocBuilder<MiscBloc, MiscState>(
+                        builder: (context, state) {
+                      if (state is MiscDataReceived) {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                '${state.numberOfFriends} ${AppLocalizations.of(context)!.friends_and_neighbours}',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 13.0,
-                                    color: Colors.red));
-                          }
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }),
+                                    color: Colors.black)),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            // Text(
+                            //     '0 ${AppLocalizations.of(context)!.groups}',
+                            //     style: TextStyle(
+                            //         fontWeight: FontWeight.w700,
+                            //         fontSize: 13.0,
+                            //         color: Colors.black)),
+                            // SizedBox(
+                            //   height: 5,
+                            // ),
+                            Text(
+                                '${AppLocalizations.of(context)!.society}: ${state.villageName} ${state.pincode}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 13.0,
+                                    color: Colors.black)),
+                          ],
+                        );
+                      }
+                      if (state is MiscLoading) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      return Text(
+                          AppLocalizations.of(context)!.add_address_to_see_this,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 13.0,
+                              color: Colors.red));
+                    }),
                   )
                 ],
               ),

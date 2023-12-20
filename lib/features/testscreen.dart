@@ -121,6 +121,7 @@ class _TestWidgetState extends State<TestWidget> {
   List<Map> addresses = globaladdress;
   List<String> taluks = [];
 
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -246,7 +247,7 @@ class _TestWidgetState extends State<TestWidget> {
 
               print(list);
 
-              List list2 = await LocationRepository()
+              List list2 = LocationRepository()
                   .getTaluksForDistrict(districtName: 'BAGALKOTE');
 
               print(list2);
@@ -261,19 +262,31 @@ class _TestWidgetState extends State<TestWidget> {
             onPressed: () async {
               print('it starts');
 
-              CollectionReference sellersCollection =
-                  FirebaseFirestore.instance.collection('seller');
-
-              // Query to find sellers with the specified parent in the 'parents' array
-              QuerySnapshot querySnapshot = await sellersCollection
-                  .where('parents', arrayContains: 'b')
+              DocumentSnapshot orderDocSnapshot = await _firestore
+                  .collection('orders')
+                  .doc('wdrTp79vdY4vvwykGsng')
                   .get();
 
-              // Return the count of sellers
-              // return querySnapshot.size;
-              print(querySnapshot.size);
+              String nameToReturn = "";
 
-              print('and it\'s done');
+              for (var orderItem in orderDocSnapshot['items']) {
+                String productId = orderItem['productID'].toString();
+
+                DocumentSnapshot documentSnapshot = await _firestore
+                    .collection('products')
+                    .doc(productId)
+                    .get();
+
+                print((documentSnapshot.data() as Map?)!['name']);
+                nameToReturn +=
+                    '${(documentSnapshot.data() as Map?)!['name'].toString()}, ';
+              }
+
+              // DocumentSnapshot documentSnapshot =
+              //     await _firestore.collection('products').doc(orderId).get();
+              // return (documentSnapshot.data() as Map?)!['name'].toString();
+
+              print(nameToReturn);
             },
             child: const Text('sup'),
           ),

@@ -199,7 +199,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               parentSnapshot.data!.cropCalendarItems.length,
                           itemBuilder: (context, index) {
                             print(parentSnapshot.data!
-                                .cropCalendarItems[selectedIndex!].cropName);
+                                .cropCalendarItems[selectedIndex].cropName);
                             return GestureDetector(
                               onTap: () => setState(() {
                                 selectedIndex = index;
@@ -259,7 +259,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           cropDocSnapshot.data != null) {
                         var docData = cropDocSnapshot.data;
                         var currentCrop = parentSnapshot
-                            .data!.cropCalendarItems[selectedIndex!];
+                            .data!.cropCalendarItems[selectedIndex];
                         return Column(
                           children: [
                             // Text(docData['stages'].toString()),

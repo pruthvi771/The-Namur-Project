@@ -30,6 +30,11 @@ final class HiveDataNotReceived extends HiveState {
   List<Object?> get props => [];
 }
 
+final class HiveDataUpdated extends HiveState {
+  @override
+  List<Object?> get props => [];
+}
+
 final class Loading extends HiveState {
   @override
   List<Object?> get props => [];
