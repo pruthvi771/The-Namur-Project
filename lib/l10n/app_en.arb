@@ -835,5 +835,7 @@
 "rating": "Rating",
 "stop_tracking": "Stop Tracking",
 "all_crops_are_already_being_tracked": "All Crops are Already Being Tracked",
-"already_added_machine": "This machine is already added"
+"already_added_machine": "This machine is already added",
+"buy": "Buy",
+"rent": "Rent"
 }

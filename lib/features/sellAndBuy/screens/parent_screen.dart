@@ -28,7 +28,7 @@ class ParentScreen extends StatefulWidget {
 }
 
 class _ParentScreenState extends State<ParentScreen> {
-  bool isSwitched = false;
+  late bool? isSwitched;
   late Future<int> totalFarmersCountFuture;
 
   var categoryListForParentEnum = enums.categoryListForParentEnum;
@@ -52,6 +52,11 @@ class _ParentScreenState extends State<ParentScreen> {
 
   @override
   void initState() {
+    if (widget.parentEnum == enums.ParentEnum.machine) {
+      isSwitched = false;
+    } else {
+      isSwitched = null;
+    }
     totalFarmersCountFuture =
         getTotalFarmersCount(parentName: nameForParentEnum[widget.parentEnum]!);
     super.initState();
@@ -126,54 +131,96 @@ class _ParentScreenState extends State<ParentScreen> {
                   }
                   if (snapshot.hasData && snapshot.data != null) {
                     return Row(
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        CachedNetworkImage(
-                          imageUrl: imageForNameCloud['farmers']!,
-                          imageBuilder: (context, imageProvider) => Container(
-                            height: 50,
-                            width: 50,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: imageProvider,
-                                fit: BoxFit.cover,
+                        Row(
+                          children: [
+                            CachedNetworkImage(
+                              imageUrl: imageForNameCloud['farmers']!,
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                height: 50,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              progressIndicatorBuilder:
+                                  (context, url, progress) {
+                                return Container(
+                                  height: 50,
+                                  width: 50,
+                                  child: Center(
+                                      child: CircularProgressIndicator()),
+                                );
+                              },
+                            ),
+                            Container(
+                              // height: 40,
+                              margin: EdgeInsets.only(left: 20),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    snapshot.data.toString(),
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 15,
+                                        color: Colors.black),
+                                  ),
+                                  Text(
+                                    AppLocalizations.of(context)!.farmer,
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 15,
+                                        color: Colors.black),
+                                  )
+                                ],
                               ),
                             ),
-                          ),
-                          progressIndicatorBuilder: (context, url, progress) {
-                            return Container(
-                              height: 50,
-                              width: 50,
-                              child: Center(child: CircularProgressIndicator()),
-                            );
-                          },
+                          ],
                         ),
-                        Container(
-                          // height: 40,
-                          margin: EdgeInsets.only(left: 20),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                snapshot.data.toString(),
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 15,
-                                    color: Colors.black),
-                              ),
-                              Text(
-                                AppLocalizations.of(context)!.farmer,
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 15,
-                                    color: Colors.black),
-                              )
-                            ],
-                          ),
-                        ),
+                        isSwitched != null
+                            ? Container(
+                                child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text(
+                                    AppLocalizations.of(context)!.buy,
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 15,
+                                        color: Colors.black),
+                                  ),
+                                  Switch(
+                                    value: isSwitched!,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        isSwitched = value;
+                                      });
+                                    },
+                                    activeTrackColor: MyTheme.green_light,
+                                    activeColor: MyTheme.primary_color,
+                                  ),
+                                  Text(
+                                    AppLocalizations.of(context)!.rent,
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 15,
+                                        color: Colors.black),
+                                  ),
+                                ],
+                              ))
+                            : Container()
                       ],
                     );
                   }
@@ -265,6 +312,7 @@ class _ParentScreenState extends State<ParentScreen> {
                                         builder: (context) => BuyProductList(
                                               subCategoryEnum: subCategoryEnum,
                                               isSecondHand: widget.isSecondHand,
+                                              isRent: isSwitched,
                                             )),
                                   )
                                 : Navigator.push(

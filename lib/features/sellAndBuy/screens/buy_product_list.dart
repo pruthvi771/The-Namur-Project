@@ -28,6 +28,7 @@ class BuyProductList extends StatefulWidget {
   // final List<FilterItem>? locationsList;
   final LocationFilterMap? locationFilterMap;
   final SortType? sortType;
+  final bool? isRent;
 
   BuyProductList({
     Key? key,
@@ -36,6 +37,7 @@ class BuyProductList extends StatefulWidget {
     this.locationFilterMap,
     this.subSubCategoryList,
     this.sortType,
+    this.isRent,
   }) : super(key: key);
 
   @override
@@ -43,6 +45,8 @@ class BuyProductList extends StatefulWidget {
 }
 
 class _BuyProductListState extends State<BuyProductList> {
+  // late bool? isRent;
+
   String? sortByDropdownValue;
   bool isALL = true;
   bool fitlerLocationTabOpen = true;
@@ -82,6 +86,20 @@ class _BuyProductListState extends State<BuyProductList> {
 
     subSubCategoryList =
         widget.subSubCategoryList != null ? widget.subSubCategoryList! : temp;
+
+    if (widget.isRent != null) {
+      if (widget.isRent == true) {
+        subSubCategoryList = [
+          FilterItem(name: 'On Rent', isSelected: true),
+          FilterItem(name: 'Sell', isSelected: false),
+        ];
+      } else {
+        subSubCategoryList = [
+          FilterItem(name: 'On Rent', isSelected: false),
+          FilterItem(name: 'Sell', isSelected: true),
+        ];
+      }
+    }
 
     if (widget.locationFilterMap != null) {
       currentLocationFilterMap = widget.locationFilterMap!;
@@ -425,6 +443,7 @@ class _BuyProductListState extends State<BuyProductList> {
             isSecondHand: isSecondHand,
             subSubCategoryList: theSubSubCategoryList,
             sortType: theSortType,
+            isRent: widget.isRent,
           );
         },
         transitionsBuilder: (context, animation, secondaryAnimation, child) {

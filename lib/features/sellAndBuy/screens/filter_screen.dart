@@ -30,6 +30,7 @@ class FilterScreen extends StatefulWidget {
   final List<FilterItem> subSubCategoryList;
   final SortType? sortType;
   final LocationFilterMap locationFilterMap;
+  final bool? isRent;
 
   const FilterScreen({
     Key? key,
@@ -38,6 +39,7 @@ class FilterScreen extends StatefulWidget {
     required this.subSubCategoryList,
     required this.sortType,
     required this.locationFilterMap,
+    this.isRent,
   }) : super(key: key);
 
   @override
@@ -175,30 +177,36 @@ class _FilterScreenState extends State<FilterScreen> {
                             ),
                           ),
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              if (sectionOpened != FilterSection.categories) {
-                                sectionOpened = FilterSection.categories;
-                              }
-                            });
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(8),
-                            height: 50,
-                            color: sectionOpened == FilterSection.categories
-                                ? Colors.white
-                                : Colors.grey[200],
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                AppLocalizations.of(context)!.categories_ucf,
-                                style: TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                          ),
-                        ),
+                        widget.isRent == null
+                            ? GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    if (sectionOpened !=
+                                        FilterSection.categories) {
+                                      sectionOpened = FilterSection.categories;
+                                    }
+                                  });
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.all(8),
+                                  height: 50,
+                                  color:
+                                      sectionOpened == FilterSection.categories
+                                          ? Colors.white
+                                          : Colors.grey[200],
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      AppLocalizations.of(context)!
+                                          .categories_ucf,
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : SizedBox.shrink(),
                         GestureDetector(
                           onTap: () {
                             setState(() {
