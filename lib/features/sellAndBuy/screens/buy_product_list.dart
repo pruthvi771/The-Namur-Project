@@ -559,13 +559,8 @@ class _BuyProductListState extends State<BuyProductList> {
                     );
                   }
                   if (snapshot.hasData) {
-                    var products = snapshot.data!.docs.map((doc) {
+                    var bareProducts = snapshot.data!.docs.map((doc) {
                       var data = doc.data() as Map;
-                      // if (!containsItem(
-                      //     subSubCategoryList, data['subSubCategory'])) {
-                      //   subSubCategoryList.add(FilterItem(
-                      //       name: data['subSubCategory'], isSelected: true));
-                      // }
                       return SellProduct(
                         id: doc.id,
                         productName: data['name'],
@@ -579,13 +574,21 @@ class _BuyProductListState extends State<BuyProductList> {
                         imageURL: data['imageURL'],
                         sellerId: data['sellerId'],
                         isSecondHand: data['isSecondHand'],
-                        village: data['villageName'],
-                        gramPanchayat: data['gramPanchayat'],
-                        taluk: data['taluk'],
-                        district: data['district'],
+                        village: data['villageName'] ?? "",
+                        gramPanchayat: data['gramPanchayat'] ?? "",
+                        taluk: data['taluk'] ?? "",
+                        district: data['district'] ?? "",
                         createdAt: data['createdAt'].toDate(),
                       );
                     }).toList();
+
+                    List<SellProduct> products = bareProducts
+                        .where((product) =>
+                            product.district.isNotEmpty &&
+                            product.taluk.isNotEmpty &&
+                            product.gramPanchayat.isNotEmpty &&
+                            product.village.isNotEmpty)
+                        .toList();
 
                     return Container(
                       child: products.length == 0
