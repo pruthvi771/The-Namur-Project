@@ -73,7 +73,8 @@ class _BuyProductListState extends State<BuyProductList> {
     }
 
     List<FilterItem> temp = [];
-    bareSubSubCategoryList = SubSubCategoryList[widget.subCategoryEnum]!;
+    bareSubSubCategoryList = SubSubCategoryList[widget.subCategoryEnum] ??
+        [nameForSubCategoryEnum[widget.subCategoryEnum]!];
 
     bareSubSubCategoryList.forEach((element) {
       temp.add(FilterItem(name: element, isSelected: true));
