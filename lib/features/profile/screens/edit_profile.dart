@@ -105,7 +105,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   List<String> locationsList = [];
   List<String> locationsListForLand = [];
 
-  List<String> districtsList = [];
+  // List<String> districtsList = [];
   List<String> taluksList = [];
   List<String> gramPanchayatsList = [];
   List<String> villageNamesList = [];
@@ -127,7 +127,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   late var localContext;
 
-  get console => null;
+  Uint8List? _image;
+  late Future<List<String>> districtsListFuture;
 
   getAddressValues() {
     postOfficeResponse!.postOffices.forEach((postOffice) {
@@ -177,21 +178,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  void fetchDistricts() async {
-    if (_pinCodeController.text.toString().isEmpty ||
-        _pinCodeController.text.toString().length != 6) {
-      ToastComponent.showDialog(localContext.enter_valid_pincode,
-          gravity: Toast.center, duration: Toast.lengthLong);
-      return;
-    }
+  // void fetchDistricts() async {
+  //   if (_pinCodeController.text.toString().isEmpty ||
+  //       _pinCodeController.text.toString().length != 6) {
+  //     ToastComponent.showDialog(localContext.enter_valid_pincode,
+  //         gravity: Toast.center, duration: Toast.lengthLong);
+  //     return;
+  //   }
 
-    List<String> temp = await locationRepository.getDistrictsForPincode(
-        pinCode: _pinCodeController.text);
-    setState(() {
-      districtsList = temp;
-      isDistrictEnabled = true;
-    });
-  }
+  //   List<String> temp = await locationRepository.getDistrictsForPincode(
+  //       pinCode: _pinCodeController.text);
+  //   setState(() {
+  //     districtsList = temp;
+  //     isDistrictEnabled = true;
+  //   });
+  // }
 
   void fetchTaluks({
     required String districtName,
@@ -391,7 +392,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void initState() {
-    districtsList = locationRepository.getAllDistricts();
+    // districtsList = locationRepository.getAllDistricts();
+    districtsListFuture = getAllDistrictsList();
     profileDataUpdating = false;
     super.initState();
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
@@ -818,7 +820,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Uint8List? _image;
   selectImage() async {
     Uint8List img = await pickImage(ImageSource.camera);
     print('image uploaded');
@@ -830,6 +831,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     BlocProvider.of<ProfileBloc>(context).add(
       ProfileImageUpdateRequested(file: _image!),
     );
+  }
+
+  Future<List<String>> getAllDistrictsList() async {
+    return locationRepository.getAllDistricts();
   }
 
   @override
@@ -1181,15 +1186,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                   ),
 
-                  SizedBox(
-                    height: 18,
-                  ),
-                  Divider(
-                    // color: MyTheme.grey_153,
-                    thickness: 2,
-                  ),
-                  SizedBox(
-                    height: 8,
+                  Padding(
+                    padding: const EdgeInsets.only(top: 18, bottom: 8),
+                    child: Divider(
+                      // color: MyTheme.grey_153,
+                      thickness: 2,
+                    ),
                   ),
 
                   HeadingTextWidget('KYC'),
@@ -1303,15 +1305,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ],
                     ),
 
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Divider(
-                    // color: MyTheme.grey_153,
-                    thickness: 2,
-                  ),
-                  SizedBox(
-                    height: 12,
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8, bottom: 12),
+                    child: Divider(
+                      // color: MyTheme.grey_153,
+                      thickness: 2,
+                    ),
                   ),
 
                   HeadingTextWidget(localContext.address_details),
@@ -1379,137 +1378,156 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
                   // address input
                   if (state.profileData.address.length == 0)
-                    Column(
-                      children: [
-                        TexiFieldWidgetForDouble(
-                          _pinCodeController,
-                          "Pincode",
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        AddressSearchDropdown(
-                            title: localContext.select_district,
-                            hintText: localContext.search,
-                            context: context,
-                            dropdownValue: districtsDropdownValue,
-                            listOfItems: districtsList,
-                            searchController: textEditingController,
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                taluksDropdownValue = null;
-                                gramPanchayatsDropdownValue = null;
-                                villageNamesDropdownValue = null;
-                                districtsDropdownValue = newValue!;
-                              });
-                              fetchTaluks(
-                                  districtName: districtsDropdownValue!);
-                            },
-                            onMenuStateChange: (p0) {
-                              if (!p0) {
-                                textEditingController.clear();
-                              }
-                            },
-                            isEnabled: true,
-                            disabledHint: localContext.district),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        AddressSearchDropdown(
-                          isEnabled: isTalukEnabled,
-                          disabledHint: localContext.select_district_first,
-                          title: localContext.select_taluk,
-                          hintText: localContext.search,
-                          context: context,
-                          dropdownValue: taluksDropdownValue,
-                          listOfItems: taluksList,
-                          searchController: textEditingController,
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              gramPanchayatsDropdownValue = null;
-                              villageNamesDropdownValue = null;
-                              taluksDropdownValue = newValue!;
-                            });
-                            fetchGramPanchayats(
-                                talukName: taluksDropdownValue!);
-                          },
-                          onMenuStateChange: (p0) {
-                            if (!p0) {
-                              textEditingController.clear();
-                            }
-                          },
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        AddressSearchDropdown(
-                          searchController: textEditingController,
-                          hintText: localContext.search,
-                          title: localContext.select_gram_panchayat,
-                          context: context,
-                          dropdownValue: gramPanchayatsDropdownValue,
-                          listOfItems: gramPanchayatsList,
-                          disabledHint: localContext.select_taluk_first,
-                          isEnabled: isGramPanchayadEnabled,
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              villageNamesDropdownValue = null;
-                              gramPanchayatsDropdownValue = newValue!;
-                            });
-                            fetchVillageNames(
-                                gramPanchayatName:
-                                    gramPanchayatsDropdownValue!);
-                          },
-                          onMenuStateChange: (p0) {
-                            if (!p0) {
-                              textEditingController.clear();
-                            }
-                          },
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        AddressSearchDropdown(
-                          searchController: textEditingController,
-                          hintText: localContext.search,
-                          title: localContext.select_village,
-                          context: context,
-                          dropdownValue: villageNamesDropdownValue,
-                          listOfItems: villageNamesList,
-                          disabledHint:
-                              localContext.select_gram_panchayat_first,
-                          isEnabled: isVillageNameEnabled,
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              villageNamesDropdownValue = newValue!;
-                            });
-                          },
-                          onMenuStateChange: (p0) {
-                            if (!p0) {
-                              textEditingController.clear();
-                            }
-                          },
-                        ),
-                        Row(
-                          children: [
-                            Expanded(child: SizedBox()),
-                            TextButton(
-                              child: Text(localContext.save_ucf),
-                              onPressed: () {
-                                _addAddressToHive(
-                                  pincode: _pinCodeController.text,
-                                  gramPanchayat: gramPanchayatsDropdownValue,
-                                  district: districtsDropdownValue,
-                                  villageName: villageNamesDropdownValue,
-                                  taluk: taluksDropdownValue,
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                    FutureBuilder(
+                        future: districtsListFuture,
+                        builder: (context, districtSnapshot) {
+                          if (districtSnapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                          if (districtSnapshot.hasData &&
+                              districtSnapshot.data != null) {
+                            return Column(
+                              children: [
+                                TexiFieldWidgetForDouble(
+                                  _pinCodeController,
+                                  "Pincode",
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                AddressSearchDropdown(
+                                    title: localContext.select_district,
+                                    hintText: localContext.search,
+                                    context: context,
+                                    dropdownValue: districtsDropdownValue,
+                                    listOfItems: districtSnapshot.data!,
+                                    searchController: textEditingController,
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        taluksDropdownValue = null;
+                                        gramPanchayatsDropdownValue = null;
+                                        villageNamesDropdownValue = null;
+                                        districtsDropdownValue = newValue!;
+                                      });
+                                      fetchTaluks(
+                                          districtName:
+                                              districtsDropdownValue!);
+                                    },
+                                    onMenuStateChange: (p0) {
+                                      if (!p0) {
+                                        textEditingController.clear();
+                                      }
+                                    },
+                                    isEnabled: true,
+                                    disabledHint: localContext.district),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                AddressSearchDropdown(
+                                  isEnabled: isTalukEnabled,
+                                  disabledHint:
+                                      localContext.select_district_first,
+                                  title: localContext.select_taluk,
+                                  hintText: localContext.search,
+                                  context: context,
+                                  dropdownValue: taluksDropdownValue,
+                                  listOfItems: taluksList,
+                                  searchController: textEditingController,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      gramPanchayatsDropdownValue = null;
+                                      villageNamesDropdownValue = null;
+                                      taluksDropdownValue = newValue!;
+                                    });
+                                    fetchGramPanchayats(
+                                        talukName: taluksDropdownValue!);
+                                  },
+                                  onMenuStateChange: (p0) {
+                                    if (!p0) {
+                                      textEditingController.clear();
+                                    }
+                                  },
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                AddressSearchDropdown(
+                                  searchController: textEditingController,
+                                  hintText: localContext.search,
+                                  title: localContext.select_gram_panchayat,
+                                  context: context,
+                                  dropdownValue: gramPanchayatsDropdownValue,
+                                  listOfItems: gramPanchayatsList,
+                                  disabledHint: localContext.select_taluk_first,
+                                  isEnabled: isGramPanchayadEnabled,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      villageNamesDropdownValue = null;
+                                      gramPanchayatsDropdownValue = newValue!;
+                                    });
+                                    fetchVillageNames(
+                                        gramPanchayatName:
+                                            gramPanchayatsDropdownValue!);
+                                  },
+                                  onMenuStateChange: (p0) {
+                                    if (!p0) {
+                                      textEditingController.clear();
+                                    }
+                                  },
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                AddressSearchDropdown(
+                                  searchController: textEditingController,
+                                  hintText: localContext.search,
+                                  title: localContext.select_village,
+                                  context: context,
+                                  dropdownValue: villageNamesDropdownValue,
+                                  listOfItems: villageNamesList,
+                                  disabledHint:
+                                      localContext.select_gram_panchayat_first,
+                                  isEnabled: isVillageNameEnabled,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      villageNamesDropdownValue = newValue!;
+                                    });
+                                  },
+                                  onMenuStateChange: (p0) {
+                                    if (!p0) {
+                                      textEditingController.clear();
+                                    }
+                                  },
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(child: SizedBox()),
+                                    TextButton(
+                                      child: Text(localContext.save_ucf),
+                                      onPressed: () {
+                                        _addAddressToHive(
+                                          pincode: _pinCodeController.text,
+                                          gramPanchayat:
+                                              gramPanchayatsDropdownValue,
+                                          district: districtsDropdownValue,
+                                          villageName:
+                                              villageNamesDropdownValue,
+                                          taluk: taluksDropdownValue,
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            );
+                          }
+                          return SizedBox.shrink();
+                        }),
 
+                  // divider
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: Divider(

@@ -29,7 +29,7 @@ class LocationRepository {
     }
   }
 
-  List<String> getAllDistricts() {
+  Future<List<String>> getAllDistricts() async {
     return addresses.map((map) => map['district'].toString()).toSet().toList();
   }
 
