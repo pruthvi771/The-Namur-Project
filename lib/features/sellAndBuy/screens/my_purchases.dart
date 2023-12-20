@@ -2,6 +2,7 @@
 
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/order_item.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/checkout_screen.dart';
+import 'package:active_ecommerce_flutter/utils/functions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -109,6 +110,15 @@ class _PurchaseHistoryScreenState extends State<PurchaseHistoryScreen> {
                         Map<String, dynamic> orderData =
                             documents[index].data() as Map<String, dynamic>;
 
+                        String nameToDisplay = '';
+                        for (var item in orderData['items']) {
+                          if (item == orderData['items'].last) {
+                            nameToDisplay += item['name'];
+                            break;
+                          }
+                          nameToDisplay += item['name'] + ', ';
+                        }
+
                         return InkWell(
                           onTap: () {
                             Navigator.push(
@@ -121,6 +131,9 @@ class _PurchaseHistoryScreenState extends State<PurchaseHistoryScreen> {
                           },
                           child: PreviousOrderCard(
                               context: context,
+                              // title: nameToDisplay,
+                              title:
+                                  'alkfnaklngvangv algkagv aelkga glekhawoi tmtIWH i3hroIR WFNQWNF ',
                               totalPrice: orderData['totalAmount'],
                               orderID: documentId,
                               orderStatus: orderData['status'],
@@ -135,7 +148,7 @@ class _PurchaseHistoryScreenState extends State<PurchaseHistoryScreen> {
 
   Padding PreviousOrderCard({
     required BuildContext context,
-    // required String productName,
+    required String title,
     required double totalPrice,
     required String orderID,
     required String orderStatus,
@@ -157,7 +170,7 @@ class _PurchaseHistoryScreenState extends State<PurchaseHistoryScreen> {
               borderRadius: BorderRadius.circular(6),
               border: Border.all(
                   width: 1, color: MyTheme.medium_grey.withOpacity(0.5))),
-          height: 100,
+          height: 115,
           width: MediaQuery.of(context).size.width,
           child: Padding(
             padding: const EdgeInsets.all(13),
@@ -168,41 +181,46 @@ class _PurchaseHistoryScreenState extends State<PurchaseHistoryScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      '#$orderID',
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w500,
+                    Expanded(
+                      child: Text(
+                        title,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
-                    Row(
-                      children: [
-                        Container(
-                          height: 17,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                '₹',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  // fontWeight: FontWeight.w600,
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Row(
+                        children: [
+                          Container(
+                            height: 17,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  '₹',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    // fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                              ),
-                              SizedBox.shrink()
-                            ],
+                                SizedBox.shrink()
+                              ],
+                            ),
                           ),
-                        ),
-                        Text(
-                          totalPrice.toInt().toString(),
-                          style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w400,
+                          Text(
+                            totalPrice.toInt().toString(),
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     )
                   ],
                 ),
@@ -213,9 +231,16 @@ class _PurchaseHistoryScreenState extends State<PurchaseHistoryScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Text('Order ID : ${orderID}'),
+                          // Text('#$orderID',
+                          //     style: TextStyle(
+                          //       fontSize: 13,
+                          //       fontWeight: FontWeight.w400,
+                          //     )),
+                          // SizedBox(
+                          //   height: 5,
+                          // ),
                           Text(
-                              '${orderTime.toDate().toString().substring(0, 10)} at ${orderTime.toDate().toString().substring(11, 16)}',
+                              '${formatDateWithYear(orderTime.toDate().toString().substring(0, 10))} at ${orderTime.toDate().toString().substring(11, 16)}',
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
@@ -224,8 +249,9 @@ class _PurchaseHistoryScreenState extends State<PurchaseHistoryScreen> {
                       ),
                     ),
                     Expanded(
+                      flex: 2,
                       child: Align(
-                        alignment: Alignment.center,
+                        alignment: Alignment.bottomRight,
                         child: Container(
                           color: MyTheme.green_lighter,
                           padding:

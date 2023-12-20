@@ -42,7 +42,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   late final currentUser;
-  double _rating = 0;
 
   late Future<OrderDocument> orderDocDataFuture;
 
