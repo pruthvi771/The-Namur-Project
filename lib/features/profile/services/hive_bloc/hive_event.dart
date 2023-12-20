@@ -20,7 +20,7 @@ class HiveLocationDataRequested extends HiveEvent {
 }
 
 class SyncHiveToFirestoreRequested extends HiveEvent {
-  ProfileData profileData;
+  final ProfileData profileData;
 
   SyncHiveToFirestoreRequested({
     required this.profileData,

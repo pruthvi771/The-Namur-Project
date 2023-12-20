@@ -1,8 +1,9 @@
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_bloc.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
-import 'package:active_ecommerce_flutter/features/profile/services/bloc/friends_bloc.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/friends_bloc/friends_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_bloc.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/misc_bloc/misc_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/rent_bloc/rent_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/rent_repository.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart'
@@ -213,6 +214,9 @@ class _MyAppState extends State<MyApp> {
           ),
           BlocProvider<FriendsBloc>(
             create: (context) => FriendsBloc(),
+          ),
+          BlocProvider<MiscBloc>(
+            create: (context) => MiscBloc(),
           ),
         ],
         child: MultiProvider(

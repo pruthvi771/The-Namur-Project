@@ -9,6 +9,7 @@ import 'package:active_ecommerce_flutter/features/profile/models/updates_data.da
 import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_event.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_state.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/misc_bloc/misc_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/hive_machine_details.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
@@ -55,7 +56,6 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     BlocProvider.of<ProfileBloc>(context).add(
       ProfileDataRequested(),
@@ -117,50 +117,6 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
     BlocProvider.of<ProfileBloc>(context).add(
       ProfileImageUpdateRequested(file: _image!),
     );
-  }
-
-  Future<List<Object?>?> getNumberOfFriends() async {
-    var dataBox = Hive.box<ProfileData>('profileDataBox3');
-
-    var savedData = dataBox.get('profile');
-    if (savedData == null) {
-      return null;
-    }
-    try {
-      if (savedData.address[0].pincode.isEmpty) {
-        return null;
-      }
-
-      int count = 0;
-      String villageName = savedData.address[0].village;
-      String pincode = savedData.address[0].pincode;
-
-      QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await FirebaseFirestore.instance
-              .collection('buyer')
-              .where(FieldPath.documentId, isNotEqualTo: null)
-              .where('profileData', isNotEqualTo: null)
-              .get();
-
-      List<DocumentSnapshot<Map<String, dynamic>>> documents =
-          querySnapshot.docs;
-
-      for (var document in documents) {
-        Map<String, dynamic> data = document.data()!;
-        if (data['profileData']['address'].isNotEmpty) {
-          Map<String, dynamic> data = document.data()!;
-          if (data['profileData']['address'][0]['pincode'] ==
-              savedData.address[0].pincode) {
-            count++;
-            print('count incremented');
-          }
-        }
-      }
-
-      return [villageName, pincode, count - 1];
-    } catch (e) {
-      return null;
-    }
   }
 
   @override
@@ -344,72 +300,49 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                             ),
                           ),
                           Expanded(
-                            child: FutureBuilder(
-                                future: getNumberOfFriends(),
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasData) {
-                                    if (snapshot.data == null) {
-                                      return Text(
-                                        AppLocalizations.of(context)!
-                                            .add_address_to_see_this,
+                            child: BlocBuilder<MiscBloc, MiscState>(
+                                builder: (context, state) {
+                              if (state is MiscDataReceived) {
+                                return Column(
+                                  children: [
+                                    //Region text
+                                    Text('${state.villageName}',
+                                        overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                             fontFamily: 'Poppins',
                                             fontWeight: FontWeight.w500,
                                             fontSize: 15,
-                                            color: Colors.red),
-                                      );
-                                    }
-                                    return Column(
-                                      children: [
-                                        //Region text
-                                        Text('${snapshot.data![0]}',
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontFamily: 'Poppins',
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 15,
-                                                color: Colors.black)),
-                                        Text('${snapshot.data![1]}',
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontFamily: 'Poppins',
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 15,
-                                                color: Colors.black)),
+                                            color: Colors.black)),
+                                    Text('${state.pincode}',
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            fontFamily: 'Poppins',
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 15,
+                                            color: Colors.black)),
 
-                                        //Friends and Neighbors text
-                                        Text(
-                                          '${snapshot.data![2]} ${AppLocalizations.of(context)!.friends_and_neighbours}',
-                                          style: TextStyle(
-                                              fontFamily: 'Poppins',
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 15,
-                                              color: Colors.black),
-                                        ),
-                                      ],
-                                    );
-                                  }
-                                  if (snapshot.hasError) {
-                                    return Text(
-                                      AppLocalizations.of(context)!
-                                          .add_address_to_see_this,
+                                    //Friends and Neighbors text
+                                    Text(
+                                      '${state.numberOfFriends} ${AppLocalizations.of(context)!.friends_and_neighbours}',
                                       style: TextStyle(
                                           fontFamily: 'Poppins',
                                           fontWeight: FontWeight.w500,
                                           fontSize: 15,
-                                          color: Colors.red),
-                                    );
-                                  }
-                                  return Text(
-                                    AppLocalizations.of(context)!
-                                        .add_address_to_see_this,
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 15,
-                                        color: Colors.red),
-                                  );
-                                }),
+                                          color: Colors.black),
+                                    ),
+                                  ],
+                                );
+                              }
+                              return Text(
+                                AppLocalizations.of(context)!
+                                    .add_address_to_see_this,
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 15,
+                                    color: Colors.red),
+                              );
+                            }),
                           )
                         ],
                       ),

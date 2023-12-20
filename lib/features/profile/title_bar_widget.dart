@@ -1,23 +1,19 @@
-import 'dart:async';
-
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_event.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/misc_bloc/misc_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_event.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_state.dart'
     as profileState;
-import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/friends_screen.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/profile.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/weather_section_bloc/weather_section_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/weather_section_bloc/weather_section_event.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/weather_section_bloc/weather_section_state.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
 import 'package:toast/toast.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../my_theme.dart';
@@ -34,69 +30,18 @@ class _TitleBarState extends State<TitleBar> {
   @override
   void initState() {
     super.initState();
-    _countOfFriends = getNumberOfFriends();
     BlocProvider.of<ProfileBloc>(context).add(
       ProfileDataRequested(),
     );
     BlocProvider.of<WeatherSectionBloc>(context).add(
       WeatherSectionDataRequested(),
     );
-    // BlocProvider.of<HiveBloc>(context).add(
-    //   HiveDataRequested(),
-    // );
+    BlocProvider.of<MiscBloc>(context).add(
+      MiscDataRequested(),
+    );
     BlocProvider.of<HiveBloc>(context).add(
       HiveDataRequested(),
-      // HiveAppendAddress(context: context),
     );
-  }
-
-  late Future<List<Object>> _countOfFriends;
-
-  Future<List<Object>> getNumberOfFriends() async {
-    var dataBox = Hive.box<ProfileData>('profileDataBox3');
-
-    var savedData = dataBox.get('profile');
-    if (savedData == null) {
-      return [0, 0];
-    }
-    try {
-      if (savedData.address[0].pincode.isEmpty) {
-        throw Exception('Failed to load data');
-      }
-
-      int count = 0;
-      int cropCount = 0;
-
-      for (Land land in savedData.land) {
-        cropCount += land.crops.length;
-      }
-
-      QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await FirebaseFirestore.instance
-              .collection('buyer')
-              .where(FieldPath.documentId, isNotEqualTo: null)
-              .where('profileData', isNotEqualTo: null)
-              .get();
-
-      List<DocumentSnapshot<Map<String, dynamic>>> documents =
-          querySnapshot.docs;
-
-      for (var document in documents) {
-        Map<String, dynamic> data = document.data()!;
-        if (data['profileData']['address'].isNotEmpty) {
-          Map<String, dynamic> data = document.data()!;
-          if (data['profileData']['address'][0]['pincode'] ==
-              savedData.address[0].pincode) {
-            count++;
-            print('count incremented');
-          }
-        }
-      }
-
-      return [cropCount, count - 1];
-    } catch (e) {
-      return [0, 0];
-    }
   }
 
   @override
@@ -109,7 +54,6 @@ class _TitleBarState extends State<TitleBar> {
         height: 100,
         width: MediaQuery.of(context).size.width,
         child: Row(
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
@@ -177,75 +121,73 @@ class _TitleBarState extends State<TitleBar> {
                                 MaterialPageRoute(
                                     builder: (context) => Friends()));
                           },
-                          child: FutureBuilder(
-                              future: _countOfFriends,
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  return Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 8.0),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "${snapshot.data![1]} Friends",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w800,
-                                                fontSize: 13,
-                                                fontFamily: 'Poppins',
-                                                color: MyTheme.primary_color,
-                                                letterSpacing: .5),
-                                          ),
-                                          // SizedBox(height: 1),
-                                          Text(
-                                            "0 Groups",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 13,
-                                                fontFamily: 'Poppins',
-                                                color: MyTheme.primary_color,
-                                                letterSpacing: .5,
-                                                height: 1.5),
-                                          ),
-                                          Text(
-                                            "${snapshot.data![0]} Crops",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 13,
-                                                fontFamily: 'Poppins',
-                                                color: MyTheme.primary_color,
-                                                letterSpacing: .5,
-                                                height: 1.5),
-                                          )
-                                        ],
+                          child: BlocBuilder<MiscBloc, MiscState>(
+                              builder: (context, state) {
+                            if (state is MiscLoading) {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                            if (state is MiscDataReceived) {
+                              return Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 8.0, horizontal: 8),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "${state.numberOfFriends} ${AppLocalizations.of(context)!.friends_and_neighbours}",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w800,
+                                            fontSize: 13,
+                                            fontFamily: 'Poppins',
+                                            color: MyTheme.primary_color,
+                                            letterSpacing: .5),
                                       ),
-                                    ),
-                                  );
-                                }
-                                if (snapshot.hasError) {
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Center(
-                                        child: Text(
-                                      AppLocalizations.of(context)!
-                                          .add_address_to_see_this,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w800,
-                                          fontSize: 13,
-                                          fontFamily: 'Poppins',
-                                          color: MyTheme.primary_color,
-                                          letterSpacing: .5),
-                                    )),
-                                  );
-                                }
-                                return Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              }),
+                                      // Text(
+                                      //   "0 Groups",
+                                      //   style: TextStyle(
+                                      //       fontWeight: FontWeight.w700,
+                                      //       fontSize: 13,
+                                      //       fontFamily: 'Poppins',
+                                      //       color: MyTheme.primary_color,
+                                      //       letterSpacing: .5,
+                                      //       height: 1.5),
+                                      // ),
+                                      Text(
+                                        "${state.numberOfCrops} ${AppLocalizations.of(context)!.crops}",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 13,
+                                            fontFamily: 'Poppins',
+                                            color: MyTheme.primary_color,
+                                            letterSpacing: .5,
+                                            height: 1.5),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Center(
+                                  child: Text(
+                                AppLocalizations.of(context)!
+                                    .add_address_to_see_this,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 13,
+                                    fontFamily: 'Poppins',
+                                    color: MyTheme.primary_color,
+                                    letterSpacing: .5),
+                              )),
+                            );
+                          }),
                         ),
                       ),
                     ],
