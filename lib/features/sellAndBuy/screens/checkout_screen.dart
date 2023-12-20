@@ -68,6 +68,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       orderItems.add(
         OrderItem(
           productID: item['productID'],
+          name: item['name'],
           price: item['price'].toDouble(),
           quantity: item['quantity'],
           sellerID: item['sellerID'],
@@ -288,23 +289,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         SizedBox(
                           height: 10,
                         ),
-                        // TextButton(
-                        //   onPressed: () async {
-                        //     print('something ebgan');
-                        //     final cartDoc = await _firestore
-                        //         .collection('orders')
-                        //         .doc('3gRvzGetUmUyCQD13mYH')
-                        //         .get();
-                        //     var items = cartDoc.data()!['items'];
-                        //     items[0]['rating'] = 5;
-                        //     await _firestore
-                        //         .collection('orders')
-                        //         .doc(widget.orderID)
-                        //         .update({'items': items});
-                        //     print('something ended');
-                        //   },
-                        //   child: Text('scam.'),
-                        // ),
                         Column(
                           children: List.generate(
                             orderDocument.orderItems.length,
@@ -348,8 +332,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                                       productImageURL:
                                                           productData[
                                                               'imageURL'][0],
-                                                      productName:
-                                                          productData['name'],
+                                                      productName: orderDocument
+                                                          .orderItems[index]
+                                                          .name,
                                                       netPrice: orderDocument
                                                               .orderItems[index]
                                                               .price *

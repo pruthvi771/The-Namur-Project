@@ -34,10 +34,20 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
               await checkoutRepository.getProductDocumenyByProductId(
             productID: product['productId'],
           );
-          print(userCartDocument);
+
+          // print(product['productId'].toString());
+          // print(userCartDocument!['name'].toString());
+          // print(product['quantity'].toString());
+          // print(userCartDocument['price'].toString());
+          // print(userCartDocument['sellerId'].toString());
+          // print(null.toString());
+
+          // print(userCartDocument);
           var response = await checkoutRepository.reduceProductQuantity(
               productId: product['productId'],
               quantityToReduce: product['quantity']);
+
+          print(product);
 
           if (response[0] == ReduceQuantityResponseEnum.NotEnoughQuantity) {
             emit(
@@ -55,8 +65,9 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
           orderItems.add(
             OrderItem(
               productID: product['productId'],
+              name: userCartDocument!['name'],
               quantity: product['quantity'],
-              price: userCartDocument!['price'],
+              price: userCartDocument['price'],
               sellerID: userCartDocument['sellerId'],
               rating: null,
             ),

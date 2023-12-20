@@ -54,6 +54,7 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
     for (var item in cartDoc.data()!['items']) {
       orderItems.add(OrderItem(
         productID: item['productID'],
+        name: item['name'],
         price: item['price'],
         quantity: item['quantity'],
         sellerID: item['sellerID'],
@@ -381,8 +382,8 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
                                                     productImageURL:
                                                         productData['imageURL']
                                                             [0],
-                                                    productName:
-                                                        productData['name'],
+                                                    productName: orderDocument
+                                                        .orderItems[index].name,
                                                     netPrice: orderDocument
                                                             .orderItems[index]
                                                             .price *

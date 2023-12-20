@@ -263,6 +263,7 @@ class _MachineRentFormState extends State<MachineRentForm> {
         orderItems: [
           OrderItem(
             productID: widget.machineId,
+            name: widget.machineName,
             price: widget.machinePrice,
             quantity: 1,
             sellerID: widget.sellerId,
