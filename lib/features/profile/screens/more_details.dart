@@ -1,5 +1,6 @@
 // translation done.
 
+import 'package:active_ecommerce_flutter/features/profile/address_list.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/expanded_tile_widget.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_event.dart';
@@ -11,6 +12,7 @@ import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/edit_profile.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/land_screen.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
+import 'package:active_ecommerce_flutter/utils/imageLinks.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -19,8 +21,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive/hive.dart';
 import 'package:flutter_expanded_tile/flutter_expanded_tile.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'package:active_ecommerce_flutter/features/profile/address_list.dart'
-    as addressList;
 
 class MoreDetails extends StatefulWidget {
   const MoreDetails({Key? key}) : super(key: key);
@@ -38,9 +38,6 @@ class _MoreDetailsState extends State<MoreDetails> {
 
   late double progress;
   late ProfileData? profileData;
-
-  final imageForCrop = addressList.imageForCrop;
-  final imageForEquipment = addressList.imageForEquipment;
 
   void calculatingProgress(profileData) {
     var tempProgress = 0.0;
@@ -720,8 +717,14 @@ class _MoreDetailsState extends State<MoreDetails> {
                                       (index) {
                                         var crop = cropsList[index];
                                         return EquipmentWidget(
-                                          title: crop,
-                                          image: imageForCrop[crop]!,
+                                          title: translatedName(
+                                            name: crop.toString().toLowerCase(),
+                                            context: context,
+                                          ),
+                                          image: imageForNameCloud[crop
+                                                  .toString()
+                                                  .toLowerCase()] ??
+                                              imageForNameCloud['placeholder']!,
                                         );
                                       },
                                     ),
@@ -773,8 +776,16 @@ class _MoreDetailsState extends State<MoreDetails> {
                                       (index) {
                                         var machine = machinesList[index];
                                         return EquipmentWidget(
-                                          title: machine,
-                                          image: imageForEquipment[machine]!,
+                                          title: translatedName(
+                                            name: machine
+                                                .toString()
+                                                .toLowerCase(),
+                                            context: context,
+                                          ),
+                                          image: imageForNameCloud[machine
+                                                  .toString()
+                                                  .toLowerCase()] ??
+                                              imageForNameCloud['placeholder']!,
                                         );
                                       },
                                     ),
@@ -792,56 +803,6 @@ class _MoreDetailsState extends State<MoreDetails> {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class GridViewListWidget extends StatelessWidget {
-  const GridViewListWidget({
-    super.key,
-    required this.image,
-    required this.title,
-  });
-
-  final String image;
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 120,
-      width: 90,
-      margin: EdgeInsets.only(left: 5, right: 5, top: 10, bottom: 5),
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.black12,
-          width: 3,
-        ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Image.asset(
-              image,
-              fit: BoxFit.fitWidth,
-            ),
-          ),
-          SizedBox(
-            height: 5,
-          ),
-          Text(title,
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                letterSpacing: .5,
-                fontFamily: 'Poppins',
-              )),
-        ],
       ),
     );
   }

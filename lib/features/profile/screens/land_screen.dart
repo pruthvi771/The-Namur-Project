@@ -1,14 +1,15 @@
+import 'package:active_ecommerce_flutter/features/profile/address_list.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/edit_profile.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
+import 'package:active_ecommerce_flutter/utils/imageLinks.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import '../../../custom/device_info.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter_expanded_tile/flutter_expanded_tile.dart';
-
-import 'package:active_ecommerce_flutter/features/profile/address_list.dart'
-    as addressList;
 
 // import '../seller_platform/seller_platform.dart';
 
@@ -28,9 +29,6 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
   String title = "KYC";
   final double progress = 0.80;
   late ProfileData? profileData;
-
-  final imageForCrop = addressList.imageForCrop;
-  final imageForEquipment = addressList.imageForEquipment;
 
   Future<ProfileData> fetchDataFromHive() async {
     var dataBox = await Hive.openBox<ProfileData>('profileDataBox3');
@@ -61,7 +59,7 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'No Land Data Found',
+                        AppLocalizations.of(context)!.no_land_added_yet,
                         style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.w600,
@@ -80,7 +78,7 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
                           ),
                         ),
                         child: Text(
-                          'Add Land Data',
+                          AppLocalizations.of(context)!.add_land_first,
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
@@ -159,8 +157,8 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
                           profileData!.land.length,
                           (index) {
                             var item = profileData!.land[index];
-                            print('crops: ${item.crops.length}');
-                            print('machines: ${item.equipments.length}');
+                            // print('crops: ${item.crops.length}');
+                            // print('machines: ${item.equipments.length}');
                             return SingleChildScrollView(
                               padding: EdgeInsets.only(bottom: 20),
                               physics: BouncingScrollPhysics(),
@@ -174,7 +172,8 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
                                     ),
                                     LandExpandedTile(
                                       controller2: _areaController,
-                                      title: 'Land Area, Size',
+                                      title: AppLocalizations.of(context)!
+                                          .land_details,
                                       content: Container(
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 3, vertical: 8),
@@ -218,7 +217,9 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
                                                           .spaceEvenly,
                                                   children: [
                                                     Text(
-                                                      'Size (in acres)',
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .size_in_acres,
                                                       style: TextStyle(
                                                           fontSize: 12,
                                                           color: Colors.black54,
@@ -272,11 +273,10 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
                                     ),
                                     LandExpandedTile(
                                         controller2: _cropController,
-                                        title: 'Crops Detail',
+                                        title:
+                                            AppLocalizations.of(context)!.crops,
                                         content: (item.crops.length != 0)
                                             ? Container(
-                                                // padding: const EdgeInsets.symmetric(
-                                                //     horizontal: 12),
                                                 height: 150,
                                                 child: ListView(
                                                   physics:
@@ -289,9 +289,16 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
                                                       var crop =
                                                           item.crops[index];
                                                       return CropWidget(
-                                                        title: crop.name,
-                                                        image: imageForCrop[
-                                                            crop.name]!,
+                                                        title: translatedName(
+                                                            name: crop.name
+                                                                .toString()
+                                                                .toLowerCase(),
+                                                            context: context),
+                                                        image: imageForNameCloud[crop
+                                                                .name
+                                                                .toLowerCase()] ??
+                                                            imageForNameCloud[
+                                                                'placeholder']!,
                                                         yieldOfCrop:
                                                             crop.yieldOfCrop,
                                                       );
@@ -303,7 +310,9 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
                                                 height: 50,
                                                 child: Center(
                                                   child: Text(
-                                                    'No Crop Data Found',
+                                                    AppLocalizations.of(
+                                                            context)!
+                                                        .no_crops_added,
                                                     style: TextStyle(
                                                       fontSize: 15,
                                                       fontWeight:
@@ -319,7 +328,8 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
                                     ),
                                     LandExpandedTile(
                                       controller2: _landController,
-                                      title: 'Machines and Equipments',
+                                      title:
+                                          AppLocalizations.of(context)!.machine,
                                       content: (item.equipments.length != 0)
                                           ? Container(
                                               // padding: const EdgeInsets.symmetric(
@@ -336,9 +346,16 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
                                                     var equipment =
                                                         item.equipments[index];
                                                     return EquipmentWidget(
-                                                      title: equipment,
-                                                      image: imageForEquipment[
-                                                          equipment]!,
+                                                      title: translatedName(
+                                                          name: equipment
+                                                              .toString()
+                                                              .toLowerCase(),
+                                                          context: context),
+                                                      image: imageForNameCloud[
+                                                              equipment
+                                                                  .toLowerCase()] ??
+                                                          imageForNameCloud[
+                                                              'placeholder']!,
                                                     );
                                                   },
                                                 ),
@@ -348,7 +365,8 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
                                               height: 50,
                                               child: Center(
                                                 child: Text(
-                                                  'No Equipment Data found',
+                                                  AppLocalizations.of(context)!
+                                                      .no_machines_added,
                                                   style: TextStyle(
                                                     fontSize: 15,
                                                     fontWeight: FontWeight.w600,
@@ -375,16 +393,6 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
     );
   }
 
-  // RefreshIndicator buildBody() {
-  //   return RefreshIndicator(
-  //     color: MyTheme.white,
-  //     backgroundColor: MyTheme.primary_color,
-  //     onRefresh: _onPageRefresh,
-  //     displacement: 10,
-  //     child: bodycontent(),
-  //   );
-  // }
-
   PreferredSize buildCustomAppBar(context) {
     return PreferredSize(
       preferredSize: Size(DeviceInfo(context).width!, 80),
@@ -405,7 +413,7 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
                   width: 30,
                 ),
                 Center(
-                  child: Text('Land',
+                  child: Text(AppLocalizations.of(context)!.land,
                       style: TextStyle(
                           color: MyTheme.white,
                           fontSize: 20,
@@ -474,13 +482,6 @@ class LandExpandedTile extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        // trailing: Padding(
-        //   padding: const EdgeInsets.all(8.0),
-        //   child: Image.asset(
-        //     'assets/dropdown.png',
-        //     height: 15,
-        //   ),
-        // ),
         content: content,
       ),
     );
@@ -518,8 +519,8 @@ class CropWidget extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Image.asset(
-              image,
+            child: CachedNetworkImage(
+              imageUrl: image,
               fit: BoxFit.fitWidth,
             ),
           ),
@@ -569,8 +570,8 @@ class EquipmentWidget extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Image.asset(
-              image,
+            child: CachedNetworkImage(
+              imageUrl: image,
               fit: BoxFit.fitWidth,
             ),
           ),

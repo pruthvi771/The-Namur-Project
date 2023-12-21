@@ -1,11 +1,13 @@
 // translation done.
 
 import 'package:active_ecommerce_flutter/drawer/drawer.dart';
+import 'package:active_ecommerce_flutter/features/profile/address_list.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/friends_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/buy_product_list.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/product_inventory.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart' as enums;
+import 'package:active_ecommerce_flutter/utils/enums.dart';
 import 'package:active_ecommerce_flutter/utils/imageLinks.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -370,7 +372,12 @@ class _ParentScreenState extends State<ParentScreen> {
                                 ),
                                 FittedBox(
                                   child: Text(
-                                    nameForSubCategoryEnum[subCategoryEnum]!,
+                                    translatedName(
+                                      name: nameForSubCategoryEnum[
+                                              subCategoryEnum]!
+                                          .toLowerCase(),
+                                      context: context,
+                                    ),
                                     style: TextStyle(
                                       // fontSize: 14,
                                       fontWeight: FontWeight.w700,

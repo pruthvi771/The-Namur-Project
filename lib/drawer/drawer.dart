@@ -135,11 +135,6 @@ class _MainDrawerState extends State<MainDrawer> {
                 // wallet
                 ListTile(
                     visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-                    // leading: Image.asset(
-                    //   "assets/wallet.png",
-                    //   height: 16,
-                    //   color: Color.fromRGBO(153, 153, 153, 1),
-                    // ),
                     leading: Icon(
                       Icons.wallet_outlined,
                       // size: 23,

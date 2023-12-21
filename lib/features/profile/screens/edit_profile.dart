@@ -22,7 +22,6 @@ import 'package:active_ecommerce_flutter/features/profile/utils.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/sell_bloc/sell_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/sell_bloc/sell_event.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
-import 'package:active_ecommerce_flutter/features/profile/screens/more_details.dart';
 import 'package:active_ecommerce_flutter/utils/location_repository.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -63,8 +62,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   TextEditingController _animalNameController = TextEditingController();
   TextEditingController _animalQuantityController = TextEditingController();
-
-  final districts = addressList.districtTalukMap;
 
   final cropsList = addressList.crops;
   final equipmentsList = addressList.equipment;
@@ -179,22 +176,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       LocationsForPincodeRequested(_pinCodeController.text.toString()),
     );
   }
-
-  // void fetchDistricts() async {
-  //   if (_pinCodeController.text.toString().isEmpty ||
-  //       _pinCodeController.text.toString().length != 6) {
-  //     ToastComponent.showDialog(localContext.enter_valid_pincode,
-  //         gravity: Toast.center, duration: Toast.lengthLong);
-  //     return;
-  //   }
-
-  //   List<String> temp = await locationRepository.getDistrictsForPincode(
-  //       pinCode: _pinCodeController.text);
-  //   setState(() {
-  //     districtsList = temp;
-  //     isDistrictEnabled = true;
-  //   });
-  // }
 
   void fetchTaluks({
     required String districtName,
@@ -1897,7 +1878,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                                       horizontal: 10,
                                                       vertical: 0),
                                               label: Text(
-                                                  '${item.name} (${item.yieldOfCrop.toInt()})'),
+                                                  '${addressList.translatedName(name: item.name.toString().toLowerCase(), context: context)} (${item.yieldOfCrop.toInt()})'),
                                               // deleteIcon: Icon(Icons.delete),
                                               onDeleted: () {
                                                 _deleteCropFromHive(
@@ -1933,7 +1914,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                                   return DropdownMenuItem<
                                                       String>(
                                                     value: value,
-                                                    child: Text(value),
+                                                    child: Text(addressList
+                                                        .translatedName(
+                                                            name: value
+                                                                .toString()
+                                                                .toLowerCase(),
+                                                            context: context)),
                                                   );
                                                 }).toList(),
                                                 cropDropdownValue, (value) {
@@ -2016,7 +2002,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                                   EdgeInsets.symmetric(
                                                       horizontal: 10,
                                                       vertical: 0),
-                                              label: Text(item),
+                                              label: Text(
+                                                addressList.translatedName(
+                                                  name: item.toLowerCase(),
+                                                  context: context,
+                                                ),
+                                              ),
                                               // deleteIcon: Icon(Icons.delete),
                                               onDeleted: () {
                                                 _deleteEquipmentFromHive(
@@ -2043,7 +2034,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                                   (String value) {
                                             return DropdownMenuItem<String>(
                                               value: value,
-                                              child: Text(value),
+                                              child: Text(
+                                                  addressList.translatedName(
+                                                      name: value
+                                                          .toString()
+                                                          .toLowerCase(),
+                                                      context: context)),
                                             );
                                           }).toList(),
                                           equipmentDropdownValue, (value) {

@@ -1,6 +1,7 @@
 // translation done.
 
 import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_add_crop.dart';
+import 'package:active_ecommerce_flutter/features/profile/address_list.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/screens/calender/cultivation_tip.dart';
 import 'package:active_ecommerce_flutter/screens/calender/pest_control.dart';
@@ -213,8 +214,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 image: imageLinks[parentSnapshot
                                     .data!.cropCalendarItems[index].cropName
                                     .toLowerCase()],
-                                title: parentSnapshot
-                                    .data!.cropCalendarItems[index].cropName,
+                                title: translatedName(
+                                  name: parentSnapshot
+                                      .data!.cropCalendarItems[index].cropName
+                                      .toLowerCase(),
+                                  context: context,
+                                ),
                                 isSelected: index == selectedIndex,
                               ),
                             );
@@ -803,20 +808,12 @@ class CropSelectionItemWidget extends StatelessWidget {
           width: 3,
         ),
       ),
-      // child: Image.asset(
-      //   image,
-      //   fit: BoxFit.cover,
-      // ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 2),
-              // child: Image.asset(
-              //   image,
-              //   fit: BoxFit.cover,
-              // ),
               child: image == null
                   ? Image.asset(
                       "assets/placeholder.png",

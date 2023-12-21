@@ -1,431 +1,347 @@
-var districtTalukMap3 = [
-  // [
-  //   '',
-  //   ['']
-  // ],
-  [
-    'Bagalkote',
-    [
-      '',
-      'Bagalkote',
-      'Jamkhandi',
-      'Mudhola',
-      'Badami',
-      'Bilagi',
-      'Hunagunda',
-      'Ilkal',
-      'Rabkavi Banhatti',
-      'Guledgudda'
-    ]
-  ],
-  [
-    'Ballari',
-    [
-      '',
-      'Ballari',
-      'Kurugodu',
-      'Kampli',
-      'Sanduru',
-      'Siraguppa',
-    ]
-  ],
-];
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-List<List<Object>> districtTalukMap = [
-  // [
-  //   '',
-  //   ['']
-  // ],
-  [
-    'Bagalkote',
-    [
-      'Bagalkote',
-      'Jamkhandi',
-      'Mudhola',
-      'Badami',
-      'Bilagi',
-      'Hunagunda',
-      'Ilkal',
-      'Rabkavi Banhatti',
-      'Guledgudda'
-    ]
-  ],
-  [
-    'Ballari',
-    [
-      'Ballari',
-      'Kurugodu',
-      'Kampli',
-      'Sanduru',
-      'Siraguppa',
-    ]
-  ],
-  [
-    'Belagavi',
-    [
-      'Belagavi',
-      'Athani',
-      'Bailahongala',
-      'Chikkodi',
-      'Gokak',
-      'Khanapura',
-      'Mudalgi',
-      'Nippani',
-      'Rayabaga',
-      'Savadatti',
-      'Ramadurga',
-      'Kagawada',
-      'Hukkeri',
-      'Kitturu'
-    ]
-  ],
-  [
-    'Bengaluru Urban',
-    [
-      'Hebbala',
-      'Kengeri',
-      'Krishnarajapura',
-      'Anekal',
-      'Yelahanka',
-    ]
-  ],
-  [
-    'Bengaluru Rural',
-    [
-      'Nelamangala',
-      'Doddaballapura',
-      'Devanahalli',
-      'Hosakote',
-    ]
-  ],
-  [
-    'Bidar',
-    [
-      'Aurad',
-      'Basavakalyana',
-      'Bhalki',
-      'Bidar',
-      'Chitgoppa',
-      'Hulsuru',
-      'Humnabad',
-      'Kamalanagara'
-    ]
-  ],
-  [
-    'Chamarajanagara',
-    [
-      'Chamarajanagara',
-      'Gundlupete',
-      'Kollegala',
-      'Yelanduru',
-      'Hanuru',
-    ]
-  ],
-  [
-    'Chikkaballapura',
-    [
-      'Chikkaballapura',
-      'Bagepalli',
-      'Chintamani',
-      'Gauribidanuru',
-      'Gudibanda',
-      'Sidlaghatta',
-      'Cheluru'
-    ]
-  ],
-  [
-    'Chikkamagaluru',
-    [
-      'Chikkamagaluru',
-      'Kaduru',
-      'Koppa',
-      'Mudigere',
-      'Narasimharajapura',
-      'Sringeri',
-      'Tarikere',
-      'Ajjampura',
-      'Kalasa'
-    ]
-  ],
-  [
-    'Chitradurga',
-    [
-      'Chitradurga',
-      'Challakere',
-      'Hiriyur',
-      'Holalkere',
-      'Hosadurga',
-      'Molakalmuru'
-    ]
-  ],
-  [
-    'Dakshina Kannada',
-    [
-      'Mangaluru',
-      'Ullal',
-      'Mulki',
-      'Moodbidri',
-      'Bantwala',
-      'Belathangadi',
-      'Putturu',
-      'Sulya',
-      'Kadaba'
-    ]
-  ],
-  [
-    'Davanagere',
-    [
-      'Davanagere',
-      'Harihara',
-      'Channagiri',
-      'Honnali',
-      'Nyamathi',
-      'Jagaluru',
-    ]
-  ],
-  [
-    'Dharwad',
-    [
-      'Kalghatgi',
-      'Dharwad',
-      'Hubballi',
-      'Kundagolu',
-      'Navalgunda',
-      'Alnavara',
-      'Annigeri'
-    ]
-  ],
-  [
-    'Gadag',
-    [
-      'Gadag',
-      'Naragunda',
-      'Mundaragi',
-      'Rona',
-      'Gajendragada',
-      'Lakshmeshwara',
-      'Shirahatti'
-    ]
-  ],
-  [
-    'Hassan',
-    [
-      'Hassan',
-      'Arasikere',
-      'Channarayapattana',
-      'Holenarsipura',
-      'Sakleshpura',
-      'Aluru',
-      'Arakalagudu',
-      'Beluru'
-    ]
-  ],
-  [
-    'Haveri',
-    [
-      'Ranibennur',
-      'Byadgi',
-      'Hangala',
-      'Haveri',
-      'Savanuru',
-      'Hirekeruru',
-      'Shiggavi',
-      'Rattihalli'
-    ]
-  ],
-  [
-    'Kalaburagi',
-    [
-      'Kalaburagi',
-      'Afzalpura',
-      'Alanda',
-      'Chincholi',
-      'Chitapura',
-      'Jevargi',
-      'Sedam',
-      'Kamalapura',
-      'Shahabad',
-      'Kalgi',
-      'Yedrami'
-    ]
-  ],
-  [
-    'Kodagu',
-    [
-      'Madikeri',
-      'Somawarapete',
-      'Virajapete',
-      'Ponnammapete',
-      'Kushalnagara',
-    ]
-  ],
-  [
-    'Kolar',
-    [
-      'Kolar',
-      'Bangarapete',
-      'Maluru',
-      'Mulabagilu',
-      'Srinivasapura',
-      'KGF',
-    ]
-  ],
-  [
-    'Koppala',
-    [
-      'Koppala',
-      'Gangavathi',
-      'Kushtagi',
-      'Yelaburga',
-      'Kanakagiri',
-      'Karatagi',
-      'Kukanuru'
-    ]
-  ],
-  [
-    'Mandya',
-    [
-      'Mandya',
-      'Madduru',
-      'Malavalli',
-      'Srirangapattana',
-      'Krishnarajapete',
-      'Nagamangala',
-      'Pandavapura'
-    ]
-  ],
-  [
-    'Mysuru',
-    [
-      'Mysuru',
-      'Hunasuru',
-      'Krishnarajanagara',
-      'Nanjanagodu',
-      'Heggadadevanakote',
-      'Piriyapattana',
-      'T.Narasipura',
-      'Saraguru',
-      'Saligrama'
-    ],
-  ],
-  [
-    'Raichuru',
-    [
-      'Raichuru',
-      'Sindhanuru',
-      'Manvi',
-      'Devadurga',
-      'Lingasaguru',
-      'Mudgal',
-      'Maski',
-      'Sirawara'
-    ]
-  ],
-  [
-    'Ramanagara',
-    [
-      'Ramanagara',
-      'Magadi',
-      'Kanakapura',
-      'Channapattana',
-      'Harohalli',
-    ]
-  ],
-  [
-    'Shivamogga',
-    [
-      'Shivamogga',
-      'Sagara',
-      'Bhadravathi',
-      'Hosanagara',
-      'Shikaripura',
-      'Soraba',
-      'Tirthahalli'
-    ]
-  ],
-  [
-    'Tumakuru',
-    [
-      'Tumakuru',
-      'Chikkanayakanahalli',
-      'Kunigal',
-      'Madhugiri',
-      'Sira',
-      'Tipturu',
-      'Gubbi',
-      'Koratagere',
-      'Pavagada',
-      'Turuvekere'
-    ]
-  ],
-  [
-    'Udupi',
-    [
-      'Udupi',
-      'Kapu',
-      'Bynduru',
-      'Karkala',
-      'Kundapura',
-      'Hebri',
-      'Brahmavara',
-    ]
-  ],
-  [
-    'Uttara Kannada',
-    [
-      'Sirsi',
-      'Joida',
-      'Dandeli',
-      'Bhatkal',
-      'Kumta',
-      'Ankola',
-      'Haliyal',
-      'Honnavara',
-      'Mundagodu',
-      'Siddapura',
-      'Yellapura'
-    ]
-  ],
-  [
-    'Bijapur',
-    [
-      'Indi',
-      'Basavana Bagewadi',
-      'Sindgi',
-      'Muddebihala',
-      'Talikote',
-      'Devara Hipparagi',
-      'Chadchana',
-      'Tikote',
-      'Babaleshwara',
-      'Kolhara',
-      'Nidagundi',
-      'Alamela'
-    ]
-  ],
-  [
-    'Yadagiri',
-    [
-      'Yadagiri',
-      'Shahapura',
-      'Surapura',
-      'Gurmitkala',
-      'Vadagera',
-      'Hunsagi',
-    ]
-  ],
-  [
-    'Vijayanagara',
-    [
-      'Hosapete',
-      'Hagaribommanahalli',
-      'Harapanahalli',
-      'Hoovina Hadagali',
-      'Kudligi',
-      'Kotturu'
-    ]
-  ],
-];
+String translatedName({
+  required String name,
+  required BuildContext context,
+}) {
+  switch (name) {
+    case 'banana':
+      return AppLocalizations.of(context)!.banana;
+    case 'beetroot':
+      return AppLocalizations.of(context)!.beetroot;
+    case 'betel nut':
+      return AppLocalizations.of(context)!.betelnut;
+    case 'cabbage':
+      return AppLocalizations.of(context)!.cabbage;
+    case 'capsicum':
+      return AppLocalizations.of(context)!.capsicum;
+    case 'carrot':
+      return AppLocalizations.of(context)!.carrot;
+    case 'cashew':
+      return AppLocalizations.of(context)!.cashew;
+    case 'cauliflower':
+      return AppLocalizations.of(context)!.cauliflower;
+    case 'cereal':
+      return AppLocalizations.of(context)!.cereal;
+    case 'chili':
+      return AppLocalizations.of(context)!.chili;
+    case 'chilli':
+      return AppLocalizations.of(context)!.chilli;
+    case 'coconut tree':
+      return AppLocalizations.of(context)!.coconuttree;
+    case 'coconut':
+      return AppLocalizations.of(context)!.coconut;
+    case 'coffee':
+      return AppLocalizations.of(context)!.coffee;
+    case 'coriander':
+      return AppLocalizations.of(context)!.coriander;
+    case 'corn':
+      return AppLocalizations.of(context)!.corn;
+    case 'cotton':
+      return AppLocalizations.of(context)!.cotton;
+    case 'cucumber':
+      return AppLocalizations.of(context)!.cucumber;
+    case 'drumstick':
+      return AppLocalizations.of(context)!.drumstick;
+    case 'eggplant':
+      return AppLocalizations.of(context)!.eggplant;
+    case 'food':
+      return AppLocalizations.of(context)!.food;
+    case 'ginger':
+      return AppLocalizations.of(context)!.ginger;
+    case 'grape':
+      return AppLocalizations.of(context)!.grape;
+    case 'grapes black dry':
+      return AppLocalizations.of(context)!.grapesblackdry;
+    case 'grapes black':
+      return AppLocalizations.of(context)!.grapesblack;
+    case 'grapes green':
+      return AppLocalizations.of(context)!.grapesgreen;
+    case 'grapes red':
+      return AppLocalizations.of(context)!.grapesred;
+    case 'green beans':
+      return AppLocalizations.of(context)!.greenbeans;
+    case 'green onion':
+      return AppLocalizations.of(context)!.greenonion;
+    case 'green tea':
+      return AppLocalizations.of(context)!.greentea;
+    case 'jackfruit':
+      return AppLocalizations.of(context)!.jackfruit;
+    case 'jaggery':
+      return AppLocalizations.of(context)!.jaggery;
+    case 'jar':
+      return AppLocalizations.of(context)!.jar;
+    case 'lemon':
+      return AppLocalizations.of(context)!.lemon;
+    case 'mango':
+      return AppLocalizations.of(context)!.mango;
+    case 'marijuana':
+      return AppLocalizations.of(context)!.marijuana;
+    case 'milk tank':
+      return AppLocalizations.of(context)!.milktank;
+    case 'mushroom':
+      return AppLocalizations.of(context)!.mushroom;
+    case 'olive oil':
+      return AppLocalizations.of(context)!.oliveoil;
+    case 'onion':
+      return AppLocalizations.of(context)!.onion;
+    case 'orange':
+      return AppLocalizations.of(context)!.orange;
+    case 'palm oil':
+      return AppLocalizations.of(context)!.palmOil;
+    case 'papaya':
+      return AppLocalizations.of(context)!.papaya;
+    case 'pea':
+      return AppLocalizations.of(context)!.pea;
+    case 'peanut':
+      return AppLocalizations.of(context)!.peanut;
+    case 'pear':
+      return AppLocalizations.of(context)!.pear;
+    case 'pineapple':
+      return AppLocalizations.of(context)!.pineapple;
+    case 'pomegranate':
+      return AppLocalizations.of(context)!.pomegranate;
+    case 'potato':
+      return AppLocalizations.of(context)!.potato;
+    case 'pumpkin':
+      return AppLocalizations.of(context)!.pumpkin;
+    case 'radish':
+      return AppLocalizations.of(context)!.radish;
+    case 'rice':
+      return AppLocalizations.of(context)!.rice;
+    case 'sapling':
+      return AppLocalizations.of(context)!.sapling;
+    case 'seed':
+      return AppLocalizations.of(context)!.seed;
+    case 'spinach':
+      return AppLocalizations.of(context)!.spinach;
+    case 'sunflower oil':
+      return AppLocalizations.of(context)!.sunfloweroil;
+    case 'sweet potato':
+      return AppLocalizations.of(context)!.sweetPotato;
+    case 'tamarind':
+      return AppLocalizations.of(context)!.tamarind;
+    case 'tomato':
+      return AppLocalizations.of(context)!.tomato;
+    case 'wheat':
+      return AppLocalizations.of(context)!.tomato;
+    case 'cows':
+      return AppLocalizations.of(context)!.cows;
+    case 'goats':
+      return AppLocalizations.of(context)!.goats;
+    case 'buffaloes':
+      return AppLocalizations.of(context)!.buffaloes;
+    case 'sheep':
+      return AppLocalizations.of(context)!.sheep;
+    case 'bull':
+      return AppLocalizations.of(context)!.bull;
+    case 'pig':
+      return AppLocalizations.of(context)!.pig;
+    case 'parrot':
+      return AppLocalizations.of(context)!.parrot;
+    case 'pigeon':
+      return AppLocalizations.of(context)!.pigeon;
+    case 'sparrow':
+      return AppLocalizations.of(context)!.sparrow;
+    case 'duck':
+      return AppLocalizations.of(context)!.duck;
+    case 'turkey':
+      return AppLocalizations.of(context)!.turkey;
+    case 'barley':
+      return AppLocalizations.of(context)!.barley;
+    case 'bengal gram':
+      return AppLocalizations.of(context)!.bengalGram;
+    case 'castor':
+      return AppLocalizations.of(context)!.castor;
+    case 'groundnut':
+      return AppLocalizations.of(context)!.groundnut;
+    case 'jute':
+      return AppLocalizations.of(context)!.jute;
+    case 'linseed':
+      return AppLocalizations.of(context)!.linseed;
+    case 'maize':
+      return AppLocalizations.of(context)!.maize;
+    case 'mustard':
+      return AppLocalizations.of(context)!.mustard;
+    case 'pearl millet':
+      return AppLocalizations.of(context)!.pearlMillet;
+    case 'rabi maize':
+      return AppLocalizations.of(context)!.rabiMaize;
+    case 'soybean':
+      return AppLocalizations.of(context)!.soybean;
+    case 'sunflower':
+      return AppLocalizations.of(context)!.sunflower;
+    case 'tobacco':
+      return AppLocalizations.of(context)!.tobacco;
+    case 'turmeric':
+      return AppLocalizations.of(context)!.turmeric;
+    case 'jower':
+      return AppLocalizations.of(context)!.jower;
+    case 'tea':
+      return AppLocalizations.of(context)!.tea;
+    case 'pepper':
+      return AppLocalizations.of(context)!.pepper;
+    case 'arecanut':
+      return AppLocalizations.of(context)!.arecanut;
+    case 'horsegram':
+      return AppLocalizations.of(context)!.horsegram;
+    case 'ragi':
+      return AppLocalizations.of(context)!.ragi;
+    case 'chikpea':
+      return AppLocalizations.of(context)!.chikpea;
+    case 'tamrind':
+      return AppLocalizations.of(context)!.tamrind;
+    case 'greengram':
+      return AppLocalizations.of(context)!.greengram;
+    case 'arbi':
+      return AppLocalizations.of(context)!.arbi;
+    case 'ber':
+      return AppLocalizations.of(context)!.ber;
+    case 'cow pea':
+      return AppLocalizations.of(context)!.cowPea;
+    case 'cumin':
+      return AppLocalizations.of(context)!.cumin;
+    case 'kinnow':
+      return AppLocalizations.of(context)!.kinnow;
+    case 'lentil':
+      return AppLocalizations.of(context)!.lentil;
+    case 'litchi':
+      return AppLocalizations.of(context)!.litchi;
+    case 'okra':
+      return AppLocalizations.of(context)!.okra;
+    case 'pigenopea':
+      return AppLocalizations.of(context)!.pigenopea;
+    case 'ridged ground':
+      return AppLocalizations.of(context)!.ridgedGround;
+    case 'sorghum':
+      return AppLocalizations.of(context)!.sorghum;
+    case 'sugarcane':
+      return AppLocalizations.of(context)!.sugarcane;
+    case 'tuberose':
+      return AppLocalizations.of(context)!.tuberose;
+    case 'beans':
+      return AppLocalizations.of(context)!.beans;
+    case 'bitterground':
+      return AppLocalizations.of(context)!.bitterground;
+    case 'bottleground':
+      return AppLocalizations.of(context)!.bottleground;
+    case 'brinjal':
+      return AppLocalizations.of(context)!.brinjal;
+    case 'brocolli':
+      return AppLocalizations.of(context)!.brocolli;
+    case 'chickpeas':
+      return AppLocalizations.of(context)!.chikPeas;
+    case 'cluster bean':
+      return AppLocalizations.of(context)!.clusterBean;
+    case 'french beans':
+      return AppLocalizations.of(context)!.frenchBeans;
+    case 'green peas':
+      return AppLocalizations.of(context)!.greenpeas;
+    case 'ivy ground':
+      return AppLocalizations.of(context)!.ivyGround;
+    case 'mint':
+      return AppLocalizations.of(context)!.mentha;
+    case 'pointed ground':
+      return AppLocalizations.of(context)!.pointedGround;
+    case 'snake ground':
+      return AppLocalizations.of(context)!.snakeGround;
+    case 'sponge ground':
+      return AppLocalizations.of(context)!.spongeGround;
+    case 'ladyfinger':
+      return AppLocalizations.of(context)!.ladyFinger;
+    case 'baby corn':
+      return AppLocalizations.of(context)!.babycorn;
+    case 'milk':
+      return AppLocalizations.of(context)!.milk;
+    case 'onions':
+      return AppLocalizations.of(context)!.onions;
+    case 'garlic':
+      return AppLocalizations.of(context)!.garlic;
+    case 'amla':
+      return AppLocalizations.of(context)!.amla;
+    case 'guava':
+      return AppLocalizations.of(context)!.gauva;
+    case 'grapes':
+      return AppLocalizations.of(context)!.grapes;
+    case 'muskmelon':
+      return AppLocalizations.of(context)!.muskmelon;
+    case 'sapota':
+      return AppLocalizations.of(context)!.sapota;
+    case 'watermelon':
+      return AppLocalizations.of(context)!.watermelon;
+    case 'strawberry':
+      return AppLocalizations.of(context)!.strawberry;
+    case 'custard apple':
+      return AppLocalizations.of(context)!.custardApple;
+    case 'apple':
+      return AppLocalizations.of(context)!.apple;
+    case 'marasebu pear':
+      return AppLocalizations.of(context)!.marasebuPear;
+    case 'mosambi':
+      return AppLocalizations.of(context)!.mosambi;
+    case 'musk melon':
+      return AppLocalizations.of(context)!.muskMelon;
+    case 'tender coconut':
+      return AppLocalizations.of(context)!.tenderCoconut;
+    case 'dates':
+      return AppLocalizations.of(context)!.dates;
+    case 'resins':
+      return AppLocalizations.of(context)!.resins;
+    case 'fig':
+      return AppLocalizations.of(context)!.fig;
+    case 'jamun':
+      return AppLocalizations.of(context)!.jamun;
+    case 'rose':
+      return AppLocalizations.of(context)!.rose;
+    case 'marigold':
+      return AppLocalizations.of(context)!.marigold;
+    case 'egg':
+      return AppLocalizations.of(context)!.egg;
+    case 'chicken':
+      return AppLocalizations.of(context)!.chicken;
+    case 'mobile':
+      return AppLocalizations.of(context)!.mobile;
+    case 'laptop':
+      return AppLocalizations.of(context)!.laptop;
+    case 'tv':
+      return AppLocalizations.of(context)!.tv;
+    case 'jcb':
+      return AppLocalizations.of(context)!.jcb;
+    case 'tractor':
+      return AppLocalizations.of(context)!.tractor;
+    case 'rotavator':
+      return AppLocalizations.of(context)!.rotavator;
+    case 'cultivator':
+      return AppLocalizations.of(context)!.cultivator;
+    case 'backhoe':
+      return AppLocalizations.of(context)!.backhoe;
+    case 'billhook':
+      return AppLocalizations.of(context)!.billhook;
+    case 'car':
+      return AppLocalizations.of(context)!.car;
+    case 'combine harvester':
+      return AppLocalizations.of(context)!.combine_harvester;
+    case 'electric scooter':
+      return AppLocalizations.of(context)!.electric_scooter;
+    case 'equipment':
+      return AppLocalizations.of(context)!.equipment;
+    case 'fan':
+      return AppLocalizations.of(context)!.fan;
+    case 'gardening tools':
+      return AppLocalizations.of(context)!.gardening_tools;
+    case 'loader':
+      return AppLocalizations.of(context)!.loader;
+    case 'plow':
+      return AppLocalizations.of(context)!.plow;
+    case 'scooter':
+      return AppLocalizations.of(context)!.scooter;
+    case 'shredder':
+      return AppLocalizations.of(context)!.shredder;
+    default:
+      return name;
+  }
+}
 
 List<String> crops = [
   // '',
@@ -508,41 +424,6 @@ List<String> equipment = [
   'Tractor',
 ];
 
-var districtList = [
-  // '',
-  'Bagalkote',
-  'Ballari',
-  'Belagavi',
-  'Bengaluru (Urban)',
-  'Bengaluru (Rural)',
-  'Bidar',
-  'Chamarajanagara',
-  'Chikkaballapura',
-  'Chikkmagaluru',
-  'Chitradurga',
-  'Dakshina Kannada',
-  'Davanagere',
-  'Dharwad',
-  'Gadag',
-  'Hassan',
-  'Haveri',
-  'Kalaburagi',
-  'Kodagu',
-  'Kolar',
-  'Koppala',
-  'Mandya',
-  'Mysuru',
-  'Raichuru',
-  'Ramanagara',
-  'Shivamogga',
-  'Tumakuru',
-  'Udupi',
-  'Uttara Kannada',
-  'Bijapur',
-  'Yadagiri',
-  'Vijayanagara',
-];
-
 var districtListForWeather = [
   '',
   // 'Bagalkote',
@@ -573,86 +454,3 @@ var districtListForWeather = [
   'Udupi',
   'Bijapur',
 ];
-
-var imageForCrop = {
-  'Banana': 'assets/ikons/fruitsAndVeg/banana.png',
-  'Beetroot': 'assets/ikons/fruitsAndVeg/beetroot.png',
-  'Betel Nut': 'assets/ikons/fruitsAndVeg/betel-nut.png',
-  'Cabbage': 'assets/ikons/fruitsAndVeg/cabbage.png',
-  'Capsicum': 'assets/ikons/fruitsAndVeg/capsicum.png',
-  'Carrot': 'assets/ikons/fruitsAndVeg/carrot.png',
-  'Cashew': 'assets/ikons/fruitsAndVeg/cashew.png',
-  'Cauliflower': 'assets/ikons/fruitsAndVeg/cauliflower.png',
-  'Cereal': 'assets/ikons/fruitsAndVeg/cereal.png',
-  'Chili': 'assets/ikons/fruitsAndVeg/chili.png',
-  'Chilli': 'assets/ikons/fruitsAndVeg/chilli.png',
-  'Coconut Tree': 'assets/ikons/fruitsAndVeg/coconut-tree.png',
-  'Coconut': 'assets/ikons/fruitsAndVeg/coconut.png',
-  'Coffee': 'assets/ikons/fruitsAndVeg/coffee.png',
-  'Coriander': 'assets/ikons/fruitsAndVeg/coriander.png',
-  'Corn': 'assets/ikons/fruitsAndVeg/corn.png',
-  'Cotton': 'assets/ikons/fruitsAndVeg/cotton.png',
-  'Cucumber': 'assets/ikons/fruitsAndVeg/cucumber.png',
-  'Drumstick': 'assets/ikons/fruitsAndVeg/drumstick.png',
-  'Eggplant': 'assets/ikons/fruitsAndVeg/eggplant.png',
-  'Food': 'assets/ikons/fruitsAndVeg/food.png',
-  'Ginger': 'assets/ikons/fruitsAndVeg/ginger.png',
-  'Grape': 'assets/ikons/fruitsAndVeg/grape.png',
-  'Grapes Black Dry': 'assets/ikons/fruitsAndVeg/Grapes black dry.jpeg',
-  'Grapes Black': 'assets/ikons/fruitsAndVeg/Grapes Black.jpeg',
-  'Grapes Green': 'assets/ikons/fruitsAndVeg/Grapes green.jpg',
-  'Grapes Red': 'assets/ikons/fruitsAndVeg/Grapes red.jpeg',
-  'Green Beans': 'assets/ikons/fruitsAndVeg/green-beans.png',
-  'Green Onion': 'assets/ikons/fruitsAndVeg/green-onion.png',
-  'Green Tea': 'assets/ikons/fruitsAndVeg/green-tea.png',
-  'Jackfruit': 'assets/ikons/fruitsAndVeg/jackfruit.png',
-  'Jaggery': 'assets/ikons/fruitsAndVeg/jaggery.png',
-  'Jar': 'assets/ikons/fruitsAndVeg/jar.png',
-  'Lemon': 'assets/ikons/fruitsAndVeg/lemon.png',
-  'Mango': 'assets/ikons/fruitsAndVeg/mango.png',
-  'Marijuana': 'assets/ikons/fruitsAndVeg/marijuana.png',
-  'Milk Tank': 'assets/ikons/fruitsAndVeg/milk-tank.png',
-  'Mushroom': 'assets/ikons/fruitsAndVeg/mushroom.png',
-  'Olive Oil': 'assets/ikons/fruitsAndVeg/olive-oil.png',
-  'Onion': 'assets/ikons/fruitsAndVeg/onion.png',
-  'Orange': 'assets/ikons/fruitsAndVeg/orange.png',
-  'Palm Oil': 'assets/ikons/fruitsAndVeg/palm-oil.png',
-  'Papaya': 'assets/ikons/fruitsAndVeg/papaya.png',
-  'Pea': 'assets/ikons/fruitsAndVeg/pea.png',
-  'Peanut': 'assets/ikons/fruitsAndVeg/peanut.png',
-  'Pear': 'assets/ikons/fruitsAndVeg/pear.png',
-  'Pineapple': 'assets/ikons/fruitsAndVeg/pineapple.png',
-  'Planting': 'assets/ikons/fruitsAndVeg/planting.png',
-  'Pomegranate': 'assets/ikons/fruitsAndVeg/pomegranate.png',
-  'Potato': 'assets/ikons/fruitsAndVeg/potato.png',
-  'Pumpkin': 'assets/ikons/fruitsAndVeg/pumpkin.png',
-  'Radish': 'assets/ikons/fruitsAndVeg/radish.png',
-  'Rice': 'assets/ikons/fruitsAndVeg/rice.png',
-  'Sapling': 'assets/ikons/fruitsAndVeg/sapling.png',
-  'Seed Bag': 'assets/ikons/fruitsAndVeg/seed-bag.png',
-  'Seed': 'assets/ikons/fruitsAndVeg/seed.png',
-  'Seeding': 'assets/ikons/fruitsAndVeg/seeding.png',
-  'Seeds': 'assets/ikons/fruitsAndVeg/seeds.png',
-  'Spinach': 'assets/ikons/fruitsAndVeg/spinach.png',
-  'Sunflower Oil': 'assets/ikons/fruitsAndVeg/sunflower-oil.png',
-  'Sweet Potato': 'assets/ikons/fruitsAndVeg/sweet-potato.png',
-  'Tamarind': 'assets/ikons/fruitsAndVeg/tamarind.png',
-  'Tomato': 'assets/ikons/fruitsAndVeg/tomato.png',
-  'Wheat': 'assets/ikons/fruitsAndVeg/wheat-sack.png',
-};
-
-var imageForEquipment = {
-  'Backhoe': 'assets/ikons/manAndMcs/backhoe.png',
-  'Billhook': 'assets/ikons/manAndMcs/billhook.png',
-  'Car': 'assets/ikons/manAndMcs/car.png',
-  'Combine harvester': 'assets/ikons/manAndMcs/combine-harvester.png',
-  'Electric scooter': 'assets/ikons/manAndMcs/electric-scooter.png',
-  'Equipment': 'assets/ikons/manAndMcs/equipment.png',
-  'Fan': 'assets/ikons/manAndMcs/fan.png',
-  'Gardening tools': 'assets/ikons/manAndMcs/gardening-tools.png',
-  'Loader': 'assets/ikons/manAndMcs/loader.png',
-  'Plow': 'assets/ikons/manAndMcs/plow.png',
-  'Scooter': 'assets/ikons/manAndMcs/scooter.png',
-  'Shredder': 'assets/ikons/manAndMcs/shredder.png',
-  'Tractor': 'assets/ikons/manAndMcs/tractor.png',
-};

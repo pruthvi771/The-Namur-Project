@@ -2,16 +2,17 @@
 
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_screen.dart';
+import 'package:active_ecommerce_flutter/features/profile/address_list.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/machine_rent_form.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
+import 'package:active_ecommerce_flutter/utils/imageLinks.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive/hive.dart';
 import 'package:toast/toast.dart';
 import '../../../custom/device_info.dart';
-import 'package:active_ecommerce_flutter/features/profile/address_list.dart'
-    as addressList;
 import 'package:time_range_picker/time_range_picker.dart';
 
 class CalendarAddCrop extends StatefulWidget {
@@ -30,8 +31,6 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
   String? landDropdownValue;
   late Future<List<Land>> landList;
   late Future<List<Crop>?> cropListFuture;
-
-  final imageForCrop = addressList.imageForCrop;
 
   int? selectedIndex;
   String? selectedCropName;
@@ -328,8 +327,14 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
                                     });
                                   },
                                   child: EquipmentWidget(
-                                    image: imageForCrop[cropList[index].name]!,
-                                    title: cropList[index].name,
+                                    image: imageForNameCloud[cropList[index]
+                                            .name
+                                            .toLowerCase()] ??
+                                        imageForNameCloud['placeholder']!,
+                                    title: translatedName(
+                                      name: cropList[index].name.toLowerCase(),
+                                      context: context,
+                                    ),
                                     isSelected: selectedIndex == index,
                                   ),
                                 );
@@ -504,8 +509,8 @@ class EquipmentWidget extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Image.asset(
-              image,
+            child: CachedNetworkImage(
+              imageUrl: image,
               fit: BoxFit.fitWidth,
             ),
           ),

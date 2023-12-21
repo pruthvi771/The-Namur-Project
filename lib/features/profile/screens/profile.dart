@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_screen.dart';
+import 'package:active_ecommerce_flutter/features/profile/address_list.dart';
 import 'package:active_ecommerce_flutter/features/profile/enum.dart';
 import 'package:active_ecommerce_flutter/features/profile/models/updates_data.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_bloc.dart';
@@ -540,9 +541,9 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                                         .crops
                                                         .toUpperCase(),
                                                     style: TextStyle(
-                                                        fontSize: 16,
+                                                        fontSize: 18,
                                                         fontWeight:
-                                                            FontWeight.w500,
+                                                            FontWeight.w600,
                                                         fontFamily: 'Poppins'),
                                                   ),
                                                 ),
@@ -628,7 +629,11 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                                                               child: Align(
                                                                                 alignment: Alignment.centerLeft,
                                                                                 child: Text(
-                                                                                  cropsToDisplay[index].cropName,
+                                                                                  // cropsToDisplay[index].cropName,
+                                                                                  translatedName(
+                                                                                    name: cropsToDisplay[index].cropName.toLowerCase(),
+                                                                                    context: context,
+                                                                                  ),
                                                                                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
                                                                                 ),
                                                                               ),
@@ -754,9 +759,14 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                                                                 imageLinks['placeholder']!),
                                                                   ),
                                                                   Text(
-                                                                    cropsToDisplay[
-                                                                            index]
-                                                                        .cropName,
+                                                                    translatedName(
+                                                                      name: cropsToDisplay[
+                                                                              index]
+                                                                          .cropName
+                                                                          .toLowerCase(),
+                                                                      context:
+                                                                          context,
+                                                                    ),
                                                                     maxLines: 1,
                                                                     textAlign:
                                                                         TextAlign
@@ -793,9 +803,9 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                                         .machine
                                                         .toUpperCase(),
                                                     style: TextStyle(
-                                                        fontSize: 16,
+                                                        fontSize: 18,
                                                         fontWeight:
-                                                            FontWeight.w500,
+                                                            FontWeight.w600,
                                                         fontFamily: 'Poppins'),
                                                   ),
                                                 ),
@@ -921,7 +931,11 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                                                                     child: CachedNetworkImage(imageUrl: imageLinks[machine.toLowerCase()] ?? imageLinks['placeholder']!),
                                                                                   ),
                                                                                   Text(
-                                                                                    machine,
+                                                                                    // machine,
+                                                                                    translatedName(
+                                                                                      name: machine.toLowerCase(),
+                                                                                      context: context,
+                                                                                    ),
                                                                                     maxLines: 1,
                                                                                     textAlign: TextAlign.center,
                                                                                     overflow: TextOverflow.ellipsis,
@@ -946,7 +960,17 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                     );
                                   }
                                   return Container(
-                                    child: Text('My Stock'),
+                                    height: 100,
+                                    child: Center(
+                                      child: Text(
+                                        AppLocalizations.of(context)!
+                                            .no_data_is_available,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            fontFamily: 'Poppins'),
+                                      ),
+                                    ),
                                   );
                                 },
                               );
