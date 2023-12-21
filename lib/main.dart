@@ -92,7 +92,7 @@ main() async {
   ));
 
   await Firebase.initializeApp();
-  await MessagingAPI().initNotifications();
+
   await Hive.initFlutter();
   Hive.registerAdapter(hiveModels.AddressAdapter());
   Hive.registerAdapter(hiveModels.KYCAdapter());

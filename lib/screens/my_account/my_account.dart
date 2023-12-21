@@ -4,6 +4,7 @@ import 'package:active_ecommerce_flutter/custom/lang_text.dart';
 import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
+import 'package:active_ecommerce_flutter/features/notification/notification_screen.dart';
 import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_state.dart';
@@ -22,7 +23,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../features/profile/screens/profile.dart';
 
-import '../notification/notification_screen.dart';
+
 
 class MyAccount extends StatefulWidget {
   MyAccount({Key? key}) : super(key: key);

@@ -1,3 +1,4 @@
+import 'package:active_ecommerce_flutter/features/notification/notification_screen.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/more_details.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/my_purchases.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart'
@@ -7,7 +8,7 @@ import 'package:active_ecommerce_flutter/screens/about_us/about_us.dart';
 import 'package:active_ecommerce_flutter/screens/change_language.dart';
 import 'package:active_ecommerce_flutter/screens/contact_us/contact_us.dart';
 import 'package:active_ecommerce_flutter/screens/my_account/my_account.dart';
-import 'package:active_ecommerce_flutter/screens/notification/notification_screen.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
