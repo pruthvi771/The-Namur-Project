@@ -1,5 +1,6 @@
 // translation done.
 
+import 'package:uuid/uuid.dart';
 import 'dart:typed_data';
 import 'package:active_ecommerce_flutter/custom/input_decorations.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
@@ -573,7 +574,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         Crop()
           ..name = crop
           ..yieldOfCrop = yieldOfCropDouble
-          ..id = DateTime.now().millisecondsSinceEpoch.toString(),
+          ..id = Uuid().v4(),
       );
 
       dataBox.put(savedData.id, savedData);

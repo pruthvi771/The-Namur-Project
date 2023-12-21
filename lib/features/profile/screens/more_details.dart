@@ -1,6 +1,9 @@
 // translation done.
 
 import 'package:active_ecommerce_flutter/features/profile/screens/expanded_tile_widget.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_bloc.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_event.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_state.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/misc_bloc/misc_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_state.dart';
@@ -35,9 +38,6 @@ class _MoreDetailsState extends State<MoreDetails> {
 
   late double progress;
   late ProfileData? profileData;
-
-  List CropsList = [];
-  List MachinesList = [];
 
   final imageForCrop = addressList.imageForCrop;
   final imageForEquipment = addressList.imageForEquipment;
@@ -97,20 +97,10 @@ class _MoreDetailsState extends State<MoreDetails> {
         ..land = [];
       dataBox.put(emptyProfileData.id, emptyProfileData);
     }
-    // setState(() {
-    //   profileData = dataBox.get('profile');
-    //   calculatingProgress(profileData);
-    // });
+    BlocProvider.of<HiveBloc>(context).add(
+      HiveDataRequested(),
+    );
     profileData = dataBox.get('profile');
-
-    for (Land land in profileData!.land) {
-      for (Crop crop in land.crops) {
-        CropsList.add(crop.name);
-      }
-      for (String machine in land.equipments) {
-        MachinesList.add(machine);
-      }
-    }
 
     calculatingProgress(profileData);
   }
@@ -203,6 +193,9 @@ class _MoreDetailsState extends State<MoreDetails> {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
+          BlocProvider.of<HiveBloc>(context).add(
+            HiveDataRequested(),
+          );
           var dataBox = Hive.box<ProfileData>('profileDataBox3');
           var savedData = dataBox.get('profile');
 
@@ -219,20 +212,7 @@ class _MoreDetailsState extends State<MoreDetails> {
               ..land = [];
             dataBox.put(emptyProfileData.id, emptyProfileData);
           }
-          // setState(() {
-          //   profileData = dataBox.get('profile');
-          //   calculatingProgress(profileData);
-          // });
           profileData = dataBox.get('profile');
-
-          for (Land land in profileData!.land) {
-            for (Crop crop in land.crops) {
-              CropsList.add(crop.name);
-            }
-            for (String machine in land.equipments) {
-              MachinesList.add(machine);
-            }
-          }
           setState(() {
             calculatingProgress(profileData);
           });
@@ -682,102 +662,133 @@ class _MoreDetailsState extends State<MoreDetails> {
             ),
 
             //Crops Section
-            ExpandedTileWidget(
-                controller: _cropsController,
-                title: AppLocalizations.of(context)!.crops_grown_and_planned,
-                children: (CropsList.length == 0)
-                    ? Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              children: [
-                                Text(
-                                    AppLocalizations.of(context)!
-                                        .no_crops_added,
-                                    style: TextStyle(
-                                        fontSize: 13, color: Colors.red)),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Text(
-                                    AppLocalizations.of(context)!.add_them_here,
-                                    style: TextStyle(
-                                        fontSize: 13, color: Colors.grey[600])),
-                              ],
-                            ),
-                          ),
-                        ],
-                      )
-                    : Container(
-                        height: 140,
-                        child: ListView(
-                          physics: BouncingScrollPhysics(),
-                          scrollDirection: Axis.horizontal,
-                          children: List.generate(
-                            CropsList.length,
-                            (index) {
-                              var crop = CropsList[index];
-                              return EquipmentWidget(
-                                title: crop,
-                                image: imageForCrop[crop]!,
-                              );
-                            },
-                          ),
-                        ),
-                      )),
-            SizedBox(
-              height: 15,
-            ),
 
             //Machines Section
-            ExpandedTileWidget(
-              controller: _machinesController,
-              title: AppLocalizations.of(context)!.tractor_jcb_tiller_rotovator,
-              children: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: (MachinesList.length == 0)
-                    ? Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              children: [
-                                Text(
-                                    AppLocalizations.of(context)!
-                                        .no_machines_added,
-                                    style: TextStyle(
-                                        fontSize: 13, color: Colors.red)),
-                                SizedBox(
-                                  height: 5,
+            BlocBuilder<HiveBloc, HiveState>(
+              builder: (context, state) {
+                if (state is HiveDataReceived) {
+                  List machinesList = [];
+                  List cropsList = [];
+                  state.profileData.land.forEach((land) {
+                    land.equipments.forEach((machine) {
+                      machinesList.add(machine);
+                    });
+                    land.crops.forEach((crop) {
+                      cropsList.add(crop.name);
+                    });
+                  });
+                  return Column(
+                    children: [
+                      ExpandedTileWidget(
+                          controller: _cropsController,
+                          title: AppLocalizations.of(context)!
+                              .crops_grown_and_planned,
+                          children: (cropsList.length == 0)
+                              ? Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                              AppLocalizations.of(context)!
+                                                  .no_crops_added,
+                                              style: TextStyle(
+                                                  fontSize: 13,
+                                                  color: Colors.red)),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(
+                                              AppLocalizations.of(context)!
+                                                  .add_them_here,
+                                              style: TextStyle(
+                                                  fontSize: 13,
+                                                  color: Colors.grey[600])),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : Container(
+                                  height: 140,
+                                  child: ListView(
+                                    physics: BouncingScrollPhysics(),
+                                    scrollDirection: Axis.horizontal,
+                                    children: List.generate(
+                                      cropsList.length,
+                                      (index) {
+                                        var crop = cropsList[index];
+                                        return EquipmentWidget(
+                                          title: crop,
+                                          image: imageForCrop[crop]!,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                )),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      ExpandedTileWidget(
+                        controller: _machinesController,
+                        title: AppLocalizations.of(context)!
+                            .tractor_jcb_tiller_rotovator,
+                        children: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: (machinesList.length == 0)
+                              ? Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                              AppLocalizations.of(context)!
+                                                  .no_machines_added,
+                                              style: TextStyle(
+                                                  fontSize: 13,
+                                                  color: Colors.red)),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(
+                                              AppLocalizations.of(context)!
+                                                  .add_them_here,
+                                              style: TextStyle(
+                                                  fontSize: 13,
+                                                  color: Colors.grey[600])),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : Container(
+                                  height: 140,
+                                  child: ListView(
+                                    physics: BouncingScrollPhysics(),
+                                    scrollDirection: Axis.horizontal,
+                                    children: List.generate(
+                                      machinesList.length,
+                                      (index) {
+                                        var machine = machinesList[index];
+                                        return EquipmentWidget(
+                                          title: machine,
+                                          image: imageForEquipment[machine]!,
+                                        );
+                                      },
+                                    ),
+                                  ),
                                 ),
-                                Text(
-                                    AppLocalizations.of(context)!.add_them_here,
-                                    style: TextStyle(
-                                        fontSize: 13, color: Colors.grey[600])),
-                              ],
-                            ),
-                          ),
-                        ],
-                      )
-                    : Container(
-                        height: 140,
-                        child: ListView(
-                          physics: BouncingScrollPhysics(),
-                          scrollDirection: Axis.horizontal,
-                          children: List.generate(
-                            MachinesList.length,
-                            (index) {
-                              var machine = MachinesList[index];
-                              return EquipmentWidget(
-                                title: machine,
-                                image: imageForEquipment[machine]!,
-                              );
-                            },
-                          ),
                         ),
                       ),
-              ),
+                    ],
+                  );
+                }
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
             ),
           ],
         ),

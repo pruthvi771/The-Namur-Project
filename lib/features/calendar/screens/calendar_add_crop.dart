@@ -378,7 +378,7 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
                           DateTime? newData = await showDatePicker(
                               context: context,
                               initialDate: dateNow,
-                              firstDate: DateTime.now(),
+                              firstDate: DateTime(2000),
                               lastDate: DateTime(2025));
 
                           if (newData != null) {

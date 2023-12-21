@@ -543,7 +543,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       );
                     }),
 
-                Text(selectedIndex.toString()),
                 Padding(
                   padding: const EdgeInsets.only(right: 20),
                   child: Align(
