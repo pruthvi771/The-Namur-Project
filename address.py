@@ -34,7 +34,9 @@ for sheet_name in sheet_names:
     
     sheet_names_for_json.extend(temp_list)
 
+
 d = {"Village Name": village_names, "Gram Panchayat": gram_panchayat_names, "TALUK": taluk_names,"district":sheet_names_for_json, "state": "Karnakata"}
+
 df = pd.DataFrame(d)
 df.dropna(inplace=True)
 # df.drop_duplicates(inplace=True)
