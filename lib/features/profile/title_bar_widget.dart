@@ -11,6 +11,7 @@ import 'package:active_ecommerce_flutter/features/profile/screens/profile.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/weather_section_bloc/weather_section_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/weather_section_bloc/weather_section_event.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/weather_section_bloc/weather_section_state.dart';
+import 'package:active_ecommerce_flutter/utils/imageLinks.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -217,6 +218,7 @@ class _TitleBarState extends State<TitleBar> {
                       temperature: '-',
                       description: '-',
                       location: '---',
+                      weatherCode: null,
                     );
                   }
                   if (state is LocationDataNotFoundinHive) {
@@ -305,6 +307,7 @@ class _TitleBarState extends State<TitleBar> {
                       description:
                           state.responseData[0]!.currentData.condition.text,
                       location: '@${state.responseData[0]!.locationName}',
+                      weatherCode: state.responseData[0]!.weatherCode,
                     );
                   }
                   if (state is WeatherSectionDataNotReceived) {
@@ -312,12 +315,14 @@ class _TitleBarState extends State<TitleBar> {
                       temperature: '==',
                       description: '==',
                       location: '==',
+                      weatherCode: null,
                     );
                   }
                   return WeatherSection(
                     temperature: '00',
                     description: '00',
                     location: '00',
+                    weatherCode: null,
                   );
                 },
               ),
@@ -335,11 +340,13 @@ class WeatherSection extends StatelessWidget {
     required this.temperature,
     required this.description,
     required this.location,
+    required this.weatherCode,
   });
 
   final String temperature;
   final String description;
   final String location;
+  final int? weatherCode;
 
   @override
   Widget build(BuildContext context) {
@@ -369,7 +376,10 @@ class WeatherSection extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Image.asset('assets/weather.png'),
+                        weatherCode == null
+                            ? Icon(Icons.warning, color: Colors.red)
+                            : CachedNetworkImage(
+                                imageUrl: weatherCodeToImage[weatherCode]!),
                         Text(
                           temperature,
                           style: TextStyle(

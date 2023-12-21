@@ -8,6 +8,8 @@ import 'package:active_ecommerce_flutter/features/weather/bloc/weather_event.dar
 import 'package:active_ecommerce_flutter/features/weather/bloc/weather_state.dart';
 import 'package:active_ecommerce_flutter/features/weather/screens/add_location.dart';
 import 'package:active_ecommerce_flutter/utils/functions.dart';
+import 'package:active_ecommerce_flutter/utils/imageLinks.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -133,7 +135,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
   }
 
   bodycontent() {
-    var weatherImage = "assets/weather.png";
+    // var weatherImage = "assets/weather.png";
 
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
@@ -280,25 +282,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
               );
             },
           ),
-          // Padding(
-          //   padding: const EdgeInsets.only(left: 25, top: 5, bottom: 5),
-          //   child: Align(
-          //     alignment: Alignment.centerLeft,
-          //     child: Text(
-          //       AppLocalizations.of(context)!.forecast,
-          //       style: TextStyle(
-          //         fontWeight: FontWeight.bold,
-          //         fontSize: 15,
-          //         color: MyTheme.dark_font_grey,
-          //         decoration: TextDecoration.underline,
-          //       ),
-          //     ),
-          //   ),
-          // ),
           BlocListener<WeatherBloc, WeatherState>(
             listener: (context, state) {
               if (state is WeatherSreenDataReceived) {
-                // print('state is WeatherSreenDataReceived');
                 setState(() {
                   showFloatingActionButton = true;
                 });
@@ -315,19 +301,19 @@ class _WeatherScreenState extends State<WeatherScreen> {
                           WeatherDayCard(
                             context: context,
                             date: ' -- ',
-                            image: weatherImage,
+                            image: null,
                             desc: '--',
                           ),
                           WeatherDayCard(
                             context: context,
                             date: ' -- ',
-                            image: weatherImage,
+                            image: null,
                             desc: '--',
                           ),
                           WeatherDayCard(
                             context: context,
                             date: ' -- ',
-                            image: weatherImage,
+                            image: null,
                             desc: '--',
                           ),
                         ]),
@@ -372,11 +358,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
                             ),
                           ),
                           onPressed: () {
-                            // print('tapped');
-                            // index = 0;
-                            // setState(() {
-                            //   index = 0;
-                            // });
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -403,19 +384,22 @@ class _WeatherScreenState extends State<WeatherScreen> {
                               WeatherDayCard(
                                 context: context,
                                 date: formatDate(responseData['day0']['date']),
-                                image: weatherImage,
+                                image: weatherCodeToImage[responseData['day0']
+                                    ['code']],
                                 desc: responseData['day0']['desc'],
                               ),
                               WeatherDayCard(
                                 context: context,
                                 date: formatDate(responseData['day1']['date']),
-                                image: weatherImage,
+                                image: weatherCodeToImage[responseData['day1']
+                                    ['code']],
                                 desc: responseData['day1']['desc'],
                               ),
                               WeatherDayCard(
                                 context: context,
                                 date: formatDate(responseData['day2']['date']),
-                                image: weatherImage,
+                                image: weatherCodeToImage[responseData['day2']
+                                    ['code']],
                                 desc: responseData['day2']['desc'],
                               ),
                             ]),
@@ -431,7 +415,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                         WeatherDayCard(
                           context: context,
                           date: ' -- ',
-                          image: weatherImage,
+                          image: null,
                           // min: '--',
                           // max: '--',
                           desc: '--',
@@ -439,7 +423,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                         WeatherDayCard(
                           context: context,
                           date: ' -- ',
-                          image: weatherImage,
+                          image: null,
                           // min: '--',
                           // max: '--',
                           desc: '--',
@@ -447,7 +431,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                         WeatherDayCard(
                           context: context,
                           date: ' -- ',
-                          image: weatherImage,
+                          image: null,
                           // min: '--',
                           // max: '--',
                           desc: '--',
@@ -626,48 +610,50 @@ class CurrentWeatherWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Padding(
-                        padding: const EdgeInsets.only(
-                            right: 20, top: 0, bottom: 0, left: 5),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width - 211,
-                              child: Text(
-                                currentDesc,
-                                maxLines: 2,
-                                // 'Sunny patchy weather', // 'Sunny patchy weather
-                                overflow: TextOverflow.ellipsis,
+                    Expanded(
+                      child: Padding(
+                          padding: const EdgeInsets.only(
+                              right: 20, top: 0, bottom: 0, left: 5),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: MediaQuery.of(context).size.width - 211,
+                                child: Text(
+                                  currentDesc,
+                                  maxLines: 2,
+                                  // 'Sunny patchy weather', // 'Sunny patchy weather
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                    color: Colors.grey[800],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 4,
+                              ),
+                              Text(
+                                '${AppLocalizations.of(context)!.humidity}: $currentHumidity',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 14,
+                                  fontSize: 13,
                                   color: Colors.grey[800],
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              height: 4,
-                            ),
-                            Text(
-                              '${AppLocalizations.of(context)!.humidity}: $currentHumidity',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                                color: Colors.grey[800],
+                              Text(
+                                '${AppLocalizations.of(context)!.wind}: $currentWind',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                  color: Colors.grey[800],
+                                ),
                               ),
-                            ),
-                            Text(
-                              '${AppLocalizations.of(context)!.wind}: $currentWind',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                                color: Colors.grey[800],
-                              ),
-                            ),
-                          ],
-                        )),
+                            ],
+                          )),
+                    ),
                   ],
                 ),
               ),
@@ -692,13 +678,12 @@ class WeatherDayCard extends StatelessWidget {
 
   final BuildContext context;
   final String date;
-  final String image;
-  // final String min;
-  // final String max;
+  final String? image;
   final String desc;
 
   @override
   Widget build(BuildContext context) {
+    print(image);
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(9),
@@ -732,10 +717,13 @@ class WeatherDayCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.only(left: 20, right: 20),
             width: double.infinity,
-            child: Image.asset(
-              image,
-              fit: BoxFit.fitWidth,
-            ),
+            // child: Image.asset(
+            //   image,
+            //   fit: BoxFit.fitWidth,
+            // ),
+            child: image == null
+                ? Icon(Icons.block)
+                : CachedNetworkImage(imageUrl: image!),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),

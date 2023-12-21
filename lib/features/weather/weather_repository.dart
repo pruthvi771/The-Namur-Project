@@ -164,9 +164,7 @@ class WeatherRepository {
         '$BASE_URL/current.json?key=$API_KEY&q=${lat.toString()},${long.toString()}&aqi=no'));
 
     if (response.statusCode == 200) {
-      // print('I am here');
       var jsonResponse = json.decode(response.body);
-      // print(jsonResponse);
       return jsonResponse['location']['name'];
     } else {
       print('error happened in getNameFromLatLong');

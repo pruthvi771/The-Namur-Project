@@ -46,17 +46,20 @@ class CurrentData {
 class CurrentWeatherResponse {
   late CurrentData currentData;
   late String locationName;
+  late int weatherCode;
 
   CurrentWeatherResponse({
     required this.currentData,
     required this.locationName,
+    required this.weatherCode,
   });
 
   factory CurrentWeatherResponse.fromJson(Map<String, dynamic> json) {
-    print('hey ');
+    print('weather code: ${json['current']['condition']['code']}');
     return CurrentWeatherResponse(
       currentData: CurrentData.fromJson(json['current']),
       locationName: json['location']['name'],
+      weatherCode: json['current']['condition']['code'].toInt(),
     );
   }
 }
