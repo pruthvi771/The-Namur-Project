@@ -371,247 +371,57 @@ class _MachineDetailsState extends State<MachineDetails> {
                                 ),
                               );
                             if (state is AddToCartSuccessful)
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 5, bottom: 5),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: 35,
-                                      height: 35,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: MyTheme.primary_color,
-                                          width: 2.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                      ),
-                                      child: TextButton(
-                                        onPressed: () {
-                                          BlocProvider.of<CartBloc>(context)
-                                              .add(
-                                            UpdateCartQuantityRequested(
-                                              productId: widget.sellProduct.id,
-                                              currentQuantity: state.quantity,
-                                              type: UpdateCartQuantityType
-                                                  .decrement,
-                                            ),
-                                          );
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          padding: EdgeInsets.all(0),
-                                          elevation: 0,
-                                        ),
-                                        child: Icon(
-                                          Icons.remove,
-                                          color: MyTheme.primary_color,
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 12),
-                                      child: Text(
-                                        state.quantity.toString(),
-                                        style: TextStyle(
-                                            color: Colors.grey[700],
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w700,
-                                            letterSpacing: .5,
-                                            fontFamily: 'Poppins'),
-                                      ),
-                                    ),
-                                    Container(
-                                      width: 35,
-                                      height: 35,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: MyTheme
-                                              .primary_color, // Border color
-                                          width: 2.0, // Border width
-                                        ),
-                                        borderRadius: BorderRadius.circular(
-                                            8.0), // Border radius
-                                      ),
-                                      child: TextButton(
-                                        onPressed: () {
-                                          BlocProvider.of<CartBloc>(context)
-                                              .add(
-                                            UpdateCartQuantityRequested(
-                                              productId: widget.sellProduct.id,
-                                              currentQuantity: state.quantity,
-                                              type: UpdateCartQuantityType
-                                                  .increment,
-                                            ),
-                                          );
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          padding: EdgeInsets.all(0),
-                                          elevation: 0,
-                                        ),
-                                        child: Icon(
-                                          Icons.add,
-                                          color: MyTheme.primary_color,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                              return ElevatedButton(
+                                onPressed: null,
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 0.5,
+                                  backgroundColor:
+                                      MyTheme.primary_color, // background
+                                ),
+                                child: Text(
+                                  AppLocalizations.of(context)!.added_to_cart,
+                                  style: TextStyle(
+                                      color: MyTheme.primary_color,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: .5,
+                                      fontFamily: 'Poppins'),
                                 ),
                               );
                             if (state is CartUpdated)
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 5, bottom: 5),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: 35,
-                                      height: 35,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: MyTheme.primary_color,
-                                          width: 2.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                      ),
-                                      child: TextButton(
-                                        onPressed: () {
-                                          BlocProvider.of<CartBloc>(context)
-                                              .add(
-                                            UpdateCartQuantityRequested(
-                                              productId: widget.sellProduct.id,
-                                              currentQuantity: state.quantity,
-                                              type: UpdateCartQuantityType
-                                                  .decrement,
-                                            ),
-                                          );
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          padding: EdgeInsets.all(0),
-                                          elevation: 0,
-                                        ),
-                                        child: Icon(
-                                          Icons.remove,
-                                          color: MyTheme.primary_color,
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 12),
-                                      child: Text(
-                                        state.quantity.toString(),
-                                        style: TextStyle(
-                                            color: Colors.grey[700],
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w700,
-                                            letterSpacing: .5,
-                                            fontFamily: 'Poppins'),
-                                      ),
-                                    ),
-                                    Container(
-                                      width: 35,
-                                      height: 35,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: MyTheme
-                                              .primary_color, // Border color
-                                          width: 2.0, // Border width
-                                        ),
-                                        borderRadius: BorderRadius.circular(
-                                            8.0), // Border radius
-                                      ),
-                                      child: TextButton(
-                                        onPressed: () {
-                                          BlocProvider.of<CartBloc>(context)
-                                              .add(
-                                            UpdateCartQuantityRequested(
-                                              productId: widget.sellProduct.id,
-                                              currentQuantity: state.quantity,
-                                              type: UpdateCartQuantityType
-                                                  .increment,
-                                            ),
-                                          );
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          padding: EdgeInsets.all(0),
-                                          elevation: 0,
-                                        ),
-                                        child: Icon(
-                                          Icons.add,
-                                          color: MyTheme.primary_color,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                              return ElevatedButton(
+                                onPressed: null,
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 0.5,
+                                  backgroundColor:
+                                      MyTheme.primary_color, // background
+                                ),
+                                child: Text(
+                                  AppLocalizations.of(context)!.added_to_cart,
+                                  style: TextStyle(
+                                      color: MyTheme.primary_color,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: .5,
+                                      fontFamily: 'Poppins'),
                                 ),
                               );
                             if (state is CartQuantityLoading)
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 5, bottom: 5),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: 35,
-                                      height: 35,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: MyTheme.primary_color,
-                                          width: 2.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                      ),
-                                      child: TextButton(
-                                        onPressed: () {},
-                                        style: ElevatedButton.styleFrom(
-                                          padding: EdgeInsets.all(0),
-                                          elevation: 0,
-                                        ),
-                                        child: Icon(
-                                          Icons.remove,
-                                          color: MyTheme.primary_color,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                        height: 40,
-                                        width: 40,
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10, vertical: 10),
-                                        child: Center(
-                                          child: CircularProgressIndicator(
-                                            color: MyTheme.primary_color,
-                                            strokeWidth: 3,
-                                          ),
-                                        )),
-                                    Container(
-                                      width: 35,
-                                      height: 35,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: MyTheme.primary_color,
-                                          width: 2.0,
-                                        ),
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                      ),
-                                      child: TextButton(
-                                        onPressed: () {},
-                                        style: ElevatedButton.styleFrom(
-                                          padding: EdgeInsets.all(0),
-                                          elevation: 0,
-                                        ),
-                                        child: Icon(
-                                          Icons.add,
-                                          color: MyTheme.primary_color,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                              return ElevatedButton(
+                                onPressed: null,
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 0.5,
+                                  backgroundColor:
+                                      MyTheme.primary_color, // background
+                                ),
+                                child: Text(
+                                  AppLocalizations.of(context)!.added_to_cart,
+                                  style: TextStyle(
+                                      color: MyTheme.primary_color,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: .5,
+                                      fontFamily: 'Poppins'),
                                 ),
                               );
                             return ElevatedButton(

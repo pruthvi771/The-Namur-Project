@@ -131,9 +131,9 @@ class _PurchaseHistoryScreenState extends State<PurchaseHistoryScreen> {
                           },
                           child: PreviousOrderCard(
                               context: context,
-                              // title: nameToDisplay,
-                              title:
-                                  'alkfnaklngvangv algkagv aelkga glekhawoi tmtIWH i3hroIR WFNQWNF ',
+                              title: nameToDisplay,
+                              // title:
+                              //     'alkfnaklngvangv algkagv aelkga glekhawoi tmtIWH i3hroIR WFNQWNF ',
                               totalPrice: orderData['totalAmount'],
                               orderID: documentId,
                               orderStatus: orderData['status'],
