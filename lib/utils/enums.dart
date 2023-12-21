@@ -79,8 +79,8 @@ var subCategoryListsForCategory = {
   CategoryEnum.vegetables: [
     SubCategoryEnum.beans,
     SubCategoryEnum.beetroot,
-    SubCategoryEnum.bitterground,
-    SubCategoryEnum.bottleground,
+    SubCategoryEnum.bittergourd,
+    SubCategoryEnum.bottlegourd,
     SubCategoryEnum.brinjal,
     SubCategoryEnum.brocolli,
   ],
@@ -223,8 +223,8 @@ enum SubCategoryEnum {
   // VEGETABLES
   beans,
   beetroot,
-  bitterground,
-  bottleground,
+  bittergourd,
+  bottlegourd,
   brinjal,
   brocolli,
   cabbage,
@@ -426,10 +426,10 @@ enum SubCategoryEnum {
 //       return AppLocalizations.of(context)!.beans;
 //     case SubCategoryEnum.beetroot:
 //       return AppLocalizations.of(context)!.beetroot;
-//     case SubCategoryEnum.bitterground:
-//       return AppLocalizations.of(context)!.bitterground;
-//     case SubCategoryEnum.bottleground:
-//       return AppLocalizations.of(context)!.bottleground;
+//     case SubCategoryEnum.bittergourd:
+//       return AppLocalizations.of(context)!.bittergourd;
+//     case SubCategoryEnum.bottlegourd:
+//       return AppLocalizations.of(context)!.bottlegourd;
 //     case SubCategoryEnum.brinjal:
 //       return AppLocalizations.of(context)!.brinjal;
 //     case SubCategoryEnum.brocolli:
@@ -629,8 +629,8 @@ var nameForSubCategoryEnum = {
   SubCategoryEnum.tuberose: "Tuberose",
   SubCategoryEnum.beans: "Beans",
   SubCategoryEnum.beetroot: "Beetroot",
-  SubCategoryEnum.bitterground: "Bitterground",
-  SubCategoryEnum.bottleground: "Bottleground",
+  SubCategoryEnum.bittergourd: "bittergourd",
+  SubCategoryEnum.bottlegourd: "bottlegourd",
   SubCategoryEnum.brinjal: "Brinjal",
   SubCategoryEnum.brocolli: "Brocolli",
   SubCategoryEnum.cabbage: "Cabbage",
@@ -755,12 +755,12 @@ var SubSubCategoryList = {
     'Beetroot',
     'Red Beetroot',
   ],
-  SubCategoryEnum.bitterground: [
-    'Bitterground',
-    'Green Bitterground',
+  SubCategoryEnum.bittergourd: [
+    'bittergourd',
+    'Green bittergourd',
   ],
-  SubCategoryEnum.bottleground: [
-    'Bottleground',
+  SubCategoryEnum.bottlegourd: [
+    'bottlegourd',
   ],
   SubCategoryEnum.brinjal: [
     'Brinjal',

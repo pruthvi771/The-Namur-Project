@@ -895,8 +895,8 @@
   "tuberose": "रजनीगंधा",
   "beans": "फलियाँ",
   "beetroot": "बीटरूट",
-  "bitterground": "करेला",
-  "bottleground": "बोतल कीचड़",
+  "bittergourd": "करेला",
+  "bottlegourd": "बोतल कीचड़",
   "brinjal": "बैंगन",
   "brocolli": "ब्रोकोली",
   "cabbage": "पत्तागोभी",
@@ -1006,5 +1006,6 @@
 "loader": "लोडर",
 "plow": "हल",
 "scooter": "स्कूटर",
-"shredder": "श्रेडर"
+"shredder": "श्रेडर",
+"size_in_acres": "क्षेत्र का आकार (एकड़ में)"
     }

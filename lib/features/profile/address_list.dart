@@ -222,10 +222,10 @@ String translatedName({
       return AppLocalizations.of(context)!.tuberose;
     case 'beans':
       return AppLocalizations.of(context)!.beans;
-    case 'bitterground':
-      return AppLocalizations.of(context)!.bitterground;
-    case 'bottleground':
-      return AppLocalizations.of(context)!.bottleground;
+    case 'bittergourd':
+      return AppLocalizations.of(context)!.bittergourd;
+    case 'bottlegourd':
+      return AppLocalizations.of(context)!.bottlegourd;
     case 'brinjal':
       return AppLocalizations.of(context)!.brinjal;
     case 'brocolli':
