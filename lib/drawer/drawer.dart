@@ -9,7 +9,7 @@ import 'package:active_ecommerce_flutter/screens/contact_us/contact_us.dart';
 import 'package:active_ecommerce_flutter/screens/my_account/my_account.dart';
 import 'package:active_ecommerce_flutter/screens/notification/notification_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
+
 import 'package:flutter/material.dart';
 
 import 'package:active_ecommerce_flutter/screens/main.dart';
@@ -280,5 +280,3 @@ class _MainDrawerState extends State<MainDrawer> {
     );
   }
 }
-
-// (C:\Users\Piyush Pandey/.ssh/id_ed25519):

@@ -79,12 +79,8 @@ import 'screens/seller_products.dart';
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  FlutterDownloader.initialize(
-      debug: true,
-      // optional: set to false to disable printing logs to console (default: true)
-      ignoreSsl:
-          true // option: set to false to disable working with http links (default: false)
-      );
+
+  FlutterDownloader.initialize(debug: true, ignoreSsl: true);
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -96,6 +92,7 @@ main() async {
   ));
 
   await Firebase.initializeApp();
+  await MessagingAPI().initNotifications();
   await Hive.initFlutter();
   Hive.registerAdapter(hiveModels.AddressAdapter());
   Hive.registerAdapter(hiveModels.KYCAdapter());
@@ -224,7 +221,6 @@ class _MyAppState extends State<MyApp> {
               ChangeNotifierProvider(create: (_) => LocaleProvider()),
               ChangeNotifierProvider(create: (context) => CartCounter()),
               ChangeNotifierProvider(create: (context) => CurrencyPresenter()),
-              // ChangeNotifierProvider(create: (context) => HomePresenter())
             ],
             child: BlocListener<TranslationBloc, TranslationState>(
               listener: (context, state) {
@@ -334,6 +330,5 @@ class _MyAppState extends State<MyApp> {
                 // home: Splash(),
               ),
             )));
-    // );
   }
 }
