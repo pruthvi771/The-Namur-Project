@@ -549,14 +549,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                           ),
                           Row(
                             children: [
-                              // FaIcon(
-                              //   FontAwesomeIcons.locationPin,
-                              //   color: Colors.red,
-                              //   size: 12,
-                              // ),
-                              // SizedBox(
-                              //   width: 3,
-                              // ),
                               Expanded(
                                 child: Text(
                                   '${widget.sellProduct.village}, ${widget.sellProduct.gramPanchayat}, ${widget.sellProduct.taluk}, ${widget.sellProduct.district}',
@@ -634,7 +626,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                               Text(
                                 (snapshot.data!['rating'] /
                                         snapshot.data!['numberOfRatings'])
-                                    .toString(),
+                                    .toStringAsFixed(1),
+                                // .toString(),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(

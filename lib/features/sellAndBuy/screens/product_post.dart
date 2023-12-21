@@ -85,7 +85,8 @@ class _ProductPostState extends State<ProductPost> {
     BlocProvider.of<HiveBloc>(context).add(
       HiveDataRequested(),
     );
-    _dropdownItems = enums.SubSubCategoryList[widget.subCategoryEnum]!;
+    _dropdownItems = enums.SubSubCategoryList[widget.subCategoryEnum] ??
+        [nameForSubCategoryEnum[widget.subCategoryEnum]!];
     category = enums.nameForCategoryEnum[
         enums.findCategoryForSubCategory(widget.subCategoryEnum)]!;
     parentEnum = enums.findParentForCategory(
