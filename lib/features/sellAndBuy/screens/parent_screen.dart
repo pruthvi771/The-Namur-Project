@@ -307,7 +307,9 @@ class _ParentScreenState extends State<ParentScreen> {
                                         builder: (context) => BuyProductList(
                                               subCategoryEnum: subCategoryEnum,
                                               isSecondHand: widget.isSecondHand,
-                                              isRent: !isSwitched!,
+                                              isRent: isSwitched == null
+                                                  ? null
+                                                  : !isSwitched!,
                                             )),
                                   )
                                 : Navigator.push(

@@ -70,11 +70,15 @@ var subCategoryListsForCategory = {
     SubCategoryEnum.sparrow,
     SubCategoryEnum.duck,
     SubCategoryEnum.turkey,
+    SubCategoryEnum.emu,
   ],
   CategoryEnum.supplies: [
-    SubCategoryEnum.barley,
-    SubCategoryEnum.bengalGram,
-    SubCategoryEnum.castor,
+    SubCategoryEnum.soaps,
+    SubCategoryEnum.petShelters,
+    SubCategoryEnum.transporters,
+    SubCategoryEnum.cleaner,
+    SubCategoryEnum.honeyTools,
+    SubCategoryEnum.hive,
   ],
   CategoryEnum.vegetables: [
     SubCategoryEnum.beans,
@@ -181,6 +185,7 @@ enum SubCategoryEnum {
   // chicken,
   duck,
   turkey,
+  emu,
 
   //CROPS
   barley,
@@ -326,6 +331,14 @@ enum SubCategoryEnum {
   Scooter,
   Shredder,
   Tractor,
+
+  // supplies
+  soaps,
+  petShelters,
+  transporters,
+  cleaner,
+  honeyTools,
+  hive,
 }
 
 // String translatedNameForSubCategoryEnum({
@@ -733,6 +746,13 @@ var nameForSubCategoryEnum = {
   SubCategoryEnum.Scooter: "Scooter",
   SubCategoryEnum.Shredder: "Shredder",
   SubCategoryEnum.Tractor: "Tractor",
+  SubCategoryEnum.emu: "Emu",
+  SubCategoryEnum.soaps: 'Soaps',
+  SubCategoryEnum.petShelters: 'Pet Shelters',
+  SubCategoryEnum.transporters: 'Transporters',
+  SubCategoryEnum.cleaner: 'Cleaner',
+  SubCategoryEnum.honeyTools: 'Honey Tools',
+  SubCategoryEnum.hive: 'Hive',
 };
 
 var SubSubCategoryList = {

@@ -4,6 +4,19 @@ var imageForNameCloud = {
   'placeholder':
       'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmore%2Fplaceholder.png?alt=media&token=788c151e-2624-4866-b3a2-4cb75ccb84e4',
 
+  // supplies
+  'cleaner':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fsupplies%2Fcleaner.png?alt=media&token=6fb40e93-6a2a-4bfe-aac4-76e089b8129b',
+  'hive':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fsupplies%2Fhive.png?alt=media&token=4c946ef7-f655-410f-a6b9-63459cbcd08c',
+  'honey tools':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fsupplies%2Fhoney%20tools.png?alt=media&token=f2a22026-a898-492d-b344-ac808405915e',
+  'pet shelters':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fsupplies%2Fpet%20shelters.png?alt=media&token=15c814c7-eafa-4322-9bb6-d336cd6d55f0',
+  'soaps':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fsupplies%2Fsoaps.png?alt=media&token=cae59bd1-929b-431e-b8c4-9da1bc171d94',
+  'transporters':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fsupplies%2Ftransporters.png?alt=media&token=ca83fdc0-c717-4c7c-ad70-0244a3c6451b',
   // fruits and vegetables
   'jute':
       'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FfruitsAndVeg%2Fjute.jpeg?alt=media&token=30f5efe2-ba35-4e32-8514-8639c91fdb20',
