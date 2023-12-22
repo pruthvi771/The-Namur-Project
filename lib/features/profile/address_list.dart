@@ -261,7 +261,7 @@ String translatedName({
     case 'amla':
       return AppLocalizations.of(context)!.amla;
     case 'guava':
-      return AppLocalizations.of(context)!.gauva;
+      return AppLocalizations.of(context)!.guava;
     case 'grapes':
       return AppLocalizations.of(context)!.grapes;
     case 'muskmelon':

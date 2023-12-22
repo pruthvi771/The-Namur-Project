@@ -275,7 +275,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                     padding:
                         const EdgeInsets.only(top: 8.0, left: 20, right: 20),
                     child: Container(
-                      height: 60,
+                      height: 63,
                       width: MediaQuery.of(context).size.width,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -304,34 +304,38 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                             child: BlocBuilder<MiscBloc, MiscState>(
                                 builder: (context, state) {
                               if (state is MiscDataReceived) {
-                                return Column(
-                                  children: [
-                                    //Region text
-                                    Text('${state.villageName}',
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            fontFamily: 'Poppins',
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 15,
-                                            color: Colors.black)),
-                                    Text('${state.pincode}',
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            fontFamily: 'Poppins',
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 15,
-                                            color: Colors.black)),
+                                return Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      //Region text
+                                      Text('${state.villageName}',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 13,
+                                              color: Colors.black)),
+                                      Text('${state.pincode}',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 13,
+                                              color: Colors.black)),
 
-                                    //Friends and Neighbors text
-                                    Text(
-                                      '${state.numberOfFriends} ${AppLocalizations.of(context)!.friends_and_neighbours}',
-                                      style: TextStyle(
-                                          fontFamily: 'Poppins',
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 15,
-                                          color: Colors.black),
-                                    ),
-                                  ],
+                                      //Friends and Neighbors text
+                                      Text(
+                                        '${state.numberOfFriends} ${AppLocalizations.of(context)!.friends_and_neighbours}',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 13,
+                                            color: Colors.black),
+                                      ),
+                                    ],
+                                  ),
                                 );
                               }
                               return Text(

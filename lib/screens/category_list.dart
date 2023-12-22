@@ -585,19 +585,21 @@ class _CategoryListState extends State<CategoryList> {
                   ),
                 ],
               ),
-              Text(
-                // "${categoryResponse.categories[index].name}",
-                index == 0
-                    ? AppLocalizations.of(context)!.animal
-                    : index == 1
-                        ? AppLocalizations.of(context)!.food
-                        : index == 2
-                            ? AppLocalizations.of(context)!.machine
-                            : index == 3
-                                ? AppLocalizations.of(context)!.land
-                                : AppLocalizations.of(context)!.calendar,
-                style: TextStyle(
-                    fontWeight: FontWeight.w600, fontFamily: 'Poppins'),
+              Expanded(
+                child: Text(
+                  // "${categoryResponse.categories[index].name}",
+                  index == 0
+                      ? AppLocalizations.of(context)!.animal
+                      : index == 1
+                          ? AppLocalizations.of(context)!.food
+                          : index == 2
+                              ? AppLocalizations.of(context)!.machine
+                              : index == 3
+                                  ? AppLocalizations.of(context)!.land
+                                  : AppLocalizations.of(context)!.calendar,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600, fontFamily: 'Poppins'),
+                ),
               )
             ],
           ),

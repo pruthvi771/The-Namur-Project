@@ -537,7 +537,7 @@ class _FilterScreenState extends State<FilterScreen> {
                           list: subSubCategoryList)) {
                         ToastComponent.showDialog(
                             AppLocalizations.of(context)!
-                                .select_at_leart_one_category,
+                                .select_at_least_one_category,
                             gravity: Toast.center,
                             duration: Toast.lengthLong);
                         return;

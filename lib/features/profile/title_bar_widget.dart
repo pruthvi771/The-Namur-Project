@@ -403,18 +403,20 @@ class WeatherSection extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
-                          fontSize: 13,
+                          // fontSize: 13,
                           fontFamily: 'Poppins',
                           color: MyTheme.primary_color,
                         ),
                       ),
-                      Text(
-                        location,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 14,
-                          fontFamily: 'Poppins',
-                          color: MyTheme.primary_color,
+                      Expanded(
+                        child: Text(
+                          location,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w800,
+                            // fontSize: 14,
+                            fontFamily: 'Poppins',
+                            color: MyTheme.primary_color,
+                          ),
                         ),
                       )
                     ],
