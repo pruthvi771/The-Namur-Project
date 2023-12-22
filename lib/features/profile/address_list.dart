@@ -338,6 +338,18 @@ String translatedName({
       return AppLocalizations.of(context)!.scooter;
     case 'shredder':
       return AppLocalizations.of(context)!.shredder;
+    case 'soaps':
+      return AppLocalizations.of(context)!.soaps;
+    case 'pet shelters':
+      return AppLocalizations.of(context)!.petShelters;
+    case 'transporters':
+      return AppLocalizations.of(context)!.transporters;
+    case 'cleaner':
+      return AppLocalizations.of(context)!.cleaner;
+    case 'honey tools':
+      return AppLocalizations.of(context)!.honeyTools;
+    case 'hive':
+      return AppLocalizations.of(context)!.hive;
     default:
       return name;
   }

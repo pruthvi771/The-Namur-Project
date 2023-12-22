@@ -30,7 +30,6 @@ class _FriendsState extends State<Friends> {
   final double progress = 0.80;
   late final AuthUser currentUser;
   FirestoreRepository firestoreRepository = FirestoreRepository();
-  final String image = "assets/onion.png";
   late Future<SellerDataForFriendsScreen> _sellerUserDataFuture;
   late Future<List<String>?> _getSubCategoryListFuture;
   int selectedGroupIndex = 0;
@@ -82,7 +81,10 @@ class _FriendsState extends State<Friends> {
 
     List<String> categoryList = [];
 
-    void addItemToCategoryList(String item) {
+    void addItemToCategoryList({required String? item}) {
+      if (item == null) {
+        return;
+      }
       if (!categoryList.contains(item)) {
         categoryList.add(item);
         // print('Item "$item" added successfully.');
@@ -93,7 +95,7 @@ class _FriendsState extends State<Friends> {
       var categoryName =
           await firestoreRepository.getSubCategoryName(productId: product);
 
-      addItemToCategoryList(categoryName!);
+      addItemToCategoryList(item: categoryName);
     }
 
     return categoryList;
@@ -112,12 +114,9 @@ class _FriendsState extends State<Friends> {
                 colors: [Color(0xff107B28), Color(0xff4C7B10)]),
           ),
         ),
-        title: Text(AppLocalizations.of(context)!.friends,
-            style: TextStyle(
-                color: MyTheme.white,
-                fontWeight: FontWeight.w500,
-                letterSpacing: .5,
-                fontFamily: 'Poppins')),
+        title: Text(
+          AppLocalizations.of(context)!.friends,
+        ),
         centerTitle: true,
         actions: [
           IconButton(
@@ -181,9 +180,8 @@ class _FriendsState extends State<Friends> {
                                           top: 5,
                                           left: 5,
                                           child: Container(
-                                            width:
-                                                80, // Set your desired width for the circular avatar
-                                            height: 80, //=
+                                            width: 80,
+                                            height: 80,
                                             decoration: BoxDecoration(
                                               shape: BoxShape.circle,
                                               border: null,
@@ -197,8 +195,10 @@ class _FriendsState extends State<Friends> {
                                                       fit: BoxFit.cover,
                                                     )
                                                   : CachedNetworkImage(
-                                                      imageUrl:
-                                                          sellerData.photoURL!,
+                                                      imageUrl: sellerData
+                                                              .photoURL ??
+                                                          imageForNameCloud[
+                                                              'placeholder']!,
                                                       fit: BoxFit.cover,
                                                     ),
                                             ),
@@ -243,15 +243,6 @@ class _FriendsState extends State<Friends> {
                                         SizedBox(
                                           height: 5,
                                         ),
-                                        // Text(
-                                        //     '0 ${AppLocalizations.of(context)!.groups}',
-                                        //     style: TextStyle(
-                                        //         fontWeight: FontWeight.w700,
-                                        //         fontSize: 13.0,
-                                        //         color: Colors.black)),
-                                        // SizedBox(
-                                        //   height: 5,
-                                        // ),
                                         Text(
                                             '${AppLocalizations.of(context)!.society}: ${state.villageName} ${state.pincode}',
                                             style: TextStyle(
@@ -672,7 +663,34 @@ class _FriendsState extends State<Friends> {
                                 ],
                               );
                             }
-                            return SizedBox();
+                            if (snapshot.hasError) {
+                              print(snapshot.error);
+                              return Container(
+                                height: 200,
+                                // color: Colors.red,
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    AppLocalizations.of(context)!
+                                        .something_went_wrong,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      height: 1.4,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }
+                            return Container(
+                              height: 200,
+                              child: Center(
+                                  child: CircularProgressIndicator(
+                                color: MyTheme.primary_color,
+                              )),
+                            );
                           }),
 
                       SizedBox(

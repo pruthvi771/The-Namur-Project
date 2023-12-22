@@ -1007,5 +1007,13 @@
 "plow": "हल",
 "scooter": "स्कूटर",
 "shredder": "श्रेडर",
-"size_in_acres": "क्षेत्र का आकार (एकड़ में)"
+"size_in_acres": "क्षेत्र का आकार (एकड़ में)",
+"bookings": "बुकिंग्स",
+"product_details": "उत्पाद विवरण",
+"soaps": "साबुन",
+"petShelters": "पालतू पशु शेल्टर्स",
+"transporters": "परिवहक",
+"cleaner": "क्लीनर",
+"honeyTools": "हनी टूल्स",
+"hive": "हाइव"
     }

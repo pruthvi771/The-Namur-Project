@@ -1009,5 +1009,11 @@
 "shredder": "Shredder",
 "size_in_acres": "Size (in Acres)",
 "bookings": "Bookings",
-"product_details": "Product Details"
+"product_details": "Product Details",
+"soaps": "Soaps",
+"petShelters" : "Pet Shelters",
+"transporters" : "Transporters",
+"cleaner" : "Cleaner",
+"honeyTools" : "Honey Tools",
+"hive" : "Hive"
 }

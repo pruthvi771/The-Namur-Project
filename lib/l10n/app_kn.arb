@@ -1007,5 +1007,13 @@
 "plow": "ಎಲೆ",
 "scooter": "ಸ್ಕೂಟರ್",
 "shredder": "ಶ್ರೆಡರ್",
-"size_in_acres": "ಗಾಳಿಗೆ ಅನುಗುಣವಾದ ನೆಪದ ಅಳತೆ"
+"size_in_acres": "ಗಾಳಿಗೆ ಅನುಗುಣವಾದ ನೆಪದ ಅಳತೆ",
+"bookings": "ಬುಕಿಂಗ್ಗಳು",
+"product_details": "ಉತ್ಪನ್ನ ವಿವರಗಳು",
+"soaps": "ಸೋಪ್ಸ್",
+"petShelters" : "ಪೆಟ್ ಶೆಲ್ಟರ್ಸ್",
+"transporters" : "ಸಾಗರಿಕರು",
+"cleaner" : "ಕ್ಲೀನರ್",
+"honeyTools" : "ಹನಿ ಟೂಲ್ಸ್",
+"hive" : "ಹೈವ್"
 }
