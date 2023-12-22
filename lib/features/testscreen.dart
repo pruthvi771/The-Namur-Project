@@ -1,5 +1,5 @@
+import 'dart:convert';
 import 'dart:io';
-import 'package:active_ecommerce_flutter/utils/globaladdress.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -116,7 +116,6 @@ class _TestWidgetState extends State<TestWidget> {
 
   final AuthRepository authRepository = AuthRepository();
 
-  List<Map> addresses = globaladdress;
   List<String> taluks = [];
 
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -133,7 +132,20 @@ class _TestWidgetState extends State<TestWidget> {
             const Text('Test Widget'),
             // Text(downloadLinks.toString()),
             ElevatedButton(
-                onPressed: () => print(downloadLinks), child: Text('scam')),
+                onPressed: () async {
+                  // File file = File("lib/assets/address.json");
+                  // String jsonData = await file.readAsString();
+                  String jsonData =
+                      await rootBundle.loadString('assets/address.json');
+                  List<Map<String, dynamic>> addresses =
+                      List<Map<String, dynamic>>.from(json.decode(jsonData));
+
+                  print(addresses
+                      .map((map) => map['district'].toString())
+                      .toSet()
+                      .toList());
+                },
+                child: Text('scam')),
             ElevatedButton(
               onPressed: () async {},
               child: const Text('Back'),

@@ -179,9 +179,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   void fetchTaluks({
     required String districtName,
-  }) {
-    List<String> temp =
-        locationRepository.getTaluksForDistrict(districtName: districtName);
+  }) async {
+    List<String> temp = await locationRepository.getTaluksForDistrict(
+        districtName: districtName);
     setState(() {
       taluksList = temp;
       isTalukEnabled = true;
@@ -190,9 +190,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   void fetchGramPanchayats({
     required String talukName,
-  }) {
+  }) async {
     List<String> temp =
-        locationRepository.getGramPanchayatsForTaluk(taluk: talukName);
+        await locationRepository.getGramPanchayatsForTaluk(taluk: talukName);
     setState(() {
       gramPanchayatsList = temp;
       isGramPanchayadEnabled = true;
@@ -201,8 +201,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   void fetchVillageNames({
     required String gramPanchayatName,
-  }) {
-    List<String> temp = locationRepository.getVillagesForGramPanchayat(
+  }) async {
+    List<String> temp = await locationRepository.getVillagesForGramPanchayat(
         gramPanchayat: gramPanchayatName);
     setState(() {
       villageNamesList = temp;
@@ -1515,7 +1515,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               ],
                             );
                           }
-                          return SizedBox.shrink();
+                          return Text('error');
                         }),
 
                   // divider
