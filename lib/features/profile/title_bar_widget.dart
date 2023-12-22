@@ -140,14 +140,18 @@ class _TitleBarState extends State<TitleBar> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        "${state.numberOfFriends} ${AppLocalizations.of(context)!.friends_and_neighbours}",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w800,
-                                            fontSize: 13,
-                                            fontFamily: 'Poppins',
-                                            color: MyTheme.primary_color,
-                                            letterSpacing: .5),
+                                      Expanded(
+                                        child: Text(
+                                          "${state.numberOfFriends} ${AppLocalizations.of(context)!.friends_and_neighbours}",
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w800,
+                                              fontSize: 12,
+                                              fontFamily: 'Poppins',
+                                              color: MyTheme.primary_color,
+                                              letterSpacing: .5),
+                                        ),
                                       ),
                                       // Text(
                                       //   "0 Groups",
@@ -163,7 +167,7 @@ class _TitleBarState extends State<TitleBar> {
                                         "${state.numberOfCrops} ${AppLocalizations.of(context)!.crops}",
                                         style: TextStyle(
                                             fontWeight: FontWeight.w700,
-                                            fontSize: 13,
+                                            // fontSize: 13,
                                             fontFamily: 'Poppins',
                                             color: MyTheme.primary_color,
                                             letterSpacing: .5,

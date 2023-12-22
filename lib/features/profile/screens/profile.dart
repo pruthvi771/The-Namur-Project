@@ -7,6 +7,7 @@ import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_scre
 import 'package:active_ecommerce_flutter/features/profile/address_list.dart';
 import 'package:active_ecommerce_flutter/features/profile/enum.dart';
 import 'package:active_ecommerce_flutter/features/profile/models/updates_data.dart';
+import 'package:active_ecommerce_flutter/features/profile/screens/friends_screen.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_event.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_state.dart';
@@ -271,10 +272,15 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                   ),
 
                   // CircleAvatar, Region, Friends and Neighbors texts
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(top: 8.0, left: 20, right: 20),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return Friends();
+                      }));
+                    },
                     child: Container(
+                      margin: const EdgeInsets.only(left: 20, right: 20),
                       height: 63,
                       width: MediaQuery.of(context).size.width,
                       child: Row(
@@ -285,7 +291,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                             width: 130,
                             child: Stack(
                               children: [
-                                for (var i = 0; i < [1, 2, 3, 4].length; i++)
+                                for (var i = 0; i < [1, 2].length; i++)
                                   Positioned(
                                     left: (i * (1 - .4) * 40).toDouble(),
                                     top: 0,
@@ -293,8 +299,31 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                       radius: 28,
                                       backgroundColor: Colors.transparent,
                                       // Set the background color to transparent
-                                      backgroundImage: AssetImage(
-                                          'assets/Ellipse2.png'), // Provide the asset image path
+                                      child: CachedNetworkImage(
+                                        imageUrl: imageForNameCloud['farmers']!,
+                                        imageBuilder:
+                                            (context, imageProvider) =>
+                                                Container(
+                                          height: 50,
+                                          width: 50,
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              image: imageProvider,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                        progressIndicatorBuilder:
+                                            (context, url, progress) {
+                                          return Container(
+                                            height: 50,
+                                            width: 50,
+                                            child: Center(
+                                                child:
+                                                    LinearProgressIndicator()),
+                                          );
+                                        },
+                                      ),
                                     ),
                                   ),
                               ],

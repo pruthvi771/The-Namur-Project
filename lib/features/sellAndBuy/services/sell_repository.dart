@@ -289,6 +289,7 @@ class SellRepository {
     CollectionReference products = _firestore.collection('products');
 
     try {
+      print("land syno value: $landSynoValue");
       await products.doc(productId).update({
         'name': productName,
         'description': productDescription,

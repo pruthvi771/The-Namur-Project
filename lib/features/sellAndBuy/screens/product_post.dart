@@ -84,13 +84,19 @@ class _ProductPostState extends State<ProductPost> {
     BlocProvider.of<HiveBloc>(context).add(
       HiveDataRequested(),
     );
-    _dropdownItems = enums.SubSubCategoryList[widget.subCategoryEnum] ??
-        [nameForSubCategoryEnum[widget.subCategoryEnum]!];
+
     category = enums.nameForCategoryEnum[
         enums.findCategoryForSubCategory(widget.subCategoryEnum)]!;
     parentEnum = enums.findParentForCategory(
         enums.findCategoryForSubCategory(widget.subCategoryEnum)!)!;
     subCategory = enums.nameForSubCategoryEnum[widget.subCategoryEnum]!;
+
+    if (parentEnum == ParentEnum.machine) {
+      _dropdownItems = ['On Rent', 'Sell'];
+    } else {
+      _dropdownItems = enums.SubSubCategoryList[widget.subCategoryEnum] ??
+          [nameForSubCategoryEnum[widget.subCategoryEnum]!];
+    }
 
     if (widget.isProductEditScreen) {
       _nameController.text = widget.sellProduct!.productName;
@@ -293,6 +299,7 @@ class _ProductPostState extends State<ProductPost> {
         gramPanchayat: userLocation.gramPanchayat,
         villageName: userLocation.village,
         parentName: nameForParentEnum[parentEnum]!,
+        landSynoValue: landDropdownValue ?? "",
         hiveMachineName: hiveMachineDropdown ?? "",
       ),
     );
@@ -445,6 +452,7 @@ class _ProductPostState extends State<ProductPost> {
 
     BlocProvider.of<SellBloc>(buildContext).add(
       EditProductRequested(
+        isMachine: parentEnum == ParentEnum.machine,
         productId: widget.sellProduct!.id,
         productName: productName,
         productDescription: description,
@@ -462,9 +470,8 @@ class _ProductPostState extends State<ProductPost> {
         imageList: _mediaFileList,
         runningHours: runningHoursInt,
         kms: kmsInt,
-        landSynoValue: landDropdownValue ?? "",
-        hiveMachineName: hiveMachineDropdown ?? "",
-        // image: _image!,
+        landSynoValue: landDropdownValue!,
+        hiveMachineName: hiveMachineDropdown!,
       ),
     );
 
@@ -984,6 +991,9 @@ class _ProductPostState extends State<ProductPost> {
               ),
             ],
           ),
+
+        // Text(landDropdownValue.toString()),
+        // Text(hiveMachineDropdown.toString()),
 
         // additional description
         Padding(

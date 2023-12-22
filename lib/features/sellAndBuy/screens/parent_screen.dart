@@ -131,98 +131,92 @@ class _ParentScreenState extends State<ParentScreen> {
                     return Center(child: LinearProgressIndicator());
                   }
                   if (snapshot.hasData && snapshot.data != null) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            CachedNetworkImage(
-                              imageUrl: imageForNameCloud['farmers']!,
-                              imageBuilder: (context, imageProvider) =>
-                                  Container(
-                                height: 50,
-                                width: 50,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: imageProvider,
-                                    fit: BoxFit.cover,
+                    return Container(
+                      height: 80,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Row(
+                              children: [
+                                CachedNetworkImage(
+                                  imageUrl: imageForNameCloud['farmers']!,
+                                  imageBuilder: (context, imageProvider) =>
+                                      Container(
+                                    margin: const EdgeInsets.only(right: 10),
+                                    height: 50,
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                  progressIndicatorBuilder:
+                                      (context, url, progress) {
+                                    return Container(
+                                      height: 50,
+                                      width: 50,
+                                      child: Center(
+                                          child: CircularProgressIndicator()),
+                                    );
+                                  },
+                                ),
+                                Flexible(
+                                  child: Text(
+                                    snapshot.data.toString() +
+                                        ' ' +
+                                        AppLocalizations.of(context)!.farmer,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 15,
+                                        color: Colors.black),
                                   ),
                                 ),
-                              ),
-                              progressIndicatorBuilder:
-                                  (context, url, progress) {
-                                return Container(
-                                  height: 50,
-                                  width: 50,
-                                  child: Center(
-                                      child: CircularProgressIndicator()),
-                                );
-                              },
+                              ],
                             ),
-                            Container(
-                              // height: 40,
-                              margin: EdgeInsets.only(left: 20),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    snapshot.data.toString(),
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 15,
-                                        color: Colors.black),
-                                  ),
-                                  Text(
-                                    AppLocalizations.of(context)!.farmer,
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 15,
-                                        color: Colors.black),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        isSwitched != null
-                            ? Container(
-                                child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text(
-                                    AppLocalizations.of(context)!.buy,
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 15,
-                                        color: Colors.black),
-                                  ),
-                                  Switch(
-                                    value: isSwitched!,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        isSwitched = value;
-                                      });
-                                    },
-                                    activeTrackColor: MyTheme.green_light,
-                                    activeColor: MyTheme.primary_color,
-                                  ),
-                                  Text(
-                                    AppLocalizations.of(context)!.rent,
-                                    style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 15,
-                                        color: Colors.black),
-                                  ),
-                                ],
-                              ))
-                            : Container()
-                      ],
+                          ),
+                          isSwitched != null && widget.isBuy == true
+                              ? Container(
+                                  child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Text(
+                                      AppLocalizations.of(context)!.rent,
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins',
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 15,
+                                          color: Colors.black),
+                                    ),
+                                    Switch(
+                                      value: isSwitched!,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          isSwitched = value;
+                                        });
+                                      },
+                                      activeTrackColor: MyTheme.green_light,
+                                      activeColor: MyTheme.primary_color,
+                                    ),
+                                    Text(
+                                      AppLocalizations.of(context)!.buy,
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins',
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 15,
+                                          color: Colors.black),
+                                    ),
+                                  ],
+                                ))
+                              : Container()
+                        ],
+                      ),
                     );
                   }
                   return Container();
@@ -313,7 +307,7 @@ class _ParentScreenState extends State<ParentScreen> {
                                         builder: (context) => BuyProductList(
                                               subCategoryEnum: subCategoryEnum,
                                               isSecondHand: widget.isSecondHand,
-                                              isRent: isSwitched,
+                                              isRent: !isSwitched!,
                                             )),
                                   )
                                 : Navigator.push(

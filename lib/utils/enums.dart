@@ -107,11 +107,19 @@ var subCategoryListsForCategory = {
   ],
   CategoryEnum.jcb: [
     SubCategoryEnum.jcb,
-  ],
-  CategoryEnum.equipments: [
     SubCategoryEnum.tractor,
     SubCategoryEnum.rotavator,
     SubCategoryEnum.cultivator,
+    SubCategoryEnum.Loader,
+    SubCategoryEnum.Backhoe,
+  ],
+  CategoryEnum.equipments: [
+    SubCategoryEnum.ElectricScooter,
+    SubCategoryEnum.Equipment,
+    SubCategoryEnum.Scooter,
+    SubCategoryEnum.Fan,
+    SubCategoryEnum.GardeningTools,
+    SubCategoryEnum.Plow,
   ],
 };
 
@@ -305,6 +313,19 @@ enum SubCategoryEnum {
   tractor,
   rotavator,
   cultivator,
+  Backhoe,
+  Billhook,
+  Car,
+  CombineHarvester,
+  ElectricScooter,
+  Equipment,
+  Fan,
+  GardeningTools,
+  Loader,
+  Plow,
+  Scooter,
+  Shredder,
+  Tractor,
 }
 
 // String translatedNameForSubCategoryEnum({
@@ -699,6 +720,19 @@ var nameForSubCategoryEnum = {
   SubCategoryEnum.tractor: "Tractor",
   SubCategoryEnum.rotavator: "Rotavator",
   SubCategoryEnum.cultivator: "Cultivator",
+  SubCategoryEnum.Backhoe: "Backhoe",
+  SubCategoryEnum.Billhook: "Billhook",
+  SubCategoryEnum.Car: "Car",
+  SubCategoryEnum.CombineHarvester: "Combine Harvester",
+  SubCategoryEnum.ElectricScooter: "Electric Scooter",
+  SubCategoryEnum.Equipment: "Equipment",
+  SubCategoryEnum.Fan: "Fan",
+  SubCategoryEnum.GardeningTools: "Gardening Tools",
+  SubCategoryEnum.Loader: "Loader",
+  SubCategoryEnum.Plow: "Plow",
+  SubCategoryEnum.Scooter: "Scooter",
+  SubCategoryEnum.Shredder: "Shredder",
+  SubCategoryEnum.Tractor: "Tractor",
 };
 
 var SubSubCategoryList = {

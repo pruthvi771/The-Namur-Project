@@ -159,6 +159,8 @@ var imageForNameCloud = {
       'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FfruitsAndVeg%2FSunflower%20Oil.png?alt=media&token=8a882cde-aeb4-4f7e-b4f1-40ab65f98785',
 
   // machines
+  'rotavator':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FmanAndMcs%2Frotavator.png?alt=media&token=631442e8-1ac6-4774-9b2f-49b304af45b8',
   'tv':
       'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FmanAndMcs%2Ftv.png?alt=media&token=a6008bff-3a33-46d7-a4ef-45b594b7d248',
   'laptop':

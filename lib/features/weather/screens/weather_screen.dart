@@ -553,7 +553,7 @@ class CurrentWeatherWidget extends StatelessWidget {
       borderRadius: BorderRadius.circular(8),
       child: Container(
         width: double.infinity,
-        height: 130,
+        height: 110,
         decoration: BoxDecoration(
           color: Color(0xff4C7B10),
         ),
@@ -689,7 +689,7 @@ class WeatherDayCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(9),
         color: MyTheme.light_grey,
       ),
-      height: MediaQuery.of(context).size.height / 5.5,
+      height: MediaQuery.of(context).size.height / 6,
       width: MediaQuery.of(context).size.width / 4.15,
       child: Column(
         // mainAxisAlignment: MainAxisAlignment.start,

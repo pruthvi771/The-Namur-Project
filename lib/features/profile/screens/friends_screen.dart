@@ -495,7 +495,7 @@ class _FriendsState extends State<Friends> {
                                               crossAxisCount: 4,
                                               mainAxisSpacing: 4,
                                               crossAxisSpacing: 4,
-                                              itemCount: snapshot.data!.length,
+                                              itemCount: sellersList.length,
                                               shrinkWrap: true,
                                               padding: EdgeInsets.all(4),
                                               physics:
