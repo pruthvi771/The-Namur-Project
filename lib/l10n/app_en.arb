@@ -1007,5 +1007,7 @@
 "plow": "Plow",
 "scooter": "Scooter",
 "shredder": "Shredder",
-"size_in_acres": "Size (in Acres)"
+"size_in_acres": "Size (in Acres)",
+"bookings": "Bookings",
+"product_details": "Product Details"
 }

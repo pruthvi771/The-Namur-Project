@@ -1,1 +1,11 @@
-{}
+{
+  "hi": [
+    "bookings",
+    "product_details"
+  ],
+
+  "kn": [
+    "bookings",
+    "product_details"
+  ]
+}

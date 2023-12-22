@@ -1,6 +1,7 @@
 // translation done.
 
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/machine_bookings.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -85,11 +86,6 @@ class HiveMachineDetailsState extends State<HiveMachineDetails> {
             if (snapshot.hasData) {
               var products = snapshot.data!.docs.map((doc) {
                 var data = doc.data();
-                // if (!containsItem(
-                //     subSubCategoryList, data['subSubCategory'])) {
-                //   subSubCategoryList.add(FilterItem(
-                //       name: data['subSubCategory'], isSelected: true));
-                // }
                 return SellProduct(
                   id: doc.id,
                   productName: data['name'],
@@ -173,28 +169,15 @@ class HiveMachineDetailsState extends State<HiveMachineDetails> {
       children: [
         InkWell(
           onTap: () {
-            if (products[index].subSubCategory == 'On Rent' ||
-                products[index].subSubCategory == 'Sell') {
-              // Navigator.push(
-              //   context,
-              //   // MaterialPageRoute(
-              //   builder: (context) => MachineDetails(
-              //     sellProduct: products[index],
-              //     onRent: products[index].subSubCategory == 'On Rent',
-              //   ),
-              // ),
-              // );
-            }
-            // else {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => ProductDetails(
-            //       sellProduct: products[index],
-            //     ),
-            //   ),
-            // );
-            // }
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MachineBookings(
+                  productId: products[index].id,
+                  title: products[index].productName,
+                ),
+              ),
+            );
           },
           child: BuyProductTile(
             context: context,

@@ -23,6 +23,7 @@ class RentRepository {
         {
           'buyer': buyerId,
           'rent': true,
+          'productID': orderItems[0].productID,
           'locationName': locationName,
           'sellers': [sellerId],
           'orderDate': FieldValue.serverTimestamp(),
