@@ -1,9 +1,6 @@
-import 'package:active_ecommerce_flutter/dummy_data/products.dart';
 import 'package:active_ecommerce_flutter/sell_screen/product_inventory/product_inventory.dart';
-import 'package:active_ecommerce_flutter/sell_screen/seller_platform/seller_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../../custom/device_info.dart';
 import '../../my_theme.dart';
 
 const List<String> productList = <String>[

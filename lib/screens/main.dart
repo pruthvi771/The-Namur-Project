@@ -11,7 +11,6 @@ import 'package:active_ecommerce_flutter/screens/category_list.dart';
 // import 'package:active_ecommerce_flutter/screens/home.dart';
 // import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
 // import 'package:active_ecommerce_flutter/features/profile/screens/profile.dart';
-import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

@@ -3,7 +3,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../custom/device_info.dart';
 import '../../my_theme.dart';
 import '../../presenter/home_presenter.dart';
-import '../../drawer/drawer.dart';
 
 class Tutorial extends StatefulWidget {
   const Tutorial({Key? key}) : super(key: key);

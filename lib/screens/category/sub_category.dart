@@ -1,4 +1,3 @@
-import 'package:active_ecommerce_flutter/screens/list_sublist/list_sublist.dart';
 import 'package:active_ecommerce_flutter/sell_screen/seller_platform/seller_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -11,16 +10,11 @@ import '../../helpers/shimmer_helper.dart';
 import '../../my_theme.dart';
 
 import '../../presenter/home_presenter.dart';
-import '../../repositories/category_repository.dart';
 import '../../repositories/product_repository.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../../sell_screen/product_post/product_post.dart';
 import 'package:get/get.dart';
-import '../../ui_elements/product_card.dart';
 import '../../drawer/drawer.dart';
-import '../auction_products_details.dart';
 import '../option/option.dart';
-import '../product_details.dart';
 
 class SubCategory extends StatefulWidget {
   SubCategory({

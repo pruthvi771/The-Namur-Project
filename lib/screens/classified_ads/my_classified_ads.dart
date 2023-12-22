@@ -6,7 +6,6 @@ import 'package:active_ecommerce_flutter/custom/lang_text.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/custom/useful_elements.dart';
 import 'package:active_ecommerce_flutter/data_model/classified_ads_response.dart';
-import 'package:active_ecommerce_flutter/data_model/customer_package_response.dart';
 import 'package:active_ecommerce_flutter/data_model/user_info_response.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:active_ecommerce_flutter/helpers/shimmer_helper.dart';
@@ -14,7 +13,6 @@ import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/repositories/product_repository.dart';
 import 'package:active_ecommerce_flutter/repositories/profile_repository.dart';
 import 'package:active_ecommerce_flutter/screens/package/packages.dart';
-import 'package:active_ecommerce_flutter/ui_elements/classified_product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:toast/toast.dart';
 

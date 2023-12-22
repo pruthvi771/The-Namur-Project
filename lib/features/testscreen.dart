@@ -1,9 +1,5 @@
-import 'dart:convert';
 import 'dart:io';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:uuid/uuid.dart';
 import 'package:active_ecommerce_flutter/utils/globaladdress.dart';
-import 'package:active_ecommerce_flutter/utils/location_repository.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';

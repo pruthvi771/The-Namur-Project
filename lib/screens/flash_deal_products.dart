@@ -1,10 +1,7 @@
 import 'package:active_ecommerce_flutter/custom/box_decorations.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
-import 'package:active_ecommerce_flutter/custom/lang_text.dart';
-import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/custom/useful_elements.dart';
 import 'package:active_ecommerce_flutter/data_model/product_mini_response.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/ui_elements/product_card.dart';
@@ -15,7 +12,6 @@ import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:flutter_countdown_timer/index.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:toast/toast.dart';
 
 class FlashDealProducts extends StatefulWidget {
   FlashDealProducts(
@@ -46,17 +42,15 @@ class _FlashDealProductsState extends State<FlashDealProducts> {
   String timeText(String txt, {default_length = 3}) {
     var blank_zeros = default_length == 3 ? "000" : "00";
     var leading_zeros = "";
-    if (txt != null) {
-      if (default_length == 3 && txt.length == 1) {
-        leading_zeros = "00";
-      } else if (default_length == 3 && txt.length == 2) {
-        leading_zeros = "0";
-      } else if (default_length == 2 && txt.length == 1) {
-        leading_zeros = "0";
-      }
+    if (default_length == 3 && txt.length == 1) {
+      leading_zeros = "00";
+    } else if (default_length == 3 && txt.length == 2) {
+      leading_zeros = "0";
+    } else if (default_length == 2 && txt.length == 1) {
+      leading_zeros = "0";
     }
-
-    var newtxt = (txt == null || txt == "" || txt == null.toString())
+  
+    var newtxt = (txt == "" || txt == null.toString())
         ? blank_zeros
         : txt;
 

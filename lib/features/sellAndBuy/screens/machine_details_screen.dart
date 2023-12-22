@@ -7,7 +7,6 @@ import 'package:active_ecommerce_flutter/features/sellAndBuy/services/buy_reposi
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_event.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_state.dart';
-import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_repository.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';

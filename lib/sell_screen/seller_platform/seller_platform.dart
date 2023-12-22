@@ -1,11 +1,7 @@
-import 'package:active_ecommerce_flutter/sell_screen/more_detail/more_detail.dart';
 import 'package:active_ecommerce_flutter/sell_screen/product_inventory/product_inventory.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../../custom/device_info.dart';
 import '../../my_theme.dart';
-import '../../presenter/home_presenter.dart';
-import '../../drawer/drawer.dart';
 import '../product_post/product_post.dart';
 
 class SellerPlatform extends StatefulWidget {

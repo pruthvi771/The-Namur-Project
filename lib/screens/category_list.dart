@@ -7,7 +7,6 @@ import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_screen.dart';
-import 'package:active_ecommerce_flutter/features/testscreen.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/parent_screen.dart';
 import 'package:active_ecommerce_flutter/helpers/shimmer_helper.dart';
@@ -24,7 +23,6 @@ import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../controller/sub_category_controller.dart';
-import '../features/auth/services/auth_repository.dart';
 import '../features/profile/screens/edit_profile.dart';
 import '../presenter/home_presenter.dart';
 import '../features/profile/title_bar_widget.dart';

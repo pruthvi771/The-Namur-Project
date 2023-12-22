@@ -13,7 +13,6 @@ import 'package:flutter/material.dart';
 
 import 'package:google_maps_place_picker_mb/google_maps_place_picker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'dart:io' show Platform;
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:toast/toast.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';

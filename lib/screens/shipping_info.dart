@@ -6,13 +6,9 @@ import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/custom/enum_classes.dart';
 import 'package:active_ecommerce_flutter/custom/fade_network_image.dart';
 import 'package:active_ecommerce_flutter/custom/lang_text.dart';
-import 'package:active_ecommerce_flutter/custom/scroll_to_hide_widget.dart';
 import 'package:active_ecommerce_flutter/custom/useful_elements.dart';
-import 'package:active_ecommerce_flutter/data_model/carriers_response.dart';
 import 'package:active_ecommerce_flutter/data_model/delivery_info_response.dart';
 import 'package:active_ecommerce_flutter/helpers/system_config.dart';
-import 'package:active_ecommerce_flutter/repositories/cart_repository.dart';
-import 'package:active_ecommerce_flutter/repositories/pickup_points_repository.dart';
 import 'package:active_ecommerce_flutter/repositories/shipping_repository.dart';
 import 'package:active_ecommerce_flutter/screens/checkout.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,11 +18,8 @@ import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:active_ecommerce_flutter/repositories/address_repository.dart';
 import 'package:active_ecommerce_flutter/helpers/shimmer_helper.dart';
-import 'package:active_ecommerce_flutter/data_model/city_response.dart';
-import 'package:active_ecommerce_flutter/data_model/country_response.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:toast/toast.dart';
-import 'package:active_ecommerce_flutter/screens/address.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ShippingInfo extends StatefulWidget {

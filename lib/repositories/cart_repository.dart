@@ -11,11 +11,8 @@ import 'package:active_ecommerce_flutter/data_model/check_response_model.dart';
 import 'package:active_ecommerce_flutter/helpers/response_check.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:active_ecommerce_flutter/helpers/system_config.dart';
-import 'package:active_ecommerce_flutter/presenter/cart_counter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:one_context/one_context.dart';
-import 'package:provider/provider.dart';
 
 class CartRepository {
   Future<dynamic> getCartResponseList(

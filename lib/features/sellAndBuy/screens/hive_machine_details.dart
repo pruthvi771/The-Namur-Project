@@ -84,7 +84,7 @@ class HiveMachineDetailsState extends State<HiveMachineDetails> {
             }
             if (snapshot.hasData) {
               var products = snapshot.data!.docs.map((doc) {
-                var data = doc.data() as Map;
+                var data = doc.data();
                 // if (!containsItem(
                 //     subSubCategoryList, data['subSubCategory'])) {
                 //   subSubCategoryList.add(FilterItem(

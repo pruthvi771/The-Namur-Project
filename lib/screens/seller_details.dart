@@ -7,17 +7,13 @@ import 'package:active_ecommerce_flutter/custom/useful_elements.dart';
 import 'package:active_ecommerce_flutter/repositories/product_repository.dart';
 import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
 import 'package:active_ecommerce_flutter/screens/seller_products.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import 'package:active_ecommerce_flutter/ui_elements/product_card.dart';
-import 'package:active_ecommerce_flutter/ui_elements/list_product_card.dart';
-import 'package:active_ecommerce_flutter/ui_elements/mini_product_card.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:active_ecommerce_flutter/repositories/shop_repository.dart';
-import 'package:active_ecommerce_flutter/app_config.dart';
 import 'package:active_ecommerce_flutter/helpers/shimmer_helper.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

@@ -694,8 +694,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 //     fit: BoxFit.cover,
                                 //   ),
                                 // ),
-                                child: (sellerImageURL == null ||
-                                        sellerImageURL == '')
+                                child: (sellerImageURL == '')
                                     ? Image.asset(
                                         "assets/default_profile2.png",
                                         fit: BoxFit.cover,

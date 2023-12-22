@@ -1,7 +1,6 @@
 import 'package:active_ecommerce_flutter/custom/box_decorations.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
-import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:flutter/material.dart';
 
 class AuthScreen {

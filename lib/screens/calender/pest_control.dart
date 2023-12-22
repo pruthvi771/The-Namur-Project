@@ -4,7 +4,6 @@ import '../../custom/device_info.dart';
 import '../../data_model/calender/pests_control_model.dart';
 import '../../my_theme.dart';
 import '../../presenter/home_presenter.dart';
-import '../../drawer/drawer.dart';
 
 class PestControl extends StatefulWidget {
   const PestControl({Key? key}) : super(key: key);

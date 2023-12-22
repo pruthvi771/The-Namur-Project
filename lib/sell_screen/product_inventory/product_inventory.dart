@@ -1,12 +1,9 @@
-import 'package:active_ecommerce_flutter/screens/seller_details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../../custom/device_info.dart';
 import '../../my_theme.dart';
 import '../../presenter/home_presenter.dart';
 import '../../drawer/drawer.dart';
 import '../product_post/product_post.dart';
-import '../seller_platform/seller_platform.dart';
 
 class ProductInventory extends StatefulWidget {
   const ProductInventory({Key? key}) : super(key: key);

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../category_list.dart';
 import '../../my_theme.dart';
-import '../../sell_screen/product_inventory/product_inventory.dart';
 class BuySellButton extends StatefulWidget {
    BuySellButton({Key? key,}) : super(key: key);
 

@@ -1,9 +1,7 @@
 import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/custom/enum_classes.dart';
-import 'package:active_ecommerce_flutter/data_model/customer_package_response.dart';
 import 'package:active_ecommerce_flutter/repositories/customer_package_repository.dart';
 import 'package:active_ecommerce_flutter/repositories/offline_wallet_recharge_repository.dart';
-import 'package:active_ecommerce_flutter/screens/main.dart';
 import 'package:active_ecommerce_flutter/screens/package/packages.dart';
 import 'package:active_ecommerce_flutter/screens/wallet.dart';
 import 'package:flutter/material.dart';

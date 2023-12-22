@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../custom/device_info.dart';
 import '../../my_theme.dart';
-import '../seller_platform/seller_platform.dart';
 class MoreDetail extends StatefulWidget {
   const MoreDetail({Key? key}) : super(key: key);
 

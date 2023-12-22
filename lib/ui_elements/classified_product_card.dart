@@ -1,13 +1,9 @@
-import 'dart:async';
 
 import 'package:active_ecommerce_flutter/custom/box_decorations.dart';
 import 'package:active_ecommerce_flutter/helpers/system_config.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/screens/classified_ads/classified_product_details.dart';
-import 'package:active_ecommerce_flutter/screens/digital_product/digital_product_details.dart';
 import 'package:flutter/material.dart';
-import 'package:active_ecommerce_flutter/screens/product_details.dart';
-import 'package:active_ecommerce_flutter/app_config.dart';
 class ClassifiedAdsCard extends StatefulWidget {
   int? id;
   String? image;

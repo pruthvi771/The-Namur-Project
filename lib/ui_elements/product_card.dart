@@ -1,11 +1,9 @@
 import 'package:active_ecommerce_flutter/custom/box_decorations.dart';
-import 'package:active_ecommerce_flutter/helpers/system_config.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/screens/product_details.dart';
 import 'package:active_ecommerce_flutter/sell_screen/product_post/product_post.dart';
 import 'package:flutter/material.dart';
 
-import '../helpers/shared_value_helper.dart';
 import '../screens/auction_products_details.dart';
 
 class ProductCard extends StatefulWidget {

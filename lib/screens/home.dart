@@ -1,33 +1,9 @@
-import 'package:active_ecommerce_flutter/app_config.dart';
-import 'package:active_ecommerce_flutter/custom/aiz_image.dart';
-import 'package:active_ecommerce_flutter/custom/box_decorations.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
-import 'package:active_ecommerce_flutter/helpers/shimmer_helper.dart';
-import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/presenter/home_presenter.dart';
-import 'package:active_ecommerce_flutter/screens/category_products.dart';
-import 'package:active_ecommerce_flutter/screens/filter.dart';
-import 'package:active_ecommerce_flutter/screens/flash_deal_list.dart';
-import 'package:active_ecommerce_flutter/screens/home_widget/buy_sell_button_widget.dart';
-import 'package:active_ecommerce_flutter/screens/todays_deal_products.dart';
-import 'package:active_ecommerce_flutter/screens/top_selling_products.dart';
-import 'package:active_ecommerce_flutter/ui_elements/mini_product_card.dart';
-import 'package:active_ecommerce_flutter/ui_elements/product_card.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hexagon/hexagon.dart';
-import 'package:provider/provider.dart';
 
 import '../drawer/drawer.dart';
-import 'auction_products_details.dart';
-import 'brand_products.dart';
-import 'home_widget/hexagonal_widget.dart';
-import '../features/profile/title_bar_widget.dart';
 
 class Home extends StatefulWidget {
   Home({

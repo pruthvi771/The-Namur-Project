@@ -4,8 +4,6 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../../custom/device_info.dart';
 import '../../my_theme.dart';
 import '../../presenter/home_presenter.dart';
-import '../../sell_screen/more_detail/more_detail.dart';
-import '../../sell_screen/seller_platform/seller_platform.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../drawer/drawer.dart';

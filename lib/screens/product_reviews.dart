@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'dart:ui';
-import 'package:flutter/painting.dart';
 import 'dart:async';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
@@ -12,7 +11,6 @@ import 'package:toast/toast.dart';
 import 'package:flutter/services.dart';
 import 'package:expandable/expandable.dart';
 import 'package:active_ecommerce_flutter/repositories/review_repositories.dart';
-import 'package:active_ecommerce_flutter/app_config.dart';
 import 'package:active_ecommerce_flutter/helpers/shimmer_helper.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
