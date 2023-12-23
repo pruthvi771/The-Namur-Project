@@ -21,7 +21,7 @@
         android:usesCleartextTraffic="true"
         android:name="${applicationName}"
         android:label="Namur"
-        android:enableOnBackInvokedCallback="true"
+        android:enableOnBackInvokedCallback="false"
         android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_launcher">
         
