@@ -109,470 +109,512 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-        textDirection:
-            app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
-        child: Scaffold(
-          drawer: const MainDrawer(),
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            flexibleSpace: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Color(0xff107B28), Color(0xff4C7B10)]),
+    return WillPopScope(
+      onWillPop: () async {
+        if (widget.newOrder) {
+          Navigator.pushAndRemoveUntil(context,
+              MaterialPageRoute(builder: (context) {
+            return Main();
+          }), (route) => false);
+          return false;
+        } else {
+          Navigator.pop(context);
+          return false;
+        }
+      },
+      child: Directionality(
+          textDirection:
+              app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
+          child: Scaffold(
+            drawer: const MainDrawer(),
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              flexibleSpace: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Color(0xff107B28), Color(0xff4C7B10)]),
+                ),
               ),
+              title: Text(AppLocalizations.of(context)!.order_details_ucf,
+                  style: TextStyle(
+                      color: MyTheme.white,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: .5,
+                      fontFamily: 'Poppins')),
+              centerTitle: true,
             ),
-            title: Text(AppLocalizations.of(context)!.order_details_ucf,
-                style: TextStyle(
-                    color: MyTheme.white,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: .5,
-                    fontFamily: 'Poppins')),
-            centerTitle: true,
-          ),
-          body: FutureBuilder(
-              future: orderDocDataFuture,
-              builder: (context, snapshot) {
-                if (snapshot.hasData && snapshot.data != null) {
-                  OrderDocument orderDocument = snapshot.data as OrderDocument;
-                  return SingleChildScrollView(
-                    physics: BouncingScrollPhysics(),
-                    child: Column(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.all(10),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 10),
-                          height: 200,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.grey,
-                              width: 1,
+            body: FutureBuilder(
+                future: orderDocDataFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData && snapshot.data != null) {
+                    OrderDocument orderDocument =
+                        snapshot.data as OrderDocument;
+                    return SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
+                      child: Column(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.all(10),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 10),
+                            height: 200,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey,
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.circular(7),
+                              // color: Colors.grey[50],
                             ),
-                            borderRadius: BorderRadius.circular(7),
-                            // color: Colors.grey[50],
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    AppLocalizations.of(context)!
+                                        .order_details_ucf,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w900,
+                                        fontSize: 25,
+                                        color: MyTheme.primary_color),
+                                  ),
+                                ),
+                                SizedBox(
+                                    // height: 2,
+                                    ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      AppLocalizations.of(context)!
+                                          .order_code_ucf,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                    Text(
+                                      widget.orderID,
+                                      style: TextStyle(
+                                        color: Colors.green,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      AppLocalizations.of(context)!
+                                          .order_date_ucf,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                    Text(
+                                      orderDocument.timestamp
+                                          .toDate()
+                                          .toString(),
+                                      style: TextStyle(
+                                        color: Colors.green,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      AppLocalizations.of(context)!.your_total,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                    Text(
+                                      '₹ ${orderDocument.totalAmount.toString()}',
+                                      style: TextStyle(
+                                        color: Colors.green,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      AppLocalizations.of(context)!
+                                          .order_status,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                    Text(
+                                      orderDocument.status,
+                                      style: TextStyle(
+                                        color: Colors.green,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  AppLocalizations.of(context)!
-                                      .order_details_ucf,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w900,
-                                      fontSize: 25,
-                                      color: MyTheme.primary_color),
+                          Container(
+                            height: 40,
+                            width: double.infinity,
+                            margin: EdgeInsets.symmetric(horizontal: 10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(7),
+                              color: MyTheme.green_lighter,
+                            ),
+                            child: Center(
+                              child: Text(
+                                AppLocalizations.of(context)!
+                                    .ordered_product_ucf,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
                                 ),
                               ),
-                              SizedBox(
-                                  // height: 2,
-                                  ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    AppLocalizations.of(context)!
-                                        .order_code_ucf,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                  Text(
-                                    widget.orderID,
-                                    style: TextStyle(
-                                      color: Colors.green,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    AppLocalizations.of(context)!
-                                        .order_date_ucf,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                  Text(
-                                    orderDocument.timestamp.toDate().toString(),
-                                    style: TextStyle(
-                                      color: Colors.green,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    AppLocalizations.of(context)!.your_total,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                  Text(
-                                    '₹ ${orderDocument.totalAmount.toString()}',
-                                    style: TextStyle(
-                                      color: Colors.green,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    AppLocalizations.of(context)!.order_status,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                  Text(
-                                    orderDocument.status,
-                                    style: TextStyle(
-                                      color: Colors.green,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          height: 40,
-                          width: double.infinity,
-                          margin: EdgeInsets.symmetric(horizontal: 10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(7),
-                            color: MyTheme.green_lighter,
-                          ),
-                          child: Center(
-                            child: Text(
-                              AppLocalizations.of(context)!.ordered_product_ucf,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
-                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Column(
-                          children: List.generate(
-                            orderDocument.orderItems.length,
-                            (index) {
-                              return FutureBuilder(
-                                  future: _firestore
-                                      .collection('products')
-                                      .doc(orderDocument
-                                          .orderItems[index].productID)
-                                      .get(),
-                                  builder: (context, productSnapshot) {
-                                    if (productSnapshot.hasData &&
-                                        productSnapshot.data != null) {
-                                      var productData =
-                                          productSnapshot.data!.data()!;
-                                      return FutureBuilder(
-                                          future: _firestore
-                                              .collection('buyer')
-                                              .doc(orderDocument
-                                                  .orderItems[index].sellerID)
-                                              .get(),
-                                          builder: (context, sellerSnapshot) {
-                                            if (sellerSnapshot.hasData &&
-                                                sellerSnapshot.data != null) {
-                                              var sellerData =
-                                                  sellerSnapshot.data!.data()!;
-                                              return Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 8,
-                                                    right: 8,
-                                                    bottom: 15),
-                                                child: Column(
-                                                  children: [
-                                                    CheckoutProductCard(
-                                                      rent: orderDocument.rent,
-                                                      bookedDate: orderDocument
-                                                          .bookedDate,
-                                                      bookedSlot: orderDocument
-                                                          .bookedSlot,
-                                                      context: context,
-                                                      productImageURL:
-                                                          productData[
-                                                              'imageURL'][0],
-                                                      productName: orderDocument
-                                                          .orderItems[index]
-                                                          .name,
-                                                      netPrice: orderDocument
-                                                              .orderItems[index]
-                                                              .price *
-                                                          orderDocument
-                                                              .orderItems[index]
-                                                              .quantity,
-                                                      unitPrice: orderDocument
-                                                          .orderItems[index]
-                                                          .price,
-                                                      quantity: orderDocument
-                                                          .orderItems[index]
-                                                          .quantity,
-                                                      quantityUnit: productData[
-                                                          'quantityUnit'],
-                                                      sellerImageURL:
-                                                          sellerData[
-                                                              'photoURL'],
-                                                      sellerName:
-                                                          sellerData['name'],
-                                                      sellerPhone: sellerData[
-                                                                  'phone number'] ==
-                                                              ""
-                                                          ? null
-                                                          : sellerData[
-                                                              'phone number'],
-                                                    ),
-                                                    StreamBuilder(
-                                                      stream: FirebaseFirestore
-                                                          .instance
-                                                          .collection('orders')
-                                                          .doc(widget.orderID)
-                                                          .snapshots(),
-                                                      builder: (context,
-                                                          ratingSnapshot) {
-                                                        if (snapshot
-                                                                .connectionState ==
-                                                            ConnectionState
-                                                                .waiting) {
-                                                          return Center(
-                                                              child:
-                                                                  LinearProgressIndicator()); // Display a loading indicator while waiting for data.
-                                                        }
-
-                                                        if (ratingSnapshot
-                                                                .hasData &&
-                                                            ratingSnapshot
-                                                                    .data !=
-                                                                null) {
-                                                          var ratingData =
-                                                              ratingSnapshot
-                                                                  .data!
-                                                                  .data()!;
-                                                          double? rating;
-                                                          if (ratingData['items']
-                                                                      [index]
-                                                                  ['rating'] ==
-                                                              null) {
-                                                            rating = null;
-                                                          } else {
-                                                            rating = double.parse(
-                                                                ratingData['items']
-                                                                            [
-                                                                            index]
-                                                                        [
-                                                                        'rating']
-                                                                    .toString());
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Column(
+                            children: List.generate(
+                              orderDocument.orderItems.length,
+                              (index) {
+                                return FutureBuilder(
+                                    future: _firestore
+                                        .collection('products')
+                                        .doc(orderDocument
+                                            .orderItems[index].productID)
+                                        .get(),
+                                    builder: (context, productSnapshot) {
+                                      if (productSnapshot.hasData &&
+                                          productSnapshot.data != null) {
+                                        var productData =
+                                            productSnapshot.data!.data()!;
+                                        return FutureBuilder(
+                                            future: _firestore
+                                                .collection('buyer')
+                                                .doc(orderDocument
+                                                    .orderItems[index].sellerID)
+                                                .get(),
+                                            builder: (context, sellerSnapshot) {
+                                              if (sellerSnapshot.hasData &&
+                                                  sellerSnapshot.data != null) {
+                                                var sellerData = sellerSnapshot
+                                                    .data!
+                                                    .data()!;
+                                                return Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 8,
+                                                          right: 8,
+                                                          bottom: 15),
+                                                  child: Column(
+                                                    children: [
+                                                      CheckoutProductCard(
+                                                        rent:
+                                                            orderDocument.rent,
+                                                        bookedDate:
+                                                            orderDocument
+                                                                .bookedDate,
+                                                        bookedSlot:
+                                                            orderDocument
+                                                                .bookedSlot,
+                                                        context: context,
+                                                        productImageURL:
+                                                            productData[
+                                                                'imageURL'][0],
+                                                        productName:
+                                                            orderDocument
+                                                                .orderItems[
+                                                                    index]
+                                                                .name,
+                                                        netPrice: orderDocument
+                                                                .orderItems[
+                                                                    index]
+                                                                .price *
+                                                            orderDocument
+                                                                .orderItems[
+                                                                    index]
+                                                                .quantity,
+                                                        unitPrice: orderDocument
+                                                            .orderItems[index]
+                                                            .price,
+                                                        quantity: orderDocument
+                                                            .orderItems[index]
+                                                            .quantity,
+                                                        quantityUnit:
+                                                            productData[
+                                                                'quantityUnit'],
+                                                        sellerImageURL:
+                                                            sellerData[
+                                                                'photoURL'],
+                                                        sellerName:
+                                                            sellerData['name'],
+                                                        sellerPhone: sellerData[
+                                                                    'phone number'] ==
+                                                                ""
+                                                            ? null
+                                                            : sellerData[
+                                                                'phone number'],
+                                                      ),
+                                                      StreamBuilder(
+                                                        stream:
+                                                            FirebaseFirestore
+                                                                .instance
+                                                                .collection(
+                                                                    'orders')
+                                                                .doc(widget
+                                                                    .orderID)
+                                                                .snapshots(),
+                                                        builder: (context,
+                                                            ratingSnapshot) {
+                                                          if (snapshot
+                                                                  .connectionState ==
+                                                              ConnectionState
+                                                                  .waiting) {
+                                                            return Center(
+                                                                child:
+                                                                    LinearProgressIndicator()); // Display a loading indicator while waiting for data.
                                                           }
-                                                          return Container(
-                                                            decoration: BoxDecoration(
-                                                                color: Colors
-                                                                    .grey[50],
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            6),
-                                                                border: Border.all(
-                                                                    width: 1,
-                                                                    color: MyTheme
-                                                                        .medium_grey
-                                                                        .withOpacity(
-                                                                            0.5))),
-                                                            padding: EdgeInsets
-                                                                .symmetric(
-                                                                    vertical:
-                                                                        8),
-                                                            width:
-                                                                double.infinity,
-                                                            child: BlocBuilder<
-                                                                BuyBloc,
-                                                                BuyState>(
-                                                              builder: (context,
-                                                                  state) {
-                                                                if (state
-                                                                    is BuyLoading) {
-                                                                  return Column(
-                                                                    children: [
-                                                                      LinearProgressIndicator(),
-                                                                      Center(
-                                                                        child:
-                                                                            RatingBar(
-                                                                          initialRating:
-                                                                              rating ?? 0,
-                                                                          allowHalfRating:
-                                                                              true,
-                                                                          itemCount:
-                                                                              5,
-                                                                          ratingWidget:
-                                                                              RatingWidget(
-                                                                            full:
-                                                                                Icon(
-                                                                              Icons.star,
-                                                                              color: Colors.amber,
+
+                                                          if (ratingSnapshot
+                                                                  .hasData &&
+                                                              ratingSnapshot
+                                                                      .data !=
+                                                                  null) {
+                                                            var ratingData =
+                                                                ratingSnapshot
+                                                                    .data!
+                                                                    .data()!;
+                                                            double? rating;
+                                                            if (ratingData['items']
+                                                                        [index][
+                                                                    'rating'] ==
+                                                                null) {
+                                                              rating = null;
+                                                            } else {
+                                                              rating = double.parse(
+                                                                  ratingData['items']
+                                                                              [
+                                                                              index]
+                                                                          [
+                                                                          'rating']
+                                                                      .toString());
+                                                            }
+                                                            return Container(
+                                                              decoration: BoxDecoration(
+                                                                  color: Colors
+                                                                      .grey[50],
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              6),
+                                                                  border: Border.all(
+                                                                      width: 1,
+                                                                      color: MyTheme
+                                                                          .medium_grey
+                                                                          .withOpacity(
+                                                                              0.5))),
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                      vertical:
+                                                                          8),
+                                                              width: double
+                                                                  .infinity,
+                                                              child:
+                                                                  BlocBuilder<
+                                                                      BuyBloc,
+                                                                      BuyState>(
+                                                                builder:
+                                                                    (context,
+                                                                        state) {
+                                                                  if (state
+                                                                      is BuyLoading) {
+                                                                    return Column(
+                                                                      children: [
+                                                                        LinearProgressIndicator(),
+                                                                        Center(
+                                                                          child:
+                                                                              RatingBar(
+                                                                            initialRating:
+                                                                                rating ?? 0,
+                                                                            allowHalfRating:
+                                                                                true,
+                                                                            itemCount:
+                                                                                5,
+                                                                            ratingWidget:
+                                                                                RatingWidget(
+                                                                              full: Icon(
+                                                                                Icons.star,
+                                                                                color: Colors.amber,
+                                                                              ),
+                                                                              empty: Icon(
+                                                                                Icons.star,
+                                                                                color: Colors.amber.withOpacity(0.1),
+                                                                              ),
+                                                                              half: Icon(
+                                                                                Icons.star,
+                                                                                color: Colors.amber.withOpacity(0.5),
+                                                                              ),
                                                                             ),
-                                                                            empty:
-                                                                                Icon(
-                                                                              Icons.star,
-                                                                              color: Colors.amber.withOpacity(0.1),
-                                                                            ),
-                                                                            half:
-                                                                                Icon(
-                                                                              Icons.star,
-                                                                              color: Colors.amber.withOpacity(0.5),
-                                                                            ),
+                                                                            itemPadding:
+                                                                                EdgeInsets.symmetric(horizontal: 4.0),
+                                                                            onRatingUpdate:
+                                                                                (rating) {},
+                                                                            glow:
+                                                                                false,
+                                                                            updateOnDrag:
+                                                                                false,
                                                                           ),
-                                                                          itemPadding:
-                                                                              EdgeInsets.symmetric(horizontal: 4.0),
-                                                                          onRatingUpdate:
-                                                                              (rating) {},
-                                                                          glow:
-                                                                              false,
-                                                                          updateOnDrag:
-                                                                              false,
+                                                                        ),
+                                                                      ],
+                                                                    );
+                                                                  }
+                                                                  return Center(
+                                                                    child:
+                                                                        RatingBar(
+                                                                      initialRating:
+                                                                          rating ??
+                                                                              0,
+                                                                      allowHalfRating:
+                                                                          true,
+                                                                      itemCount:
+                                                                          5,
+                                                                      ratingWidget:
+                                                                          RatingWidget(
+                                                                        full:
+                                                                            Icon(
+                                                                          Icons
+                                                                              .star,
+                                                                          color:
+                                                                              Colors.amber,
+                                                                        ),
+                                                                        empty:
+                                                                            Icon(
+                                                                          Icons
+                                                                              .star,
+                                                                          color: Colors
+                                                                              .amber
+                                                                              .withOpacity(0.1),
+                                                                        ),
+                                                                        half:
+                                                                            Icon(
+                                                                          Icons
+                                                                              .star,
+                                                                          color: Colors
+                                                                              .amber
+                                                                              .withOpacity(0.5),
                                                                         ),
                                                                       ),
-                                                                    ],
-                                                                  );
-                                                                }
-                                                                return Center(
-                                                                  child:
-                                                                      RatingBar(
-                                                                    initialRating:
-                                                                        rating ??
-                                                                            0,
-                                                                    allowHalfRating:
-                                                                        true,
-                                                                    itemCount:
-                                                                        5,
-                                                                    ratingWidget:
-                                                                        RatingWidget(
-                                                                      full:
-                                                                          Icon(
-                                                                        Icons
-                                                                            .star,
-                                                                        color: Colors
-                                                                            .amber,
-                                                                      ),
-                                                                      empty:
-                                                                          Icon(
-                                                                        Icons
-                                                                            .star,
-                                                                        color: Colors
-                                                                            .amber
-                                                                            .withOpacity(0.1),
-                                                                      ),
-                                                                      half:
-                                                                          Icon(
-                                                                        Icons
-                                                                            .star,
-                                                                        color: Colors
-                                                                            .amber
-                                                                            .withOpacity(0.5),
-                                                                      ),
+                                                                      itemPadding:
+                                                                          EdgeInsets.symmetric(
+                                                                              horizontal: 4.0),
+                                                                      onRatingUpdate:
+                                                                          (ratingValue) {
+                                                                        onRatingsUpdated(
+                                                                            initialRating:
+                                                                                rating,
+                                                                            isFirstTime: rating ==
+                                                                                null,
+                                                                            rating:
+                                                                                ratingValue,
+                                                                            index:
+                                                                                index,
+                                                                            productId:
+                                                                                orderDocument.orderItems[index].productID);
+                                                                      },
+                                                                      glow:
+                                                                          false,
+                                                                      updateOnDrag:
+                                                                          false,
                                                                     ),
-                                                                    itemPadding:
-                                                                        EdgeInsets.symmetric(
-                                                                            horizontal:
-                                                                                4.0),
-                                                                    onRatingUpdate:
-                                                                        (ratingValue) {
-                                                                      onRatingsUpdated(
-                                                                          initialRating:
-                                                                              rating,
-                                                                          isFirstTime: rating ==
-                                                                              null,
-                                                                          rating:
-                                                                              ratingValue,
-                                                                          index:
-                                                                              index,
-                                                                          productId: orderDocument
-                                                                              .orderItems[index]
-                                                                              .productID);
-                                                                    },
-                                                                    glow: false,
-                                                                    updateOnDrag:
-                                                                        false,
-                                                                  ),
-                                                                );
-                                                              },
-                                                            ),
-                                                          );
-                                                        }
-                                                        return SizedBox
-                                                            .shrink();
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
-                                            }
-                                            return SizedBox.shrink();
-                                          });
-                                    }
-                                    return SizedBox.shrink();
-                                  });
-                            },
+                                                                  );
+                                                                },
+                                                              ),
+                                                            );
+                                                          }
+                                                          return SizedBox
+                                                              .shrink();
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              }
+                                              return SizedBox.shrink();
+                                            });
+                                      }
+                                      return SizedBox.shrink();
+                                    });
+                              },
+                            ),
                           ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushAndRemoveUntil(context,
-                                MaterialPageRoute(builder: (context) {
-                              return Main();
-                            }), (route) => false);
-                          },
-                          child: Text(AppLocalizations.of(context)!.home_ucf),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-                if (snapshot.hasError) {
-                  print(snapshot.error);
-                  return Center(
-                    child: Text(
-                      AppLocalizations.of(context)!
-                          .could_not_fetch_order_details,
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
+                          if (widget.newOrder)
+                            ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    MyTheme.accent_color),
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.pushAndRemoveUntil(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return Main();
+                                }), (route) => false);
+                              },
+                              child:
+                                  Text(AppLocalizations.of(context)!.home_ucf),
+                            ),
+                        ],
                       ),
-                    ),
-                  );
-                }
-                return Center(child: CircularProgressIndicator());
-              }),
-        ));
+                    );
+                  }
+                  if (snapshot.hasError) {
+                    print(snapshot.error);
+                    return Center(
+                      child: Text(
+                        AppLocalizations.of(context)!
+                            .could_not_fetch_order_details,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    );
+                  }
+                  return Center(child: CircularProgressIndicator());
+                }),
+          )),
+    );
   }
 
   Material CheckoutProductCard({
