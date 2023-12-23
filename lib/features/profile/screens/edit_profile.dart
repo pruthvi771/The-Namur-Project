@@ -516,19 +516,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void _addCropToHive(landSyno, crop, yieldOfCrop) async {
-    if (landSyno.isEmpty) {
+    if (landSyno == null || landSyno.isEmpty) {
       ToastComponent.showDialog(localContext.select_land,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
 
-    if (crop.isEmpty) {
+    if (crop == null || crop.isEmpty) {
       ToastComponent.showDialog(localContext.select_crop,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
 
-    if (yieldOfCrop.isEmpty) {
+    if (yieldOfCrop == null || yieldOfCrop.isEmpty) {
       ToastComponent.showDialog(localContext.enter_yield,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
@@ -551,6 +551,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     int index = savedData!.land.indexWhere((land) => land.syno == landSyno);
 
     if (index != -1) {
+      double totalAreaCovered = 0;
+
+      for (var crop in savedData.land[index].crops) {
+        totalAreaCovered += crop.yieldOfCrop;
+      }
+
+      if (totalAreaCovered + yieldOfCropDouble > savedData.land[index].area) {
+        ToastComponent.showDialog(localContext.land_area_exceeded,
+            gravity: Toast.center, duration: Toast.lengthLong);
+        return;
+      }
+
       savedData.land[index].crops.add(
         Crop()
           ..name = crop
@@ -729,14 +741,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void _addEquipmentToHive(landSyno, equipment) async {
-    if (landSyno.isEmpty) {
+    if (landSyno == null || landSyno.isEmpty) {
       ToastComponent.showDialog(localContext.select_land,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }
 
-    if (equipment.isEmpty) {
-      ToastComponent.showDialog(localContext.select_crop,
+    if (equipment == null || equipment.isEmpty) {
+      ToastComponent.showDialog(localContext.select_machine,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
     }

@@ -126,6 +126,7 @@ class _PurchaseHistoryScreenState extends State<PurchaseHistoryScreen> {
                               MaterialPageRoute(
                                   builder: (context) => CheckoutScreen(
                                         orderID: documentId,
+                                        newOrder: false,
                                       )),
                             );
                           },
@@ -134,8 +135,8 @@ class _PurchaseHistoryScreenState extends State<PurchaseHistoryScreen> {
                               title: nameToDisplay,
                               // title:
                               //     'alkfnaklngvangv algkagv aelkga glekhawoi tmtIWH i3hroIR WFNQWNF ',
-                              totalPrice: orderData['totalAmount'],
-                              orderID: documentId,
+                              totalPrice: orderData['totalAmount'].toDouble(),
+                              orderID: documentId.toString(),
                               orderStatus: orderData['status'],
                               orderTime: orderData['orderDate']),
                         );

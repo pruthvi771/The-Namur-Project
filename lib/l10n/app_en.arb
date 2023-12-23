@@ -1015,5 +1015,6 @@
 "transporters" : "Transporters",
 "cleaner" : "Cleaner",
 "honeyTools" : "Honey Tools",
-"hive" : "Hive"
+"hive" : "Hive",
+"land_area_exceeded": "You can not add crops with total yield more than land area"
 }

@@ -178,7 +178,7 @@ class _MachineBookingsState extends State<MachineBookings> {
                                 children: [
                                   Text(
                                     AppLocalizations.of(context)!.price_ucf +
-                                        '/30 mins',
+                                        '/1 Hr',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15,

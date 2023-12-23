@@ -301,7 +301,7 @@ class _MachineDetailsState extends State<MachineDetails> {
                           ),
                           widget.onRent
                               ? Text(
-                                  ' / 30 mins',
+                                  ' / 1 hr',
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w500,
@@ -459,11 +459,12 @@ class _MachineDetailsState extends State<MachineDetails> {
           builder: (context, snapshot) {
             if (snapshot.hasData)
               return Container(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                height: 90,
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 margin: EdgeInsets.symmetric(horizontal: 10),
                 decoration: BoxDecoration(
                   color: MyTheme.green_lighter,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
                 ),
                 child: Row(
                   children: [
@@ -475,7 +476,7 @@ class _MachineDetailsState extends State<MachineDetails> {
                           ? Image.asset('assets/profile_placeholder.png')
                           : ClipRRect(
                               borderRadius: BorderRadius.all(
-                                Radius.circular(10),
+                                Radius.circular(8),
                               ),
                               child: CachedNetworkImage(
                                 imageUrl: snapshot.data!.photoURL!,
@@ -484,30 +485,48 @@ class _MachineDetailsState extends State<MachineDetails> {
                             ),
                     ),
                     SizedBox(
-                      width: 20,
+                      width: 10,
                     ),
                     Expanded(
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Text(
-                          //   AppLocalizations.of(context)!.seller_ucf,
-                          //   style: TextStyle(fontSize: 15),
-                          // ),
                           Text(
                             snapshot.data!.name,
                             // "aksbfkjafknangg englkng lkegnang kegne",
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 18),
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  '${widget.sellProduct.village}, ${widget.sellProduct.gramPanchayat}, ${widget.sellProduct.taluk}, ${widget.sellProduct.district}',
+                                  // "aksbfkjafknangg englkng lkegnang kegne",
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     ),
                     Container(
+                      height: 50,
                       decoration: BoxDecoration(
                         color: MyTheme.primary_color,
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
                       ),
                       child: Center(
                         child: IconButton(

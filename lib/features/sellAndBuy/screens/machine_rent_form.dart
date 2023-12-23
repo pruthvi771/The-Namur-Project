@@ -16,7 +16,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:toast/toast.dart';
-import '../../../custom/device_info.dart';
 
 import 'package:time_range_picker/time_range_picker.dart';
 
@@ -273,79 +272,55 @@ class _MachineRentFormState extends State<MachineRentForm> {
         numberOfHalfHours: checkerBookedSlotsBroken.length,
       ),
     );
-
-    // Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
     TimeOfDay? rentStartTime = timeRangeOfRenting?.startTime;
     TimeOfDay? rentEndTime = timeRangeOfRenting?.endTime;
-    return Container(
-      color: Colors.white,
-      height: DeviceInfo(context).height,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          // elevation: 0,
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0xff107B28), Color(0xff4C7B10)]),
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        // elevation: 0,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xff107B28), Color(0xff4C7B10)]),
           ),
-          title: Text(
-            AppLocalizations.of(context)!.rent_a_machine,
-            style: TextStyle(
-                color: MyTheme.white,
-                fontWeight: FontWeight.w500,
-                letterSpacing: .5,
-                fontFamily: 'Poppins'),
-          ),
-          centerTitle: true,
         ),
-        bottomSheet: Container(
-          height: 60,
-          width: double.infinity,
-          child: BlocListener<RentBloc, RentState>(
-            listener: (context, state) {
-              if (state is RentSuccess) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => CheckoutScreen(
-                            orderID: state.documentId,
-                          )),
-                );
-              }
-            },
-            child: BlocBuilder<RentBloc, RentState>(
-              builder: (context, state) {
-                if (state is RentLoading) {
-                  return ElevatedButton(
-                    onPressed: () async {
-                      // onPressedBook(context);
-                    },
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(MyTheme.primary_color),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(0))),
-                    ),
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                      ),
-                    ),
-                  );
-                }
+        title: Text(
+          AppLocalizations.of(context)!.rent_a_machine,
+          style: TextStyle(
+              color: MyTheme.white,
+              fontWeight: FontWeight.w500,
+              letterSpacing: .5,
+              fontFamily: 'Poppins'),
+        ),
+        centerTitle: true,
+      ),
+      bottomSheet: Container(
+        height: 60,
+        width: double.infinity,
+        child: BlocListener<RentBloc, RentState>(
+          listener: (context, state) {
+            if (state is RentSuccess) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CheckoutScreen(
+                          orderID: state.documentId,
+                        )),
+              );
+            }
+          },
+          child: BlocBuilder<RentBloc, RentState>(
+            builder: (context, state) {
+              if (state is RentLoading) {
                 return ElevatedButton(
                   onPressed: () async {
-                    onPressedBook(context);
+                    // onPressedBook(context);
                   },
                   style: ButtonStyle(
                     backgroundColor:
@@ -354,438 +329,452 @@ class _MachineRentFormState extends State<MachineRentForm> {
                         RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(0))),
                   ),
-                  child: Text(
-                    AppLocalizations.of(context)!.book,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500),
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
                   ),
                 );
-              },
-            ),
+              }
+              return ElevatedButton(
+                onPressed: () async {
+                  onPressedBook(context);
+                },
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(MyTheme.primary_color),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(0))),
+                ),
+                child: Text(
+                  AppLocalizations.of(context)!.book,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500),
+                ),
+              );
+            },
           ),
         ),
-        body: RefreshIndicator(
-          onRefresh: () {
-            return Future.delayed(Duration(seconds: 1), () {
-              setState(() {
-                productDocForSlotsFuture = getProductDocForSlots(
-                    date:
-                        '${dateOfRenting!.day}-${dateOfRenting!.month}-${dateOfRenting!.year}');
-              });
+      ),
+      body: RefreshIndicator(
+        onRefresh: () {
+          return Future.delayed(Duration(seconds: 1), () {
+            setState(() {
+              productDocForSlotsFuture = getProductDocForSlots(
+                  date:
+                      '${dateOfRenting!.day}-${dateOfRenting!.month}-${dateOfRenting!.year}');
             });
-          },
-          child: ListView(
-            padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-            physics: BouncingScrollPhysics(),
-            children: [
-              SizedBox(
-                height: 10,
-              ),
+          });
+        },
+        child: ListView(
+          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
+          physics: BouncingScrollPhysics(),
+          children: [
+            SizedBox(
+              height: 10,
+            ),
 
-              TitleWidget(text: AppLocalizations.of(context)!.machine),
+            TitleWidget(text: AppLocalizations.of(context)!.machine),
 
-              SizedBox(
-                height: 10,
-              ),
+            SizedBox(
+              height: 10,
+            ),
 
-              // Machine
-              Padding(
-                padding: const EdgeInsets.all(0.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Machine Image
-                      Container(
-                        height: 250,
-                        color: Colors.grey[200],
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        child: CarouselSlider(
-                          options: CarouselOptions(
-                            viewportFraction: 1,
-                            height: double.infinity,
-                            aspectRatio: 1 / 1.5,
-                            enlargeCenterPage: true,
-                            enableInfiniteScroll: false,
-                            autoPlay: false,
-                            padEnds: false,
-                          ),
-                          items: widget.imageURL.map((fileURL) {
-                            return Builder(
-                              builder: (BuildContext context) {
-                                return Container(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10),
-                                    ),
-                                    child: Image.network(
-                                      fileURL,
-                                      fit: BoxFit.cover,
-                                      width: MediaQuery.of(context).size.width,
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          }).toList(),
+            // Machine
+            Padding(
+              padding: const EdgeInsets.all(0.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Machine Image
+                    Container(
+                      height: 250,
+                      color: Colors.grey[200],
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      child: CarouselSlider(
+                        options: CarouselOptions(
+                          viewportFraction: 1,
+                          height: double.infinity,
+                          aspectRatio: 1 / 1.5,
+                          enlargeCenterPage: true,
+                          enableInfiniteScroll: false,
+                          autoPlay: false,
+                          padEnds: false,
                         ),
+                        items: widget.imageURL.map((fileURL) {
+                          return Builder(
+                            builder: (BuildContext context) {
+                              return Container(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                  child: Image.network(
+                                    fileURL,
+                                    fit: BoxFit.cover,
+                                    width: MediaQuery.of(context).size.width,
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        }).toList(),
                       ),
+                    ),
 
-                      SizedBox(
-                        height: 10,
-                      ),
+                    SizedBox(
+                      height: 10,
+                    ),
 
-                      // Machine Price
-                      Container(
-                        padding: EdgeInsets.only(
-                            left: 18, right: 18, bottom: 12, top: 5),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              widget.machineName,
+                    // Machine Price
+                    Container(
+                      padding: EdgeInsets.only(
+                          left: 18, right: 18, bottom: 12, top: 5),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.machineName,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w900,
+                              color: Colors.black,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            '\₹${widget.machinePrice}/1 hr',
+                            // locale: Locale.fromSubtags(languageCode: 'en'),
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w900,
+                              color: Colors.grey[700],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Container(
+                            // padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              widget.machineDescription,
                               style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w900,
+                                fontSize: 13.5,
+                                height: 1.2,
+                                fontWeight: FontWeight.w500,
                                 color: Colors.black,
                               ),
                             ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              '\₹${widget.machinePrice}/30 mins',
-                              // locale: Locale.fromSubtags(languageCode: 'en'),
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w900,
-                                color: Colors.grey[700],
-                              ),
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Container(
-                              // padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                widget.machineDescription,
-                                style: TextStyle(
-                                  fontSize: 13.5,
-                                  height: 1.2,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              SizedBox(
-                height: 15,
-              ),
-              TitleWidget(text: AppLocalizations.of(context)!.planning_date),
-
-              SizedBox(
-                height: 5,
-              ),
-
-              // Planning Date
-              Container(
-                // height: 50,
-                // color: Colors.amber,
-                padding: EdgeInsets.symmetric(horizontal: 4),
-                child: Row(
-                  children: [
-                    Expanded(
-                      // flex: 4,
-                      child: Container(
-                        height: 60,
-                        padding:
-                            EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            DateTime? newData = await showDatePicker(
-                                context: context,
-                                initialDate: dateNow,
-                                firstDate: DateTime.now(),
-                                lastDate: DateTime(2025));
-
-                            if (newData != null) {
-                              setState(() {
-                                dateOfRenting = newData;
-                                productDocForSlotsFuture = getProductDocForSlots(
-                                    date:
-                                        '${dateOfRenting!.day}-${dateOfRenting!.month}-${dateOfRenting!.year}');
-                              });
-                            }
-                          },
-                          child: Text(
-                            dateOfRenting != null
-                                ? '${dateOfRenting!.day}/${dateOfRenting!.month}/${dateOfRenting!.year}'
-                                : AppLocalizations.of(context)!.date_ucf,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w800,
-                              fontSize: 15,
-                            ),
                           ),
-                          style: ButtonStyle(
-                              elevation: MaterialStateProperty.all(0),
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      side: BorderSide(
-                                          color: Colors.transparent,
-                                          width: 0))),
-                              backgroundColor: MaterialStateProperty.all(
-                                  const Color.fromARGB(255, 255, 172, 200))),
-                        ),
+                        ],
                       ),
                     ),
                   ],
                 ),
               ),
+            ),
 
-              SizedBox(
-                height: 10,
-              ),
+            SizedBox(
+              height: 15,
+            ),
+            TitleWidget(text: AppLocalizations.of(context)!.planning_date),
 
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text(
-                  AppLocalizations.of(context)!.already_booked_slots,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
+            SizedBox(
+              height: 5,
+            ),
 
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: FutureBuilder(
-                    future: productDocForSlotsFuture,
-                    builder: (context, slotSnapshot) {
-                      if (slotSnapshot.connectionState ==
-                          ConnectionState.waiting) {
-                        return Container(
-                          // height: 200,
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        );
-                      }
-                      // if (slotSnapshot.hasData && slotSnapshot.data == null) {
-                      //   return Center(
-                      //     child: Text('No slots booked'),
-                      //   );
-                      // }
-                      if (slotSnapshot.hasData && slotSnapshot.data != null) {
-                        List? bookedSlots = slotSnapshot.data[0]['bookedSlots']
-                            ?[slotSnapshot.data[1]];
+            // Planning Date
+            Container(
+              // height: 50,
+              // color: Colors.amber,
+              padding: EdgeInsets.symmetric(horizontal: 4),
+              child: Row(
+                children: [
+                  Expanded(
+                    // flex: 4,
+                    child: Container(
+                      height: 60,
+                      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          DateTime? newData = await showDatePicker(
+                              context: context,
+                              initialDate: dateNow,
+                              firstDate: DateTime.now(),
+                              lastDate: DateTime(2025));
 
-                        return bookedSlots == null || bookedSlots.length == 0
-                            ? Container(
-                                height: 50,
-                                child: Center(
-                                  child: Text(
-                                    AppLocalizations.of(context)!
-                                        .no_slot_booked,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w900,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : Wrap(
-                                children: List.generate(
-                                    bookedSlots.length,
-                                    (index) => Chip(
-                                          labelPadding: EdgeInsets.symmetric(
-                                              horizontal: 5),
-                                          label: Text(
-                                            convertTimeRangeTo12Hour(
-                                                bookedSlots[index]),
-                                            style: TextStyle(
-                                              fontSize: 11,
-                                            ),
-                                          ),
-                                        )).toList(),
-                              );
-                      }
-                      return Container(
-                        height: 50,
-                        child: Center(
-                          child: Text(
-                            AppLocalizations.of(context)!.select_date,
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w900,
-                              color: Colors.black,
-                            ),
+                          if (newData != null) {
+                            setState(() {
+                              dateOfRenting = newData;
+                              productDocForSlotsFuture = getProductDocForSlots(
+                                  date:
+                                      '${dateOfRenting!.day}-${dateOfRenting!.month}-${dateOfRenting!.year}');
+                            });
+                          }
+                        },
+                        child: Text(
+                          dateOfRenting != null
+                              ? '${dateOfRenting!.day}/${dateOfRenting!.month}/${dateOfRenting!.year}'
+                              : AppLocalizations.of(context)!.date_ucf,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 15,
                           ),
                         ),
-                      );
-                    }),
-              ),
-
-              SizedBox(
-                height: 5,
-              ),
-
-              Container(
-                height: 60,
-                padding: EdgeInsets.all(8),
-                child: ElevatedButton(
-                  onPressed: () async {
-                    TimeRange result = await showTimeRangePicker(
-                      disabledTime: TimeRange(
-                          startTime: TimeOfDay(hour: 20, minute: 0),
-                          endTime: TimeOfDay(hour: 8, minute: 0)),
-                      context: context,
-                      start: const TimeOfDay(hour: 10, minute: 0),
-                      interval: const Duration(minutes: 30),
-                      minDuration: const Duration(minutes: 30),
-                      use24HourFormat: false,
-                      padding: 30,
-                      strokeWidth: 12,
-                      handlerRadius: 9,
-                      strokeColor: MyTheme.primary_color,
-                      handlerColor: MyTheme.green_light,
-                      selectedColor: MyTheme.primary_color,
-                      backgroundColor: Colors.black.withOpacity(0.3),
-                      ticks: 12,
-                      ticksColor: Colors.white,
-                      snap: true,
-                      labels: [
-                        "12 am",
-                        "3 am",
-                        "6 am",
-                        "9 am",
-                        "12 pm",
-                        "3 pm",
-                        "6 pm",
-                        "9 pm"
-                      ].asMap().entries.map((e) {
-                        return ClockLabel.fromIndex(
-                            idx: e.key, length: 8, text: e.value);
-                      }).toList(),
-                      labelOffset: -30,
-                      labelStyle: const TextStyle(
-                          fontSize: 15,
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold),
-                      timeTextStyle: TextStyle(
-                          color: MyTheme.primary_color,
-                          fontSize: 24,
-                          fontWeight: FontWeight.w900),
-                      activeTimeTextStyle: TextStyle(
-                          color: MyTheme.primary_color,
-                          fontSize: 26,
-                          fontWeight: FontWeight.bold),
-                    );
-
-                    print("result " + result.toString());
-
-                    setState(() {
-                      timeRangeOfRenting = result;
-                      // hour12FormarTimeSlot =
-                      //     '${rentStartTime!.hourOfPeriod}:${rentStartTime.minute == 0 ? '00' : rentStartTime.minute} ${rentStartTime.period.name} - ${rentEndTime!.hourOfPeriod}:${rentEndTime.minute == 0 ? '00' : rentEndTime.minute} ${rentEndTime.period.name}';
-                    });
-                  },
-                  child: Text(
-                    timeRangeOfRenting != null
-                        ? '${rentStartTime!.hourOfPeriod}:${rentStartTime.minute == 0 ? '00' : rentStartTime.minute} ${rentStartTime.period.name} - ${rentEndTime!.hourOfPeriod}:${rentEndTime.minute == 0 ? '00' : rentEndTime.minute} ${rentEndTime.period.name}'
-                        : AppLocalizations.of(context)!.time,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 15,
+                        style: ButtonStyle(
+                            elevation: MaterialStateProperty.all(0),
+                            shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    side: BorderSide(
+                                        color: Colors.transparent, width: 0))),
+                            backgroundColor: MaterialStateProperty.all(
+                                const Color.fromARGB(255, 255, 172, 200))),
+                      ),
                     ),
                   ),
-                  style: ButtonStyle(
-                      elevation: MaterialStateProperty.all(0),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              side: BorderSide(
-                                  color: Colors.transparent, width: 0))),
-                      backgroundColor: MaterialStateProperty.all(
-                          const Color.fromARGB(255, 255, 243, 131))),
+                ],
+              ),
+            ),
+
+            SizedBox(
+              height: 10,
+            ),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Text(
+                AppLocalizations.of(context)!.already_booked_slots,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.black,
                 ),
               ),
+            ),
 
-              SizedBox(
-                height: 15,
-              ),
-
-              TitleWidget(text: AppLocalizations.of(context)!.land),
-
-              SizedBox(
-                height: 20,
-              ),
-
-              // Select Land
-              FutureBuilder(
-                  future: landList,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: DropdownButtonWidget(
-                          hintText: AppLocalizations.of(context)!.select_land,
-                          itemList: List.generate(
-                              snapshot.data!.length,
-                              (index) => DropdownMenuItem<String>(
-                                    value: snapshot.data![index].syno,
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                            child: Text(
-                                                snapshot.data![index].village)),
-                                        Expanded(
-                                            child: Text(
-                                                snapshot.data![index].syno)),
-                                      ],
-                                    ),
-                                  )).toList(),
-                          dropdownValue: landDropdownValue,
-                          onChanged: (value) {
-                            setState(() {
-                              landDropdownValue = value;
-                              locationNameOfLand = getVillageFromSyno(
-                                  snapshot.data!, landDropdownValue!);
-                            });
-                          },
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: FutureBuilder(
+                  future: productDocForSlotsFuture,
+                  builder: (context, slotSnapshot) {
+                    if (slotSnapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return Container(
+                        // height: 200,
+                        child: Center(
+                          child: CircularProgressIndicator(),
                         ),
                       );
                     }
-                    return Center(
-                      child: CircularProgressIndicator(),
+                    // if (slotSnapshot.hasData && slotSnapshot.data == null) {
+                    //   return Center(
+                    //     child: Text('No slots booked'),
+                    //   );
+                    // }
+                    if (slotSnapshot.hasData && slotSnapshot.data != null) {
+                      List? bookedSlots = slotSnapshot.data[0]['bookedSlots']
+                          ?[slotSnapshot.data[1]];
+
+                      return bookedSlots == null || bookedSlots.length == 0
+                          ? Container(
+                              height: 50,
+                              child: Center(
+                                child: Text(
+                                  AppLocalizations.of(context)!.no_slot_booked,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w900,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Wrap(
+                              children: List.generate(
+                                  bookedSlots.length,
+                                  (index) => Chip(
+                                        labelPadding:
+                                            EdgeInsets.symmetric(horizontal: 5),
+                                        label: Text(
+                                          convertTimeRangeTo12Hour(
+                                              bookedSlots[index]),
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                          ),
+                                        ),
+                                      )).toList(),
+                            );
+                    }
+                    return Container(
+                      height: 50,
+                      child: Center(
+                        child: Text(
+                          AppLocalizations.of(context)!.select_date,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
                     );
                   }),
+            ),
 
-              Container(
-                height: 65,
+            SizedBox(
+              height: 5,
+            ),
+
+            Container(
+              height: 60,
+              padding: EdgeInsets.all(8),
+              child: ElevatedButton(
+                onPressed: () async {
+                  TimeRange result = await showTimeRangePicker(
+                    disabledTime: TimeRange(
+                        startTime: TimeOfDay(hour: 20, minute: 0),
+                        endTime: TimeOfDay(hour: 8, minute: 0)),
+                    context: context,
+                    start: const TimeOfDay(hour: 10, minute: 0),
+                    interval: const Duration(hours: 1),
+                    minDuration: const Duration(hours: 1),
+                    use24HourFormat: false,
+                    padding: 30,
+                    strokeWidth: 12,
+                    handlerRadius: 9,
+                    strokeColor: MyTheme.primary_color,
+                    handlerColor: MyTheme.green_light,
+                    selectedColor: MyTheme.primary_color,
+                    backgroundColor: Colors.black.withOpacity(0.3),
+                    ticks: 12,
+                    ticksColor: Colors.white,
+                    snap: true,
+                    labels: [
+                      "12 am",
+                      "3 am",
+                      "6 am",
+                      "9 am",
+                      "12 pm",
+                      "3 pm",
+                      "6 pm",
+                      "9 pm"
+                    ].asMap().entries.map((e) {
+                      return ClockLabel.fromIndex(
+                          idx: e.key, length: 8, text: e.value);
+                    }).toList(),
+                    labelOffset: -30,
+                    labelStyle: const TextStyle(
+                        fontSize: 15,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold),
+                    timeTextStyle: TextStyle(
+                        color: MyTheme.primary_color,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w900),
+                    activeTimeTextStyle: TextStyle(
+                        color: MyTheme.primary_color,
+                        fontSize: 26,
+                        fontWeight: FontWeight.bold),
+                  );
+
+                  print("result " + result.toString());
+
+                  setState(() {
+                    timeRangeOfRenting = result;
+                    // hour12FormarTimeSlot =
+                    //     '${rentStartTime!.hourOfPeriod}:${rentStartTime.minute == 0 ? '00' : rentStartTime.minute} ${rentStartTime.period.name} - ${rentEndTime!.hourOfPeriod}:${rentEndTime.minute == 0 ? '00' : rentEndTime.minute} ${rentEndTime.period.name}';
+                  });
+                },
+                child: Text(
+                  timeRangeOfRenting != null
+                      ? '${rentStartTime!.hourOfPeriod}:${rentStartTime.minute == 0 ? '00' : rentStartTime.minute} ${rentStartTime.period.name} - ${rentEndTime!.hourOfPeriod}:${rentEndTime.minute == 0 ? '00' : rentEndTime.minute} ${rentEndTime.period.name}'
+                      : AppLocalizations.of(context)!.time,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
+                  ),
+                ),
+                style: ButtonStyle(
+                    elevation: MaterialStateProperty.all(0),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            side: BorderSide(
+                                color: Colors.transparent, width: 0))),
+                    backgroundColor: MaterialStateProperty.all(
+                        const Color.fromARGB(255, 255, 243, 131))),
               ),
-            ],
-          ),
+            ),
+
+            SizedBox(
+              height: 15,
+            ),
+
+            TitleWidget(text: AppLocalizations.of(context)!.land),
+
+            SizedBox(
+              height: 20,
+            ),
+
+            // Select Land
+            FutureBuilder(
+                future: landList,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: DropdownButtonWidget(
+                        hintText: AppLocalizations.of(context)!.select_land,
+                        itemList: List.generate(
+                            snapshot.data!.length,
+                            (index) => DropdownMenuItem<String>(
+                                  value: snapshot.data![index].syno,
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                          child: Text(
+                                              snapshot.data![index].village)),
+                                      Expanded(
+                                          child:
+                                              Text(snapshot.data![index].syno)),
+                                    ],
+                                  ),
+                                )).toList(),
+                        dropdownValue: landDropdownValue,
+                        onChanged: (value) {
+                          setState(() {
+                            landDropdownValue = value;
+                            locationNameOfLand = getVillageFromSyno(
+                                snapshot.data!, landDropdownValue!);
+                          });
+                        },
+                      ),
+                    );
+                  }
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }),
+
+            Container(
+              height: 65,
+            ),
+          ],
         ),
       ),
     );

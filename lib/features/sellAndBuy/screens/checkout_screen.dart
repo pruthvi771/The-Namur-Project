@@ -4,6 +4,7 @@ import 'package:active_ecommerce_flutter/features/sellAndBuy/models/order_item.d
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/buy_bloc/buy_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/buy_bloc/buy_event.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/buy_bloc/buy_state.dart';
+import 'package:active_ecommerce_flutter/screens/main.dart';
 import 'package:active_ecommerce_flutter/utils/functions.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,10 +20,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CheckoutScreen extends StatefulWidget {
   final String orderID;
+  final bool newOrder;
 
   CheckoutScreen({
     Key? key,
     required this.orderID,
+    this.newOrder = true,
   }) : super(key: key);
 
   @override
@@ -44,16 +47,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   late final currentUser;
 
   late Future<OrderDocument> orderDocDataFuture;
-
-  // List productList = [
-  //   '0Fdb8w5wKYgU7IRZ19WX',
-  //   '1FXIJ0kZMsKvu5A0Y09c',
-  //   '1ceHPwaFqcyV8qBkcp64',
-  //   'CeAZnY9VS1HKIRREa0xK',
-  //   'VzykmydYmmpDF805w99Z',
-  //   'kqvgzlYM58KqkhMGbt9s',
-  //   'qdoJqPjUhKSkpDukCNvi',
-  // ];
 
   Future<OrderDocument> _getOrderDocData() async {
     final cartDoc =
@@ -550,6 +543,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                   });
                             },
                           ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushAndRemoveUntil(context,
+                                MaterialPageRoute(builder: (context) {
+                              return Main();
+                            }), (route) => false);
+                          },
+                          child: Text(AppLocalizations.of(context)!.home_ucf),
                         ),
                       ],
                     ),
