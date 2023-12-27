@@ -108,14 +108,133 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  selectImage() async {
-    Uint8List img = await pickImage(ImageSource.gallery);
-    print('image uploaded');
+  selectImage(ImageSource source) async {
+    Uint8List img = await pickImage(source);
     _image = img;
   }
 
   saveProfileImage() async {
-    await selectImage();
+    ImageSource? source;
+    await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            contentPadding: EdgeInsets.only(top: 10, left: 10, right: 10),
+            actionsPadding: EdgeInsets.all(0),
+            buttonPadding: EdgeInsets.all(0),
+            content: Container(
+              height: 170,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.choose_image_from,
+                    style: TextStyle(
+                      color: MyTheme.font_grey,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            onTap: () {
+                              source = ImageSource.camera;
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: MyTheme.green_lighter.withOpacity(0.3),
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: MyTheme.green),
+                              ),
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    Icons.camera_alt,
+                                    color: MyTheme.primary_color,
+                                    size: 30,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    'Camera',
+                                    style: TextStyle(
+                                        color: MyTheme.primary_color,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 30,
+                        ),
+                        Expanded(
+                          child: InkWell(
+                            onTap: () {
+                              source = ImageSource.gallery;
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: MyTheme.green_lighter.withOpacity(0.3),
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: MyTheme.green),
+                              ),
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    Icons.photo,
+                                    color: MyTheme.primary_color,
+                                    size: 30,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    'Gallery',
+                                    style: TextStyle(
+                                        color: MyTheme.primary_color,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(AppLocalizations.of(context)!.dismiss)),
+            ],
+          );
+        });
+    if (source == null) {
+      return;
+    }
+    await selectImage(source!);
     BlocProvider.of<ProfileBloc>(context).add(
       ProfileImageUpdateRequested(file: _image!),
     );
@@ -239,19 +358,53 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                   TabController(length: 2, vsync: this);
               return SliverList(
                 delegate: SliverChildListDelegate([
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height / 2,
-                    child: (buyerUserData.photoURL == null ||
-                            buyerUserData.photoURL == '')
-                        ? Image.asset(
-                            "assets/default_profile2.png",
-                            fit: BoxFit.cover,
-                          )
-                        : CachedNetworkImage(
-                            imageUrl: buyerUserData.photoURL!,
-                            fit: BoxFit.cover,
+                  Stack(
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height / 2,
+                        child: (buyerUserData.photoURL == null ||
+                                buyerUserData.photoURL == '')
+                            ? Image.asset(
+                                "assets/default_profile2.png",
+                                fit: BoxFit.cover,
+                              )
+                            : CachedNetworkImage(
+                                imageUrl: buyerUserData.photoURL!,
+                                fit: BoxFit.cover,
+                              ),
+                      ),
+                      Positioned(
+                        bottom: 10,
+                        right: 4,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 5, right: 10),
+                          child: InkWell(
+                            onTap: () {
+                              saveProfileImage();
+                            },
+                            child: Container(
+                                padding: EdgeInsets.all(11),
+                                decoration: BoxDecoration(
+                                    color: Colors.black.withOpacity(0.7),
+                                    borderRadius: BorderRadius.circular(50)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.image,
+                                      color: Colors.white,
+                                    ),
+                                    Icon(
+                                      Icons.edit,
+                                      color: Colors.white,
+                                    ),
+                                  ],
+                                )),
                           ),
+                        ),
+                      ),
+                    ],
                   ),
 
                   SizedBox(
@@ -280,9 +433,15 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                       }));
                     },
                     child: Container(
-                      margin: const EdgeInsets.only(left: 20, right: 20),
-                      height: 63,
-                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.only(left: 12, right: 12),
+                      height: 75,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 12),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: MyTheme.green_lighter.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

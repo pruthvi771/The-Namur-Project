@@ -470,8 +470,8 @@ class _ProductPostState extends State<ProductPost> {
         imageList: _mediaFileList,
         runningHours: runningHoursInt,
         kms: kmsInt,
-        landSynoValue: landDropdownValue!,
-        hiveMachineName: hiveMachineDropdown!,
+        landSynoValue: landDropdownValue ?? "",
+        hiveMachineName: hiveMachineDropdown ?? "",
       ),
     );
 
@@ -995,36 +995,6 @@ class _ProductPostState extends State<ProductPost> {
         // Text(landDropdownValue.toString()),
         // Text(hiveMachineDropdown.toString()),
 
-        // additional description
-        Padding(
-          padding: const EdgeInsets.only(
-            top: 20.0,
-            left: 20.0,
-            right: 20.0,
-          ),
-          child: Container(
-            height: 130,
-            padding: EdgeInsets.only(left: 5, top: 15, right: 5),
-            decoration: BoxDecoration(
-                color: MyTheme.field_color,
-                borderRadius: BorderRadius.circular(10)),
-            child: TextFormField(
-              maxLines: 5,
-              // maxLength: 300,
-              controller: _additionalController,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.only(left: 15, right: 15),
-                hintText: AppLocalizations.of(context)!.description_ucf,
-                hintStyle: TextStyle(
-                    color: Colors.grey[600],
-                    fontWeight: FontWeight.w400,
-                    fontFamily: 'Poppins'),
-              ),
-            ),
-          ),
-        ),
-
         // add image
         widget.isProductEditScreen
             ? Padding(
@@ -1249,6 +1219,36 @@ class _ProductPostState extends State<ProductPost> {
                         ),
                 ),
               ),
+
+        // additional description
+        Padding(
+          padding: const EdgeInsets.only(
+            left: 20.0,
+            right: 20.0,
+            bottom: 20,
+          ),
+          child: Container(
+            height: 130,
+            padding: EdgeInsets.only(left: 5, top: 15, right: 5),
+            decoration: BoxDecoration(
+                color: MyTheme.field_color,
+                borderRadius: BorderRadius.circular(10)),
+            child: TextFormField(
+              maxLines: 5,
+              // maxLength: 300,
+              controller: _additionalController,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(left: 15, right: 15),
+                hintText: AppLocalizations.of(context)!.description_ucf,
+                hintStyle: TextStyle(
+                    color: Colors.grey[600],
+                    fontWeight: FontWeight.w400,
+                    fontFamily: 'Poppins'),
+              ),
+            ),
+          ),
+        ),
 
         Container(
           height: 60,

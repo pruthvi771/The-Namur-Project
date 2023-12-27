@@ -463,7 +463,7 @@ class ProductInventoryWidget extends StatelessWidget {
                                                       child: Text(
                                                         AppLocalizations.of(
                                                                 context)!
-                                                            .cancel,
+                                                            .delete,
                                                         style: TextStyle(
                                                           color: Colors.red,
                                                           fontSize: 15,

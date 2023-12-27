@@ -1,5 +1,6 @@
 // translation done.
 
+import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_add_crop.dart';
 import 'package:active_ecommerce_flutter/features/profile/address_list.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
@@ -13,6 +14,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:toast/toast.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({Key? key}) : super(key: key);
@@ -278,46 +280,61 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   InkWell(
-                                    onTap: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return AlertDialog(
-                                              contentPadding: EdgeInsets.only(
-                                                  top: 10, left: 10, right: 10),
-                                              // actionsPadding: EdgeInsets.all(0),
-                                              content: Container(
-                                                height: 300,
-                                                child: CachedNetworkImage(
-                                                  imageUrl:
-                                                      docData['costEstimate'],
-                                                  fit: BoxFit.fitWidth,
-                                                  progressIndicatorBuilder:
-                                                      (context, url, progress) {
-                                                    return Center(
-                                                      child: Container(
-                                                        width: 20,
-                                                        height: 20,
-                                                        child:
-                                                            CircularProgressIndicator(),
+                                    onTap: docData['costEstimate'] == null ||
+                                            docData['costEstimate'] == ''
+                                        ? () {
+                                            ToastComponent.showDialog(
+                                                AppLocalizations.of(context)!
+                                                    .cost_estimate_hasnt_been_added_yet,
+                                                gravity: Toast.center,
+                                                duration: Toast.lengthLong);
+                                            return;
+                                          }
+                                        : () {
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    contentPadding:
+                                                        EdgeInsets.only(
+                                                            top: 10,
+                                                            left: 10,
+                                                            right: 10),
+                                                    // actionsPadding: EdgeInsets.all(0),
+                                                    content: Container(
+                                                      height: 300,
+                                                      child: CachedNetworkImage(
+                                                        imageUrl: docData[
+                                                            'costEstimate'],
+                                                        fit: BoxFit.fitWidth,
+                                                        progressIndicatorBuilder:
+                                                            (context, url,
+                                                                progress) {
+                                                          return Center(
+                                                            child: Container(
+                                                              width: 20,
+                                                              height: 20,
+                                                              child:
+                                                                  CircularProgressIndicator(),
+                                                            ),
+                                                          );
+                                                        },
                                                       ),
-                                                    );
-                                                  },
-                                                ),
-                                              ),
-                                              actions: [
-                                                TextButton(
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child: Text(
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .dismiss)),
-                                              ],
-                                            );
-                                          });
-                                    },
+                                                    ),
+                                                    actions: [
+                                                      TextButton(
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          child: Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .dismiss)),
+                                                    ],
+                                                  );
+                                                });
+                                          },
                                     child: Container(
                                       child: Column(
                                         mainAxisAlignment:

@@ -1,9 +1,11 @@
 {
   "hi": [
-    "land_area_exceeded"
+    "choose_image_from",
+    "cost_estimate_hasnt_been_added_yet"
   ],
 
   "kn": [
-    "land_area_exceeded"
+    "choose_image_from",
+    "cost_estimate_hasnt_been_added_yet"
   ]
 }

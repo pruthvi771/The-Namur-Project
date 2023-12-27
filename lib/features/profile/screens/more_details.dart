@@ -109,7 +109,7 @@ class _MoreDetailsState extends State<MoreDetails> {
     if (savedData == null) {
       throw Exception('Failed to load data');
     }
-    if (savedData!.address[0].pincode.isEmpty) {
+    if (savedData.address[0].pincode.isEmpty) {
       throw Exception('Failed to load data');
     }
 

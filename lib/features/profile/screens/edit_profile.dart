@@ -515,6 +515,36 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
+  void editAddress({
+    required String district,
+    required String taluk,
+    required String gramPanchayat,
+    required String villageName,
+    required String pincode,
+    required int index,
+  }) {
+    setState(() {
+      taluksDropdownValue = null;
+      gramPanchayatsDropdownValue = null;
+      villageNamesDropdownValue = null;
+      districtsDropdownValue = district;
+    });
+    fetchTaluks(districtName: district);
+    setState(() {
+      taluksDropdownValue = taluk;
+    });
+    fetchGramPanchayats(talukName: taluk);
+    setState(() {
+      gramPanchayatsDropdownValue = gramPanchayat;
+    });
+    fetchVillageNames(gramPanchayatName: gramPanchayat);
+    setState(() {
+      villageNamesDropdownValue = villageName;
+      _pinCodeController.text = pincode;
+    });
+    _deleteDataFromHive(DataCollectionType.address, index);
+  }
+
   void _addCropToHive(landSyno, crop, yieldOfCrop) async {
     if (landSyno == null || landSyno.isEmpty) {
       ToastComponent.showDialog(localContext.select_land,
@@ -823,14 +853,133 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  selectImage() async {
-    Uint8List img = await pickImage(ImageSource.camera);
-    print('image uploaded');
+  selectImage(ImageSource source) async {
+    Uint8List img = await pickImage(source);
     _image = img;
   }
 
   saveProfileImage() async {
-    await selectImage();
+    ImageSource? source;
+    await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            contentPadding: EdgeInsets.only(top: 10, left: 10, right: 10),
+            actionsPadding: EdgeInsets.all(0),
+            buttonPadding: EdgeInsets.all(0),
+            content: Container(
+              height: 170,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.choose_image_from,
+                    style: TextStyle(
+                      color: MyTheme.font_grey,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            onTap: () {
+                              source = ImageSource.camera;
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: MyTheme.green_lighter.withOpacity(0.3),
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: MyTheme.green),
+                              ),
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    Icons.camera_alt,
+                                    color: MyTheme.primary_color,
+                                    size: 30,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    'Camera',
+                                    style: TextStyle(
+                                        color: MyTheme.primary_color,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 30,
+                        ),
+                        Expanded(
+                          child: InkWell(
+                            onTap: () {
+                              source = ImageSource.gallery;
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: MyTheme.green_lighter.withOpacity(0.3),
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: MyTheme.green),
+                              ),
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    Icons.photo,
+                                    color: MyTheme.primary_color,
+                                    size: 30,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    'Gallery',
+                                    style: TextStyle(
+                                        color: MyTheme.primary_color,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(AppLocalizations.of(context)!.dismiss)),
+            ],
+          );
+        });
+    if (source == null) {
+      return;
+    }
+    await selectImage(source!);
     BlocProvider.of<ProfileBloc>(context).add(
       ProfileImageUpdateRequested(file: _image!),
     );
@@ -870,10 +1019,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
             onPressed: () {
               Navigator.pop(context);
-              // Navigator.pop(context);
-              // Navigator.push(context, MaterialPageRoute(builder: (context) {
-              //   return MoreDetails();
-              // }));
             },
           ),
           SizedBox(
@@ -906,9 +1051,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 padding: EdgeInsets.all(15),
                 children: [
                   // The top bar section
-                  SizedBox(
-                    height: 10,
-                  ),
+                  // SizedBox(
+                  //   height: 10,
+                  // ),
                   HeadingTextWidget(localContext.account_ucf),
 
                   BlocListener<ProfileBloc, profileState.ProfileState>(
@@ -945,7 +1090,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     Container(
                                       height: 250,
                                       margin: EdgeInsets.only(
-                                          bottom: 20, left: 20, right: 20),
+                                          bottom: 10, left: 20, right: 20),
                                       width: double.infinity,
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.all(
@@ -1190,7 +1335,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
 
                   Padding(
-                    padding: const EdgeInsets.only(top: 18, bottom: 8),
+                    padding: const EdgeInsets.only(top: 5, bottom: 8),
                     child: Divider(
                       // color: MyTheme.grey_153,
                       thickness: 2,
@@ -1202,7 +1347,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   if (state.profileData.kyc.aadhar.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0, vertical: 3),
+                          horizontal: 8.0, vertical: 0),
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
@@ -1259,9 +1404,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ),
                       ),
                     ),
-                  SizedBox(
-                    height: 10,
-                  ),
+
+                  // SizedBox(
+                  //   height: 10,
+                  // ),
+
                   if (state.profileData.kyc.aadhar.isEmpty)
                     Column(
                       children: [
@@ -1308,8 +1455,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ],
                     ),
 
+                  // divider
                   Padding(
-                    padding: const EdgeInsets.only(top: 8, bottom: 12),
+                    padding: const EdgeInsets.only(top: 8, bottom: 5),
                     child: Divider(
                       // color: MyTheme.grey_153,
                       thickness: 2,
@@ -1326,7 +1474,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           height: 130,
                           width: double.infinity,
                           margin: EdgeInsets.symmetric(
-                              horizontal: 8.0, vertical: 3),
+                              horizontal: 8.0, vertical: 0),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             color: MyTheme.green_lighter,
@@ -1351,22 +1499,56 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   Text('Pincode: ${item.pincode}'),
                                 ],
                               ),
-                              InkWell(
-                                onTap: () {
-                                  _deleteDataFromHive(
-                                    DataCollectionType.address,
-                                    index,
-                                  );
-                                },
-                                child: CircleAvatar(
-                                  radius: 12,
-                                  backgroundColor: MyTheme.green,
-                                  child: Icon(
-                                    Icons.delete,
-                                    size: 15.0,
-                                    color: Colors.white,
+                              Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      _deleteDataFromHive(
+                                        DataCollectionType.address,
+                                        index,
+                                      );
+                                      setState(() {
+                                        taluksDropdownValue = null;
+                                        gramPanchayatsDropdownValue = null;
+                                        villageNamesDropdownValue = null;
+                                        districtsDropdownValue = null;
+                                        _pinCodeController.text = "";
+                                      });
+                                    },
+                                    child: CircleAvatar(
+                                      radius: 12,
+                                      backgroundColor: MyTheme.green,
+                                      child: Icon(
+                                        Icons.delete,
+                                        size: 15.0,
+                                        color: Colors.white,
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                  InkWell(
+                                    onTap: () {
+                                      editAddress(
+                                        district: item.district,
+                                        taluk: item.taluk,
+                                        gramPanchayat: item.gramPanchayat,
+                                        villageName: item.village,
+                                        pincode: item.pincode,
+                                        index: index,
+                                      );
+                                    },
+                                    child: CircleAvatar(
+                                      radius: 12,
+                                      backgroundColor: MyTheme.green,
+                                      child: Icon(
+                                        Icons.edit,
+                                        size: 15.0,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
@@ -1375,9 +1557,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                   ),
 
-                  SizedBox(
-                    height: 10,
-                  ),
+                  // SizedBox(
+                  //   height: 5,
+                  // ),
 
                   // address input
                   if (state.profileData.address.length == 0)
@@ -1399,7 +1581,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   "Pincode",
                                 ),
                                 SizedBox(
-                                  height: 15,
+                                  height: 10,
                                 ),
                                 AddressSearchDropdown(
                                     title: localContext.select_district,
@@ -1427,7 +1609,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     isEnabled: true,
                                     disabledHint: localContext.district),
                                 SizedBox(
-                                  height: 10,
+                                  height: 5,
                                 ),
                                 AddressSearchDropdown(
                                   isEnabled: isTalukEnabled,
@@ -1455,7 +1637,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   },
                                 ),
                                 SizedBox(
-                                  height: 10,
+                                  height: 5,
                                 ),
                                 AddressSearchDropdown(
                                   searchController: textEditingController,
@@ -1482,7 +1664,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   },
                                 ),
                                 SizedBox(
-                                  height: 10,
+                                  height: 5,
                                 ),
                                 AddressSearchDropdown(
                                   searchController: textEditingController,
@@ -1532,7 +1714,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
                   // divider
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    padding: const EdgeInsets.symmetric(vertical: 5),
                     child: Divider(
                       // color: MyTheme.grey_153,
                       thickness: 2,
@@ -1593,8 +1775,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           },
                         ),
                       ),
+
                       SizedBox(
-                        height: 10,
+                        height: 5,
                       ),
 
                       BlocListener<AuthBloc, authState.AuthState>(
@@ -1681,7 +1864,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   ),
                                 ),
                                 SizedBox(
-                                  height: 10,
+                                  height: 5,
                                 ),
                                 Container(
                                   height: 40,
@@ -1747,7 +1930,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
 
                       SizedBox(
-                        height: 10,
+                        height: 5,
                       ),
 
                       TextFieldWidget('Syno', _synoController,
@@ -1779,14 +1962,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
 
                       SizedBox(
-                        height: 8,
+                        height: 5,
                       ),
                       Divider(
                         // color: MyTheme.grey_153,
                         thickness: 2,
                       ),
                       SizedBox(
-                        height: 12,
+                        height: 5,
                       ),
                     ],
                   ),
@@ -1797,7 +1980,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     children: [
                       HeadingTextWidget(localContext.farm_details),
                       SizedBox(
-                        height: 10,
+                        height: 5,
                       ),
                       (state.profileData.land.length == 0)
                           ? Padding(
@@ -1977,7 +2160,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 // add machines
                                 Padding(
                                   padding: const EdgeInsets.only(
-                                      left: 8, top: 10, bottom: 5),
+                                      left: 8, top: 0, bottom: 5),
                                   child: Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
@@ -2429,7 +2612,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Padding HeadingTextWidget(String headingText) {
     return Padding(
-      padding: const EdgeInsets.only(left: 4, bottom: 7),
+      padding: const EdgeInsets.only(left: 4, bottom: 10),
       child: Text(
         headingText,
         style: TextStyle(

@@ -23,6 +23,24 @@ void openWhatsAppChat(String phoneNumber) async {
   }
 }
 
+void openPDF(String link) async {
+  final Uri _url = Uri.parse(link);
+
+  try {
+    if (await canLaunchUrl(_url)) {
+      await launchUrl(
+        _url,
+        mode: LaunchMode.platformDefault,
+      );
+    } else {
+      print('Could not open PDF');
+    }
+  } catch (e) {
+    print(e);
+    // Handle exceptions, if any
+  }
+}
+
 Address? getUserLocationFromHive() {
   var dataBox = Hive.box<ProfileData>('profileDataBox3');
 
