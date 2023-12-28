@@ -370,7 +370,7 @@ class _FilterScreenState extends State<FilterScreen> {
                                           return Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Container(
-                                              color: Colors.grey[50],
+                                              color: Colors.grey[100],
                                               padding:
                                                   const EdgeInsets.symmetric(
                                                       horizontal: 8,
@@ -611,7 +611,7 @@ class _FilterScreenState extends State<FilterScreen> {
             height: 3,
           ),
           Container(
-            color: Colors.grey[50],
+            color: Colors.grey[100],
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
