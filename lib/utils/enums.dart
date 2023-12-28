@@ -610,6 +610,15 @@ enum SubCategoryEnum {
 //   }
 // }
 
+SubCategoryEnum? findSubCategoryEnumForName(String subCategory) {
+  for (var subCategoryEnum in nameForSubCategoryEnum.keys) {
+    if (nameForSubCategoryEnum[subCategoryEnum] == subCategory) {
+      return subCategoryEnum;
+    }
+  }
+  return null; // Return null if subcategory is not found in any category
+}
+
 var nameForSubCategoryEnum = {
   SubCategoryEnum.cows: "Cows",
   SubCategoryEnum.goats: "Goats",

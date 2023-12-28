@@ -188,5 +188,18 @@ class SellBloc extends Bloc<SellEvent, SellState> {
         print(e.toString());
       }
     });
+
+    on<SellerInventoryRequested>((event, emit) async {
+      try {
+        emit(ProductLoading());
+        List<SellProduct> products = await sellRepository.getAllProducts();
+
+        emit(SellerInventoryReceived(products: products));
+      } catch (e) {
+        // emit(SellAddProductErrorState(message: e.toString()));
+        print('error happened in ProductsForSubCategoryRequested');
+        print(e.toString());
+      }
+    });
   }
 }

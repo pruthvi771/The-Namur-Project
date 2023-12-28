@@ -158,6 +158,13 @@ class ProductsForSubCategoryRequested extends SellEvent {
   List<Object> get props => [subCategory];
 }
 
+class SellerInventoryRequested extends SellEvent {
+  const SellerInventoryRequested();
+
+  @override
+  List<Object> get props => [];
+}
+
 class DeleteProductRequested extends SellEvent {
   final String productId;
 

@@ -117,21 +117,6 @@ class _ProductDetailsState extends State<ProductDetails> {
           height: 10,
         ),
 
-        // product name
-        Padding(
-          padding:
-              const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 15),
-          child: Text(
-            widget.sellProduct.productName,
-            // "aksbfkjafknangg englkng lkegnang kegne",
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              // letterSpacing: 1,
-            ),
-          ),
-        ),
-
         // product images
         Container(
           height: 300,
@@ -195,10 +180,29 @@ class _ProductDetailsState extends State<ProductDetails> {
           }).toList(),
         ),
 
-        // product name and price
+        // product name
+        Padding(
+          padding:
+              const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 15),
+          child: Text(
+            widget.sellProduct.productName,
+            // "aksbfkjafknangg englkng lkegnang kegne",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              // letterSpacing: 1,
+            ),
+          ),
+        ),
+
+        // product price and add to card
         Container(
-          padding: EdgeInsets.only(top: 5, left: 15, right: 10),
-          // color: Colors.grey[200],
+          margin: EdgeInsets.symmetric(horizontal: 10),
+          padding: EdgeInsets.only(top: 8, left: 15, right: 10, bottom: 8),
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.all(Radius.circular(8)),
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,

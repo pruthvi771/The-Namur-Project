@@ -357,6 +357,46 @@ class SellRepository {
     return products;
   }
 
+  Future<List<SellProduct>> getAllProducts() async {
+    // QuerySnapshot productSnapshot = await productsCollection.get();
+
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
+        .instance
+        .collection('products')
+        .where(FieldPath.documentId, isNotEqualTo: null)
+        .where('sellerId', isEqualTo: _firebaseAuth.currentUser!.uid)
+        .where('isDeleted', isNotEqualTo: true)
+        .get();
+
+    var products = querySnapshot.docs.map((doc) {
+      Map<String, dynamic> data = doc.data();
+      print(doc.id);
+      return SellProduct(
+        id: doc.id,
+        productName: data['name'],
+        productDescription: data['description'],
+        productPrice: data['price'],
+        productQuantity: data['quantity'],
+        quantityUnit: data['quantityUnit'],
+        // priceType: data['priceType'],
+        category: data['category'],
+        subCategory: data['subCategory'],
+        subSubCategory: data['subSubCategory'],
+        imageURL: data['imageURL'],
+        sellerId: data['sellerId'],
+        isSecondHand: data['isSecondHand'],
+        village: data['villageName'],
+        gramPanchayat: data['gramPanchayat'],
+        taluk: data['taluk'],
+        district: data['district'],
+        createdAt: data['createdAt'].toDate(),
+      );
+    }).toList();
+    print(products.length);
+
+    return products;
+  }
+
   Future<void> deleteProduct({
     required String productId,
   }) async {

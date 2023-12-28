@@ -2,12 +2,14 @@
   "hi": [
     "choose_image_from",
     "cost_estimate_hasnt_been_added_yet",
-    "select_animal"
+    "select_animal",
+    "my_inventory"
   ],
 
   "kn": [
     "choose_image_from",
     "cost_estimate_hasnt_been_added_yet",
-    "select_animal"
+    "select_animal",
+    "my_inventory"
   ]
 }

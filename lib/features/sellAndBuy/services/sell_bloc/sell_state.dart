@@ -21,6 +21,17 @@ final class ProductsForSubCategoryReceived extends SellState {
   List<Object> get props => [products];
 }
 
+final class SellerInventoryReceived extends SellState {
+  final List<SellProduct> products;
+
+  const SellerInventoryReceived({
+    required this.products,
+  });
+
+  @override
+  List<Object> get props => [products];
+}
+
 final class ProductLoading extends SellState {
   const ProductLoading();
 

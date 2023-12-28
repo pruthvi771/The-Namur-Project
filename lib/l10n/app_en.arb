@@ -1019,5 +1019,6 @@
 "land_area_exceeded": "You can not add crops with total yield more than land area",
 "choose_image_from": "Choose Image From",
 "cost_estimate_hasnt_been_added_yet": "Cost Estimate hasn't been added yet",
-"select_animal":"Select Animal"
+"select_animal":"Select Animal",
+"my_inventory": "My Inventory"
 }

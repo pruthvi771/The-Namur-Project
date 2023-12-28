@@ -1,6 +1,7 @@
 import 'package:active_ecommerce_flutter/features/notification/notification_screen.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/more_details.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/my_purchases.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/seller_inventory.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart'
     as hiveModels;
 import 'package:active_ecommerce_flutter/my_theme.dart';
@@ -148,6 +149,24 @@ class _MainDrawerState extends State<MainDrawer> {
                           '${AppLocalizations.of(context)!.coming_soon}...',
                           gravity: Toast.center,
                           duration: Toast.lengthLong);
+                    }),
+
+                Divider(),
+
+                // purchase history
+                ListTile(
+                    visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                    leading: Icon(
+                      Icons.inventory_outlined,
+                    ),
+                    title: Text(AppLocalizations.of(context)!.my_inventory,
+                        style: TextStyle(
+                            color: MyTheme.primary_color, fontSize: 14)),
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return SellerInventory();
+                      }));
                     }),
 
                 Divider(),

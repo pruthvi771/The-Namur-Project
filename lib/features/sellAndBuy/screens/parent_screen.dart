@@ -72,6 +72,7 @@ class _ParentScreenState extends State<ParentScreen> {
         // appBar: buildCustomAppBar(context),
         appBar: AppBar(
           // backgroundColor: MyTheme.primary_color,
+          automaticallyImplyLeading: false,
           flexibleSpace: Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
