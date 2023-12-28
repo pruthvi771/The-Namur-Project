@@ -369,7 +369,7 @@ class ProductInventoryWidget extends StatelessWidget {
                                       ),
                                       Text(
                                         productSubSubCategory == 'On Rent'
-                                            ? '/ 1 Hr'
+                                            ? '/ Hr'
                                             : ' per ${quantityUnit == "Units" ? 'unit' : quantityUnit}',
                                         style: TextStyle(
                                           fontSize: 14,

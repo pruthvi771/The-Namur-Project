@@ -558,7 +558,7 @@ class _ProductPostState extends State<ProductPost> {
       showQuantityDropdown = false;
     }
     if (_selectedItem == "On Rent") {
-      machinePriceHintText = 'Price (per 1 hr)';
+      machinePriceHintText = 'Price (per hr)';
     } else if (_selectedItem == "Sell") {
       machinePriceHintText = 'Price (per unit)';
     }

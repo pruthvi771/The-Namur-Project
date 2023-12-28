@@ -325,7 +325,7 @@ class _MachineDetailsState extends State<MachineDetails> {
                           ),
                           widget.onRent
                               ? Text(
-                                  ' / 1 hr',
+                                  ' / hr',
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w500,

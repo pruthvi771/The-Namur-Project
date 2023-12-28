@@ -61,8 +61,8 @@ class _SellerOrderListState extends State<SellerOrderList> {
         // print(doc.data());
         sellerOrderList.add(OrderListItem(
           orderID: doc.id,
-          totalAmount: doc.data()['totalAmount'],
-          status: doc.data()['status'],
+          totalAmount: doc.data()['totalAmount'].toDouble(),
+          status: doc.data()['status'].toString(),
           timestamp: doc.data()['orderDate'],
         ));
       }

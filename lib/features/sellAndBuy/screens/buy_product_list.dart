@@ -913,7 +913,7 @@ class _BuyProductListState extends State<BuyProductList> {
                                 ),
                                 Text(
                                   subSubCategory == 'On Rent'
-                                      ? '/ 1 Hr'
+                                      ? '/ Hr'
                                       : ' per ${quantityUnit == "Units" ? 'unit' : quantityUnit}',
                                   style: TextStyle(
                                     fontSize: 14,

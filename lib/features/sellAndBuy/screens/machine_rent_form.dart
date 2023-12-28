@@ -454,7 +454,7 @@ class _MachineRentFormState extends State<MachineRentForm> {
                             height: 10,
                           ),
                           Text(
-                            '\₹${widget.machinePrice}/1 hr',
+                            '\₹${widget.machinePrice}/ hr',
                             // locale: Locale.fromSubtags(languageCode: 'en'),
                             style: TextStyle(
                               fontSize: 16,

@@ -9,7 +9,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
-import 'package:active_ecommerce_flutter/drawer/drawer.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -65,7 +64,7 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
     OrderDocument orderDocument = OrderDocument(
       buyerID: cartDoc.data()!['buyer'],
       timestamp: cartDoc.data()!['orderDate'],
-      totalAmount: cartDoc.data()!['totalAmount'],
+      totalAmount: cartDoc.data()!['totalAmount'].toDouble(),
       status: cartDoc.data()!['status'],
       sellers: cartDoc.data()!['sellers'],
       rent: cartDoc.data()!['rent'] == null ? false : cartDoc.data()!['rent'],
