@@ -126,7 +126,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           textDirection:
               app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
           child: Scaffold(
-            drawer: const MainDrawer(),
+            // drawer: const MainDrawer(),
             backgroundColor: Colors.white,
             appBar: AppBar(
               flexibleSpace: Container(

@@ -23,8 +23,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../features/profile/screens/profile.dart';
 
-
-
 class MyAccount extends StatefulWidget {
   MyAccount({Key? key}) : super(key: key);
 
@@ -64,9 +62,8 @@ class _MyAccountState extends State<MyAccount> {
       textDirection:
           app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
-        drawer: const MainDrawer(),
         appBar: AppBar(
-          // automaticallyImplyLeading: false,
+          automaticallyImplyLeading: false,
           // elevation: 0,
           flexibleSpace: Container(
             decoration: const BoxDecoration(

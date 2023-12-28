@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../custom/device_info.dart';
 import '../../my_theme.dart';
+
 class MoreDetail extends StatefulWidget {
   const MoreDetail({Key? key}) : super(key: key);
 
@@ -22,17 +23,14 @@ class _MoreDetailState extends State<MoreDetail> {
 
   bool _switchValue = false;
 
-
   @override
   Widget build(BuildContext context) {
-    return  Container(
+    return Container(
       color: Colors.white,
       height: DeviceInfo(context).height,
       child: Stack(
         children: [
           Scaffold(
-            // key: homeData.scaffoldKey,
-            // drawer: const MainDrawer(),
             backgroundColor: Colors.transparent,
             appBar: buildCustomAppBar(context),
             body: buildBody(),
@@ -58,23 +56,21 @@ class _MoreDetailState extends State<MoreDetail> {
       child: Container(
         height: 92,
         decoration: BoxDecoration(
-            gradient:LinearGradient(
+            gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors:[Color(0xff107B28),Color(0xff4C7B10)]
-            )),
+                colors: [Color(0xff107B28), Color(0xff4C7B10)])),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.only(left: 20.0,right: 20),
+            padding: const EdgeInsets.only(left: 20.0, right: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(width: 30,),
-
+                SizedBox(
+                  width: 30,
+                ),
                 Center(
-                  child: Text(
-                      AppLocalizations.of(context)!
-                          .more_detail_ucf,
+                  child: Text(AppLocalizations.of(context)!.more_detail_ucf,
                       style: TextStyle(
                           color: MyTheme.white,
                           fontSize: 20,
@@ -82,16 +78,21 @@ class _MoreDetailState extends State<MoreDetail> {
                           letterSpacing: .5,
                           fontFamily: 'Poppins')),
                 ),
-
                 Container(
                   margin: EdgeInsets.only(right: 0),
                   height: 30,
-                  child:  Container(
+                  child: Container(
                     child: InkWell(
                       //padding: EdgeInsets.zero,
-                      onTap: (){
+                      onTap: () {
                         Navigator.pop(context);
-                      } ,child:Icon(Icons.keyboard_arrow_left,size: 35,color: MyTheme.white,), ),
+                      },
+                      child: Icon(
+                        Icons.keyboard_arrow_left,
+                        size: 35,
+                        color: MyTheme.white,
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -102,8 +103,7 @@ class _MoreDetailState extends State<MoreDetail> {
     );
   }
 
-  bodycontent(){
-
+  bodycontent() {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
@@ -118,7 +118,8 @@ class _MoreDetailState extends State<MoreDetail> {
                 ),
               ),
               Positioned(
-                top: 5,left: 5,
+                top: 5,
+                left: 5,
                 child: ClipRRect(
                   child: CircleAvatar(
                     backgroundImage: AssetImage("assets/girl.png"),
@@ -128,13 +129,16 @@ class _MoreDetailState extends State<MoreDetail> {
               ),
             ],
           ),
-          SizedBox(height: 30,),
+          SizedBox(
+            height: 30,
+          ),
           Container(
             height: 50,
             decoration: BoxDecoration(
-              border: Border.all(color: MyTheme.light_grey,),
-              borderRadius: BorderRadius.circular(15)
-            ),
+                border: Border.all(
+                  color: MyTheme.light_grey,
+                ),
+                borderRadius: BorderRadius.circular(15)),
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -143,12 +147,14 @@ class _MoreDetailState extends State<MoreDetail> {
                   autofocus: false,
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText:   AppLocalizations.of(context)!
+                    hintText: AppLocalizations.of(context)!
                         .dist_taluk_village_pincode_ucf,
                     hintStyle: TextStyle(fontWeight: FontWeight.w500),
-                    suffixIcon: Icon(Icons.location_on_outlined,
-                    size: 35,
-                    color: Colors.black,),
+                    suffixIcon: Icon(
+                      Icons.location_on_outlined,
+                      size: 35,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ),
@@ -162,9 +168,10 @@ class _MoreDetailState extends State<MoreDetail> {
           Container(
             height: 50,
             decoration: BoxDecoration(
-                border: Border.all(color: MyTheme.light_grey,),
-                borderRadius: BorderRadius.circular(15)
-            ),
+                border: Border.all(
+                  color: MyTheme.light_grey,
+                ),
+                borderRadius: BorderRadius.circular(15)),
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -173,12 +180,14 @@ class _MoreDetailState extends State<MoreDetail> {
                   autofocus: false,
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText:  AppLocalizations.of(context)!
+                    hintText: AppLocalizations.of(context)!
                         .land_details_syno_plot_size_ucf,
                     hintStyle: TextStyle(fontWeight: FontWeight.w500),
-                    suffixIcon: Icon(Icons.location_on_outlined,
+                    suffixIcon: Icon(
+                      Icons.location_on_outlined,
                       size: 35,
-                      color: Colors.black,),
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ),
@@ -191,9 +200,10 @@ class _MoreDetailState extends State<MoreDetail> {
           Container(
             height: 50,
             decoration: BoxDecoration(
-                border: Border.all(color: MyTheme.light_grey,),
-                borderRadius: BorderRadius.circular(15)
-            ),
+                border: Border.all(
+                  color: MyTheme.light_grey,
+                ),
+                borderRadius: BorderRadius.circular(15)),
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -205,7 +215,6 @@ class _MoreDetailState extends State<MoreDetail> {
                     hintText: AppLocalizations.of(context)!
                         .crops_grown_and_planned_ucf,
                     hintStyle: TextStyle(fontWeight: FontWeight.w500),
-
                   ),
                 ),
               ),
@@ -218,9 +227,10 @@ class _MoreDetailState extends State<MoreDetail> {
           Container(
             height: 50,
             decoration: BoxDecoration(
-                border: Border.all(color: MyTheme.light_grey,),
-                borderRadius: BorderRadius.circular(15)
-            ),
+                border: Border.all(
+                  color: MyTheme.light_grey,
+                ),
+                borderRadius: BorderRadius.circular(15)),
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -232,7 +242,6 @@ class _MoreDetailState extends State<MoreDetail> {
                     hintText: AppLocalizations.of(context)!
                         .tractor_jcb_tiller_rotovotator_ucf,
                     hintStyle: TextStyle(fontWeight: FontWeight.w500),
-
                   ),
                 ),
               ),
@@ -245,9 +254,10 @@ class _MoreDetailState extends State<MoreDetail> {
           Container(
             height: 50,
             decoration: BoxDecoration(
-                border: Border.all(color: MyTheme.light_grey,),
-                borderRadius: BorderRadius.circular(15)
-            ),
+                border: Border.all(
+                  color: MyTheme.light_grey,
+                ),
+                borderRadius: BorderRadius.circular(15)),
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -256,8 +266,8 @@ class _MoreDetailState extends State<MoreDetail> {
                   autofocus: false,
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText:  AppLocalizations.of(context)!
-                        .sheep_cow_chicken_ucf,
+                    hintText:
+                        AppLocalizations.of(context)!.sheep_cow_chicken_ucf,
                     hintStyle: TextStyle(fontWeight: FontWeight.w500),
                   ),
                 ),
@@ -269,19 +279,18 @@ class _MoreDetailState extends State<MoreDetail> {
           ),
 
           Center(
-            child: ElevatedButton(onPressed: (){}, child:
-            Text(AppLocalizations.of(context)!
-                .update_ucf,
-              style: TextStyle(fontWeight: FontWeight.w600,fontSize: 25),
-            ),
-              style: ElevatedButton.styleFrom(
-                primary: MyTheme.primary_color,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-
-                ),
-                padding: EdgeInsets.symmetric(vertical: 13,horizontal: 40)
+            child: ElevatedButton(
+              onPressed: () {},
+              child: Text(
+                AppLocalizations.of(context)!.update_ucf,
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 25),
               ),
+              style: ElevatedButton.styleFrom(
+                  primary: MyTheme.primary_color,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 13, horizontal: 40)),
             ),
           )
         ],

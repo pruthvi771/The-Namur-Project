@@ -113,8 +113,8 @@ class _CategoryProductsState extends State<CategoryProducts> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: homeData.scaffoldKey,
-        drawer: const MainDrawer(),
+        // key: homeData.scaffoldKey,
+        // drawer: const MainDrawer(),
         backgroundColor: Colors.white,
         appBar: buildAppBar(context),
         body: Column(

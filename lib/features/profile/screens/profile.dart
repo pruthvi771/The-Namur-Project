@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
+import 'package:active_ecommerce_flutter/drawer/drawer.dart';
 import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_screen.dart';
 import 'package:active_ecommerce_flutter/features/profile/address_list.dart';
 import 'package:active_ecommerce_flutter/features/profile/enum.dart';
@@ -256,18 +257,30 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
     return Stack(
       children: [
         Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: Icon(
-                Icons.keyboard_arrow_left,
-                size: 35,
-                color: MyTheme.white,
-              ),
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: MyTheme.primary_color,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              Icons.keyboard_arrow_left,
+              size: 35,
+              color: MyTheme.white,
             ),
-            automaticallyImplyLeading: false,
+          ),
+          drawer: const MainDrawer(),
+          appBar: AppBar(
+            // leading: IconButton(
+            //   onPressed: () {
+            //     Navigator.pop(context);
+            //   },
+            //   icon: Icon(
+            //     Icons.keyboard_arrow_left,
+            //     size: 35,
+            //     color: MyTheme.white,
+            //   ),
+            // ),
+            // automaticallyImplyLeading: false,
             flexibleSpace: Container(
               decoration: const BoxDecoration(
                 gradient: LinearGradient(

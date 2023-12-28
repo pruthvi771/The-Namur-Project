@@ -285,7 +285,7 @@ class _CartState extends State<Cart> {
           app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
           key: homeData.scaffoldKey,
-          drawer: const MainDrawer(),
+          // drawer: const MainDrawer(),
           backgroundColor: Colors.white,
           appBar: buildAppBar(context),
           body: Stack(

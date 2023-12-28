@@ -50,7 +50,7 @@ class _PurchaseHistoryScreenState extends State<PurchaseHistoryScreen> {
         textDirection:
             app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
         child: Scaffold(
-          drawer: const MainDrawer(),
+          // drawer: const MainDrawer(),
           backgroundColor: Colors.white,
           appBar: AppBar(
             flexibleSpace: Container(

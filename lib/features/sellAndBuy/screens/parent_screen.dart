@@ -69,7 +69,7 @@ class _ParentScreenState extends State<ParentScreen> {
       length: categoryListForParentEnum[widget.parentEnum]!.length,
       child: Scaffold(
         // key: homeData.scaffoldKey,
-        drawer: const MainDrawer(),
+        // drawer: const MainDrawer(),
         // appBar: buildCustomAppBar(context),
         appBar: AppBar(
           // backgroundColor: MyTheme.primary_color,

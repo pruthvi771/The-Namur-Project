@@ -58,8 +58,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       textDirection:
           app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
-          key: homeData.scaffoldKey,
-          drawer: const MainDrawer(),
+          // key: homeData.scaffoldKey,
+          // drawer: const MainDrawer(),
           appBar: PreferredSize(
               preferredSize: Size.fromHeight(60),
               child: AppBar(

@@ -36,7 +36,7 @@ class _ManMachineState extends State<ManMachine> {
         children: [
           Scaffold(
             key: homeData.scaffoldKey,
-            drawer: const MainDrawer(),
+            // drawer: const MainDrawer(),
             backgroundColor: Colors.transparent,
             appBar: buildCustomAppBar(context),
             body: buildBody(),

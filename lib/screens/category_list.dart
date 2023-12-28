@@ -121,12 +121,11 @@ class _CategoryListState extends State<CategoryList> {
           app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
       child: Stack(children: [
         Scaffold(
-          key: homeData.scaffoldKey,
-          drawer: const MainDrawer(),
+          // key: homeData.scaffoldKey,
+          // drawer: const MainDrawer(),
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            // elevation: 0,
-            // backgroundColor: MyTheme.primary_color,
+            automaticallyImplyLeading: false,
             flexibleSpace: Container(
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
@@ -145,13 +144,6 @@ class _CategoryListState extends State<CategoryList> {
             ),
             centerTitle: true,
           ),
-          // body: RefreshIndicator(
-          //   child: buildBody(),
-          //   onRefresh: () async {
-          //     // Add a return statement at the end
-          //     _getProfileDataFuture = _getProfileData();
-          //   },
-          // ),
           body: buildBody(),
         ),
         Align(

@@ -26,7 +26,6 @@ class _ProductInventoryState extends State<ProductInventory> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: homeData.scaffoldKey,
-      drawer: const MainDrawer(),
       appBar: AppBar(
         // backgroundColor: MyTheme.primary_color,
         flexibleSpace: Container(

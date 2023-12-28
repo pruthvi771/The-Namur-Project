@@ -122,7 +122,7 @@ class _SubCategoryState extends State<SubCategory> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: homeData.scaffoldKey,
-      drawer: const MainDrawer(),
+      // drawer: const MainDrawer(),
       backgroundColor: Colors.white,
       appBar: buildAppBar(context),
       body: Column(

@@ -80,7 +80,7 @@ class _CultivationTipsState extends State<CultivationTips> {
         children: [
           Scaffold(
             key: homeData.scaffoldKey,
-            drawer: const MainDrawer(),
+            // drawer: const MainDrawer(),
             backgroundColor: Colors.transparent,
             appBar: buildCustomAppBar(context),
             body: buildBody(),
