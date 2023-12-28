@@ -879,3 +879,27 @@ var SubSubCategoryList = {
     'Sell',
   ],
 };
+
+var animalsList = [
+  'Parrot',
+  'Pigeon',
+  'Sparrow',
+  'Bull',
+  'Rabbit',
+  'Buffalo',
+  'Bee',
+  'Duck',
+  'Donkey',
+  'Dog',
+  'Cow',
+  'Fish',
+  'Pig',
+  'Pork',
+  'Sheep',
+  'Turkey',
+  'Hen',
+  'Goat',
+  'Emu',
+  'Cat',
+  'Black Cat',
+];

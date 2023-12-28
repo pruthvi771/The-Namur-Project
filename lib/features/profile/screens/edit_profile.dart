@@ -60,11 +60,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   TextEditingController _nameControllerForAccount = TextEditingController();
 
-  TextEditingController _animalNameController = TextEditingController();
+  // TextEditingController _animalNameController = TextEditingController();
+
   TextEditingController _animalQuantityController = TextEditingController();
 
   final cropsList = addressList.crops;
   final equipmentsList = addressList.equipment;
+  final animalsList = addressList.animals;
 
   LocationRepository locationRepository = LocationRepository();
 
@@ -80,6 +82,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   String? locationDropdownValue;
   String? locationDropdownValueForLand;
+
+  String? animalDropdownValue;
 
   bool talukDropdownEnabled = false;
   bool isDropdownEnabled = false;
@@ -656,9 +660,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void _addAnimalToHive(landSyno, name, quantity) async {
-    if (name.isEmpty) {
+    if (landSyno == null || landSyno.isEmpty) {
+      ToastComponent.showDialog(localContext.select_land,
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
+
+    if (name == null || name.isEmpty) {
       ToastComponent.showDialog(
-        localContext.enter_animal_name,
+        localContext.select_animal,
         gravity: Toast.center,
         duration: Toast.lengthLong,
       );
@@ -707,7 +717,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       print('Land with syno $landSyno not found.');
     }
 
-    _animalNameController.clear();
+    // _animalNameController.clear();
+    animalDropdownValue = null;
     _animalQuantityController.clear();
 
     BlocProvider.of<HiveBloc>(context).add(
@@ -2323,11 +2334,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         children: [
                                           Expanded(
                                             flex: 3,
-                                            child: TextFieldWidget(
-                                              localContext.animal,
-                                              _animalNameController,
-                                              localContext.enter_animal_name,
-                                            ),
+                                            child: DropdownButtonWidget(
+                                                '',
+                                                localContext.select_animal,
+                                                animalsList.map<
+                                                        DropdownMenuItem<
+                                                            String>>(
+                                                    (String value) {
+                                                  return DropdownMenuItem<
+                                                      String>(
+                                                    value: value,
+                                                    child: Text(addressList
+                                                        .translatedName(
+                                                            name: value
+                                                                .toString()
+                                                                .toLowerCase(),
+                                                            context: context)),
+                                                  );
+                                                }).toList(),
+                                                animalDropdownValue, (value) {
+                                              setState(() {
+                                                animalDropdownValue = value;
+                                              });
+                                            }),
                                           ),
                                           SizedBox(
                                             width: 5,
@@ -2350,7 +2379,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             onPressed: () {
                                               _addAnimalToHive(
                                                 landDropdownValue,
-                                                _animalNameController.text,
+                                                animalDropdownValue,
                                                 _animalQuantityController.text,
                                               );
                                               setState(() {});

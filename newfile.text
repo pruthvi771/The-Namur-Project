@@ -1,11 +1,13 @@
 {
   "hi": [
     "choose_image_from",
-    "cost_estimate_hasnt_been_added_yet"
+    "cost_estimate_hasnt_been_added_yet",
+    "select_animal"
   ],
 
   "kn": [
     "choose_image_from",
-    "cost_estimate_hasnt_been_added_yet"
+    "cost_estimate_hasnt_been_added_yet",
+    "select_animal"
   ]
 }

@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+extension Capitalized on String {
+  String capitalized() =>
+      this.substring(0, 1).toUpperCase() + this.substring(1).toLowerCase();
+}
+
 String translatedName({
   required String name,
   required BuildContext context,
@@ -351,7 +356,7 @@ String translatedName({
     case 'hive':
       return AppLocalizations.of(context)!.hive;
     default:
-      return name;
+      return name.capitalized();
   }
 }
 
@@ -465,4 +470,28 @@ var districtListForWeather = [
   'Tumakuru',
   'Udupi',
   'Bijapur',
+];
+
+List<String> animals = [
+  'Parrot',
+  'Pigeon',
+  'Sparrow',
+  'Bull',
+  'Rabbit',
+  'Buffalo',
+  'Bee',
+  'Duck',
+  'Donkey',
+  'Dog',
+  'Cow',
+  'Fish',
+  'Pig',
+  'Pork',
+  'Sheep',
+  'Turkey',
+  'Hen',
+  'Goat',
+  'Emu',
+  'Cat',
+  'Black Cat',
 ];
