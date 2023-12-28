@@ -266,226 +266,245 @@ class ProductInventoryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 20.0, right: 20, top: 10),
+      padding: const EdgeInsets.only(
+        left: 8,
+        right: 8,
+        top: 10,
+        // bottom: 8,
+      ),
       child: Material(
-        elevation: 0.5,
-        borderRadius: BorderRadius.circular(5),
+        elevation: 0,
+        borderRadius: BorderRadius.circular(6),
         child: Container(
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: BorderRadius.circular(6),
               border: Border.all(
                   width: 1, color: MyTheme.medium_grey.withOpacity(0.5))),
-          height: 140,
+          height: 170,
           width: MediaQuery.of(context).size.width,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            child: Column(
+            padding: const EdgeInsets.all(5),
+            child: Row(
               children: [
-                // product name
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: Text(productName,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 19,
-                          fontWeight: FontWeight.w600,
-                        )),
-                  ),
-                ),
-
-                // product details
                 Expanded(
+                  flex: 10,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // product image
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                            padding: EdgeInsets.all(7),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(5),
-                              child: CachedNetworkImage(
-                                imageUrl: imageURL[0],
-                                fit: BoxFit.cover,
-                              ),
-                            )),
-                      ),
                       Expanded(
                         flex: 2,
+                        child: Container(
+                            padding: EdgeInsets.only(left: 5),
+                            height: 140,
+                            child: imageURL.isEmpty || imageURL.length == 0
+                                ? Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : ClipRRect(
+                                    borderRadius: BorderRadius.circular(5),
+                                    child: CachedNetworkImage(
+                                      imageUrl: imageURL[0],
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )),
+                      ),
+                      Expanded(
+                        flex: 3,
                         child: Padding(
-                          padding: const EdgeInsets.all(6.0),
-                          child: Row(
-                            // crossAxisAlignment: CrossAxisAlignment.start,
+                          padding: const EdgeInsets.only(
+                              top: 8, bottom: 8, left: 12),
+                          child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Text(
-                                      productSubSubCategory,
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    Text(
-                                      "Stock: $productQuantity x $quantityUnit",
-                                      maxLines: 2,
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                          color: MyTheme.dark_grey,
-                                          height: 1.2),
-                                    ),
-                                    Text(
-                                      "₹ $productPrice per ${quantityUnit == "Units" ? 'unit' : quantityUnit}",
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                          color: MyTheme.dark_grey,
-                                          height: 1.2),
-                                    ),
-                                  ],
+                              Text(
+                                productName,
+                                // 'skgknkl kgsne ksngkla lkgnlkang lkenglkg',
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              Column(
+                              Text(
+                                productSubSubCategory.toUpperCase(),
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                  color: Colors.grey[700],
+                                ),
+                              ),
+                              Row(
                                 children: [
-                                  Expanded(
-                                    child: CircleAvatar(
-                                      backgroundColor: MyTheme.green_lighter,
-                                      child: IconButton(
-                                        splashRadius: 20,
-                                        onPressed: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ProductPost(
-                                                        subCategoryEnum:
-                                                            subCategoryEnum,
-                                                        alreadyExistingProductNames: [],
-                                                        isProductEditScreen:
-                                                            true,
-                                                        isSecondHand:
-                                                            isSecondHand,
-                                                        sellProduct:
-                                                            SellProduct(
-                                                          id: productId,
-                                                          productName:
-                                                              productName,
-                                                          productDescription:
-                                                              productDescription,
-                                                          productPrice:
-                                                              productPrice,
-                                                          productQuantity:
-                                                              productQuantity,
-                                                          quantityUnit:
-                                                              quantityUnit,
-                                                          category: "",
-                                                          subCategory: "",
-                                                          subSubCategory:
-                                                              productSubSubCategory,
-                                                          imageURL: imageURL,
-                                                          sellerId: sellerId,
-                                                          isSecondHand:
-                                                              isSecondHand,
-                                                          district: district,
-                                                          taluk: taluk,
-                                                          gramPanchayat:
-                                                              gramPanchayat,
-                                                          village: village,
-                                                          createdAt:
-                                                              DateTime.now(),
-                                                        ),
-                                                      )));
-                                        },
-                                        icon: Image.asset(
-                                          "assets/edit1.png",
+                                  Container(
+                                    height: 20,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          '₹',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            // fontWeight: FontWeight.w600,
+                                          ),
                                         ),
-                                      ),
+                                        SizedBox.shrink()
+                                      ],
                                     ),
                                   ),
-                                  SizedBox(
-                                    height: 3,
-                                  ),
-                                  Expanded(
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.red[100],
-                                      child: IconButton(
-                                        splashRadius: 20,
-                                        onPressed: () {
-                                          showAdaptiveDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return AlertDialog(
-                                                  title: Text(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .delete_product,
-                                                    style: TextStyle(
-                                                      color:
-                                                          MyTheme.primary_color,
-                                                      fontSize: 20,
-                                                      fontWeight:
-                                                          FontWeight.w800,
-                                                    ),
-                                                  ),
-                                                  content: Text(
-                                                      '${AppLocalizations.of(context)!.are_you_sure_to_delete} $productName'),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: Text(
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .cancel,
-                                                        style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 15,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    TextButton(
-                                                      onPressed: () {
-                                                        onPressedDelete(
-                                                            context, productId);
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: Text(
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .delete,
-                                                        style: TextStyle(
-                                                          color: Colors.red,
-                                                          fontSize: 15,
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                );
-                                              });
-                                        },
-                                        icon: Icon(
-                                          Icons.delete,
-                                          color: Colors.black,
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.baseline,
+                                    textBaseline: TextBaseline.alphabetic,
+                                    children: [
+                                      Text(
+                                        '${productPrice.toInt()}',
+                                        style: TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w400,
                                         ),
                                       ),
-                                    ),
+                                      Text(
+                                        productSubSubCategory == 'On Rent'
+                                            ? '/ 1 Hr'
+                                            : ' per ${quantityUnit == "Units" ? 'unit' : quantityUnit}',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          // fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
-                              )
+                              ),
+                              Text(
+                                'Stock: $productQuantity x $quantityUnit',
+                                maxLines: 2,
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                    // color: MyTheme.bla,
+                                    height: 1.2),
+                              ),
                             ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: CircleAvatar(
+                          backgroundColor: Colors.red,
+                          child: IconButton(
+                            splashRadius: 20,
+                            onPressed: () {
+                              showAdaptiveDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: Text(
+                                        AppLocalizations.of(context)!
+                                            .delete_product,
+                                        style: TextStyle(
+                                          color: MyTheme.primary_color,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                      content: Text(
+                                          '${AppLocalizations.of(context)!.are_you_sure_to_delete} $productName'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text(
+                                            AppLocalizations.of(context)!
+                                                .cancel,
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            onPressedDelete(context, productId);
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text(
+                                            AppLocalizations.of(context)!
+                                                .delete,
+                                            style: TextStyle(
+                                              color: Colors.red,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  });
+                            },
+                            icon: Icon(
+                              Icons.close,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 3,
+                      ),
+                      Expanded(
+                        child: CircleAvatar(
+                          backgroundColor: Colors.green,
+                          child: IconButton(
+                            splashRadius: 20,
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ProductPost(
+                                            subCategoryEnum: subCategoryEnum,
+                                            alreadyExistingProductNames: [],
+                                            isProductEditScreen: true,
+                                            isSecondHand: isSecondHand,
+                                            sellProduct: SellProduct(
+                                              id: productId,
+                                              productName: productName,
+                                              productDescription:
+                                                  productDescription,
+                                              productPrice: productPrice,
+                                              productQuantity: productQuantity,
+                                              quantityUnit: quantityUnit,
+                                              category: "",
+                                              subCategory: "",
+                                              subSubCategory:
+                                                  productSubSubCategory,
+                                              imageURL: imageURL,
+                                              sellerId: sellerId,
+                                              isSecondHand: isSecondHand,
+                                              district: district,
+                                              taluk: taluk,
+                                              gramPanchayat: gramPanchayat,
+                                              village: village,
+                                              createdAt: DateTime.now(),
+                                            ),
+                                          )));
+                            },
+                            icon: Icon(
+                              Icons.edit,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),

@@ -208,45 +208,69 @@ class _MachineDetailsState extends State<MachineDetails> {
               if (snapshot.hasData) {
                 if (snapshot.data!['runningHours'] != null &&
                     snapshot.data!['kms'] != null)
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      SmallInfoBox(
-                        title: AppLocalizations.of(context)!.running_hours,
-                        value: Text(
-                          snapshot.data!['runningHours'].toString() + ' Hrs',
-                          style: TextStyle(fontSize: 13),
+                  return Container(
+                    height: 65,
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: SmallInfoBox(
+                            title: AppLocalizations.of(context)!.running_hours,
+                            value: Text(
+                              snapshot.data!['runningHours'].toString() +
+                                  ' Hrs',
+                              style: TextStyle(fontSize: 13),
+                            ),
+                            color: Colors.red.shade200,
+                          ),
                         ),
-                        color: Colors.red.shade200,
-                      ),
-                      snapshot.data!['numberOfRatings'] == 0
-                          ? SmallInfoBox(
-                              title: AppLocalizations.of(context)!.rating,
-                              value: Text('No rating'),
-                              color: Colors.blue.shade200)
-                          : SmallInfoBox(
-                              title: AppLocalizations.of(context)!.rating,
-                              value: RatingBarIndicator(
-                                rating: snapshot.data!['rating'] /
-                                    snapshot.data!['numberOfRatings'],
-                                itemCount: 5,
-                                itemSize: 15.0,
-                                physics: BouncingScrollPhysics(),
-                                itemBuilder: (context, _) => Icon(
-                                  Icons.star,
-                                  color: Colors.amber,
+                        snapshot.data!['numberOfRatings'] == 0
+                            ? Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 8),
+                                  child: SmallInfoBox(
+                                      title:
+                                          AppLocalizations.of(context)!.rating,
+                                      value: Text('No rating'),
+                                      color: Colors.blue.shade200),
+                                ),
+                              )
+                            : Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 8),
+                                  child: SmallInfoBox(
+                                      title:
+                                          AppLocalizations.of(context)!.rating,
+                                      value: RatingBarIndicator(
+                                        rating: snapshot.data!['rating'] /
+                                            snapshot.data!['numberOfRatings'],
+                                        itemCount: 5,
+                                        itemSize: 15.0,
+                                        physics: BouncingScrollPhysics(),
+                                        itemBuilder: (context, _) => Icon(
+                                          Icons.star,
+                                          color: Colors.amber,
+                                        ),
+                                      ),
+                                      color: Colors.blue.shade200),
                                 ),
                               ),
-                              color: Colors.blue.shade200),
-                      SmallInfoBox(
-                        title: AppLocalizations.of(context)!.kms,
-                        value: Text(
-                          snapshot.data!['kms'].toString() + ' Kms',
-                          style: TextStyle(fontSize: 13),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: SmallInfoBox(
+                              title: AppLocalizations.of(context)!.kms,
+                              value: Text(
+                                snapshot.data!['kms'].toString() + ' Kms',
+                                style: TextStyle(fontSize: 13),
+                              ),
+                              color: Colors.green.shade200,
+                            ),
+                          ),
                         ),
-                        color: Colors.green.shade200,
-                      ),
-                    ],
+                      ],
+                    ),
                   );
                 else {
                   return Container();
@@ -595,6 +619,7 @@ class _MachineDetailsState extends State<MachineDetails> {
     required Color color,
   }) {
     return Container(
+      // height: double.infinity,
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -602,9 +627,13 @@ class _MachineDetailsState extends State<MachineDetails> {
       ),
       child: Column(
         children: [
-          Text(
-            title,
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+          Expanded(
+            child: Text(
+              title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+            ),
           ),
           SizedBox(
             height: 5,

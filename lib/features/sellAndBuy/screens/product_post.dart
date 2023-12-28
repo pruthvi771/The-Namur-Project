@@ -551,9 +551,9 @@ class _ProductPostState extends State<ProductPost> {
     String machinePriceHintText = 'Price';
     if (productCategoryEnum == CategoryEnum.animals ||
         productCategoryEnum == CategoryEnum.birds ||
-        productCategoryEnum == CategoryEnum.electronics ||
+        productCategoryEnum == CategoryEnum.vehicles ||
         productCategoryEnum == CategoryEnum.equipments ||
-        productCategoryEnum == CategoryEnum.jcb) {
+        productCategoryEnum == CategoryEnum.tools) {
       selectedQuantityUnit = listOfQuantityUnits[0];
       showQuantityDropdown = false;
     }
@@ -565,436 +565,6 @@ class _ProductPostState extends State<ProductPost> {
     return ListView(
       physics: BouncingScrollPhysics(),
       children: [
-        // product name
-        Padding(
-          padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
-          child: Container(
-            decoration: BoxDecoration(
-                color: MyTheme.field_color,
-                borderRadius: BorderRadius.circular(10)),
-            child: TextFormField(
-              controller: _nameController,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.only(left: 15),
-                hintText: AppLocalizations.of(context)!.product_name_ucf,
-                hintStyle: TextStyle(
-                    color: Colors.grey[600],
-                    fontWeight: FontWeight.w400,
-                    fontFamily: 'Poppins'),
-              ),
-            ),
-          ),
-        ),
-
-        // product category
-        Container(
-            margin: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
-            decoration: BoxDecoration(
-                color: MyTheme.field_color,
-                borderRadius: BorderRadius.circular(10)),
-            child: DropdownButton<String>(
-              padding: EdgeInsets.only(left: 15),
-              underline: Container(
-                // Remove the underline
-                height: 0,
-                color: Colors.transparent,
-              ),
-              value: _selectedItem,
-              onChanged: (String? newValue) {
-                setState(() {
-                  _selectedItem = newValue!;
-                  if (_selectedItem == "On Rent") {
-                    hideQuantityBox = true;
-                    _quantityController.text = "1";
-                  } else {
-                    hideQuantityBox = false;
-                  }
-                });
-              },
-              items:
-                  _dropdownItems.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              hint: SizedBox(
-                width: MediaQuery.of(context).size.width /
-                    1.3, // Adjust the width to your desired value
-                child: Text(
-                  AppLocalizations.of(context)!.product_category,
-                  style: TextStyle(
-                      color: Colors.grey[600],
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Poppins'),
-                ),
-              ),
-            )),
-
-        // product quantity
-        Container(
-          margin: const EdgeInsets.only(top: 20.0, left: 20.0, right: 15.0),
-          height: 50, // Specify a fixed height for the container
-          child: Row(
-            children: [
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: MyTheme.field_color,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: TextFormField(
-                    enabled: !hideQuantityBox,
-                    controller: _quantityController,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.only(left: 15),
-                      hintText: AppLocalizations.of(context)!.quantity_ucf,
-                      hintStyle: TextStyle(
-                        color: Colors.grey[600],
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'Poppins',
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(width: 10),
-              if (showQuantityDropdown)
-                Container(
-                  // width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: MyTheme.field_color,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 6),
-                        child: Icon(
-                          Icons.close,
-                          color: Colors.grey[600],
-                          size: 15,
-                        ),
-                      ),
-                      DropdownButton<String>(
-                        padding: EdgeInsets.only(left: 15, right: 5),
-                        underline: Container(
-                          height: 0,
-                          color: Colors.transparent,
-                        ),
-                        value: selectedQuantityUnit,
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            selectedQuantityUnit = newValue!;
-                          });
-                        },
-                        items: listOfQuantityUnits
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        hint: Text(
-                          AppLocalizations.of(context)!.select_quantity_unit,
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Poppins',
-                          ),
-                        ),
-                        // icon: SizedBox(width: 24),
-                      ),
-                    ],
-                  ),
-                ),
-            ],
-          ),
-        ),
-
-        // product price
-        Container(
-          margin: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
-          width: MediaQuery.of(context).size.width,
-          height: 50,
-          decoration: BoxDecoration(
-            color: MyTheme.field_color,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 15.0, right: 15.0),
-            child: Row(
-              children: [
-                (productCategoryEnum == CategoryEnum.electronics ||
-                        productCategoryEnum == CategoryEnum.equipments ||
-                        productCategoryEnum == CategoryEnum.jcb)
-                    ? Expanded(
-                        child: TextFormField(
-                          controller: _priceController,
-                          keyboardType:
-                              TextInputType.numberWithOptions(decimal: true),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: machinePriceHintText,
-                            hintStyle: TextStyle(
-                              color: Colors.grey[600],
-                              fontWeight: FontWeight.w400,
-                              fontFamily: 'Poppins',
-                            ),
-                          ),
-                        ),
-                      )
-                    : Expanded(
-                        child: TextFormField(
-                          controller: _priceController,
-                          keyboardType:
-                              TextInputType.numberWithOptions(decimal: true),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText:
-                                "${AppLocalizations.of(context)!.price_ucf} (per ${selectedQuantityUnit == "Units" ? 'unit' : selectedQuantityUnit ?? 'unit'})",
-                            hintStyle: TextStyle(
-                              color: Colors.grey[600],
-                              fontWeight: FontWeight.w400,
-                              fontFamily: 'Poppins',
-                            ),
-                          ),
-                        ),
-                      ),
-              ],
-            ),
-          ),
-        ),
-
-        // Text(parentEnum.toString()),
-
-        if (parentEnum == ParentEnum.machine)
-          Column(
-            children: [
-              Container(
-                margin: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
-                decoration: BoxDecoration(
-                    color: MyTheme.field_color,
-                    borderRadius: BorderRadius.circular(10)),
-                child: TextFormField(
-                  controller: _runningHoursController,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.only(left: 15),
-                    hintText: AppLocalizations.of(context)!.enter_running_hours,
-                    hintStyle: TextStyle(
-                        color: Colors.grey[600],
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'Poppins'),
-                  ),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
-                decoration: BoxDecoration(
-                    color: MyTheme.field_color,
-                    borderRadius: BorderRadius.circular(10)),
-                child: TextFormField(
-                  controller: _kmsController,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.only(left: 15),
-                    hintText: AppLocalizations.of(context)!.enter_total_kms,
-                    hintStyle: TextStyle(
-                        color: Colors.grey[600],
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'Poppins'),
-                  ),
-                ),
-              ),
-              BlocBuilder<HiveBloc, HiveState>(
-                builder: (context, state) {
-                  if (state is HiveDataReceived) {
-                    List<String> machines = [];
-
-                    for (Land land in state.profileData.land) {
-                      for (String machine in land.equipments) {
-                        machines.add(machine);
-                      }
-                    }
-
-                    print(machines);
-
-                    return Column(
-                      children: [
-                        state.profileData.land.length == 0
-                            ? Container(
-                                padding: const EdgeInsets.only(
-                                    top: 20.0,
-                                    left: 20.0,
-                                    right: 20.0,
-                                    bottom: 10),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      height: 50,
-                                      width: double.infinity,
-                                      margin: const EdgeInsets.only(bottom: 10),
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 12),
-                                      decoration: BoxDecoration(
-                                          color: MyTheme.field_color,
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .no_land_added_yet,
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: Colors.grey[600],
-                                                  fontWeight: FontWeight.w400,
-                                                  fontFamily: 'Poppins'),
-                                            ),
-                                          ),
-                                          Icon(Icons.block)
-                                        ],
-                                      ),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        AppLocalizations.of(context)!
-                                            .add_land_first,
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey[600],
-                                            fontWeight: FontWeight.w400,
-                                            fontFamily: 'Poppins'),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              )
-                            : DropdownButtonWidget(
-                                '',
-                                AppLocalizations.of(context)!.select_land,
-                                state.profileData.land
-                                    .map((e) => DropdownMenuItem<String>(
-                                          child: Text(e.village),
-                                          value: e.syno,
-                                        ))
-                                    .toList(),
-                                landDropdownValue,
-                                (value) {
-                                  setState(() {
-                                    hiveMachineDropdown = null;
-                                    landDropdownValue = value;
-                                  });
-                                },
-                              ),
-                        landDropdownValue == null
-                            ? Container()
-                            : state.profileData.land
-                                        .firstWhere((element) =>
-                                            element.syno == landDropdownValue)
-                                        .equipments
-                                        .length ==
-                                    0
-                                ? Container(
-                                    padding: const EdgeInsets.only(
-                                        top: 20.0,
-                                        left: 20.0,
-                                        right: 20.0,
-                                        bottom: 10),
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          height: 50,
-                                          width: double.infinity,
-                                          margin:
-                                              const EdgeInsets.only(bottom: 10),
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 12),
-                                          decoration: BoxDecoration(
-                                              color: MyTheme.field_color,
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Align(
-                                                alignment: Alignment.centerLeft,
-                                                child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .no_machines_added,
-                                                  style: TextStyle(
-                                                      fontSize: 16,
-                                                      color: Colors.grey[600],
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      fontFamily: 'Poppins'),
-                                                ),
-                                              ),
-                                              Icon(Icons.block)
-                                            ],
-                                          ),
-                                        ),
-                                        Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            AppLocalizations.of(context)!
-                                                .please_first_add_machine_in_settings_screen,
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.grey[600],
-                                                fontWeight: FontWeight.w400,
-                                                fontFamily: 'Poppins'),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  )
-                                : DropdownButtonWidget(
-                                    '',
-                                    AppLocalizations.of(context)!
-                                        .select_machine,
-                                    state.profileData.land
-                                        .firstWhere((element) =>
-                                            element.syno == landDropdownValue)
-                                        .equipments
-                                        .map((e) => DropdownMenuItem<String>(
-                                              child: Text(e),
-                                              value: e,
-                                            ))
-                                        .toList(),
-                                    hiveMachineDropdown,
-                                    (value) {
-                                      setState(() {
-                                        hiveMachineDropdown = value;
-                                      });
-                                    },
-                                  ),
-                      ],
-                    );
-                  } else {
-                    return Container();
-                  }
-                },
-              ),
-            ],
-          ),
-
-        // Text(landDropdownValue.toString()),
-        // Text(hiveMachineDropdown.toString()),
-
         // add image
         widget.isProductEditScreen
             ? Padding(
@@ -1219,6 +789,444 @@ class _ProductPostState extends State<ProductPost> {
                         ),
                 ),
               ),
+
+        // product name
+        Padding(
+          padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+          child: Container(
+            decoration: BoxDecoration(
+                color: MyTheme.field_color,
+                borderRadius: BorderRadius.circular(10)),
+            child: TextFormField(
+              controller: _nameController,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(left: 15),
+                hintText: AppLocalizations.of(context)!.product_name_ucf,
+                hintStyle: TextStyle(
+                    color: Colors.grey[600],
+                    fontWeight: FontWeight.w400,
+                    fontFamily: 'Poppins'),
+              ),
+            ),
+          ),
+        ),
+
+        // product category
+        Container(
+            margin: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+            decoration: BoxDecoration(
+                color: MyTheme.field_color,
+                borderRadius: BorderRadius.circular(10)),
+            child: DropdownButton<String>(
+              padding: EdgeInsets.only(left: 15),
+              underline: Container(
+                // Remove the underline
+                height: 0,
+                color: Colors.transparent,
+              ),
+              value: _selectedItem,
+              onChanged: (String? newValue) {
+                setState(() {
+                  _selectedItem = newValue!;
+                  if (_selectedItem == "On Rent") {
+                    hideQuantityBox = true;
+                    _quantityController.text = "1";
+                  } else {
+                    hideQuantityBox = false;
+                  }
+                });
+              },
+              items:
+                  _dropdownItems.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              hint: SizedBox(
+                width: MediaQuery.of(context).size.width /
+                    1.3, // Adjust the width to your desired value
+                child: Text(
+                  AppLocalizations.of(context)!.product_category,
+                  style: TextStyle(
+                      color: Colors.grey[600],
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Poppins'),
+                ),
+              ),
+            )),
+
+        // product quantity
+        Container(
+          margin: const EdgeInsets.only(top: 20.0, left: 20.0, right: 15.0),
+          height: 50, // Specify a fixed height for the container
+          child: Row(
+            children: [
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: MyTheme.field_color,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: TextFormField(
+                    enabled: !hideQuantityBox,
+                    controller: _quantityController,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.only(left: 15),
+                      hintText: AppLocalizations.of(context)!.quantity_ucf,
+                      hintStyle: TextStyle(
+                        color: Colors.grey[600],
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 10),
+              if (showQuantityDropdown)
+                Container(
+                  // width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: MyTheme.field_color,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 6),
+                        child: Icon(
+                          Icons.close,
+                          color: Colors.grey[600],
+                          size: 15,
+                        ),
+                      ),
+                      DropdownButton<String>(
+                        padding: EdgeInsets.only(left: 15, right: 5),
+                        underline: Container(
+                          height: 0,
+                          color: Colors.transparent,
+                        ),
+                        value: selectedQuantityUnit,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            selectedQuantityUnit = newValue!;
+                          });
+                        },
+                        items: listOfQuantityUnits
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        hint: Text(
+                          AppLocalizations.of(context)!.select_quantity_unit,
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Poppins',
+                          ),
+                        ),
+                        // icon: SizedBox(width: 24),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        ),
+
+        // product price
+        Container(
+          margin:
+              EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0, bottom: 20),
+          width: MediaQuery.of(context).size.width,
+          height: 50,
+          decoration: BoxDecoration(
+            color: MyTheme.field_color,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+            child: Row(
+              children: [
+                (productCategoryEnum == CategoryEnum.vehicles ||
+                        productCategoryEnum == CategoryEnum.equipments ||
+                        productCategoryEnum == CategoryEnum.tools)
+                    ? Expanded(
+                        child: TextFormField(
+                          controller: _priceController,
+                          keyboardType:
+                              TextInputType.numberWithOptions(decimal: true),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: machinePriceHintText,
+                            hintStyle: TextStyle(
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
+                        ),
+                      )
+                    : Expanded(
+                        child: TextFormField(
+                          controller: _priceController,
+                          keyboardType:
+                              TextInputType.numberWithOptions(decimal: true),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText:
+                                "${AppLocalizations.of(context)!.price_ucf} (per ${selectedQuantityUnit == "Units" ? 'unit' : selectedQuantityUnit ?? 'unit'})",
+                            hintStyle: TextStyle(
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
+                        ),
+                      ),
+              ],
+            ),
+          ),
+        ),
+
+        // Text(parentEnum.toString()),
+
+        if (parentEnum == ParentEnum.machine)
+          Column(
+            children: [
+              Container(
+                margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                decoration: BoxDecoration(
+                    color: MyTheme.field_color,
+                    borderRadius: BorderRadius.circular(10)),
+                child: TextFormField(
+                  controller: _runningHoursController,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.only(left: 15),
+                    hintText: AppLocalizations.of(context)!.enter_running_hours,
+                    hintStyle: TextStyle(
+                        color: Colors.grey[600],
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Poppins'),
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+                decoration: BoxDecoration(
+                    color: MyTheme.field_color,
+                    borderRadius: BorderRadius.circular(10)),
+                child: TextFormField(
+                  controller: _kmsController,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.only(left: 15),
+                    hintText: AppLocalizations.of(context)!.enter_total_kms,
+                    hintStyle: TextStyle(
+                        color: Colors.grey[600],
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Poppins'),
+                  ),
+                ),
+              ),
+              BlocBuilder<HiveBloc, HiveState>(
+                builder: (context, state) {
+                  if (state is HiveDataReceived) {
+                    List<String> machines = [];
+
+                    for (Land land in state.profileData.land) {
+                      for (String machine in land.equipments) {
+                        machines.add(machine);
+                      }
+                    }
+
+                    print(machines);
+
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: Column(
+                        children: [
+                          state.profileData.land.length == 0
+                              ? Container(
+                                  padding: const EdgeInsets.only(
+                                      top: 20.0,
+                                      left: 20.0,
+                                      right: 20.0,
+                                      bottom: 10),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        height: 50,
+                                        width: double.infinity,
+                                        margin:
+                                            const EdgeInsets.only(bottom: 10),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 12),
+                                        decoration: BoxDecoration(
+                                            color: MyTheme.field_color,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                AppLocalizations.of(context)!
+                                                    .no_land_added_yet,
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.grey[600],
+                                                    fontWeight: FontWeight.w400,
+                                                    fontFamily: 'Poppins'),
+                                              ),
+                                            ),
+                                            Icon(Icons.block)
+                                          ],
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          AppLocalizations.of(context)!
+                                              .add_land_first,
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey[600],
+                                              fontWeight: FontWeight.w400,
+                                              fontFamily: 'Poppins'),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              : DropdownButtonWidget(
+                                  '',
+                                  AppLocalizations.of(context)!.select_land,
+                                  state.profileData.land
+                                      .map((e) => DropdownMenuItem<String>(
+                                            child: Text(e.village),
+                                            value: e.syno,
+                                          ))
+                                      .toList(),
+                                  landDropdownValue,
+                                  (value) {
+                                    setState(() {
+                                      hiveMachineDropdown = null;
+                                      landDropdownValue = value;
+                                    });
+                                  },
+                                ),
+                          landDropdownValue == null
+                              ? Container()
+                              : state.profileData.land
+                                          .firstWhere((element) =>
+                                              element.syno == landDropdownValue)
+                                          .equipments
+                                          .length ==
+                                      0
+                                  ? Container(
+                                      padding: const EdgeInsets.only(
+                                          top: 20.0,
+                                          left: 20.0,
+                                          right: 20.0,
+                                          bottom: 10),
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            height: 50,
+                                            width: double.infinity,
+                                            margin: const EdgeInsets.only(
+                                                bottom: 10),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 12),
+                                            decoration: BoxDecoration(
+                                                color: MyTheme.field_color,
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Align(
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  child: Text(
+                                                    AppLocalizations.of(
+                                                            context)!
+                                                        .no_machines_added,
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.grey[600],
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        fontFamily: 'Poppins'),
+                                                  ),
+                                                ),
+                                                Icon(Icons.block)
+                                              ],
+                                            ),
+                                          ),
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .please_first_add_machine_in_settings_screen,
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.grey[600],
+                                                  fontWeight: FontWeight.w400,
+                                                  fontFamily: 'Poppins'),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                  : DropdownButtonWidget(
+                                      '',
+                                      AppLocalizations.of(context)!
+                                          .select_machine,
+                                      state.profileData.land
+                                          .firstWhere((element) =>
+                                              element.syno == landDropdownValue)
+                                          .equipments
+                                          .map((e) => DropdownMenuItem<String>(
+                                                child: Text(e),
+                                                value: e,
+                                              ))
+                                          .toList(),
+                                      hiveMachineDropdown,
+                                      (value) {
+                                        setState(() {
+                                          hiveMachineDropdown = value;
+                                        });
+                                      },
+                                    ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    return Container();
+                  }
+                },
+              ),
+            ],
+          ),
+
+        // Text(landDropdownValue.toString()),
+        // Text(hiveMachineDropdown.toString()),
 
         // additional description
         Padding(

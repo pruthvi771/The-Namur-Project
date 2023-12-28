@@ -44,14 +44,14 @@ var categoryListForParentEnum = {
     CategoryEnum.crops,
   ],
   ParentEnum.machine: [
-    CategoryEnum.jcb,
-    CategoryEnum.electronics,
+    CategoryEnum.vehicles,
     CategoryEnum.equipments,
+    CategoryEnum.tools,
   ],
   ParentEnum.land: [
-    CategoryEnum.jcb,
-    CategoryEnum.electronics,
+    CategoryEnum.vehicles,
     CategoryEnum.equipments,
+    CategoryEnum.tools,
   ],
 };
 
@@ -104,12 +104,12 @@ var subCategoryListsForCategory = {
     SubCategoryEnum.groundnut,
     SubCategoryEnum.jute,
   ],
-  CategoryEnum.electronics: [
+  CategoryEnum.equipments: [
     SubCategoryEnum.mobile,
     SubCategoryEnum.laptop,
     SubCategoryEnum.tv,
   ],
-  CategoryEnum.jcb: [
+  CategoryEnum.vehicles: [
     SubCategoryEnum.jcb,
     SubCategoryEnum.tractor,
     SubCategoryEnum.rotavator,
@@ -117,7 +117,7 @@ var subCategoryListsForCategory = {
     SubCategoryEnum.Loader,
     SubCategoryEnum.Backhoe,
   ],
-  CategoryEnum.equipments: [
+  CategoryEnum.tools: [
     SubCategoryEnum.ElectricScooter,
     SubCategoryEnum.Equipment,
     SubCategoryEnum.Scooter,
@@ -152,9 +152,12 @@ enum CategoryEnum {
   crops,
   vegetables,
   fruits,
-  electronics,
-  jcb,
+  // electronics,
+  // jcb,
+  // equipments,
+  vehicles,
   equipments,
+  tools,
 }
 
 var nameForCategoryEnum = {
@@ -163,8 +166,10 @@ var nameForCategoryEnum = {
   CategoryEnum.crops: "Grains/Pulses",
   CategoryEnum.vegetables: "Vegetables",
   CategoryEnum.fruits: "Fruits",
-  CategoryEnum.electronics: "Electronics",
-  CategoryEnum.jcb: "JCB",
+  // CategoryEnum.electronics: "Electronics",
+  // CategoryEnum.jcb: "JCB",
+  CategoryEnum.vehicles: "Vehicles",
+  CategoryEnum.tools: "Tools",
   CategoryEnum.equipments: "Equipments",
   CategoryEnum.supplies: "Supplies",
 };
