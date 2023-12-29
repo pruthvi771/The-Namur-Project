@@ -150,7 +150,7 @@ class _FilterScreenState extends State<FilterScreen> {
                 Expanded(
                   flex: 2,
                   child: Container(
-                    color: Colors.grey[100],
+                    color: Colors.grey[200],
                     child: ListView(
                       children: [
                         GestureDetector(
@@ -166,7 +166,7 @@ class _FilterScreenState extends State<FilterScreen> {
                             height: 50,
                             color: sectionOpened == FilterSection.price
                                 ? Colors.white
-                                : Colors.grey[200],
+                                : Colors.transparent,
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
@@ -193,7 +193,7 @@ class _FilterScreenState extends State<FilterScreen> {
                                   color:
                                       sectionOpened == FilterSection.categories
                                           ? Colors.white
-                                          : Colors.grey[200],
+                                          : Colors.transparent,
                                   child: Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
@@ -222,7 +222,7 @@ class _FilterScreenState extends State<FilterScreen> {
                             color:
                                 sectionOpened == FilterSection.sellerLocations
                                     ? Colors.white
-                                    : Colors.grey[200],
+                                    : Colors.transparent,
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
@@ -370,7 +370,7 @@ class _FilterScreenState extends State<FilterScreen> {
                                           return Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Container(
-                                              color: Colors.grey[100],
+                                              color: Colors.grey[200],
                                               padding:
                                                   const EdgeInsets.symmetric(
                                                       horizontal: 8,
@@ -529,7 +529,6 @@ class _FilterScreenState extends State<FilterScreen> {
               children: [
                 Expanded(child: SizedBox()),
                 Container(
-                  // width: 100,
                   height: 40,
                   child: ElevatedButton(
                     onPressed: () {
@@ -611,7 +610,7 @@ class _FilterScreenState extends State<FilterScreen> {
             height: 3,
           ),
           Container(
-            color: Colors.grey[100],
+            color: Colors.grey[200],
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

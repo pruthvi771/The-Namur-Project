@@ -4,32 +4,31 @@ enum ProductType {
   // onRent,
 }
 
-enum ProductQuantity {
-  units,
-  wkg,
-  w500g,
-  w250g,
-}
+enum ProductQuantity { units, wkg, w500g, w250g, ltr, mtr, acre, feet }
 
 var nameForProductQuantity = {
   ProductQuantity.units: "Units",
   ProductQuantity.wkg: "Kg",
   ProductQuantity.w500g: "500g",
   ProductQuantity.w250g: "250g",
+  ProductQuantity.ltr: "Ltr",
+  ProductQuantity.mtr: "Mtr",
+  ProductQuantity.acre: "Acre",
+  ProductQuantity.feet: "Feet",
 };
 
 enum ParentEnum {
   animal,
   food,
   machine,
-  land,
+  market,
 }
 
 var nameForParentEnum = {
   ParentEnum.animal: "Animals",
   ParentEnum.food: "Food",
   ParentEnum.machine: "Machine",
-  ParentEnum.land: "Land",
+  ParentEnum.market: "Market",
 };
 
 var categoryListForParentEnum = {
@@ -48,10 +47,15 @@ var categoryListForParentEnum = {
     CategoryEnum.equipments,
     CategoryEnum.tools,
   ],
-  ParentEnum.land: [
+  ParentEnum.market: [
     CategoryEnum.vehicles,
     CategoryEnum.equipments,
     CategoryEnum.tools,
+    // CategoryEnum.vehicles,
+    // CategoryEnum.landProperty,
+    // CategoryEnum.toysGadget,
+    // CategoryEnum.houseItems,
+    // CategoryEnum.other,
   ],
 };
 
@@ -152,12 +156,15 @@ enum CategoryEnum {
   crops,
   vegetables,
   fruits,
-  // electronics,
-  // jcb,
-  // equipments,
   vehicles,
   equipments,
   tools,
+
+  // land specific
+  landProperty,
+  toysGadget,
+  houseItems,
+  other,
 }
 
 var nameForCategoryEnum = {
@@ -166,12 +173,14 @@ var nameForCategoryEnum = {
   CategoryEnum.crops: "Grains/Pulses",
   CategoryEnum.vegetables: "Vegetables",
   CategoryEnum.fruits: "Fruits",
-  // CategoryEnum.electronics: "Electronics",
-  // CategoryEnum.jcb: "JCB",
   CategoryEnum.vehicles: "Vehicles",
   CategoryEnum.tools: "Tools",
   CategoryEnum.equipments: "Equipments",
   CategoryEnum.supplies: "Supplies",
+  CategoryEnum.landProperty: "Land Property",
+  CategoryEnum.toysGadget: "Toys/Gadget",
+  CategoryEnum.houseItems: "House Items",
+  CategoryEnum.other: "Other",
 };
 
 enum SubCategoryEnum {
@@ -345,270 +354,6 @@ enum SubCategoryEnum {
   honeyTools,
   hive,
 }
-
-// String translatedNameForSubCategoryEnum({
-//   required SubCategoryEnum subCategory,
-//   required BuildContext context,
-// }) {
-//   switch (subCategory) {
-//     case SubCategoryEnum.cows:
-//       return AppLocalizations.of(context)!.cows;
-//     case SubCategoryEnum.goats:
-//       return AppLocalizations.of(context)!.goats;
-//     case SubCategoryEnum.buffaloes:
-//       return AppLocalizations.of(context)!.buffaloes;
-//     case SubCategoryEnum.sheep:
-//       return AppLocalizations.of(context)!.sheep;
-//     case SubCategoryEnum.bull:
-//       return AppLocalizations.of(context)!.bull;
-//     case SubCategoryEnum.pig:
-//       return AppLocalizations.of(context)!.pig;
-//     case SubCategoryEnum.parrot:
-//       return AppLocalizations.of(context)!.parrot;
-//     case SubCategoryEnum.pigeon:
-//       return AppLocalizations.of(context)!.pigeon;
-//     case SubCategoryEnum.sparrow:
-//       return AppLocalizations.of(context)!.sparrow;
-//     case SubCategoryEnum.duck:
-//       return AppLocalizations.of(context)!.duck;
-//     case SubCategoryEnum.turkey:
-//       return AppLocalizations.of(context)!.turkey;
-//     case SubCategoryEnum.barley:
-//       return AppLocalizations.of(context)!.barley;
-//     case SubCategoryEnum.bengalGram:
-//       return AppLocalizations.of(context)!.bengalGram;
-//     case SubCategoryEnum.castor:
-//       return AppLocalizations.of(context)!.castor;
-//     case SubCategoryEnum.cotton:
-//       return AppLocalizations.of(context)!.cotton;
-//     case SubCategoryEnum.groundnut:
-//       return AppLocalizations.of(context)!.groundnut;
-//     case SubCategoryEnum.jute:
-//       return AppLocalizations.of(context)!.jute;
-//     case SubCategoryEnum.linseed:
-//       return AppLocalizations.of(context)!.linseed;
-//     case SubCategoryEnum.maize:
-//       return AppLocalizations.of(context)!.maize;
-//     case SubCategoryEnum.mustard:
-//       return AppLocalizations.of(context)!.mustard;
-//     case SubCategoryEnum.pearlMillet:
-//       return AppLocalizations.of(context)!.pearlMillet;
-//     case SubCategoryEnum.rabiMaize:
-//       return AppLocalizations.of(context)!.rabiMaize;
-//     case SubCategoryEnum.soybean:
-//       return AppLocalizations.of(context)!.soybean;
-//     case SubCategoryEnum.sunflower:
-//       return AppLocalizations.of(context)!.sunflower;
-//     case SubCategoryEnum.tobacco:
-//       return AppLocalizations.of(context)!.tobacco;
-//     case SubCategoryEnum.turmeric:
-//       return AppLocalizations.of(context)!.turmeric;
-//     case SubCategoryEnum.wheat:
-//       return AppLocalizations.of(context)!.wheat;
-//     case SubCategoryEnum.rice:
-//       return AppLocalizations.of(context)!.rice;
-//     case SubCategoryEnum.jower:
-//       return AppLocalizations.of(context)!.jower;
-//     case SubCategoryEnum.coffee:
-//       return AppLocalizations.of(context)!.coffee;
-//     case SubCategoryEnum.tea:
-//       return AppLocalizations.of(context)!.tea;
-//     case SubCategoryEnum.pepper:
-//       return AppLocalizations.of(context)!.pepper;
-//     case SubCategoryEnum.coconut:
-//       return AppLocalizations.of(context)!.coconut;
-//     case SubCategoryEnum.arecanut:
-//       return AppLocalizations.of(context)!.arecanut;
-//     case SubCategoryEnum.horsegram:
-//       return AppLocalizations.of(context)!.horsegram;
-//     case SubCategoryEnum.ragi:
-//       return AppLocalizations.of(context)!.ragi;
-//     case SubCategoryEnum.chikpea:
-//       return AppLocalizations.of(context)!.chikpea;
-//     case SubCategoryEnum.jaggery:
-//       return AppLocalizations.of(context)!.jaggery;
-//     case SubCategoryEnum.tamrind:
-//       return AppLocalizations.of(context)!.tamrind;
-//     case SubCategoryEnum.cashew:
-//       return AppLocalizations.of(context)!.cashew;
-//     case SubCategoryEnum.palmOil:
-//       return AppLocalizations.of(context)!.palmOil;
-//     case SubCategoryEnum.greengram:
-//       return AppLocalizations.of(context)!.greengram;
-//     case SubCategoryEnum.arbi:
-//       return AppLocalizations.of(context)!.arbi;
-//     case SubCategoryEnum.ber:
-//       return AppLocalizations.of(context)!.ber;
-//     case SubCategoryEnum.cowPea:
-//       return AppLocalizations.of(context)!.cowPea;
-//     case SubCategoryEnum.cumin:
-//       return AppLocalizations.of(context)!.cumin;
-//     case SubCategoryEnum.kinnow:
-//       return AppLocalizations.of(context)!.kinnow;
-//     case SubCategoryEnum.lentil:
-//       return AppLocalizations.of(context)!.lentil;
-//     case SubCategoryEnum.litchi:
-//       return AppLocalizations.of(context)!.litchi;
-//     case SubCategoryEnum.okra:
-//       return AppLocalizations.of(context)!.okra;
-//     case SubCategoryEnum.pigenopea:
-//       return AppLocalizations.of(context)!.pigenopea;
-//     case SubCategoryEnum.ridgedGround:
-//       return AppLocalizations.of(context)!.ridgedGround;
-//     case SubCategoryEnum.sorghum:
-//       return AppLocalizations.of(context)!.sorghum;
-//     case SubCategoryEnum.sugarcane:
-//       return AppLocalizations.of(context)!.sugarcane;
-//     case SubCategoryEnum.tuberose:
-//       return AppLocalizations.of(context)!.tuberose;
-//     case SubCategoryEnum.beans:
-//       return AppLocalizations.of(context)!.beans;
-//     case SubCategoryEnum.beetroot:
-//       return AppLocalizations.of(context)!.beetroot;
-//     case SubCategoryEnum.bittergourd:
-//       return AppLocalizations.of(context)!.bittergourd;
-//     case SubCategoryEnum.bottlegourd:
-//       return AppLocalizations.of(context)!.bottlegourd;
-//     case SubCategoryEnum.brinjal:
-//       return AppLocalizations.of(context)!.brinjal;
-//     case SubCategoryEnum.brocolli:
-//       return AppLocalizations.of(context)!.brocolli;
-//     case SubCategoryEnum.cabbage:
-//       return AppLocalizations.of(context)!.cabbage;
-//     case SubCategoryEnum.capsicum:
-//       return AppLocalizations.of(context)!.capsicum;
-//     case SubCategoryEnum.carrot:
-//       return AppLocalizations.of(context)!.carrot;
-//     case SubCategoryEnum.cauliflower:
-//       return AppLocalizations.of(context)!.cauliflower;
-//     case SubCategoryEnum.chikPeas:
-//       return AppLocalizations.of(context)!.chikPeas;
-//     case SubCategoryEnum.chilli:
-//       return AppLocalizations.of(context)!.chilli;
-//     case SubCategoryEnum.clusterBean:
-//       return AppLocalizations.of(context)!.clusterBean;
-//     case SubCategoryEnum.coriander:
-//       return AppLocalizations.of(context)!.coriander;
-//     case SubCategoryEnum.cucumber:
-//       return AppLocalizations.of(context)!.cucumber;
-//     case SubCategoryEnum.drumstick:
-//       return AppLocalizations.of(context)!.drumstick;
-//     case SubCategoryEnum.frenchBeans:
-//       return AppLocalizations.of(context)!.frenchBeans;
-//     case SubCategoryEnum.ginger:
-//       return AppLocalizations.of(context)!.ginger;
-//     case SubCategoryEnum.greenpeas:
-//       return AppLocalizations.of(context)!.greenpeas;
-//     case SubCategoryEnum.IvyGround:
-//       return AppLocalizations.of(context)!.ivyGround;
-//     case SubCategoryEnum.lemon:
-//       return AppLocalizations.of(context)!.lemon;
-//     case SubCategoryEnum.mentha:
-//       return AppLocalizations.of(context)!.mentha;
-//     case SubCategoryEnum.pointedGround:
-//       return AppLocalizations.of(context)!.pointedGround;
-//     case SubCategoryEnum.potato:
-//       return AppLocalizations.of(context)!.potato;
-//     case SubCategoryEnum.pumpkin:
-//       return AppLocalizations.of(context)!.pumpkin;
-//     case SubCategoryEnum.raddish:
-//       return AppLocalizations.of(context)!.raddish;
-//     case SubCategoryEnum.snakeGround:
-//       return AppLocalizations.of(context)!.snakeGround;
-//     case SubCategoryEnum.spinach:
-//       return AppLocalizations.of(context)!.spinach;
-//     case SubCategoryEnum.spongeGround:
-//       return AppLocalizations.of(context)!.spongeGround;
-//     case SubCategoryEnum.tomato:
-//       return AppLocalizations.of(context)!.tomato;
-//     case SubCategoryEnum.sweetPotato:
-//       return AppLocalizations.of(context)!.sweetPotato;
-//     case SubCategoryEnum.mashroom:
-//       return AppLocalizations.of(context)!.mashroom;
-//     case SubCategoryEnum.ladyFinger:
-//       return AppLocalizations.of(context)!.ladyFinger;
-//     case SubCategoryEnum.babycorn:
-//       return AppLocalizations.of(context)!.babycorn;
-//     case SubCategoryEnum.milk:
-//       return AppLocalizations.of(context)!.milk;
-//     case SubCategoryEnum.onions:
-//       return AppLocalizations.of(context)!.onions;
-//     case SubCategoryEnum.garlic:
-//       return AppLocalizations.of(context)!.garlic;
-//     case SubCategoryEnum.amla:
-//       return AppLocalizations.of(context)!.amla;
-//     case SubCategoryEnum.banana:
-//       return AppLocalizations.of(context)!.banana;
-//     case SubCategoryEnum.gauva:
-//       return AppLocalizations.of(context)!.gauva;
-//     case SubCategoryEnum.grapes:
-//       return AppLocalizations.of(context)!.grapes;
-//     case SubCategoryEnum.jackfruit:
-//       return AppLocalizations.of(context)!.jackfruit;
-//     case SubCategoryEnum.mango:
-//       return AppLocalizations.of(context)!.mango;
-//     case SubCategoryEnum.muskmelon:
-//       return AppLocalizations.of(context)!.muskmelon;
-//     case SubCategoryEnum.pineapple:
-//       return AppLocalizations.of(context)!.pineapple;
-//     case SubCategoryEnum.sapota:
-//       return AppLocalizations.of(context)!.sapota;
-//     case SubCategoryEnum.watermelon:
-//       return AppLocalizations.of(context)!.watermelon;
-//     case SubCategoryEnum.orange:
-//       return AppLocalizations.of(context)!.orange;
-//     case SubCategoryEnum.strawberry:
-//       return AppLocalizations.of(context)!.strawberry;
-//     case SubCategoryEnum.custardApple:
-//       return AppLocalizations.of(context)!.custardApple;
-//     case SubCategoryEnum.papaya:
-//       return AppLocalizations.of(context)!.papaya;
-//     case SubCategoryEnum.pomegranate:
-//       return AppLocalizations.of(context)!.pomegranate;
-//     case SubCategoryEnum.apple:
-//       return AppLocalizations.of(context)!.apple;
-//     case SubCategoryEnum.MarasebuPear:
-//       return AppLocalizations.of(context)!.marasebuPear;
-//     case SubCategoryEnum.mosambi:
-//       return AppLocalizations.of(context)!.mosambi;
-//     case SubCategoryEnum.muskMelon:
-//       return AppLocalizations.of(context)!.muskMelon;
-//     case SubCategoryEnum.tenderCoconut:
-//       return AppLocalizations.of(context)!.tenderCoconut;
-//     case SubCategoryEnum.dates:
-//       return AppLocalizations.of(context)!.dates;
-//     case SubCategoryEnum.resins:
-//       return AppLocalizations.of(context)!.resins;
-//     case SubCategoryEnum.fig:
-//       return AppLocalizations.of(context)!.fig;
-//     case SubCategoryEnum.jamun:
-//       return AppLocalizations.of(context)!.jamun;
-//     case SubCategoryEnum.rose:
-//       return AppLocalizations.of(context)!.rose;
-//     case SubCategoryEnum.marigold:
-//       return AppLocalizations.of(context)!.marigold;
-//     case SubCategoryEnum.egg:
-//       return AppLocalizations.of(context)!.egg;
-//     case SubCategoryEnum.chicken:
-//       return AppLocalizations.of(context)!.chicken;
-//     case SubCategoryEnum.mobile:
-//       return AppLocalizations.of(context)!.mobile;
-//     case SubCategoryEnum.laptop:
-//       return AppLocalizations.of(context)!.laptop;
-//     case SubCategoryEnum.tv:
-//       return AppLocalizations.of(context)!.tv;
-//     case SubCategoryEnum.jcb:
-//       return AppLocalizations.of(context)!.jcb;
-//     case SubCategoryEnum.tractor:
-//       return AppLocalizations.of(context)!.tractor;
-//     case SubCategoryEnum.rotavator:
-//       return AppLocalizations.of(context)!.rotavator;
-//     case SubCategoryEnum.cultivator:
-//       return AppLocalizations.of(context)!.cultivator;
-//     default:
-//       return nameForSubCategoryEnum[subCategory]!;
-//   }
-// }
 
 SubCategoryEnum? findSubCategoryEnumForName(String subCategory) {
   for (var subCategoryEnum in nameForSubCategoryEnum.keys) {
@@ -861,16 +606,6 @@ var SubSubCategoryList = {
     'Grapes Green',
     'Grapes Red',
   ],
-  // SubCategoryEnum.laptop: [
-  //   'Laptop',
-  //   'Laptop Black',
-  //   'Laptop White',
-  // ],
-  // SubCategoryEnum.tv: [
-  //   'TV',
-  //   'TV Black',
-  //   'TV White',
-  // ],
   SubCategoryEnum.jcb: [
     'On Rent',
     'Sell',
@@ -888,27 +623,3 @@ var SubSubCategoryList = {
     'Sell',
   ],
 };
-
-var animalsList = [
-  'Parrot',
-  'Pigeon',
-  'Sparrow',
-  'Bull',
-  'Rabbit',
-  'Buffalo',
-  'Bee',
-  'Duck',
-  'Donkey',
-  'Dog',
-  'Cow',
-  'Fish',
-  'Pig',
-  'Pork',
-  'Sheep',
-  'Turkey',
-  'Hen',
-  'Goat',
-  'Emu',
-  'Cat',
-  'Black Cat',
-];

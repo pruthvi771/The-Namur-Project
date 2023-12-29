@@ -1020,5 +1020,6 @@
 "choose_image_from": "Choose Image From",
 "cost_estimate_hasnt_been_added_yet": "Cost Estimate hasn't been added yet",
 "select_animal":"Select Animal",
-"my_inventory": "My Inventory"
+"my_inventory": "My Inventory",
+"market": "Market"
 }

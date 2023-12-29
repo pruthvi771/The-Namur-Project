@@ -67,9 +67,6 @@ class _ParentScreenState extends State<ParentScreen> {
     return DefaultTabController(
       length: categoryListForParentEnum[widget.parentEnum]!.length,
       child: Scaffold(
-        // key: homeData.scaffoldKey,
-        // drawer: const MainDrawer(),
-        // appBar: buildCustomAppBar(context),
         appBar: AppBar(
           // backgroundColor: MyTheme.primary_color,
           automaticallyImplyLeading: false,

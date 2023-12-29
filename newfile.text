@@ -3,13 +3,15 @@
     "choose_image_from",
     "cost_estimate_hasnt_been_added_yet",
     "select_animal",
-    "my_inventory"
+    "my_inventory",
+    "market"
   ],
 
   "kn": [
     "choose_image_from",
     "cost_estimate_hasnt_been_added_yet",
     "select_animal",
-    "my_inventory"
+    "my_inventory",
+    "market"
   ]
 }

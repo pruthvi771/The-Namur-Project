@@ -477,7 +477,7 @@ class _CategoryListState extends State<CategoryList> {
                   : index == 2
                       ? ParentEnum.machine
                       : index == 3
-                          ? ParentEnum.land
+                          ? ParentEnum.market
                           : null;
           if (!isBuy) {
             Navigator.push(
@@ -487,7 +487,7 @@ class _CategoryListState extends State<CategoryList> {
                   return ParentScreen(
                       parentEnum: parentEnum!,
                       isSecondHand:
-                          parentEnum == ParentEnum.land ? true : false);
+                          parentEnum == ParentEnum.market ? true : false);
                 },
               ),
             );
@@ -499,7 +499,8 @@ class _CategoryListState extends State<CategoryList> {
                   return ParentScreen(
                     parentEnum: parentEnum!,
                     isBuy: true,
-                    isSecondHand: parentEnum == ParentEnum.land ? true : false,
+                    isSecondHand:
+                        parentEnum == ParentEnum.market ? true : false,
                   );
                 },
               ),
@@ -587,7 +588,7 @@ class _CategoryListState extends State<CategoryList> {
                           : index == 2
                               ? AppLocalizations.of(context)!.machine
                               : index == 3
-                                  ? AppLocalizations.of(context)!.land
+                                  ? AppLocalizations.of(context)!.market
                                   : AppLocalizations.of(context)!.calendar,
                   style: TextStyle(
                       fontWeight: FontWeight.w600, fontFamily: 'Poppins'),
