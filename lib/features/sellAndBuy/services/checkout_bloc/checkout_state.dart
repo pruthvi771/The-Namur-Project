@@ -16,6 +16,13 @@ final class CheckoutLoading extends CheckoutState {
   List<Object> get props => [];
 }
 
+final class CheckoutApproved extends CheckoutState {
+  const CheckoutApproved();
+
+  @override
+  List<Object> get props => [];
+}
+
 final class CheckoutCompleted extends CheckoutState {
   final String orderId;
   const CheckoutCompleted({

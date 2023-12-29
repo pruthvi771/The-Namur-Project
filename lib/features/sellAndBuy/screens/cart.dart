@@ -1,6 +1,7 @@
 // translation done.
 
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/checkout_details_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/checkout_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_event.dart';
@@ -467,6 +468,18 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                               }
                               BlocProvider.of<CheckoutBloc>(context).add(
                                 CheckoutInitialEventRequested(),
+                              );
+                            }
+                            if (state is CheckoutApproved) {
+                              // widget.currentUser.uid
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CheckoutDetails(
+                                    uid: widget.currentUser.uid,
+                                    totalPrice: snapshot.data!,
+                                  ),
+                                ),
                               );
                             }
                           },

@@ -18,11 +18,6 @@ class RentBloc extends Bloc<RentEvent, RentState> {
       try {
         emit(RentLoading());
         var currentUser = authRepository.currentUser!;
-        // List<SellProduct> products =
-        //     await buyRepository.getProductsForSubCategory(
-        //   subCategory: event.subCategory,
-        //   // isSecondHand: event.isSecondHand,
-        // );
 
         String? documentId = await rentRepository.addRentOrderDocument(
           buyerId: currentUser.userId,

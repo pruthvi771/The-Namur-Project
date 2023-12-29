@@ -1021,5 +1021,15 @@
 "cost_estimate_hasnt_been_added_yet": "Cost Estimate hasn't been added yet",
 "select_animal":"Select Animal",
 "my_inventory": "My Inventory",
-"market": "Market"
+"market": "Market",
+"choose_address": "Choose Address",
+"pay_via": "Pay via",
+"house_no": "House No, Flat No, Floor",
+"street_name" : "Street Name",
+"landmark_optional": "Landmark (optional)",
+"enter_house_no": "Enter House No, Flat No, Floor",
+"enter_street_name": "Enter Street Name",
+"enter_city": "Enter City",
+"enter_state": "Enter State",
+"select_address_to_continue" : "Select Address to Continue"
 }

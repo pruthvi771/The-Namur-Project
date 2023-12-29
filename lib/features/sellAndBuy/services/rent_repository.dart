@@ -8,7 +8,6 @@ class RentRepository {
     required String buyerId,
     required String sellerId,
     required String bookedSlot,
-    // required List bookedSlotBroken,
     required List<OrderItem> orderItems,
     required int numberOfHalfHours,
     required String bookedDate,

@@ -35,21 +35,67 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
             productID: product['productId'],
           );
 
-          // print(product['productId'].toString());
-          // print(userCartDocument!['name'].toString());
-          // print(product['quantity'].toString());
-          // print(userCartDocument['price'].toString());
-          // print(userCartDocument['sellerId'].toString());
-          // print(null.toString());
+          var response = await checkoutRepository.canReduceProductQuantity(
+              productId: product['productId'],
+              quantityToReduce: product['quantity']);
 
-          // print(userCartDocument);
+          print(product);
+
+          if (response[0] == false) {
+            emit(
+              NotEnoughQuantityError(
+                productName: userCartDocument!['name'],
+                availableQuantity: response[1],
+              ),
+            );
+            return;
+          } else if (response[0] == ReduceQuantityResponseEnum.Error) {
+            emit(CheckoutError(
+                message: 'Something went wrong. Please try again.'));
+            return;
+          }
+          // orderItems.add(
+          //   OrderItem(
+          //     productID: product['productId'],
+          //     name: userCartDocument!['name'],
+          //     quantity: product['quantity'],
+          //     price: userCartDocument['price'],
+          //     sellerID: userCartDocument['sellerId'],
+          //     rating: null,
+          //   ),
+          // );
+        }
+        // String? orderID =
+        //     await checkoutRepository.createOrder(event.userID, orderItems);
+        // await cartRepository.clearCart();
+        emit(CheckoutApproved());
+      } catch (e) {
+        print('error happened in AddToCartRequested');
+        print(e.toString());
+      }
+    });
+
+    on<CreateOrderRequested>((event, emit) async {
+      try {
+        emit(CheckoutLoading());
+        var userCartDocument = await checkoutRepository.getCartDocumenyByUserId(
+            userID: event.userID);
+        print(userCartDocument);
+        await Future.delayed(Duration(seconds: 2));
+        List<OrderItem> orderItems = [];
+        for (var product in userCartDocument!['products']) {
+          var userCartDocument =
+              await checkoutRepository.getProductDocumenyByProductId(
+            productID: product['productId'],
+          );
+
           var response = await checkoutRepository.reduceProductQuantity(
               productId: product['productId'],
               quantityToReduce: product['quantity']);
 
           print(product);
 
-          if (response[0] == ReduceQuantityResponseEnum.NotEnoughQuantity) {
+          if (response[0] == false) {
             emit(
               NotEnoughQuantityError(
                 productName: userCartDocument!['name'],
@@ -73,8 +119,8 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
             ),
           );
         }
-        String? orderID =
-            await checkoutRepository.createOrder(event.userID, orderItems);
+        String? orderID = await checkoutRepository.createOrder(
+            event.userID, orderItems, event.address);
         await cartRepository.clearCart();
         emit(CheckoutCompleted(orderId: orderID!));
       } catch (e) {

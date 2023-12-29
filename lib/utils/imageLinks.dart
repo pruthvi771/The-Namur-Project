@@ -1,4 +1,8 @@
 var imageForNameCloud = {
+  'cod':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmore%2Fcash-on-delivery.png?alt=media&token=287c2c42-4d93-40b1-9ee3-f89c4c17fe63',
+  'razorpay':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmore%2Frazorpay.png?alt=media&token=28bd729c-b513-4a80-9cfe-733f334fdee5',
   'farmers':
       'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmore%2Ffarmers.png?alt=media&token=663f050d-24b2-43c5-9196-b43800a5a725',
   'placeholder':

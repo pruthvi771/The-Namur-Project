@@ -4,7 +4,17 @@
     "cost_estimate_hasnt_been_added_yet",
     "select_animal",
     "my_inventory",
-    "market"
+    "market",
+    "choose_address",
+    "pay_via",
+    "house_no",
+    "street_name",
+    "landmark_optional",
+    "enter_house_no",
+    "enter_street_name",
+    "enter_city",
+    "enter_state",
+    "select_address_to_continue"
   ],
 
   "kn": [
@@ -12,6 +22,16 @@
     "cost_estimate_hasnt_been_added_yet",
     "select_animal",
     "my_inventory",
-    "market"
+    "market",
+    "choose_address",
+    "pay_via",
+    "house_no",
+    "street_name",
+    "landmark_optional",
+    "enter_house_no",
+    "enter_street_name",
+    "enter_city",
+    "enter_state",
+    "select_address_to_continue"
   ]
 }

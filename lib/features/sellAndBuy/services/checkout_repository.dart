@@ -1,4 +1,5 @@
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/order_item.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/checkout_details_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -76,7 +77,36 @@ class CheckoutRepository {
     }
   }
 
-  Future<String?> createOrder(String userID, List<OrderItem> items) async {
+  Future<List> canReduceProductQuantity({
+    required String productId,
+    required int quantityToReduce,
+  }) async {
+    try {
+      var productRef = _firestore.collection('products').doc(productId);
+      DocumentSnapshot productSnapshot = await productRef.get();
+
+      int currentQuantity = (productSnapshot.data() as Map)['quantity'] ?? 0;
+      if (currentQuantity < quantityToReduce) {
+        print('not enough');
+        return [false, currentQuantity];
+      }
+
+      return [true, 0];
+
+      // int newQuantity = currentQuantity - quantityToReduce;
+
+      // await productRef.update({'quantity': newQuantity});
+
+      // print('Quantity for $productId updated. New quantity: $newQuantity');
+      // return [ReduceQuantityResponseEnum.Success, 0];
+    } catch (error) {
+      print('Error reducing quantity: $error');
+      return [ReduceQuantityResponseEnum.Error, 0];
+    }
+  }
+
+  Future<String?> createOrder(String userID, List<OrderItem> items,
+      CheckoutAddress checkoutAddress) async {
     try {
       // extracting all seller IDs into a list
       List<String> sellerIDs = items.map((item) => item.sellerID).toList();
@@ -89,6 +119,7 @@ class CheckoutRepository {
           'totalAmount': calculateTotalAmount(items),
           'items': items.map((item) => item.toMap()).toList(),
           'status': 'Confirmed',
+          'address': checkoutAddress.toMap(),
         },
       );
 
