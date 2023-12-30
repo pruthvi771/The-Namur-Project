@@ -83,8 +83,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
       await dataBox.put('calendar', cropCalendarData);
     }
-
-    Navigator.pushReplacement(
+    Navigator.pop(context);
+    Navigator.pop(context);
+    Navigator.push(
         context, MaterialPageRoute(builder: (context) => CalendarScreen()));
   }
 

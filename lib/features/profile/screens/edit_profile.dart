@@ -498,6 +498,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     } else if (dataCollectionType == DataCollectionType.land) {
       landDropdownValue = null;
       savedData!.land.removeAt(index);
+      if (savedData.land.length == 0) {
+        var dataBox4 = Hive.box<CropCalendarData>('cropCalendarDataBox');
+        await dataBox4.clear();
+      }
     }
 
     var newData = ProfileData()

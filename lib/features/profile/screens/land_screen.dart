@@ -43,264 +43,338 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
       child: FutureBuilder(
           future: fetchDataFromHive(),
           builder: (context, snapshot) {
-            profileData = snapshot.data;
-            TabController tabController =
-                TabController(length: profileData!.land.length, vsync: this);
-            print(profileData!.land.length);
-            if (profileData!.land.length == 0)
+            if (snapshot.connectionState == ConnectionState.waiting) {
               return Scaffold(
                 backgroundColor: Colors.transparent,
                 appBar: buildCustomAppBar(context),
-                body: Container(
-                  height: double.infinity,
-                  width: double.infinity,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        AppLocalizations.of(context)!.no_land_added_yet,
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: .5,
-                          fontFamily: 'Poppins',
-                        ),
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: MyTheme.accent_color,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        child: Text(
-                          AppLocalizations.of(context)!.add_land_first,
+                body: Center(
+                  child: CircularProgressIndicator(
+                    color: MyTheme.accent_color,
+                  ),
+                ),
+              );
+            }
+            if (snapshot.hasData && snapshot.data != null) {
+              profileData = snapshot.data;
+              TabController tabController =
+                  TabController(length: profileData!.land.length, vsync: this);
+              print(profileData!.land.length);
+              if (profileData!.land.length == 0)
+                return Scaffold(
+                  backgroundColor: Colors.transparent,
+                  appBar: buildCustomAppBar(context),
+                  body: Container(
+                    height: double.infinity,
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.no_land_added_yet,
                           style: TextStyle(
-                            fontSize: 15,
+                            fontSize: 25,
                             fontWeight: FontWeight.w600,
                             letterSpacing: .5,
                             fontFamily: 'Poppins',
                           ),
                         ),
-                        onPressed: () {
-                          Navigator.pushReplacement(context,
-                              MaterialPageRoute(builder: (context) {
-                            return EditProfileScreen();
-                          }));
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            return DefaultTabController(
-              length: profileData!.land.length,
-              child: Scaffold(
-                backgroundColor: Colors.transparent,
-                appBar: buildCustomAppBar(context),
-                body: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Card(
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.0),
+                        SizedBox(
+                          height: 15,
                         ),
-                        child: Container(
-                          height: 50,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12.0),
-                            border: Border.all(
-                              color: MyTheme.field_color,
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: MyTheme.accent_color,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          child: TabBar(
-                            indicator: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12.0),
-                              color: Color(0xff4C7B10),
-                            ),
-                            labelColor: Colors.white,
-                            unselectedLabelColor: Colors.black,
-                            controller: tabController,
-                            isScrollable: true,
-                            labelPadding: EdgeInsets.symmetric(horizontal: 25),
-                            tabs: List.generate(
-                              profileData!.land.length,
-                              (index) {
-                                var item = profileData!.land[index];
-                                return Tab(
-                                  child: Text(
-                                    item.village,
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w800,
-                                      letterSpacing: .5,
-                                    ),
-                                  ),
-                                );
-                              },
+                          child: Text(
+                            AppLocalizations.of(context)!.add_land_first,
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: .5,
+                              fontFamily: 'Poppins',
                             ),
                           ),
+                          onPressed: () {
+                            Navigator.pushReplacement(context,
+                                MaterialPageRoute(builder: (context) {
+                              return EditProfileScreen();
+                            }));
+                          },
                         ),
-                      ),
+                      ],
                     ),
-                    Expanded(
-                      child: TabBarView(
-                        controller: tabController,
-                        children: List.generate(
-                          profileData!.land.length,
-                          (index) {
-                            var item = profileData!.land[index];
-                            // print('crops: ${item.crops.length}');
-                            // print('machines: ${item.equipments.length}');
-                            return SingleChildScrollView(
-                              padding: EdgeInsets.only(bottom: 20),
-                              physics: BouncingScrollPhysics(),
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 20),
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 5,
+                  ),
+                );
+              return DefaultTabController(
+                length: profileData!.land.length,
+                child: Scaffold(
+                  backgroundColor: Colors.transparent,
+                  appBar: buildCustomAppBar(context),
+                  body: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Card(
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          child: Container(
+                            height: 50,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12.0),
+                              border: Border.all(
+                                color: MyTheme.field_color,
+                              ),
+                            ),
+                            child: TabBar(
+                              indicator: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12.0),
+                                color: Color(0xff4C7B10),
+                              ),
+                              labelColor: Colors.white,
+                              unselectedLabelColor: Colors.black,
+                              controller: tabController,
+                              isScrollable: true,
+                              labelPadding:
+                                  EdgeInsets.symmetric(horizontal: 25),
+                              tabs: List.generate(
+                                profileData!.land.length,
+                                (index) {
+                                  var item = profileData!.land[index];
+                                  return Tab(
+                                    child: Text(
+                                      item.village,
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w800,
+                                        letterSpacing: .5,
+                                      ),
                                     ),
-                                    LandExpandedTile(
-                                      controller2: _areaController,
-                                      title: AppLocalizations.of(context)!
-                                          .land_details,
-                                      content: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 3, vertical: 8),
-                                        height: 150,
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              flex: 3,
-                                              child: Container(
-                                                height: double.infinity,
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(12)),
-                                                  child: Image.asset(
-                                                    'assets/farmland_medium.jpeg',
-                                                    fit: BoxFit.cover,
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: TabBarView(
+                          controller: tabController,
+                          children: List.generate(
+                            profileData!.land.length,
+                            (index) {
+                              var item = profileData!.land[index];
+                              // print('crops: ${item.crops.length}');
+                              // print('machines: ${item.equipments.length}');
+                              return SingleChildScrollView(
+                                padding: EdgeInsets.only(bottom: 20),
+                                physics: BouncingScrollPhysics(),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      LandExpandedTile(
+                                        controller2: _areaController,
+                                        title: AppLocalizations.of(context)!
+                                            .land_details,
+                                        content: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 3, vertical: 8),
+                                          height: 150,
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                flex: 3,
+                                                child: Container(
+                                                  height: double.infinity,
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                12)),
+                                                    child: Image.asset(
+                                                      'assets/farmland_medium.jpeg',
+                                                      fit: BoxFit.cover,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Expanded(
-                                              flex: 2,
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: MyTheme.green_lighter,
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                ),
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 16,
-                                                    vertical: 20),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceEvenly,
-                                                  children: [
-                                                    Text(
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .size_in_acres,
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          color: Colors.black54,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          letterSpacing: .5,
-                                                          fontFamily:
-                                                              'Poppins'),
-                                                    ),
-                                                    Text(
-                                                      '${item.area.toInt()}',
-                                                      style: TextStyle(
-                                                          fontSize: 17,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          letterSpacing: .5,
-                                                          fontFamily:
-                                                              'Poppins'),
-                                                    ),
-                                                    Text(
-                                                      'Sy No.',
-                                                      style: TextStyle(
-                                                          fontSize: 13,
-                                                          color: Colors.black54,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          letterSpacing: .5,
-                                                          fontFamily:
-                                                              'Poppins'),
-                                                    ),
-                                                    Text(
-                                                      item.syno,
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          letterSpacing: .5,
-                                                          fontFamily:
-                                                              'Poppins'),
-                                                    ),
-                                                  ],
-                                                ),
+                                              SizedBox(
+                                                width: 10,
                                               ),
-                                            )
-                                          ],
+                                              Expanded(
+                                                flex: 2,
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color:
+                                                        MyTheme.green_lighter,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12),
+                                                  ),
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 16,
+                                                      vertical: 20),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    children: [
+                                                      Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .size_in_acres,
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            color:
+                                                                Colors.black54,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            letterSpacing: .5,
+                                                            fontFamily:
+                                                                'Poppins'),
+                                                      ),
+                                                      Text(
+                                                        '${item.area.toInt()}',
+                                                        style: TextStyle(
+                                                            fontSize: 17,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            letterSpacing: .5,
+                                                            fontFamily:
+                                                                'Poppins'),
+                                                      ),
+                                                      Text(
+                                                        'Sy No.',
+                                                        style: TextStyle(
+                                                            fontSize: 13,
+                                                            color:
+                                                                Colors.black54,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            letterSpacing: .5,
+                                                            fontFamily:
+                                                                'Poppins'),
+                                                      ),
+                                                      Text(
+                                                        item.syno,
+                                                        style: TextStyle(
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            letterSpacing: .5,
+                                                            fontFamily:
+                                                                'Poppins'),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      height: 15,
-                                    ),
-                                    LandExpandedTile(
-                                        controller2: _cropController,
-                                        title:
-                                            AppLocalizations.of(context)!.crops,
-                                        content: (item.crops.length != 0)
+                                      SizedBox(
+                                        height: 15,
+                                      ),
+                                      LandExpandedTile(
+                                          controller2: _cropController,
+                                          title: AppLocalizations.of(context)!
+                                              .crops,
+                                          content: (item.crops.length != 0)
+                                              ? Container(
+                                                  height: 150,
+                                                  child: ListView(
+                                                    physics:
+                                                        BouncingScrollPhysics(),
+                                                    scrollDirection:
+                                                        Axis.horizontal,
+                                                    children: List.generate(
+                                                      item.crops.length,
+                                                      (index) {
+                                                        var crop =
+                                                            item.crops[index];
+                                                        return CropWidget(
+                                                          title: translatedName(
+                                                              name: crop.name
+                                                                  .toString()
+                                                                  .toLowerCase(),
+                                                              context: context),
+                                                          image: imageForNameCloud[crop
+                                                                  .name
+                                                                  .toLowerCase()] ??
+                                                              imageForNameCloud[
+                                                                  'placeholder']!,
+                                                          yieldOfCrop:
+                                                              crop.yieldOfCrop,
+                                                        );
+                                                      },
+                                                    ),
+                                                  ),
+                                                )
+                                              : Container(
+                                                  height: 50,
+                                                  child: Center(
+                                                    child: Text(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .no_crops_added,
+                                                      style: TextStyle(
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        letterSpacing: .5,
+                                                        fontFamily: 'Poppins',
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )),
+                                      SizedBox(
+                                        height: 15,
+                                      ),
+                                      LandExpandedTile(
+                                        controller2: _landController,
+                                        title: AppLocalizations.of(context)!
+                                            .machine,
+                                        content: (item.equipments.length != 0)
                                             ? Container(
-                                                height: 150,
+                                                // padding: const EdgeInsets.symmetric(
+                                                //     horizontal: 12),
+                                                height: 140,
                                                 child: ListView(
                                                   physics:
                                                       BouncingScrollPhysics(),
                                                   scrollDirection:
                                                       Axis.horizontal,
                                                   children: List.generate(
-                                                    item.crops.length,
+                                                    item.equipments.length,
                                                     (index) {
-                                                      var crop =
-                                                          item.crops[index];
-                                                      return CropWidget(
+                                                      var equipment = item
+                                                          .equipments[index];
+                                                      return EquipmentWidget(
                                                         title: translatedName(
-                                                            name: crop.name
+                                                            name: equipment
                                                                 .toString()
                                                                 .toLowerCase(),
                                                             context: context),
-                                                        image: imageForNameCloud[crop
-                                                                .name
-                                                                .toLowerCase()] ??
+                                                        image: imageForNameCloud[
+                                                                equipment
+                                                                    .toLowerCase()] ??
                                                             imageForNameCloud[
                                                                 'placeholder']!,
-                                                        yieldOfCrop:
-                                                            crop.yieldOfCrop,
                                                       );
                                                     },
                                                   ),
@@ -312,7 +386,7 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
                                                   child: Text(
                                                     AppLocalizations.of(
                                                             context)!
-                                                        .no_crops_added,
+                                                        .no_machines_added,
                                                     style: TextStyle(
                                                       fontSize: 15,
                                                       fontWeight:
@@ -322,70 +396,27 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
                                                     ),
                                                   ),
                                                 ),
-                                              )),
-                                    SizedBox(
-                                      height: 15,
-                                    ),
-                                    LandExpandedTile(
-                                      controller2: _landController,
-                                      title:
-                                          AppLocalizations.of(context)!.machine,
-                                      content: (item.equipments.length != 0)
-                                          ? Container(
-                                              // padding: const EdgeInsets.symmetric(
-                                              //     horizontal: 12),
-                                              height: 140,
-                                              child: ListView(
-                                                physics:
-                                                    BouncingScrollPhysics(),
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                children: List.generate(
-                                                  item.equipments.length,
-                                                  (index) {
-                                                    var equipment =
-                                                        item.equipments[index];
-                                                    return EquipmentWidget(
-                                                      title: translatedName(
-                                                          name: equipment
-                                                              .toString()
-                                                              .toLowerCase(),
-                                                          context: context),
-                                                      image: imageForNameCloud[
-                                                              equipment
-                                                                  .toLowerCase()] ??
-                                                          imageForNameCloud[
-                                                              'placeholder']!,
-                                                    );
-                                                  },
-                                                ),
                                               ),
-                                            )
-                                          : Container(
-                                              height: 50,
-                                              child: Center(
-                                                child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .no_machines_added,
-                                                  style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.w600,
-                                                    letterSpacing: .5,
-                                                    fontFamily: 'Poppins',
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                    ),
-                                  ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
+                ),
+              );
+            }
+            return Scaffold(
+              backgroundColor: Colors.transparent,
+              appBar: buildCustomAppBar(context),
+              body: Center(
+                child: CircularProgressIndicator(
+                  color: MyTheme.accent_color,
                 ),
               ),
             );
