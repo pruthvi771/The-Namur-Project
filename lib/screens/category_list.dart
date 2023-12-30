@@ -7,6 +7,7 @@ import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_screen.dart';
+import 'package:active_ecommerce_flutter/features/testscreen.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/parent_screen.dart';
 import 'package:active_ecommerce_flutter/helpers/shimmer_helper.dart';
@@ -187,11 +188,7 @@ class _CategoryListState extends State<CategoryList> {
                         //       Navigator.push(
                         //         context,
                         //         MaterialPageRoute(
-                        //           builder: (context) => CheckoutDetails(
-                        //             uid: "daOfTYpAxMRwjKmT3E5ln0hyoWn2",
-                        //             totalPrice: 1232.3,
-                        //           ),
-                        //         ),
+                        //             builder: (context) => TestWidget()),
                         //       );
                         //     },
                         //     child: Text('Test Widget')),

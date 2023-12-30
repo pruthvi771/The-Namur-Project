@@ -2,11 +2,11 @@
 
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_add_crop.dart';
+import 'package:active_ecommerce_flutter/features/calendar/screens/cultivation_tips_screen.dart';
+import 'package:active_ecommerce_flutter/features/calendar/screens/pest_control_screen.dart';
 import 'package:active_ecommerce_flutter/features/calendar/screens/schedule_screen.dart';
 import 'package:active_ecommerce_flutter/features/profile/address_list.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
-import 'package:active_ecommerce_flutter/screens/calender/cultivation_tip.dart';
-import 'package:active_ecommerce_flutter/screens/calender/pest_control.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/utils/imageLinks.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -405,13 +405,18 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                     ),
                                   ),
                                   SizedBox(width: 15),
+
+                                  // pest control
                                   InkWell(
                                     onTap: () {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  PestControl()));
+                                                  PestControlScreen(
+                                                    cropName:
+                                                        currentCrop.cropName,
+                                                  )));
                                     },
                                     child: Column(
                                       mainAxisAlignment:
@@ -439,13 +444,19 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                     ),
                                   ),
                                   SizedBox(width: 15),
+
+                                  // cultivation tips
                                   InkWell(
                                     onTap: () {
                                       Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CultivationTips()));
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              CultivationTipsScreen(
+                                                  cropName:
+                                                      currentCrop.cropName),
+                                        ),
+                                      );
                                     },
                                     child: Column(
                                       mainAxisAlignment:

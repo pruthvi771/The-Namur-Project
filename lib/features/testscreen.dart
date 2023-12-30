@@ -133,17 +133,63 @@ class _TestWidgetState extends State<TestWidget> {
             // Text(downloadLinks.toString()),
             ElevatedButton(
                 onPressed: () async {
-                  // File file = File("lib/assets/address.json");
-                  // String jsonData = await file.readAsString();
-                  String jsonData =
-                      await rootBundle.loadString('assets/address.json');
-                  List<Map<String, dynamic>> addresses =
-                      List<Map<String, dynamic>>.from(json.decode(jsonData));
+                  FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-                  print(addresses
-                      .map((map) => map['district'].toString())
-                      .toSet()
-                      .toList());
+                  // Reference to the document in the specified collection
+                  DocumentReference documentReference =
+                      firestore.collection('calendar').doc('cauliflower');
+
+                  // Update the specific field in the document
+                  await documentReference.update({
+                    'pest control': [
+                      {
+                        'stageName': 'Planting Stage',
+                        'pests': [
+                          {
+                            'name': 'Swirling Virus',
+                            'image': 'assets/swirling.png',
+                            'description': 'Swirling Virus is a virus'
+                          },
+                          {
+                            'name': 'Leaf Eaters',
+                            'image':
+                                'https://cdn-developer-wp.arc.dev/wp-content/uploads/2021/08/Adham-Dannaway-home.gif',
+                            'description':
+                                'Leaf Eaters are insects that eat leaves. Leaf Eaters are insects that eat leaves. Leaf Eaters are insects that eat leaves. Leaf Eaters are insects that eat leaves. Leaf Eaters are insects that eat leaves. Leaf Eaters are insects that eat leaves. Leaf Eaters are insects that eat leaves. Leaf Eaters are insects that eat leaves'
+                          },
+                          {
+                            'name': 'Fruit Flies',
+                            'image': 'assets/fruit_flies.png',
+                            'description':
+                                'Fruit Flies are small flying insects that infest fruits'
+                          },
+                        ]
+                      },
+                      {
+                        'stageName': 'Planting Stage 2',
+                        'pests': [
+                          {
+                            'name': 'Swirling Virus',
+                            'image': 'assets/swirling.png',
+                            'description': 'Swirling Virus is a virus'
+                          },
+                          {
+                            'name': 'Leaf Eaters',
+                            'image':
+                                'https://cdn-developer-wp.arc.dev/wp-content/uploads/2021/08/Adham-Dannaway-home.gif',
+                            'description':
+                                'Leaf Eaters are insects that eat leaves. Leaf Eaters are insects that eat leaves. Leaf Eaters are insects that eat leaves. Leaf Eaters are insects that eat leaves. Leaf Eaters are insects that eat leaves. Leaf Eaters are insects that eat leaves. Leaf Eaters are insects that eat leaves. Leaf Eaters are insects that eat leaves'
+                          },
+                          {
+                            'name': 'Fruit Flies',
+                            'image': 'assets/fruit_flies.png',
+                            'description':
+                                'Fruit Flies are small flying insects that infest fruits'
+                          },
+                        ]
+                      },
+                    ]
+                  });
                 },
                 child: Text('scam')),
             ElevatedButton(
