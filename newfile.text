@@ -14,7 +14,10 @@
     "enter_street_name",
     "enter_city",
     "enter_state",
-    "select_address_to_continue"
+    "select_address_to_continue",
+    "add_date_for_tracking_by_going_to_schedule_section",
+    "crop_details",
+    "start_tracking"
   ],
 
   "kn": [
@@ -32,6 +35,9 @@
     "enter_street_name",
     "enter_city",
     "enter_state",
-    "select_address_to_continue"
+    "select_address_to_continue",
+    "add_date_for_tracking_by_going_to_schedule_section",
+    "crop_details",
+    "start_tracking"
   ]
 }

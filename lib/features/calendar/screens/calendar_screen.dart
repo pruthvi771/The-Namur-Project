@@ -2,11 +2,11 @@
 
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_add_crop.dart';
+import 'package:active_ecommerce_flutter/features/calendar/screens/schedule_screen.dart';
 import 'package:active_ecommerce_flutter/features/profile/address_list.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/screens/calender/cultivation_tip.dart';
 import 'package:active_ecommerce_flutter/screens/calender/pest_control.dart';
-import 'package:active_ecommerce_flutter/screens/calender/tutorial.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/utils/imageLinks.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -279,6 +279,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
+                                  // cost esmite
                                   InkWell(
                                     onTap: docData['costEstimate'] == null ||
                                             docData['costEstimate'] == ''
@@ -363,13 +364,20 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                     ),
                                   ),
                                   SizedBox(width: 15),
+
+                                  // schedule
                                   InkWell(
                                     onTap: () {
                                       Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  Tutorial()));
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ScheduleScreen(
+                                            cropName: currentCrop.cropName,
+                                            landSyno: currentCrop.landSyno,
+                                            cropId: currentCrop.id,
+                                          ),
+                                        ),
+                                      );
                                     },
                                     child: Column(
                                       mainAxisAlignment:
@@ -472,85 +480,109 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               height: 20,
                             ),
 
-                            // calendar event heading
-                            Align(
-                              alignment: Alignment.center,
-                              child: Text(
-                                AppLocalizations.of(context)!.calendar_events,
-                                style: TextStyle(
-                                  color: Color(0xff107B28),
-                                  // fontFamily: "Poppins",
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 20,
-                                  decoration: TextDecoration.underline,
-                                ),
-                              ),
-                            ),
-
-                            SizedBox(
-                              height: 20,
-                            ),
-
-                            // SizedBox(height: 20),
-
-                            Padding(
-                              padding: const EdgeInsets.only(left: 20),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      AppLocalizations.of(context)!
-                                          .planting_date,
-                                      style: TextStyle(
+                            currentCrop.plantingDate == null
+                                ? Container(
+                                    height: 200,
+                                    child: Center(
+                                      child: Text(
+                                        AppLocalizations.of(context)!
+                                            .add_date_for_tracking_by_going_to_schedule_section,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
                                           fontSize: 16,
-                                          fontWeight: FontWeight.w700,
-                                          fontFamily: "Poppins"),
+                                        ),
+                                      ),
                                     ),
-                                    Text(
-                                      ': ${currentCrop.plantingDate.day}/${currentCrop.plantingDate.month}/${currentCrop.plantingDate.year}',
-                                      style: TextStyle(
-                                          fontSize: 16, fontFamily: "Poppins"),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                                  )
+                                : Column(
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          AppLocalizations.of(context)!
+                                              .calendar_events,
+                                          style: TextStyle(
+                                            color: Color(0xff107B28),
+                                            // fontFamily: "Poppins",
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 20,
+                                            decoration:
+                                                TextDecoration.underline,
+                                          ),
+                                        ),
+                                      ),
 
-                            SizedBox(
-                              height: 15,
-                            ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
 
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 20.0, right: 20),
-                              child: Container(
-                                child: ListView.builder(
-                                  itemCount: docData['stages'].length,
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.vertical,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context, index) {
-                                    return CalendarStageItem(
-                                      stageName:
-                                          '${AppLocalizations.of(context)!.stage_for_calendar} ${index + 1}',
-                                      stage1text: docData['stages'][index]['0']
-                                          ['name'],
-                                      stage2text: docData['stages'][index]['1']
-                                          ['name'],
-                                      initialDate: currentCrop.plantingDate.add(
-                                          Duration(
-                                              days: docData['stages'][index]
-                                                  ['0']['days'])),
-                                      stage1days: docData['stages'][index]['0']
-                                          ['days'],
-                                      stage2days: docData['stages'][index]['1']
-                                          ['days'],
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
+                                      // SizedBox(height: 20),
+
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 20),
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                AppLocalizations.of(context)!
+                                                    .planting_date,
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w700,
+                                                    fontFamily: "Poppins"),
+                                              ),
+                                              Text(
+                                                ': ${currentCrop.plantingDate!.day}/${currentCrop.plantingDate!.month}/${currentCrop.plantingDate!.year}',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontFamily: "Poppins"),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+
+                                      SizedBox(
+                                        height: 15,
+                                      ),
+
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 20.0, right: 20),
+                                        child: Container(
+                                          child: ListView.builder(
+                                            itemCount: docData['stages'].length,
+                                            shrinkWrap: true,
+                                            scrollDirection: Axis.vertical,
+                                            physics:
+                                                NeverScrollableScrollPhysics(),
+                                            itemBuilder: (context, index) {
+                                              return CalendarStageItem(
+                                                stageName:
+                                                    '${AppLocalizations.of(context)!.stage_for_calendar} ${index + 1}',
+                                                stage1text: docData['stages']
+                                                    [index]['0']['name'],
+                                                stage2text: docData['stages']
+                                                    [index]['1']['name'],
+                                                initialDate: currentCrop
+                                                    .plantingDate!
+                                                    .add(Duration(
+                                                        days: docData['stages']
+                                                                [index]['0']
+                                                            ['days'])),
+                                                stage1days: docData['stages']
+                                                    [index]['0']['days'],
+                                                stage2days: docData['stages']
+                                                    [index]['1']['days'],
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                           ],
                         );
                       }

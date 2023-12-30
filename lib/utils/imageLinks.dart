@@ -280,8 +280,6 @@ var imageForNameCloud = {
       'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fanimals%2Fduck.png?alt=media&token=6c5efff5-085b-409e-ad72-cf3c08888155',
   'donkey':
       'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fanimals%2Fdonkey.png?alt=media&token=19e6b02d-3d14-41aa-8e1f-af5182dc1444',
-  'hive':
-      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fanimals%2Fhive.png?alt=media&token=b91607a4-f6e3-4bd0-a1ec-d70d8eb3ed9f',
   'bird':
       'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fanimals%2Fbird.png?alt=media&token=2eaba9a4-3229-46a2-858b-a27777647977',
   'dog':

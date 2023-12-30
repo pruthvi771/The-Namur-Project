@@ -316,7 +316,7 @@ class CropCalendarItemAdapter extends TypeAdapter<CropCalendarItem> {
     return CropCalendarItem()
       ..cropName = fields[0] as String
       ..landSyno = fields[1] as String
-      ..plantingDate = fields[2] as DateTime
+      ..plantingDate = fields[2] as DateTime?
       ..id = fields[3] as String;
   }
 

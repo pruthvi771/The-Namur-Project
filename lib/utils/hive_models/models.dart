@@ -119,7 +119,7 @@ class CropCalendarItem {
   late String landSyno;
 
   @HiveField(2)
-  late DateTime plantingDate;
+  late DateTime? plantingDate;
 
   @HiveField(3)
   late String id;

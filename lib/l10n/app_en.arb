@@ -1031,5 +1031,8 @@
 "enter_street_name": "Enter Street Name",
 "enter_city": "Enter City",
 "enter_state": "Enter State",
-"select_address_to_continue" : "Select Address to Continue"
+"select_address_to_continue" : "Select Address to Continue",
+"add_date_for_tracking_by_going_to_schedule_section": "Add date for tracking by going to schedule section",
+"crop_details": "Crop Details",
+"start_tracking": "Start Tracking"
 }
