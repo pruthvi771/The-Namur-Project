@@ -1,14 +1,11 @@
 // translation done.
 
-import 'dart:ffi';
-
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:get/get.dart';
 import 'package:toast/toast.dart';
 
 class CheckoutAddressAdd extends StatefulWidget {
@@ -307,7 +304,7 @@ class _CheckoutAddressAddState extends State<CheckoutAddressAdd> {
         ),
 
         SizedBox(
-          height: 60,
+          height: 70,
         ),
       ],
     );

@@ -1,11 +1,15 @@
 // translation done.
 
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/models/order_item.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/checkout_address_add.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/checkout_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/checkout_bloc/checkout_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/checkout_bloc/checkout_event.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/checkout_bloc/checkout_state.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/rent_bloc/rent_bloc.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/rent_bloc/rent_event.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/services/rent_bloc/rent_state.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/utils/imageLinks.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -19,11 +23,29 @@ import 'package:toast/toast.dart';
 class CheckoutDetails extends StatefulWidget {
   final String uid;
   final double totalPrice;
+  final bool isRent;
+  final String? sellerId;
+  final String? bookedSlot;
+  final List<OrderItem>? orderItems;
+  final int? numberOfHalfHours;
+  final String? locationName;
+  final String? bookedDate;
+  final String? addToSlots;
+  final List? addToSlotsBroken;
 
   const CheckoutDetails({
     Key? key,
     required this.uid,
     required this.totalPrice,
+    this.isRent = false,
+    this.sellerId,
+    this.bookedSlot,
+    this.orderItems,
+    this.numberOfHalfHours,
+    this.locationName,
+    this.bookedDate,
+    this.addToSlots,
+    this.addToSlotsBroken,
   }) : super(key: key);
 
   @override
@@ -469,111 +491,181 @@ class _CheckoutDetailsState extends State<CheckoutDetails> {
                   ],
                 ),
               ),
-              BlocListener<CheckoutBloc, CheckoutState>(
-                listener: (context, state) {
-                  if (state is CheckoutCompleted) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CheckoutScreen(
-                                orderID: state.orderId,
-                              )),
-                    );
-                  }
-                  if (state is CheckoutError) {
-                    ToastComponent.showDialog(state.message,
-                        gravity: Toast.center, duration: Toast.lengthLong);
-                    BlocProvider.of<CheckoutBloc>(context).add(
-                      CheckoutInitialEventRequested(),
-                    );
-                  }
-                  if (state is NotEnoughQuantityError) {
-                    if (state.availableQuantity == 0) {
-                      ToastComponent.showDialog(
-                          AppLocalizations.of(context)!
-                              .product_is_out_of_stock(state.productName),
-                          gravity: Toast.center,
-                          duration: Toast.lengthLong);
-                    } else {
-                      ToastComponent.showDialog(
-                          // 'Only ${state.availableQuantity} units of ${state.productName} available',
-                          AppLocalizations.of(context)!
-                              .only_some_quantity_left_for_product(
-                                  state.productName, state.availableQuantity),
-                          gravity: Toast.center,
-                          duration: Toast.lengthLong);
-                    }
-                    BlocProvider.of<CheckoutBloc>(context).add(
-                      CheckoutInitialEventRequested(),
-                    );
-                  }
-                },
-                child: BlocBuilder<CheckoutBloc, CheckoutState>(
-                  builder: (context, state) {
-                    if (state is CheckoutLoading) {
-                      return Container(
-                        height: 40,
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                    return GestureDetector(
-                      onTap: () {
-                        if (selectedAddress == null) {
-                          ToastComponent.showDialog(
-                              AppLocalizations.of(context)!
-                                  .select_address_to_continue,
-                              gravity: Toast.center,
-                              duration: Toast.lengthLong);
-                          return;
-                        }
-
-                        BlocProvider.of<CheckoutBloc>(context).add(
-                          CreateOrderRequested(
-                            userID: widget.uid,
-                            address: selectedAddress!,
-                          ),
-                        );
-                      },
-                      child: Container(
-                        height: 40,
-                        // color: Colors.red[100],
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: Row(
-                          children: [
-                            CachedNetworkImage(
-                              height: 30,
-                              imageUrl: imageForNameCloud['cod']!,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Expanded(
-                              child: Text(
-                                'COD',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: .5,
-                                ),
-                              ),
-                            ),
-                            Icon(
-                              Icons.arrow_forward_ios,
-                              size: 16,
-                            )
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
+              widget.isRent
+                  ? CreateOrderRentSection()
+                  : CreateOrderNormalSection(),
               SizedBox(
                 height: 15,
               )
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  BlocListener<RentBloc, RentState> CreateOrderRentSection() {
+    return BlocListener<RentBloc, RentState>(
+      listener: (context, state) {
+        if (state is RentSuccess) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CheckoutScreen(
+                      orderID: state.documentId,
+                    )),
+          );
+        }
+      },
+      child: BlocBuilder<RentBloc, RentState>(
+        builder: (context, state) {
+          if (state is RentLoading) {
+            return Container(
+              height: 40,
+              child: CircularProgressIndicator(),
+            );
+          }
+          return GestureDetector(
+            onTap: () async {
+              if (selectedAddress == null) {
+                ToastComponent.showDialog(
+                    AppLocalizations.of(context)!.select_address_to_continue,
+                    gravity: Toast.center,
+                    duration: Toast.lengthLong);
+                return;
+              }
+
+              await FirebaseFirestore.instance
+                  .collection('products')
+                  .doc(widget.orderItems![0].productID)
+                  .update(
+                {
+                  'bookedSlots.${widget.bookedDate}':
+                      FieldValue.arrayUnion([widget.addToSlots!]),
+                  'bookedSlotsBroken.${widget.bookedDate}':
+                      FieldValue.arrayUnion(widget.addToSlotsBroken!),
+                },
+              );
+
+              BlocProvider.of<RentBloc>(context).add(
+                RentProductRequested(
+                  bookedDate: widget.bookedDate!,
+                  sellerId: widget.sellerId!,
+                  bookedSlot: widget.bookedSlot!,
+                  locationName: widget.locationName!,
+                  orderItems: widget.orderItems!,
+                  numberOfHalfHours: widget.numberOfHalfHours!,
+                ),
+              );
+            },
+            child: CodButton(),
+          );
+        },
+      ),
+    );
+  }
+
+  BlocListener<CheckoutBloc, CheckoutState> CreateOrderNormalSection() {
+    return BlocListener<CheckoutBloc, CheckoutState>(
+      listener: (context, state) {
+        if (state is CheckoutCompleted) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CheckoutScreen(
+                      orderID: state.orderId,
+                    )),
+          );
+        }
+        if (state is CheckoutError) {
+          ToastComponent.showDialog(state.message,
+              gravity: Toast.center, duration: Toast.lengthLong);
+          BlocProvider.of<CheckoutBloc>(context).add(
+            CheckoutInitialEventRequested(),
+          );
+        }
+        if (state is NotEnoughQuantityError) {
+          if (state.availableQuantity == 0) {
+            ToastComponent.showDialog(
+                AppLocalizations.of(context)!
+                    .product_is_out_of_stock(state.productName),
+                gravity: Toast.center,
+                duration: Toast.lengthLong);
+          } else {
+            ToastComponent.showDialog(
+                // 'Only ${state.availableQuantity} units of ${state.productName} available',
+                AppLocalizations.of(context)!
+                    .only_some_quantity_left_for_product(
+                        state.productName, state.availableQuantity),
+                gravity: Toast.center,
+                duration: Toast.lengthLong);
+          }
+          BlocProvider.of<CheckoutBloc>(context).add(
+            CheckoutInitialEventRequested(),
+          );
+        }
+      },
+      child: BlocBuilder<CheckoutBloc, CheckoutState>(
+        builder: (context, state) {
+          if (state is CheckoutLoading) {
+            return Container(
+              height: 40,
+              child: CircularProgressIndicator(),
+            );
+          }
+          return GestureDetector(
+            onTap: () {
+              if (selectedAddress == null) {
+                ToastComponent.showDialog(
+                    AppLocalizations.of(context)!.select_address_to_continue,
+                    gravity: Toast.center,
+                    duration: Toast.lengthLong);
+                return;
+              }
+
+              BlocProvider.of<CheckoutBloc>(context).add(
+                CreateOrderRequested(
+                  userID: widget.uid,
+                  address: selectedAddress!,
+                ),
+              );
+            },
+            child: CodButton(),
+          );
+        },
+      ),
+    );
+  }
+
+  Container CodButton() {
+    return Container(
+      height: 40,
+      // color: Colors.red[100],
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        children: [
+          CachedNetworkImage(
+            height: 30,
+            imageUrl: imageForNameCloud['cod']!,
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: Text(
+              'COD',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                letterSpacing: .5,
+              ),
+            ),
+          ),
+          Icon(
+            Icons.arrow_forward_ios,
+            size: 16,
+          )
+        ],
       ),
     );
   }

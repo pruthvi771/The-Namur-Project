@@ -2,14 +2,15 @@
 
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/order_item.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/checkout_details_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/checkout_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/rent_bloc/rent_bloc.dart';
-import 'package:active_ecommerce_flutter/features/sellAndBuy/services/rent_bloc/rent_event.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/rent_bloc/rent_state.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -55,6 +56,8 @@ class _MachineRentFormState extends State<MachineRentForm> {
   late Future<List<Land>> landList;
   late Future productDocForSlotsFuture;
 
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  late final currentUser;
   String? hour12FormarTimeSlot;
 
   List splitTimeRange(String timeRange) {
@@ -84,6 +87,7 @@ class _MachineRentFormState extends State<MachineRentForm> {
   @override
   void initState() {
     super.initState();
+    currentUser = _firebaseAuth.currentUser!;
     landList = getLandList();
     productDocForSlotsFuture = getProductDocForSlots(date: null);
   }
@@ -240,36 +244,66 @@ class _MachineRentFormState extends State<MachineRentForm> {
       return;
     }
 
-    await FirebaseFirestore.instance
-        .collection('products')
-        .doc(widget.machineId)
-        .update(
-      {
-        'bookedSlots.${dateOfRenting!.day}-${dateOfRenting!.month}-${dateOfRenting!.year}':
-            FieldValue.arrayUnion([hour24format]),
-        'bookedSlotsBroken.${dateOfRenting!.day}-${dateOfRenting!.month}-${dateOfRenting!.year}':
-            FieldValue.arrayUnion(splitTimeRange(hour24format)),
-      },
-    );
+    // await FirebaseFirestore.instance
+    //     .collection('products')
+    //     .doc(widget.machineId)
+    //     .update(
+    //   {
+    //     'bookedSlots.${dateOfRenting!.day}-${dateOfRenting!.month}-${dateOfRenting!.year}':
+    //         FieldValue.arrayUnion([hour24format]),
+    //     'bookedSlotsBroken.${dateOfRenting!.day}-${dateOfRenting!.month}-${dateOfRenting!.year}':
+    //         FieldValue.arrayUnion(splitTimeRange(hour24format)),
+    //   },
+    // );
 
-    BlocProvider.of<RentBloc>(buildContext).add(
-      RentProductRequested(
-        bookedDate:
-            '${dateOfRenting!.day}-${dateOfRenting!.month}-${dateOfRenting!.year}',
-        sellerId: widget.sellerId,
-        bookedSlot: hour24format,
-        locationName: locationNameOfLand!,
-        orderItems: [
-          OrderItem(
-            productID: widget.machineId,
-            name: widget.machineName,
-            price: widget.machinePrice,
-            quantity: 1,
-            sellerID: widget.sellerId,
-            rating: null,
-          ),
-        ],
-        numberOfHalfHours: checkerBookedSlotsBroken.length,
+    // BlocProvider.of<RentBloc>(buildContext).add(
+    //   RentProductRequested(
+    //     bookedDate:
+    //         '${dateOfRenting!.day}-${dateOfRenting!.month}-${dateOfRenting!.year}',
+    //     sellerId: widget.sellerId,
+    //     bookedSlot: hour24format,
+    //     locationName: locationNameOfLand!,
+    //     orderItems: [
+    //       OrderItem(
+    //         productID: widget.machineId,
+    //         name: widget.machineName,
+    //         price: widget.machinePrice,
+    //         quantity: 1,
+    //         sellerID: widget.sellerId,
+    //         rating: null,
+    //       ),
+    //     ],
+    //     numberOfHalfHours: checkerBookedSlotsBroken.length,
+    //   ),
+    // );
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CheckoutDetails(
+          addToSlots: hour24format,
+          addToSlotsBroken: splitTimeRange(hour24format),
+          uid: currentUser.uid,
+          totalPrice:
+              (widget.machinePrice * checkerBookedSlotsBroken.length) / 2,
+          isRent: true,
+          sellerId: widget.sellerId,
+          orderItems: [
+            OrderItem(
+              productID: widget.machineId,
+              name: widget.machineName,
+              price: widget.machinePrice,
+              quantity: 1,
+              sellerID: widget.sellerId,
+              rating: null,
+            ),
+          ],
+          bookedDate:
+              '${dateOfRenting!.day}-${dateOfRenting!.month}-${dateOfRenting!.year}',
+          bookedSlot: hour24format,
+          locationName: locationNameOfLand!,
+          numberOfHalfHours: checkerBookedSlotsBroken.length,
+        ),
       ),
     );
   }

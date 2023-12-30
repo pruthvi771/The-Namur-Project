@@ -13,9 +13,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     required this.checkoutRepository,
     required this.cartRepository,
   }) : super(CheckoutInitial()) {
-    on<CheckoutEvent>((event, emit) {
-      // TODO: implement event handler
-    });
+    on<CheckoutEvent>((event, emit) {});
 
     on<CheckoutInitialEventRequested>((event, emit) {
       emit(CheckoutInitial());

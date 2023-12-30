@@ -11,7 +11,6 @@ enum ReduceQuantityResponseEnum {
 }
 
 class CheckoutRepository {
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<Map?> getCartDocumenyByUserId({required String userID}) async {

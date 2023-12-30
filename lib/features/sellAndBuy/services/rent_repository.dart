@@ -26,7 +26,7 @@ class RentRepository {
           'locationName': locationName,
           'sellers': [sellerId],
           'orderDate': FieldValue.serverTimestamp(),
-          'totalAmount': orderItems[0].price * numberOfHalfHours,
+          'totalAmount': (orderItems[0].price * numberOfHalfHours) / 2,
           'items': orderItems.map((item) => item.toMap()).toList(),
           'bookedSlot': bookedSlot,
           'bookedDate': bookedDate,
