@@ -7,6 +7,7 @@ import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_screen.dart';
+import 'package:active_ecommerce_flutter/features/screen_database.dart';
 import 'package:active_ecommerce_flutter/features/testscreen.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/parent_screen.dart';
@@ -18,7 +19,6 @@ import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:hexagon/hexagon.dart';
 import 'package:hive/hive.dart';
-import 'package:active_ecommerce_flutter/screens/category_products.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -146,14 +146,14 @@ class _CategoryListState extends State<CategoryList> {
           ),
           body: buildBody(),
         ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: widget.is_base_category || widget.is_top_category
-              ? Container(
-                  height: 0,
-                )
-              : buildBottomContainer(),
-        )
+        // Align(
+        //   alignment: Alignment.bottomCenter,
+        //   child: widget.is_base_category || widget.is_top_category
+        //       ? Container(
+        //           height: 0,
+        //         )
+        //       : buildBottomContainer(),
+        // )
       ]),
     );
   }
@@ -183,15 +183,15 @@ class _CategoryListState extends State<CategoryList> {
                         // TitleBar(),
 
                         // screen database button
-                        // TextButton(
-                        //     onPressed: () {
-                        //       Navigator.push(
-                        //         context,
-                        //         MaterialPageRoute(
-                        //             builder: (context) => TestWidget()),
-                        //       );
-                        //     },
-                        //     child: Text('Test Widget')),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ScreenDatabase()),
+                              );
+                            },
+                            child: Text('Test Widget')),
 
                         SizedBox(height: 10),
 
@@ -602,55 +602,55 @@ class _CategoryListState extends State<CategoryList> {
     );
   }
 
-  Container buildBottomContainer() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-      ),
-      // height: 80,
-      height: widget.is_base_category ? 0 : 80,
-      //color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Container(
-                width: (MediaQuery.of(context).size.width - 32),
-                height: 40,
-                child: Btn.basic(
-                  minWidth: MediaQuery.of(context).size.width,
-                  color: MyTheme.accent_color,
-                  shape: RoundedRectangleBorder(
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(8.0))),
-                  child: Text(
-                    AppLocalizations.of(context)!.all_products_of_ucf +
-                        " " +
-                        widget.parent_category_name,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600),
-                  ),
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return CategoryProducts(
-                        category_id: widget.parent_category_id,
-                        category_name: widget.parent_category_name,
-                      );
-                    }));
-                  },
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
+  // Container buildBottomContainer() {
+  //   return Container(
+  //     decoration: BoxDecoration(
+  //       color: Colors.white,
+  //     ),
+  //     // height: 80,
+  //     height: widget.is_base_category ? 0 : 80,
+  //     //color: Colors.white,
+  //     child: Padding(
+  //       padding: const EdgeInsets.all(16.0),
+  //       child: Column(
+  //         children: [
+  //           Padding(
+  //             padding: const EdgeInsets.only(top: 8.0),
+  //             child: Container(
+  //               width: (MediaQuery.of(context).size.width - 32),
+  //               height: 40,
+  //               child: Btn.basic(
+  //                 minWidth: MediaQuery.of(context).size.width,
+  //                 color: MyTheme.accent_color,
+  //                 shape: RoundedRectangleBorder(
+  //                     borderRadius:
+  //                         const BorderRadius.all(Radius.circular(8.0))),
+  //                 child: Text(
+  //                   AppLocalizations.of(context)!.all_products_of_ucf +
+  //                       " " +
+  //                       widget.parent_category_name,
+  //                   style: TextStyle(
+  //                       color: Colors.white,
+  //                       fontSize: 13,
+  //                       fontWeight: FontWeight.w600),
+  //                 ),
+  //                 onPressed: () {
+  //                   Navigator.push(context,
+  //                       MaterialPageRoute(builder: (context) {
+  //                     return CategoryProducts(
+  //                       category_id: widget.parent_category_id,
+  //                       category_name: widget.parent_category_name,
+  //                     );
+  //                   }));
+  //                 },
+  //               ),
+  //             ),
+  //           )
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget buildShimmer() {
     return GridView.builder(

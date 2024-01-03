@@ -11,12 +11,11 @@ import 'package:active_ecommerce_flutter/data_model/state_response.dart';
 import 'package:active_ecommerce_flutter/data_model/country_response.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:toast/toast.dart';
-import 'package:active_ecommerce_flutter/screens/map_location.dart';
+// import 'package:active_ecommerce_flutter/screens/map_location.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 import '../presenter/home_presenter.dart';
-import '../drawer/drawer.dart';
 
 class Address extends StatefulWidget {
   Address({Key? key, this.from_shipping_info = false}) : super(key: key);
@@ -454,11 +453,11 @@ class _AddressState extends State<Address> {
         onPressDelete(_shippingAddressList[listIndex].id);
         break;
       case 2:
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return MapLocation(address: _shippingAddressList[listIndex]);
-        })).then((value) {
-          onPopped(value);
-        });
+        // Navigator.push(context, MaterialPageRoute(builder: (context) {
+        //   return MapLocation(address: _shippingAddressList[listIndex]);
+        // })).then((value) {
+        //   onPopped(value);
+        // });
         //deleteProduct(productId);
         break;
       default:

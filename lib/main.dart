@@ -23,22 +23,11 @@ import 'package:active_ecommerce_flutter/presenter/cart_counter.dart';
 import 'package:active_ecommerce_flutter/presenter/currency_presenter.dart';
 import 'package:active_ecommerce_flutter/providers/locale_provider.dart';
 import 'package:active_ecommerce_flutter/screens/address.dart';
-import 'package:active_ecommerce_flutter/screens/cart.dart';
 import 'package:active_ecommerce_flutter/screens/category_list.dart';
-import 'package:active_ecommerce_flutter/screens/digital_product/digital_products.dart';
 import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
 import 'package:active_ecommerce_flutter/screens/main.dart';
-import 'package:active_ecommerce_flutter/screens/map_location.dart';
-import 'package:active_ecommerce_flutter/screens/messenger_list.dart';
-import 'package:active_ecommerce_flutter/screens/order_details.dart';
-import 'package:active_ecommerce_flutter/screens/order_list.dart';
-import 'package:active_ecommerce_flutter/screens/product_reviews.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/profile.dart';
-import 'package:active_ecommerce_flutter/screens/refund_request.dart';
 import 'package:active_ecommerce_flutter/screens/splash_screen.dart';
-import 'package:active_ecommerce_flutter/screens/todays_deal_products.dart';
-import 'package:active_ecommerce_flutter/screens/top_selling_products.dart';
-import 'package:active_ecommerce_flutter/screens/wallet.dart';
 import 'package:active_ecommerce_flutter/utils/translation_bloc/translation_bloc.dart';
 import 'package:active_ecommerce_flutter/utils/translation_bloc/translation_state.dart';
 import 'package:flutter/material.dart';
@@ -57,25 +46,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'lang_config.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'screens/auction_products.dart';
-import 'screens/auction_products_details.dart';
-import 'screens/brand_products.dart';
-import 'screens/category_products.dart';
-import 'screens/chat.dart';
-import 'screens/checkout.dart';
-import 'screens/classified_ads/classified_ads.dart';
-import 'screens/classified_ads/classified_product_details.dart';
-import 'screens/classified_ads/my_classified_ads.dart';
-import 'screens/club_point.dart';
-import 'screens/digital_product/digital_product_details.dart';
-import 'screens/digital_product/purchased_digital_produts.dart';
-import 'screens/flash_deal_list.dart';
-import 'screens/flash_deal_products.dart';
-import 'screens/home.dart';
-import 'screens/package/packages.dart';
-import 'screens/product_details.dart';
-import 'screens/seller_details.dart';
-import 'screens/seller_products.dart';
+// import 'screens/package/packages.dart';
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -234,59 +205,52 @@ class _MyAppState extends State<MyApp> {
                 initialRoute: "/",
                 routes: {
                   "/": (context) => SplashScreen(),
-                  "/classified_ads": (context) => ClassifiedAds(),
-                  "/classified_ads_details": (context) =>
-                      ClassifiedAdsDetails(id: 0),
-                  "/my_classified_ads": (context) => MyClassifiedAds(),
-                  "/digital_product_details": (context) =>
-                      DigitalProductDetails(
-                        id: 0,
-                      ),
-                  "/digital_products": (context) => DigitalProducts(),
-                  "/purchased_digital_products": (context) =>
-                      PurchasedDigitalProducts(),
-                  "/update_package": (context) => UpdatePackage(),
+                  // "/classified_ads": (context) => ClassifiedAds(),
+                  // "/classified_ads_details": (context) =>
+                  //     ClassifiedAdsDetails(id: 0),
+                  // "/my_classified_ads": (context) => MyClassifiedAds(),
+                  // "/digital_product_details": (context) =>
+                  //     DigitalProductDetails(
+                  //       id: 0,
+                  //     ),
+                  // "/digital_products": (context) => DigitalProducts(),
+                  // "/purchased_digital_products": (context) =>
+                  //     PurchasedDigitalProducts(),
+                  // "/update_package": (context) => UpdatePackage(),
                   "/address": (context) => Address(),
-                  "/auction_products": (context) => AuctionProducts(),
-                  "/auction_products_details": (context) =>
-                      AuctionProductsDetails(id: 0),
-                  "/brand_products": (context) =>
-                      BrandProducts(id: 0, brand_name: ""),
-                  "/cart": (context) => Cart(),
+                  // "/auction_products": (context) => AuctionProducts(),
+                  // "/auction_products_details": (context) =>
+                  //     AuctionProductsDetails(id: 0),
+                  // "/brand_products": (context) =>
+                  //     BrandProducts(id: 0, brand_name: ""),
                   "/category_list": (context) => CategoryList(
                       parent_category_id: 0,
                       is_base_category: true,
                       parent_category_name: "",
                       is_top_category: false),
-                  "/category_products": (context) =>
-                      CategoryProducts(category_id: 0, category_name: ""),
-                  "/chat": (context) => Chat(),
-                  "/checkout": (context) => Checkout(),
-                  "/clubpoint": (context) => Clubpoint(),
-                  "/flash_deal_list": (context) => FlashDealList(),
-                  "/flash_deal_products": (context) => FlashDealProducts(),
-                  "/home": (context) => Home(),
+                  // "/category_products": (context) =>
+                  //     CategoryProducts(category_id: 0, category_name: ""),
+                  // "/chat": (context) => Chat(),
+                  // "/checkout": (context) => Checkout(),
+                  // "/flash_deal_list": (context) => FlashDealList(),
+                  // "/flash_deal_products": (context) => FlashDealProducts(),
                   "/login": (context) => Login(),
                   "/main": (context) => Main(),
-                  "/map_location": (context) => MapLocation(),
-                  "/messenger_list": (context) => MessengerList(),
-                  "/order_details": (context) => OrderDetails(),
-                  "/order_list": (context) => OrderList(),
-                  "/product_details": (context) => ProductDetails(
-                        id: 0,
-                      ),
-                  "/product_reviews": (context) => ProductReviews(
-                        id: 0,
-                      ),
+                  // "/messenger_list": (context) => MessengerList(),
+                  // "/product_details": (context) => ProductDetails(
+                  //       id: 0,
+                  //     ),
+                  // "/product_reviews": (context) => ProductReviews(
+                  //       id: 0,
+                  //     ),
                   "/profile": (context) => Profile(),
-                  "/refund_request": (context) => RefundRequest(),
-                  "/seller_details": (context) => SellerDetails(
-                        id: 0,
-                      ),
-                  "/seller_products": (context) => SellerProducts(),
-                  "/todays_deal_products": (context) => TodaysDealProducts(),
-                  "/top_selling_products": (context) => TopSellingProducts(),
-                  "/wallet": (context) => Wallet(),
+                  // "/seller_details": (context) => SellerDetails(
+                  //       id: 0,
+                  //     ),
+                  // "/seller_products": (context) => SellerProducts(),
+                  // "/todays_deal_products": (context) => TodaysDealProducts(),
+                  // "/top_selling_products": (context) => TopSellingProducts(),
+                  // "/wallet": (context) => Wallet(),
                 },
                 builder: OneContext().builder,
                 navigatorKey: OneContext().navigator.key,

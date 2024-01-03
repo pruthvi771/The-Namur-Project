@@ -7,7 +7,6 @@ import 'package:active_ecommerce_flutter/utils/hive_models/models.dart'
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/screens/about_us/about_us.dart';
 import 'package:active_ecommerce_flutter/screens/change_language.dart';
-import 'package:active_ecommerce_flutter/screens/contact_us/contact_us.dart';
 import 'package:active_ecommerce_flutter/screens/my_account/my_account.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -219,10 +218,10 @@ class _MainDrawerState extends State<MainDrawer> {
                         style: TextStyle(
                             color: MyTheme.primary_color, fontSize: 14)),
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return ContactUs();
-                      }));
+                      // Navigator.push(context,
+                      //     MaterialPageRoute(builder: (context) {
+                      //   return ContactUs();
+                      // }));
                     }),
 
                 Divider(),
