@@ -277,6 +277,7 @@ class ProductInventoryWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(6),
         child: Container(
           decoration: BoxDecoration(
+              color: productQuantity == 0 ? Colors.red.withOpacity(0.2) : null,
               borderRadius: BorderRadius.circular(6),
               border: Border.all(
                   width: 1, color: MyTheme.medium_grey.withOpacity(0.5))),

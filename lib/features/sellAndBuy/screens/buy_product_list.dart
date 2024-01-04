@@ -105,10 +105,10 @@ class _BuyProductListState extends State<BuyProductList> {
       currentLocationFilterMap = widget.locationFilterMap!;
     } else {
       currentLocationFilterMap = LocationFilterMap(
-        district: false,
+        district: true,
         taluk: false,
         gramPanchayat: false,
-        village: true,
+        village: false,
       );
     }
 

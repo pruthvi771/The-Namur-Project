@@ -104,6 +104,21 @@ class _ProductDetailsState extends State<ProductDetails> {
                   fontFamily: 'Poppins'),
             ),
             centerTitle: true,
+            actions: [
+              IconButton(
+                icon: Icon(
+                  Icons.keyboard_arrow_left,
+                  size: 35,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              SizedBox(
+                width: 10,
+              ),
+            ],
           ),
           body: bodycontent()),
     );

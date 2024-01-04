@@ -211,7 +211,7 @@ class _TitleBarState extends State<TitleBar> {
                   // print('state is WeatherSectionDataNotReceived');
                 }
                 if (state is Error) {
-                  ToastComponent.showDialog(state.error,
+                  ToastComponent.showDialog('Network error. Try again later',
                       gravity: Toast.center, duration: Toast.lengthLong);
                 }
               },

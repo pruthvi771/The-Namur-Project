@@ -1747,44 +1747,55 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           state.profileData.land.length,
                           (index) {
                             var item = state.profileData.land[index];
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
+                            return Container(
+                              height: 85,
+                              margin: const EdgeInsets.symmetric(
                                   horizontal: 8.0, vertical: 3),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: MyTheme.green_lighter,
-                                ),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 15, vertical: 5),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(child: Text(item.village)),
-                                    Expanded(child: Text(item.syno)),
-                                    Expanded(child: Text(item.area.toString())),
-                                    // Expanded(child: Text(item.village)),
-                                    InkWell(
-                                      onTap: () {
-                                        _deleteDataFromHive(
-                                          DataCollectionType.land,
-                                          index,
-                                        );
-                                        setState(() {});
-                                      },
-                                      child: CircleAvatar(
-                                        radius: 12,
-                                        backgroundColor: MyTheme.green,
-                                        child: Icon(
-                                          Icons.delete,
-                                          size: 15.0,
-                                          color: Colors.white,
-                                        ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: MyTheme.green_lighter,
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 15),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            '${localContext.village}: ${item.village}'),
+                                        Text('Syno: ${item.syno}'),
+                                        Text(
+                                            '${localContext.area}: ${item.area.toString()}'),
+                                      ],
+                                    ),
+                                  ),
+                                  // Expanded(child: Text(item.village)),
+                                  InkWell(
+                                    onTap: () {
+                                      _deleteDataFromHive(
+                                        DataCollectionType.land,
+                                        index,
+                                      );
+                                      setState(() {});
+                                    },
+                                    child: CircleAvatar(
+                                      radius: 12,
+                                      backgroundColor: MyTheme.green,
+                                      child: Icon(
+                                        Icons.delete,
+                                        size: 15.0,
+                                        color: Colors.white,
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             );
                           },
@@ -1792,7 +1803,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
 
                       SizedBox(
-                        height: 5,
+                        height: 15,
                       ),
 
                       BlocListener<AuthBloc, authState.AuthState>(
@@ -2030,11 +2041,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               Expanded(
-                                                  child: Text(item.village)),
-                                              Expanded(child: Text(item.syno)),
-                                              Expanded(
                                                   child: Text(
-                                                      item.area.toString())),
+                                                item.village,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              )),
+                                              Expanded(
+                                                child: Text(
+                                                  'Syno: ' + item.syno,
+                                                ),
+                                              ),
                                               // Expanded(child: Text(item.village)),
                                             ],
                                           ),
@@ -2146,7 +2162,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             child: TexiFieldWidgetForDouble(
                                                 // 'Yield',
                                                 _yieldController,
-                                                localContext.enter_crop_yield),
+                                                localContext.enter_crop_area),
                                           ),
                                         ],
                                       ),

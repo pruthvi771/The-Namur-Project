@@ -760,7 +760,7 @@
 "farm_details" : "Farm Details",
 "enter_pincode_first" : "Enter Pincode First",
 "enter_area_in_acres" : "Enter Area (in Acres)",
-"enter_crop_yield" : "Enter Crop Yield",
+"enter_crop_area" : "Enter Crop Area",
 "track_another_crop": "Track Another Crop",
 "calendar_events": "Calendar Events",
 "cost_estimate": "Cost Estimate",
@@ -1034,5 +1034,6 @@
 "select_address_to_continue" : "Select Address to Continue",
 "add_date_for_tracking_by_going_to_schedule_section": "Add date for tracking by going to schedule section",
 "crop_details": "Crop Details",
-"start_tracking": "Start Tracking"
+"start_tracking": "Start Tracking",
+"area": "Area"
 }

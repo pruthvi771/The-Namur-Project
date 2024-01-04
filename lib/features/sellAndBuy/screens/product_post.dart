@@ -93,7 +93,10 @@ class _ProductPostState extends State<ProductPost> {
 
     if (parentEnum == ParentEnum.machine) {
       _dropdownItems = ['On Rent', 'Sell'];
+      hideQuantityBox = true;
+      _quantityController.text = "1";
     } else {
+      hideQuantityBox = false;
       _dropdownItems = enums.SubSubCategoryList[widget.subCategoryEnum] ??
           [nameForSubCategoryEnum[widget.subCategoryEnum]!];
     }
@@ -790,6 +793,176 @@ class _ProductPostState extends State<ProductPost> {
                 ),
               ),
 
+        if (parentEnum == ParentEnum.machine)
+          BlocBuilder<HiveBloc, HiveState>(
+            builder: (context, state) {
+              if (state is HiveDataReceived) {
+                List<String> machines = [];
+
+                for (Land land in state.profileData.land) {
+                  for (String machine in land.equipments) {
+                    machines.add(machine);
+                  }
+                }
+
+                print(machines);
+
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 25, bottom: 8),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            AppLocalizations.of(context)!.select_machine,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          state.profileData.land.length == 0
+                              ? Expanded(
+                                  child: Container(
+                                    padding: const EdgeInsets.only(
+                                      top: 10.0,
+                                      left: 20.0,
+                                      right: 5.0,
+                                    ),
+                                    child: Container(
+                                      height: 50,
+                                      width: double.infinity,
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 12),
+                                      decoration: BoxDecoration(
+                                          color: MyTheme.field_color,
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .add_land_first,
+                                              style: TextStyle(
+                                                  fontSize: 13,
+                                                  color: Colors.grey[600],
+                                                  fontWeight: FontWeight.w400,
+                                                  fontFamily: 'Poppins'),
+                                            ),
+                                          ),
+                                          Icon(
+                                            Icons.block,
+                                            size: 20,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : Expanded(
+                                  child: Container(
+                                    padding: EdgeInsets.only(left: 20),
+                                    child: DropdownButtonWidget(
+                                      '',
+                                      AppLocalizations.of(context)!.select_land,
+                                      state.profileData.land
+                                          .map((e) => DropdownMenuItem<String>(
+                                                child: Text(e.village),
+                                                value: e.syno,
+                                              ))
+                                          .toList(),
+                                      landDropdownValue,
+                                      (value) {
+                                        setState(() {
+                                          hiveMachineDropdown = null;
+                                          landDropdownValue = value;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
+                          landDropdownValue == null
+                              ? Expanded(child: Container())
+                              : state.profileData.land
+                                          .firstWhere((element) =>
+                                              element.syno == landDropdownValue)
+                                          .equipments
+                                          .length ==
+                                      0
+                                  ? Expanded(
+                                      child: Container(
+                                        height: 50,
+                                        width: double.infinity,
+                                        margin: const EdgeInsets.only(
+                                            right: 20, left: 5),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 12),
+                                        decoration: BoxDecoration(
+                                            color: MyTheme.field_color,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            AppLocalizations.of(context)!
+                                                .no_machines_added,
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                color: Colors.grey[600],
+                                                fontWeight: FontWeight.w400,
+                                                fontFamily: 'Poppins'),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 5, right: 20),
+                                        child: DropdownButtonWidget(
+                                          '',
+                                          AppLocalizations.of(context)!
+                                              .select_machine,
+                                          state.profileData.land
+                                              .firstWhere((element) =>
+                                                  element.syno ==
+                                                  landDropdownValue)
+                                              .equipments
+                                              .map((e) =>
+                                                  DropdownMenuItem<String>(
+                                                    child: Text(e),
+                                                    value: e,
+                                                  ))
+                                              .toList(),
+                                          hiveMachineDropdown,
+                                          (value) {
+                                            setState(() {
+                                              hiveMachineDropdown = value;
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                return Container();
+              }
+            },
+          ),
+
         // product name
         Padding(
           padding: const EdgeInsets.only(left: 20.0, right: 20.0),
@@ -829,12 +1002,6 @@ class _ProductPostState extends State<ProductPost> {
               onChanged: (String? newValue) {
                 setState(() {
                   _selectedItem = newValue!;
-                  if (_selectedItem == "On Rent") {
-                    hideQuantityBox = true;
-                    _quantityController.text = "1";
-                  } else {
-                    hideQuantityBox = false;
-                  }
                 });
               },
               items:
@@ -1022,7 +1189,8 @@ class _ProductPostState extends State<ProductPost> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+                margin: EdgeInsets.only(
+                    top: 20.0, left: 20.0, right: 20.0, bottom: 20),
                 decoration: BoxDecoration(
                     color: MyTheme.field_color,
                     borderRadius: BorderRadius.circular(10)),
@@ -1038,189 +1206,6 @@ class _ProductPostState extends State<ProductPost> {
                         fontFamily: 'Poppins'),
                   ),
                 ),
-              ),
-              BlocBuilder<HiveBloc, HiveState>(
-                builder: (context, state) {
-                  if (state is HiveDataReceived) {
-                    List<String> machines = [];
-
-                    for (Land land in state.profileData.land) {
-                      for (String machine in land.equipments) {
-                        machines.add(machine);
-                      }
-                    }
-
-                    print(machines);
-
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: Column(
-                        children: [
-                          state.profileData.land.length == 0
-                              ? Container(
-                                  padding: const EdgeInsets.only(
-                                      top: 20.0,
-                                      left: 20.0,
-                                      right: 20.0,
-                                      bottom: 10),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        height: 50,
-                                        width: double.infinity,
-                                        margin:
-                                            const EdgeInsets.only(bottom: 10),
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 12),
-                                        decoration: BoxDecoration(
-                                            color: MyTheme.field_color,
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Text(
-                                                AppLocalizations.of(context)!
-                                                    .no_land_added_yet,
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    color: Colors.grey[600],
-                                                    fontWeight: FontWeight.w400,
-                                                    fontFamily: 'Poppins'),
-                                              ),
-                                            ),
-                                            Icon(Icons.block)
-                                          ],
-                                        ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          AppLocalizations.of(context)!
-                                              .add_land_first,
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.grey[600],
-                                              fontWeight: FontWeight.w400,
-                                              fontFamily: 'Poppins'),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                )
-                              : DropdownButtonWidget(
-                                  '',
-                                  AppLocalizations.of(context)!.select_land,
-                                  state.profileData.land
-                                      .map((e) => DropdownMenuItem<String>(
-                                            child: Text(e.village),
-                                            value: e.syno,
-                                          ))
-                                      .toList(),
-                                  landDropdownValue,
-                                  (value) {
-                                    setState(() {
-                                      hiveMachineDropdown = null;
-                                      landDropdownValue = value;
-                                    });
-                                  },
-                                ),
-                          landDropdownValue == null
-                              ? Container()
-                              : state.profileData.land
-                                          .firstWhere((element) =>
-                                              element.syno == landDropdownValue)
-                                          .equipments
-                                          .length ==
-                                      0
-                                  ? Container(
-                                      padding: const EdgeInsets.only(
-                                          top: 20.0,
-                                          left: 20.0,
-                                          right: 20.0,
-                                          bottom: 10),
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            height: 50,
-                                            width: double.infinity,
-                                            margin: const EdgeInsets.only(
-                                                bottom: 10),
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 12),
-                                            decoration: BoxDecoration(
-                                                color: MyTheme.field_color,
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Align(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  child: Text(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .no_machines_added,
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: Colors.grey[600],
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        fontFamily: 'Poppins'),
-                                                  ),
-                                                ),
-                                                Icon(Icons.block)
-                                              ],
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .please_first_add_machine_in_settings_screen,
-                                              style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.grey[600],
-                                                  fontWeight: FontWeight.w400,
-                                                  fontFamily: 'Poppins'),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    )
-                                  : DropdownButtonWidget(
-                                      '',
-                                      AppLocalizations.of(context)!
-                                          .select_machine,
-                                      state.profileData.land
-                                          .firstWhere((element) =>
-                                              element.syno == landDropdownValue)
-                                          .equipments
-                                          .map((e) => DropdownMenuItem<String>(
-                                                child: Text(e),
-                                                value: e,
-                                              ))
-                                          .toList(),
-                                      hiveMachineDropdown,
-                                      (value) {
-                                        setState(() {
-                                          hiveMachineDropdown = value;
-                                        });
-                                      },
-                                    ),
-                        ],
-                      ),
-                    );
-                  } else {
-                    return Container();
-                  }
-                },
               ),
             ],
           ),
@@ -1274,7 +1259,7 @@ class _ProductPostState extends State<ProductPost> {
     return Container(
       height: 50,
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
-      margin: EdgeInsets.only(top: 20, left: 20, right: 20),
+      margin: EdgeInsets.only(top: 0, left: 0, right: 0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: MyTheme.field_color,

@@ -760,7 +760,7 @@
 "farm_details": "खेत विवरण",
 "enter_pincode_first": "पहले पिनकोड दर्ज करें",
 "enter_area_in_acres": "क्षेत्र (एकड़ में) दर्ज करें",
-"enter_crop_yield": "फसल उत्पन्न दर्ज करें",
+"enter_crop_area" : "फसल क्षेत्र दर्ज करें",
 "track_another_crop": "एक और की खेती करें",
 "calendar_events": "कैलेंडर घटनाएँ",
 "cost_estimate": "लागत अनुमान",
