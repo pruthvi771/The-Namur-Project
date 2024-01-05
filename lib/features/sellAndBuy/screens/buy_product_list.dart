@@ -138,15 +138,16 @@ class _BuyProductListState extends State<BuyProductList> {
     super.initState();
   }
 
-  Stream<QuerySnapshot> allProductStreamQuery() {
-    return _firestore
-        .collection('products')
-        .where('subCategory',
-            isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
-        .where('isSecondHand', isEqualTo: widget.isSecondHand)
-        .where('isDeleted', isNotEqualTo: true)
-        .snapshots();
-  }
+  // Stream<QuerySnapshot> allProductStreamQuery() {
+  //   return _firestore
+  //       .collection('products')
+  //       .where('subCategory',
+  //           isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
+  //       .where('isSecondHand', isEqualTo: widget.isSecondHand)
+  //       .where('isDeleted', isNotEqualTo: true)
+  //       .where('quantity', isGreaterThan: 0)
+  //       .snapshots();
+  // }
 
   Stream<QuerySnapshot> allProductSortedStreamQuery({
     required SortType sortType,
@@ -159,6 +160,7 @@ class _BuyProductListState extends State<BuyProductList> {
             isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
         .where('isSecondHand', isEqualTo: widget.isSecondHand)
         .where('isDeleted', isEqualTo: false)
+        .where('quantity', isGreaterThan: 0)
         .orderBy(orderByField, descending: sortType == SortType.descending)
         .snapshots();
   }
@@ -179,7 +181,8 @@ class _BuyProductListState extends State<BuyProductList> {
             isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
         .where('isSecondHand', isEqualTo: widget.isSecondHand)
         .where('subSubCategory', whereIn: subSubCategoryList)
-        .where('isDeleted', isNotEqualTo: true)
+        .where('isDeleted', isEqualTo: false)
+        .where('quantity', isGreaterThan: 0)
         .snapshots();
   }
 
@@ -202,6 +205,7 @@ class _BuyProductListState extends State<BuyProductList> {
         .where('subSubCategory',
             whereIn: subSubCategoryList.length != 0 ? subSubCategoryList : [''])
         .where('isDeleted', isEqualTo: false)
+        .where('quantity', isGreaterThan: 0)
         .orderBy('price', descending: sortType == SortType.descending)
         .snapshots();
   }
@@ -209,41 +213,29 @@ class _BuyProductListState extends State<BuyProductList> {
   Stream<QuerySnapshot> productFilteredByLocationStreamQuery({
     required LocationFilterMap locationFilterMap,
   }) {
+    var defaultQuery = _firestore
+        .collection('products')
+        .where('subCategory',
+            isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
+        .where('isSecondHand', isEqualTo: widget.isSecondHand)
+        .where('quantity', isGreaterThan: 0)
+        .where('isDeleted', isEqualTo: false);
+
     if (locationFilterMap.district) {
-      return _firestore
-          .collection('products')
-          .where('subCategory',
-              isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
-          .where('isSecondHand', isEqualTo: widget.isSecondHand)
+      return defaultQuery
           .where(districtField, isEqualTo: userLocation!.district)
-          .where('isDeleted', isNotEqualTo: true)
           .snapshots();
     } else if (locationFilterMap.taluk) {
-      return _firestore
-          .collection('products')
-          .where('subCategory',
-              isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
-          .where('isSecondHand', isEqualTo: widget.isSecondHand)
+      return defaultQuery
           .where(talukField, isEqualTo: userLocation!.taluk)
-          .where('isDeleted', isNotEqualTo: true)
           .snapshots();
     } else if (locationFilterMap.gramPanchayat) {
-      return _firestore
-          .collection('products')
-          .where('subCategory',
-              isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
-          .where('isSecondHand', isEqualTo: widget.isSecondHand)
+      return defaultQuery
           .where(gramPanchayatField, isEqualTo: userLocation!.gramPanchayat)
-          .where('isDeleted', isNotEqualTo: true)
           .snapshots();
     } else {
-      return _firestore
-          .collection('products')
-          .where('subCategory',
-              isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
-          .where('isSecondHand', isEqualTo: widget.isSecondHand)
+      return defaultQuery
           .where(villageNameField, isEqualTo: userLocation!.village)
-          .where('isDeleted', isNotEqualTo: true)
           .snapshots();
     }
   }
@@ -269,7 +261,8 @@ class _BuyProductListState extends State<BuyProductList> {
               whereIn:
                   subSubCategoryList.length != 0 ? subSubCategoryList : [''])
           .where(districtField, isEqualTo: userLocation!.district)
-          .where('isDeleted', isNotEqualTo: true)
+          .where('quantity', isGreaterThan: 0)
+          .where('isDeleted', isEqualTo: false)
           .snapshots();
     } else if (locationFilterMap.taluk) {
       return _firestore
@@ -277,11 +270,12 @@ class _BuyProductListState extends State<BuyProductList> {
           .where('subCategory',
               isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
           .where('isSecondHand', isEqualTo: widget.isSecondHand)
+          .where('quantity', isGreaterThan: 0)
           .where('subSubCategory',
               whereIn:
                   subSubCategoryList.length != 0 ? subSubCategoryList : [''])
           .where(talukField, isEqualTo: userLocation!.taluk)
-          .where('isDeleted', isNotEqualTo: true)
+          .where('isDeleted', isEqualTo: false)
           .snapshots();
     } else if (locationFilterMap.gramPanchayat) {
       return _firestore
@@ -289,11 +283,12 @@ class _BuyProductListState extends State<BuyProductList> {
           .where('subCategory',
               isEqualTo: nameForSubCategoryEnum[widget.subCategoryEnum])
           .where('isSecondHand', isEqualTo: widget.isSecondHand)
+          .where('quantity', isGreaterThan: 0)
           .where('subSubCategory',
               whereIn:
                   subSubCategoryList.length != 0 ? subSubCategoryList : [''])
           .where(gramPanchayatField, isEqualTo: userLocation!.gramPanchayat)
-          .where('isDeleted', isNotEqualTo: true)
+          .where('isDeleted', isEqualTo: false)
           .snapshots();
     } else {
       return _firestore
@@ -305,7 +300,8 @@ class _BuyProductListState extends State<BuyProductList> {
               whereIn:
                   subSubCategoryList.length != 0 ? subSubCategoryList : [''])
           .where(villageNameField, isEqualTo: userLocation!.village)
-          .where('isDeleted', isNotEqualTo: true)
+          .where('quantity', isGreaterThan: 0)
+          .where('isDeleted', isEqualTo: false)
           .snapshots();
     }
   }
@@ -323,6 +319,7 @@ class _BuyProductListState extends State<BuyProductList> {
           .where('isSecondHand', isEqualTo: widget.isSecondHand)
           .where(districtField, isEqualTo: userLocation!.district)
           .where('isDeleted', isEqualTo: false)
+          .where('quantity', isGreaterThan: 0)
           .orderBy(orderByField, descending: sortType == SortType.descending)
           .snapshots();
     } else if (locationFilterMap.taluk) {
@@ -333,6 +330,7 @@ class _BuyProductListState extends State<BuyProductList> {
           .where('isSecondHand', isEqualTo: widget.isSecondHand)
           .where(talukField, isEqualTo: userLocation!.taluk)
           .where('isDeleted', isEqualTo: false)
+          .where('quantity', isGreaterThan: 0)
           .orderBy(orderByField, descending: sortType == SortType.descending)
           .snapshots();
     } else if (locationFilterMap.gramPanchayat) {
@@ -343,6 +341,7 @@ class _BuyProductListState extends State<BuyProductList> {
           .where('isSecondHand', isEqualTo: widget.isSecondHand)
           .where(gramPanchayatField, isEqualTo: userLocation!.gramPanchayat)
           .where('isDeleted', isEqualTo: false)
+          .where('quantity', isGreaterThan: 0)
           .orderBy(orderByField, descending: sortType == SortType.descending)
           .snapshots();
     } else {
@@ -353,6 +352,7 @@ class _BuyProductListState extends State<BuyProductList> {
           .where('isSecondHand', isEqualTo: widget.isSecondHand)
           .where(villageNameField, isEqualTo: userLocation!.village)
           .where('isDeleted', isEqualTo: false)
+          .where('quantity', isGreaterThan: 0)
           .orderBy(orderByField, descending: sortType == SortType.descending)
           .snapshots();
     }
@@ -383,6 +383,7 @@ class _BuyProductListState extends State<BuyProductList> {
                   subSubCategoryList.length != 0 ? subSubCategoryList : [''])
           .where(districtField, isEqualTo: userLocation!.district)
           .where('isDeleted', isEqualTo: false)
+          .where('quantity', isGreaterThan: 0)
           .orderBy(orderByField, descending: sortType == SortType.descending)
           .snapshots();
     } else if (locationFilterMap.taluk) {
@@ -396,6 +397,7 @@ class _BuyProductListState extends State<BuyProductList> {
                   subSubCategoryList.length != 0 ? subSubCategoryList : [''])
           .where(talukField, isEqualTo: userLocation!.taluk)
           .where('isDeleted', isEqualTo: false)
+          .where('quantity', isGreaterThan: 0)
           .orderBy(orderByField, descending: sortType == SortType.descending)
           .snapshots();
     } else if (locationFilterMap.gramPanchayat) {
@@ -409,6 +411,7 @@ class _BuyProductListState extends State<BuyProductList> {
                   subSubCategoryList.length != 0 ? subSubCategoryList : [''])
           .where(gramPanchayatField, isEqualTo: userLocation!.gramPanchayat)
           .where('isDeleted', isEqualTo: false)
+          .where('quantity', isGreaterThan: 0)
           .orderBy(orderByField, descending: sortType == SortType.descending)
           .snapshots();
     } else {
@@ -422,6 +425,7 @@ class _BuyProductListState extends State<BuyProductList> {
                   subSubCategoryList.length != 0 ? subSubCategoryList : [''])
           .where(villageNameField, isEqualTo: userLocation!.village)
           .where('isDeleted', isEqualTo: false)
+          .where('quantity', isGreaterThan: 0)
           .orderBy(orderByField, descending: sortType == SortType.descending)
           .snapshots();
     }
