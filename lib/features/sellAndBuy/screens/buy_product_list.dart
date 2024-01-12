@@ -384,6 +384,7 @@ class _BuyProductListState extends State<BuyProductList> {
           .where(districtField, isEqualTo: userLocation!.district)
           .where('isDeleted', isEqualTo: false)
           .where('quantity', isGreaterThan: 0)
+          .orderBy('quantity', descending: sortType == SortType.descending)
           .orderBy(orderByField, descending: sortType == SortType.descending)
           .snapshots();
     } else if (locationFilterMap.taluk) {
@@ -398,6 +399,7 @@ class _BuyProductListState extends State<BuyProductList> {
           .where(talukField, isEqualTo: userLocation!.taluk)
           .where('isDeleted', isEqualTo: false)
           .where('quantity', isGreaterThan: 0)
+          .orderBy('quantity', descending: sortType == SortType.descending)
           .orderBy(orderByField, descending: sortType == SortType.descending)
           .snapshots();
     } else if (locationFilterMap.gramPanchayat) {
@@ -412,6 +414,7 @@ class _BuyProductListState extends State<BuyProductList> {
           .where(gramPanchayatField, isEqualTo: userLocation!.gramPanchayat)
           .where('isDeleted', isEqualTo: false)
           .where('quantity', isGreaterThan: 0)
+          .orderBy('quantity', descending: sortType == SortType.descending)
           .orderBy(orderByField, descending: sortType == SortType.descending)
           .snapshots();
     } else {
@@ -426,6 +429,7 @@ class _BuyProductListState extends State<BuyProductList> {
           .where(villageNameField, isEqualTo: userLocation!.village)
           .where('isDeleted', isEqualTo: false)
           .where('quantity', isGreaterThan: 0)
+          .orderBy('quantity', descending: sortType == SortType.descending)
           .orderBy(orderByField, descending: sortType == SortType.descending)
           .snapshots();
     }
