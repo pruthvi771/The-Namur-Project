@@ -176,7 +176,9 @@ class _MoreDetailsState extends State<MoreDetails> {
               ..land = [];
             dataBox.put(emptyProfileData.id, emptyProfileData);
           }
-          profileData = dataBox.get('profile');
+          setState(() {
+            profileData = dataBox.get('profile');
+          });
         },
         child: ListView(
           physics: BouncingScrollPhysics(),

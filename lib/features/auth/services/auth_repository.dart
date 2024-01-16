@@ -136,7 +136,7 @@ class AuthRepository {
 
       if (!userSnapshot.exists) {
         toReturn = true;
-        firestoreRepository.addUserToBuyerSellerCollections(
+        await firestoreRepository.addUserToBuyerSellerCollections(
           userId: userCredential.user!.uid,
           name: userCredential.user!.displayName!,
           email: userCredential.user!.email!,
@@ -144,7 +144,7 @@ class AuthRepository {
           googleSignIn: true,
         );
 
-        firestoreRepository.createEmptyHiveDataInstance(
+        await firestoreRepository.createEmptyHiveDataInstance(
             userId: userCredential.user!.uid);
       } else {
         toReturn = false;
