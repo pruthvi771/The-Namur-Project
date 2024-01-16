@@ -368,6 +368,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                   // schedule
                                   InkWell(
                                     onTap: () {
+                                      // print('hello');
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(

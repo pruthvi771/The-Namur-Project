@@ -6,6 +6,7 @@ import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hiv
 import 'package:active_ecommerce_flutter/features/profile/services/misc_bloc/misc_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/rent_bloc/rent_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/rent_repository.dart';
+import 'package:active_ecommerce_flutter/utils/profile_completion_bloc/profile_completion_bloc.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart'
     as hiveModels;
 import 'package:active_ecommerce_flutter/features/profile/services/profile_bloc/profile_bloc.dart';
@@ -185,6 +186,9 @@ class _MyAppState extends State<MyApp> {
           ),
           BlocProvider<MiscBloc>(
             create: (context) => MiscBloc(),
+          ),
+          BlocProvider<ProfileCompletionBloc>(
+            create: (context) => ProfileCompletionBloc(),
           ),
         ],
         child: MultiProvider(

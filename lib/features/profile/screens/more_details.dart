@@ -13,6 +13,9 @@ import 'package:active_ecommerce_flutter/features/profile/screens/edit_profile.d
 import 'package:active_ecommerce_flutter/features/profile/screens/land_screen.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/utils/imageLinks.dart';
+import 'package:active_ecommerce_flutter/utils/profile_completion_bloc/profile_completion_bloc.dart';
+import 'package:active_ecommerce_flutter/utils/profile_completion_bloc/profile_completion_event.dart';
+import 'package:active_ecommerce_flutter/utils/profile_completion_bloc/profile_completion_state.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -36,44 +39,7 @@ class _MoreDetailsState extends State<MoreDetails> {
   final _cropsController = new ExpandedTileController(isExpanded: true);
   final _machinesController = new ExpandedTileController(isExpanded: true);
 
-  late double progress;
   late ProfileData? profileData;
-
-  void calculatingProgress(profileData) {
-    var tempProgress = 0.0;
-
-    if (!(profileData.address.length == 0)) {
-      tempProgress += 0.2;
-    }
-    if (profileData.kyc.aadhar.isNotEmpty) {
-      tempProgress += 0.2;
-    }
-    int cropCount = 0;
-
-    for (Land land in profileData.land) {
-      cropCount += land.crops.length;
-    }
-
-    if (cropCount > 0) {
-      tempProgress += 0.2;
-    }
-
-    int machineCount = 0;
-
-    for (Land land in profileData.land) {
-      machineCount += land.equipments.length;
-    }
-
-    if (machineCount > 0) {
-      tempProgress += 0.2;
-    }
-
-    if (!(profileData.land.length == 0)) {
-      tempProgress += 0.2;
-    }
-
-    progress = tempProgress;
-  }
 
   @override
   void initState() {
@@ -98,8 +64,6 @@ class _MoreDetailsState extends State<MoreDetails> {
       HiveDataRequested(),
     );
     profileData = dataBox.get('profile');
-
-    calculatingProgress(profileData);
   }
 
   Future<List<Object?>> getNumberOfFriends() async {
@@ -193,6 +157,9 @@ class _MoreDetailsState extends State<MoreDetails> {
           BlocProvider.of<HiveBloc>(context).add(
             HiveDataRequested(),
           );
+          BlocProvider.of<ProfileCompletionBloc>(context).add(
+            ProfileCompletionDataRequested(),
+          );
           var dataBox = Hive.box<ProfileData>('profileDataBox3');
           var savedData = dataBox.get('profile');
 
@@ -210,9 +177,6 @@ class _MoreDetailsState extends State<MoreDetails> {
             dataBox.put(emptyProfileData.id, emptyProfileData);
           }
           profileData = dataBox.get('profile');
-          setState(() {
-            calculatingProgress(profileData);
-          });
         },
         child: ListView(
           physics: BouncingScrollPhysics(),
@@ -293,19 +257,41 @@ class _MoreDetailsState extends State<MoreDetails> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: CircularPercentIndicator(
-                      center: new Text(
-                        "${(progress * 100).toInt()}%",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13.0,
-                            color: MyTheme.dark_grey),
-                      ),
-                      radius: 30.0,
-                      lineWidth: 10.0,
-                      percent: progress,
-                      backgroundColor: MyTheme.dark_grey,
-                      progressColor: MyTheme.green,
+                    child: BlocBuilder<ProfileCompletionBloc,
+                        ProfileCompletionState>(
+                      builder: (context, state) {
+                        if (state is ProfileCompletionDataReceived) {
+                          return CircularPercentIndicator(
+                            center: Text(
+                              "${(state.profileProgress * 100).toInt()}%",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13.0,
+                                  color: MyTheme.dark_grey),
+                            ),
+                            radius: 30.0,
+                            lineWidth: 10.0,
+                            percent: state.profileProgress,
+                            backgroundColor: MyTheme.dark_grey,
+                            progressColor: MyTheme.green,
+                          );
+                        } else {
+                          return CircularPercentIndicator(
+                            center: Text(
+                              "--%",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13.0,
+                                  color: MyTheme.dark_grey),
+                            ),
+                            radius: 30.0,
+                            lineWidth: 10.0,
+                            percent: 0,
+                            backgroundColor: MyTheme.dark_grey,
+                            progressColor: MyTheme.green,
+                          );
+                        }
+                      },
                     ),
                   ),
                   Expanded(

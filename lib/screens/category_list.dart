@@ -3,22 +3,19 @@
 import 'dart:ui';
 
 import 'package:active_ecommerce_flutter/custom/box_decorations.dart';
-import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
-import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_screen.dart';
-import 'package:active_ecommerce_flutter/features/screen_database.dart';
-import 'package:active_ecommerce_flutter/features/testscreen.dart';
-import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/parent_screen.dart';
 import 'package:active_ecommerce_flutter/helpers/shimmer_helper.dart';
 import 'package:active_ecommerce_flutter/presenter/bottom_appbar_index.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:active_ecommerce_flutter/utils/profile_completion_bloc/profile_completion_bloc.dart';
+import 'package:active_ecommerce_flutter/utils/profile_completion_bloc/profile_completion_event.dart';
+import 'package:active_ecommerce_flutter/utils/profile_completion_bloc/profile_completion_state.dart';
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexagon/hexagon.dart';
-import 'package:hive/hive.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -59,59 +56,9 @@ class _CategoryListState extends State<CategoryList> {
   @override
   void initState() {
     super.initState();
-    _getProfileDataFuture = _getProfileData();
-  }
-
-  late Future<ProfileData> _getProfileDataFuture;
-
-  Future<ProfileData> _getProfileData() async {
-    var dataBox = Hive.box<ProfileData>('profileDataBox3');
-
-    var savedData = dataBox.get('profile');
-    if (savedData == null) {
-      User? user = FirebaseAuth.instance.currentUser;
-      return FirestoreRepository()
-          .createEmptyHiveDataInstance(userId: user!.uid);
-    }
-    return savedData;
-  }
-
-  double profileProgress = 0;
-
-  double calculatingProfileProgress({required ProfileData profileData}) {
-    var tempProgress = 0.0;
-
-    if (!(profileData.address.length == 0)) {
-      tempProgress += 0.2;
-    }
-    if (profileData.kyc.aadhar.isNotEmpty) {
-      tempProgress += 0.2;
-    }
-    int cropCount = 0;
-
-    for (Land land in profileData.land) {
-      cropCount += land.crops.length;
-    }
-
-    if (cropCount > 0) {
-      tempProgress += 0.2;
-    }
-
-    int machineCount = 0;
-
-    for (Land land in profileData.land) {
-      machineCount += land.equipments.length;
-    }
-
-    if (machineCount > 0) {
-      tempProgress += 0.2;
-    }
-
-    if (!(profileData.land.length == 0)) {
-      tempProgress += 0.2;
-    }
-
-    return tempProgress;
+    BlocProvider.of<ProfileCompletionBloc>(context).add(
+      ProfileCompletionDataRequested(),
+    );
   }
 
   @override
@@ -159,273 +106,265 @@ class _CategoryListState extends State<CategoryList> {
   }
 
   Widget buildBody() {
-    return FutureBuilder(
-        future: _getProfileDataFuture,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            printError(info: 'hello');
-            if (snapshot.data == null) {
-              profileProgress = 0;
-            } else {
-              profileProgress =
-                  calculatingProfileProgress(profileData: snapshot.data!);
-            }
+    return BlocBuilder<ProfileCompletionBloc, ProfileCompletionState>(
+      builder: (context, state) {
+        if (state is ProfileCompletionDataReceived) {
+          return Column(
+            children: [
+              TitleBar(),
+              Expanded(
+                child: CustomScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  slivers: [
+                    SliverList(
+                        delegate: SliverChildListDelegate([
+                      // TitleBar(),
 
-            return Column(
-              children: [
-                TitleBar(),
-                Expanded(
-                  child: CustomScrollView(
-                    physics: AlwaysScrollableScrollPhysics(),
-                    slivers: [
-                      SliverList(
-                          delegate: SliverChildListDelegate([
-                        // TitleBar(),
+                      // screen database button
+                      // TextButton(
+                      //     onPressed: () {
+                      //       Navigator.push(
+                      //         context,
+                      //         MaterialPageRoute(
+                      //             builder: (context) => ScreenDatabase()),
+                      //       );
+                      //     },
+                      //     child: Text('Test Widget')),
 
-                        // screen database button
-                        // TextButton(
-                        //     onPressed: () {
-                        //       Navigator.push(
-                        //         context,
-                        //         MaterialPageRoute(
-                        //             builder: (context) => ScreenDatabase()),
-                        //       );
-                        //     },
-                        //     child: Text('Test Widget')),
+                      SizedBox(height: 10),
 
-                        SizedBox(height: 10),
-
-                        //Buy Sell Button Design
-                        Center(
-                          child: Stack(
-                            children: [
-                              Container(
-                                height: 44,
-                                width: 162,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: MyTheme.light_grey,
-                                    border:
-                                        Border.all(color: MyTheme.light_grey)),
-                                child: Center(
-                                    child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    SizedBox(),
-                                    InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          color = "sell";
-                                          isBuyActive = false;
-                                          isvalue = false;
-                                          CategoryList();
-                                        });
-                                        //  Navigator.push(context, MaterialPageRoute(builder: (context)=> ProductInventory() ));
-                                      },
-                                      child: Container(
-                                        height: 44,
-                                        width: 77,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
+                      //Buy Sell Button Design
+                      Center(
+                        child: Stack(
+                          children: [
+                            Container(
+                              height: 44,
+                              width: 162,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: MyTheme.light_grey,
+                                  border:
+                                      Border.all(color: MyTheme.light_grey)),
+                              child: Center(
+                                  child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SizedBox(),
+                                  InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        color = "sell";
+                                        isBuyActive = false;
+                                        isvalue = false;
+                                        CategoryList();
+                                      });
+                                      //  Navigator.push(context, MaterialPageRoute(builder: (context)=> ProductInventory() ));
+                                    },
+                                    child: Container(
+                                      height: 44,
+                                      width: 77,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          color: !isBuyActive
+                                              ? MyTheme.primary_color
+                                              : MyTheme.light_grey),
+                                      child: Center(
+                                        child: Text(
+                                          AppLocalizations.of(context)!
+                                              .sell_upper,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
                                             color: !isBuyActive
-                                                ? MyTheme.primary_color
-                                                : MyTheme.light_grey),
-                                        child: Center(
-                                          child: Text(
-                                            AppLocalizations.of(context)!
-                                                .sell_upper,
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600,
-                                              color: !isBuyActive
-                                                  ? MyTheme.white
-                                                  : Colors.black,
-                                            ),
+                                                ? MyTheme.white
+                                                : Colors.black,
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ],
-                                )),
-                              ),
-                              Positioned(
-                                child: InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      isBuyActive = true;
-                                      isvalue = true;
-                                    });
-                                  },
-                                  child: Container(
-                                    height: 44,
-                                    width: 77,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ],
+                              )),
+                            ),
+                            Positioned(
+                              child: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    isBuyActive = true;
+                                    isvalue = true;
+                                  });
+                                },
+                                child: Container(
+                                  height: 44,
+                                  width: 77,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      color: isBuyActive
+                                          ? MyTheme.primary_color
+                                          : MyTheme.light_grey),
+                                  child: Center(
+                                    child: Text(
+                                      AppLocalizations.of(context)!.buy_upper,
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
                                         color: isBuyActive
-                                            ? MyTheme.primary_color
-                                            : MyTheme.light_grey),
-                                    child: Center(
-                                      child: Text(
-                                        AppLocalizations.of(context)!.buy_upper,
-                                        textAlign: TextAlign.right,
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                          color: isBuyActive
-                                              ? MyTheme.white
-                                              : Colors.black,
-                                        ),
+                                            ? MyTheme.white
+                                            : Colors.black,
                                       ),
                                     ),
                                   ),
                                 ),
-                              )
-                            ],
-                          ),
+                              ),
+                            )
+                          ],
                         ),
+                      ),
 
-                        // buy sell button design closed
+                      // buy sell button design closed
 
-                        SizedBox(height: 10),
+                      SizedBox(height: 10),
 
-                        // Category hexagonal widget design start
-                        isBuyActive
-                            ? buildCategoryList(isBuy: true)
-                            : ClipRRect(
-                                child: Stack(children: [
-                                  IgnorePointer(
-                                    ignoring:
-                                        profileProgress == 1 ? false : true,
-                                    child: buildCategoryList(isBuy: false),
-                                  ),
-                                  profileProgress == 1
-                                      ? SizedBox.shrink()
-                                      : Positioned.fill(
-                                          child: Center(
-                                            child: BackdropFilter(
-                                              filter: ImageFilter.blur(
-                                                  sigmaX: 10, sigmaY: 10),
-                                              child: Container(
-                                                // color: Colors.black.withOpacity(0.5),
-                                                child: Center(
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            30),
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Text(
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .complate_profile_to_become_seller,
-                                                          style: TextStyle(
-                                                              fontSize: 20,
-                                                              color:
-                                                                  Colors.black,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w700),
-                                                          textAlign: TextAlign
-                                                              .center, // Align text to the center
-                                                        ),
-                                                        ElevatedButton(
-                                                            style:
-                                                                ElevatedButton
-                                                                    .styleFrom(
-                                                              backgroundColor:
-                                                                  MyTheme
-                                                                      .primary_color,
-                                                            ),
-                                                            onPressed: () {
-                                                              Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                      builder:
-                                                                          (context) =>
-                                                                              EditProfileScreen()));
-                                                            },
-                                                            child: Text(
-                                                                AppLocalizations.of(
-                                                                        context)!
-                                                                    .complate_profile)),
-                                                      ],
-                                                    ),
+                      // Category hexagonal widget design start
+                      isBuyActive
+                          ? buildCategoryList(isBuy: true)
+                          : ClipRRect(
+                              child: Stack(children: [
+                                IgnorePointer(
+                                  ignoring:
+                                      state.profileProgress == 1 ? false : true,
+                                  child: buildCategoryList(isBuy: false),
+                                ),
+                                state.profileProgress == 1
+                                    ? SizedBox.shrink()
+                                    : Positioned.fill(
+                                        child: Center(
+                                          child: BackdropFilter(
+                                            filter: ImageFilter.blur(
+                                                sigmaX: 10, sigmaY: 10),
+                                            child: Container(
+                                              // color: Colors.black.withOpacity(0.5),
+                                              child: Center(
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(30),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .complate_profile_to_become_seller,
+                                                        style: TextStyle(
+                                                            fontSize: 20,
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w700),
+                                                        textAlign: TextAlign
+                                                            .center, // Align text to the center
+                                                      ),
+                                                      ElevatedButton(
+                                                          style: ElevatedButton
+                                                              .styleFrom(
+                                                            backgroundColor:
+                                                                MyTheme
+                                                                    .primary_color,
+                                                          ),
+                                                          onPressed: () {
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            EditProfileScreen()));
+                                                          },
+                                                          child: Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .complate_profile)),
+                                                    ],
                                                   ),
                                                 ),
                                               ),
                                             ),
                                           ),
                                         ),
-                                ]),
+                                      ),
+                              ]),
+                            ),
+
+                      // Calender widget design start
+                      Column(
+                        children: [
+                          Stack(
+                            children: [
+                              HexagonWidget.flat(
+                                width: 122,
+                                cornerRadius: 15,
+                                color: Colors.black,
+                                elevation: 3,
                               ),
-
-                        // Calender widget design start
-                        Column(
-                          children: [
-                            Stack(
-                              children: [
-                                HexagonWidget.flat(
-                                  width: 122,
-                                  cornerRadius: 15,
-                                  color: Colors.black,
-                                  elevation: 3,
+                              Positioned(
+                                top: 1,
+                                left: 1,
+                                right: 1,
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                CalendarScreen()));
+                                  },
+                                  child: HexagonWidget.flat(
+                                      width: 120,
+                                      cornerRadius: 15,
+                                      color: MyTheme.field_color,
+                                      elevation: 3,
+                                      child:
+                                          Image.asset('assets/calender.png')),
                                 ),
-                                Positioned(
-                                  top: 1,
-                                  left: 1,
-                                  right: 1,
-                                  child: InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CalendarScreen()));
-                                    },
-                                    child: HexagonWidget.flat(
-                                        width: 120,
-                                        cornerRadius: 15,
-                                        color: MyTheme.field_color,
-                                        elevation: 3,
-                                        child:
-                                            Image.asset('assets/calender.png')),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 5),
-                            Text(
-                              AppLocalizations.of(context)!.calendar,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: 'Poppins'),
-                            ),
-                          ],
-                        ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 5),
+                          Text(
+                            AppLocalizations.of(context)!.calendar,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Poppins'),
+                          ),
+                        ],
+                      ),
 
-                        Container(
-                          height: widget.is_base_category ? 90 : 90,
-                        ),
-                      ]))
-                    ],
-                  ),
+                      Container(
+                        height: widget.is_base_category ? 90 : 90,
+                      ),
+                    ]))
+                  ],
                 ),
-              ],
-            );
-          }
-          // if (snapshot.hasError) {
-          //   _getProfileDataFuture = _getProfileData();
-          //   return Text('Error');
-          // }
+              ),
+            ],
+          );
+        } else {
           return buildShimmer();
-        });
+        }
+      },
+    );
   }
+  // if (snapshot.hasError) {
+  //   _getProfileDataFuture = _getProfileData();
+  //   return Text('Error');
+  // }
+  //   return buildShimmer();
+  // });
 
   String getAppBarTitle() {
     String name = widget.parent_category_name == ""

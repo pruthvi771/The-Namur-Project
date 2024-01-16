@@ -33,6 +33,13 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   DateTime dateNow = DateTime.now();
   DateTime? dateOfRenting;
   late Land currentLand;
+  // Land currentLand = Land()
+  //   ..village = 'Village'
+  //   ..syno = 'Syno'
+  //   ..area = 0
+  //   ..crops = []
+  //   ..equipments = []
+  //   ..animals = [];
 
   @override
   void initState() {
@@ -44,6 +51,10 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     if (savedData == null) {
       return;
     }
+
+    // Land newLand =
+    //     savedData.land.firstWhere((element) => element.syno == widget.landSyno);
+    // print(newLand.animals);
 
     currentLand =
         savedData.land.firstWhere((element) => element.syno == widget.landSyno);

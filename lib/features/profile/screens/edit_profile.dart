@@ -1,5 +1,7 @@
 // translation done.
 
+import 'package:active_ecommerce_flutter/utils/profile_completion_bloc/profile_completion_bloc.dart';
+import 'package:active_ecommerce_flutter/utils/profile_completion_bloc/profile_completion_event.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:typed_data';
 import 'package:active_ecommerce_flutter/custom/input_decorations.dart';
@@ -308,6 +310,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     BlocProvider.of<HiveBloc>(context).add(
       HiveDataRequested(),
     );
+
+    BlocProvider.of<MiscBloc>(context).add(
+      MiscDataRequested(),
+    );
+
+    BlocProvider.of<ProfileCompletionBloc>(context).add(
+      ProfileCompletionDataRequested(),
+    );
   }
 
   void _addLandToHive(area, syno, village) async {
@@ -375,6 +385,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     BlocProvider.of<HiveBloc>(context).add(
       HiveDataRequested(),
       // HiveAppendAddress(context: context),
+    );
+
+    BlocProvider.of<ProfileCompletionBloc>(context).add(
+      ProfileCompletionDataRequested(),
     );
   }
 
@@ -448,6 +462,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     BlocProvider.of<HiveBloc>(context).add(
       HiveDataRequested(),
     );
+
+    BlocProvider.of<ProfileCompletionBloc>(context).add(
+      ProfileCompletionDataRequested(),
+    );
   }
 
   void _deleteKycFromHive() async {
@@ -477,6 +495,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     BlocProvider.of<HiveBloc>(context).add(
       HiveDataRequested(),
+    );
+
+    BlocProvider.of<ProfileCompletionBloc>(context).add(
+      ProfileCompletionDataRequested(),
     );
   }
 
@@ -513,6 +535,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     await dataBox.put(newData.id, newData);
 
+    BlocProvider.of<MiscBloc>(context).add(
+      MiscDataRequested(),
+    );
+
     BlocProvider.of<HiveBloc>(context).add(
       SyncHiveToFirestoreRequested(profileData: savedData),
     );
@@ -520,6 +546,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     BlocProvider.of<HiveBloc>(context).add(
       HiveDataRequested(),
       // HiveAppendAddress(context: context),
+    );
+
+    BlocProvider.of<ProfileCompletionBloc>(context).add(
+      ProfileCompletionDataRequested(),
     );
   }
 
@@ -629,6 +659,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     BlocProvider.of<HiveBloc>(context).add(
       HiveDataRequested(),
     );
+
+    BlocProvider.of<ProfileCompletionBloc>(context).add(
+      ProfileCompletionDataRequested(),
+    );
   }
 
   void _deleteCropFromHive(landSyno, indexToDelete) async {
@@ -660,6 +694,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     BlocProvider.of<HiveBloc>(context).add(
       HiveDataRequested(),
+    );
+
+    BlocProvider.of<ProfileCompletionBloc>(context).add(
+      ProfileCompletionDataRequested(),
     );
   }
 
@@ -728,6 +766,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     BlocProvider.of<HiveBloc>(context).add(
       HiveDataRequested(),
     );
+
+    BlocProvider.of<ProfileCompletionBloc>(context).add(
+      ProfileCompletionDataRequested(),
+    );
   }
 
   void _deleteAnimalFromHive(landSyno, indexToDelete) async {
@@ -755,6 +797,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     BlocProvider.of<HiveBloc>(context).add(
       HiveDataRequested(),
+    );
+
+    BlocProvider.of<ProfileCompletionBloc>(context).add(
+      ProfileCompletionDataRequested(),
     );
   }
 
@@ -837,6 +883,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     BlocProvider.of<HiveBloc>(context).add(
       HiveDataRequested(),
     );
+
+    BlocProvider.of<ProfileCompletionBloc>(context).add(
+      ProfileCompletionDataRequested(),
+    );
   }
 
   void _deleteEquipmentFromHive(landSyno, indexToDelete) async {
@@ -865,6 +915,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     BlocProvider.of<HiveBloc>(context).add(
       HiveDataRequested(),
+    );
+
+    BlocProvider.of<ProfileCompletionBloc>(context).add(
+      ProfileCompletionDataRequested(),
     );
   }
 

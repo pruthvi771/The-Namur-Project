@@ -153,16 +153,6 @@ class _TitleBarState extends State<TitleBar> {
                                               letterSpacing: .5),
                                         ),
                                       ),
-                                      // Text(
-                                      //   "0 Groups",
-                                      //   style: TextStyle(
-                                      //       fontWeight: FontWeight.w700,
-                                      //       fontSize: 13,
-                                      //       fontFamily: 'Poppins',
-                                      //       color: MyTheme.primary_color,
-                                      //       letterSpacing: .5,
-                                      //       height: 1.5),
-                                      // ),
                                       Text(
                                         "${state.numberOfCrops} ${AppLocalizations.of(context)!.crops}",
                                         style: TextStyle(

@@ -1075,6 +1075,9 @@ class _ProductPostState extends State<ProductPost> {
                         ),
                       ),
                       DropdownButton<String>(
+                        dropdownColor: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(18),
+                        menuMaxHeight: 200,
                         padding: EdgeInsets.only(left: 15, right: 5),
                         underline: Container(
                           height: 0,
