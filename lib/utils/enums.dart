@@ -48,9 +48,10 @@ var categoryListForParentEnum = {
     CategoryEnum.tools,
   ],
   ParentEnum.market: [
-    CategoryEnum.vehicles,
-    CategoryEnum.equipments,
-    CategoryEnum.tools,
+    CategoryEnum.property,
+    CategoryEnum.toysGadgets,
+    CategoryEnum.houseItems,
+    CategoryEnum.others,
     // CategoryEnum.vehicles,
     // CategoryEnum.landProperty,
     // CategoryEnum.toysGadget,
@@ -129,6 +130,41 @@ var subCategoryListsForCategory = {
     SubCategoryEnum.GardeningTools,
     SubCategoryEnum.Plow,
   ],
+  CategoryEnum.property: [
+    SubCategoryEnum.rentalProperty,
+    SubCategoryEnum.farmStay,
+    SubCategoryEnum.farmRental,
+    SubCategoryEnum.buyNsale,
+    SubCategoryEnum.farmLabour,
+    SubCategoryEnum.greenhouse,
+    SubCategoryEnum.otherProperty,
+  ],
+  CategoryEnum.toysGadgets: [
+    SubCategoryEnum.softToys,
+    SubCategoryEnum.electronicToys,
+    SubCategoryEnum.woodenToys,
+    SubCategoryEnum.misc,
+    SubCategoryEnum.otherToys,
+  ],
+  CategoryEnum.houseItems: [
+    SubCategoryEnum.electronics,
+    SubCategoryEnum.furniture,
+    SubCategoryEnum.kitchen,
+    SubCategoryEnum.electricals,
+    SubCategoryEnum.eventFunction,
+    SubCategoryEnum.clothing,
+    SubCategoryEnum.otherHouseItems,
+  ],
+  CategoryEnum.others: [
+    SubCategoryEnum.farmExtracts,
+    SubCategoryEnum.localBrands,
+    SubCategoryEnum.oilsAndGels,
+    SubCategoryEnum.localProducts,
+    SubCategoryEnum.energyDrinks,
+    SubCategoryEnum.artisans,
+    SubCategoryEnum.homeMade,
+    SubCategoryEnum.otherOthers,
+  ],
 };
 
 CategoryEnum? findCategoryForSubCategory(SubCategoryEnum subCategory) {
@@ -161,10 +197,10 @@ enum CategoryEnum {
   tools,
 
   // land specific
-  landProperty,
-  toysGadget,
+  property,
+  toysGadgets,
   houseItems,
-  other,
+  others,
 }
 
 var nameForCategoryEnum = {
@@ -177,10 +213,10 @@ var nameForCategoryEnum = {
   CategoryEnum.tools: "Tools",
   CategoryEnum.equipments: "Equipments",
   CategoryEnum.supplies: "Supplies",
-  CategoryEnum.landProperty: "Land Property",
-  CategoryEnum.toysGadget: "Toys/Gadget",
+  CategoryEnum.property: "Property",
+  CategoryEnum.toysGadgets: "Toys/Gadgets",
   CategoryEnum.houseItems: "House Items",
-  CategoryEnum.other: "Other",
+  CategoryEnum.others: "Others",
 };
 
 enum SubCategoryEnum {
@@ -353,6 +389,41 @@ enum SubCategoryEnum {
   cleaner,
   honeyTools,
   hive,
+
+  // property
+  rentalProperty,
+  farmStay,
+  farmRental,
+  buyNsale,
+  farmLabour,
+  greenhouse,
+  otherProperty,
+
+  // toysGadgets
+  softToys,
+  electronicToys,
+  woodenToys,
+  misc,
+  otherToys,
+
+  // houseItems
+  electronics,
+  furniture,
+  kitchen,
+  electricals,
+  eventFunction,
+  clothing,
+  otherHouseItems,
+
+  // others
+  farmExtracts,
+  localBrands,
+  oilsAndGels,
+  localProducts,
+  energyDrinks,
+  artisans,
+  homeMade,
+  otherOthers,
 }
 
 SubCategoryEnum? findSubCategoryEnumForName(String subCategory) {
@@ -512,6 +583,40 @@ var nameForSubCategoryEnum = {
   SubCategoryEnum.cleaner: 'Cleaner',
   SubCategoryEnum.honeyTools: 'Honey Tools',
   SubCategoryEnum.hive: 'Hive',
+
+  // property
+  SubCategoryEnum.rentalProperty: 'Rental Property',
+  SubCategoryEnum.farmStay: 'Farm Stay',
+  SubCategoryEnum.farmRental: 'Farm Rental',
+  SubCategoryEnum.buyNsale: 'Buy & Sale',
+  SubCategoryEnum.farmLabour: 'Farm Labour',
+  SubCategoryEnum.greenhouse: 'Greenhouse',
+  SubCategoryEnum.otherProperty: 'Others',
+
+  SubCategoryEnum.softToys: 'Soft Toys',
+  SubCategoryEnum.electronicToys: 'Electronic Toys',
+  SubCategoryEnum.woodenToys: 'Wooden Toys',
+  SubCategoryEnum.misc: 'Misc',
+  SubCategoryEnum.otherToys: 'Others',
+
+  // houseItems
+  SubCategoryEnum.electronics: 'Electronics',
+  SubCategoryEnum.furniture: 'Furniture',
+  SubCategoryEnum.kitchen: 'Kitchen',
+  SubCategoryEnum.electricals: 'Electricals',
+  SubCategoryEnum.eventFunction: 'Event Function',
+  SubCategoryEnum.clothing: 'Clothing',
+  SubCategoryEnum.otherHouseItems: 'Others',
+
+  // others
+  SubCategoryEnum.farmExtracts: 'Farm Extracts',
+  SubCategoryEnum.localBrands: 'Local Brands',
+  SubCategoryEnum.oilsAndGels: 'Oils & Gels',
+  SubCategoryEnum.localProducts: 'Local Products',
+  SubCategoryEnum.energyDrinks: 'Energy Drinks',
+  SubCategoryEnum.artisans: 'Artisans',
+  SubCategoryEnum.homeMade: 'Home Made',
+  SubCategoryEnum.otherOthers: 'Others',
 };
 
 var SubSubCategoryList = {

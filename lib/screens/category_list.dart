@@ -425,9 +425,10 @@ class _CategoryListState extends State<CategoryList> {
               MaterialPageRoute(
                 builder: (context) {
                   return ParentScreen(
-                      parentEnum: parentEnum!,
-                      isSecondHand:
-                          parentEnum == ParentEnum.market ? true : false);
+                    parentEnum: parentEnum!,
+                    isSecondHand: false,
+                    // parentEnum == ParentEnum.market ? true : false,
+                  );
                 },
               ),
             );
@@ -439,8 +440,8 @@ class _CategoryListState extends State<CategoryList> {
                   return ParentScreen(
                     parentEnum: parentEnum!,
                     isBuy: true,
-                    isSecondHand:
-                        parentEnum == ParentEnum.market ? true : false,
+                    isSecondHand: false,
+                    // parentEnum == ParentEnum.market ? true : false,
                   );
                 },
               ),

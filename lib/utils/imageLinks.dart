@@ -1,4 +1,55 @@
 var imageForNameCloud = {
+  'farm stay':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmarket%2F03_Farm%20stay.png?alt=media&token=63f31889-fabc-4273-a30d-51efa7ac96e1',
+  // 'Farm Rental',
+  'buy & sale':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmarket%2F02_buy%20n%20sale.png?alt=media&token=21806f82-42f7-4624-b13d-1b02b28a9273',
+  'farm labour':
+      "https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmarket%2F02_farm%20labour.png?alt=media&token=4d4e6514-6d9c-4500-a511-d11c7aa69df3",
+  'greenhouse':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmarket%2F04_greenhouse.png?alt=media&token=8bd11fda-424b-4874-856f-de5d74865639',
+  'others':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmarket%2F10_Others.png?alt=media&token=dbf4dfa8-b6c4-4dc1-b3b3-d7d4eaeec837',
+  'electronic toys':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmarket%2F02_electronic%20toys.png?alt=media&token=f45fdbcc-ebc0-4959-9c4f-9e185c2e6b34',
+  'wooden toys':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmarket%2F03_wooden%20toys.png?alt=media&token=a2307fd6-6d04-45ee-b278-05e41ffe2b91',
+  'misc':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmarket%2F04_Misc.png?alt=media&token=4d6ba63f-a013-4bb4-9971-5a736055ca7b',
+  'electronics':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmarket%2F05_electronics.png?alt=media&token=50e127bb-ed77-440f-a4b3-6c48758ee9c8',
+  'furniture':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmarket%2F03_furniture.png?alt=media&token=08a97b82-d344-4bc9-9f6f-ff28c75da899',
+  'kitchen':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmarket%2F04_kitchen.png?alt=media&token=07cdf166-e6d6-4429-8343-e0113d3014ee',
+  'electricals':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmarket%2F06_electricals.png?alt=media&token=3ebd611e-868d-4e1e-a030-c1b94be87093',
+  'clothing':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmarket%2F02_clothing.png?alt=media&token=d5da9835-724b-46db-96be-d835e9574af1',
+  'farm extracts':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmarket%2F04_farm%20extracts.png?alt=media&token=d7f4cd11-78d6-49f4-bc11-0c8aca9be7e3',
+  'local brands':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmarket%2F05_local%20brands.png?alt=media&token=fbb5e9ad-7fb3-4be6-9c56-54ef8a0b5a3a',
+  'local products':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmarket%2F06_local-product.png?alt=media&token=d822ff4a-056e-40e5-bd75-eb428091ac9d',
+  'energy drinks':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmarket%2F02_energy-drink.png?alt=media&token=500c25ba-bfb9-4240-a266-88e92a935242',
+  'artisans':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmarket%2F03_artisans.png?alt=media&token=3e8ec40c-c7ea-4cd5-91d1-e5ff9c20d6bf',
+  'home made':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmarket%2F01_Home%20made.png?alt=media&token=a7f2228f-d6cc-40a6-b602-eb56821bc985',
+  'oils & gels':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmarket%2F01_Oils%20and%20gels.png?alt=media&token=1e3d6fa1-df31-4470-8f21-9be6a3c37631',
+  'event function':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmarket%2F01_event%20Function.png?alt=media&token=a9095dc1-831c-4660-b211-0e0f63e84ca7',
+  'farm rental':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmarket%2F01_farm%20rental.png?alt=media&token=3b8b8b9e-9b9a-4b9a-9b9a-9b9a9b9a9b9a',
+  'rental property':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmarket%2F01_rental%20property.png?alt=media&token=25918e18-ae32-4e61-a5d1-aa004900ade8',
+  'soft toys':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmarket%2F01_soft%20toys.png?alt=media&token=ad5d47d6-8e1c-45ce-a399-de94cf13a4c7',
+
+  // misc
   'cod':
       'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2Fmore%2Fcash-on-delivery.png?alt=media&token=287c2c42-4d93-40b1-9ee3-f89c4c17fe63',
   'razorpay':
