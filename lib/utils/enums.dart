@@ -89,7 +89,6 @@ var subCategoryListsForCategory = {
   ],
   CategoryEnum.vegetables: [
     SubCategoryEnum.beans,
-    SubCategoryEnum.beans,
     SubCategoryEnum.garlic,
     SubCategoryEnum.onion,
     SubCategoryEnum.beetroot,
@@ -163,7 +162,6 @@ var subCategoryListsForCategory = {
     SubCategoryEnum.trailerAttachments,
     SubCategoryEnum.taxi,
     SubCategoryEnum.logistics,
-    SubCategoryEnum.maintenance,
     SubCategoryEnum.otherMachines,
   ],
   CategoryEnum.attachments: [
@@ -183,6 +181,7 @@ var subCategoryListsForCategory = {
     SubCategoryEnum.welding,
     SubCategoryEnum.wheelbarrow,
     SubCategoryEnum.gardeningTools,
+    SubCategoryEnum.maintenance,
     SubCategoryEnum.waterHose,
     SubCategoryEnum.otherAttachments,
   ],
@@ -640,12 +639,12 @@ var nameForSubCategoryEnum = {
   SubCategoryEnum.buyNsale: 'Buy & Sale',
   SubCategoryEnum.farmLabour: 'Farm Labour',
   SubCategoryEnum.greenhouse: 'Greenhouse',
-  SubCategoryEnum.otherProperty: 'Others',
+  SubCategoryEnum.otherProperty: 'Other Properties',
   SubCategoryEnum.softToys: 'Soft Toys',
   SubCategoryEnum.electronicToys: 'Electronic Toys',
   SubCategoryEnum.woodenToys: 'Wooden Toys',
   SubCategoryEnum.misc: 'Misc',
-  SubCategoryEnum.otherToys: 'Others',
+  SubCategoryEnum.otherToys: 'Other Toys',
 
   // houseItems
   SubCategoryEnum.electronics: 'Electronics',
@@ -654,7 +653,7 @@ var nameForSubCategoryEnum = {
   SubCategoryEnum.electricals: 'Electricals',
   SubCategoryEnum.eventFunction: 'Event Function',
   SubCategoryEnum.clothing: 'Clothing',
-  SubCategoryEnum.otherHouseItems: 'Others',
+  SubCategoryEnum.otherHouseItems: 'Other House Items',
 
   // others
   SubCategoryEnum.farmExtracts: 'Farm Extracts',

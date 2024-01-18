@@ -130,7 +130,7 @@ String translatedName({
     case 'tomato':
       return AppLocalizations.of(context)!.tomato;
     case 'wheat':
-      return AppLocalizations.of(context)!.tomato;
+      return AppLocalizations.of(context)!.wheat;
     case 'cows':
       return AppLocalizations.of(context)!.cows;
     case 'goats':
