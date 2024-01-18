@@ -554,9 +554,9 @@ class _ProductPostState extends State<ProductPost> {
     String machinePriceHintText = 'Price';
     if (productCategoryEnum == CategoryEnum.animals ||
         productCategoryEnum == CategoryEnum.birds ||
-        productCategoryEnum == CategoryEnum.vehicles ||
-        productCategoryEnum == CategoryEnum.equipments ||
-        productCategoryEnum == CategoryEnum.tools) {
+        productCategoryEnum == CategoryEnum.machines ||
+        productCategoryEnum == CategoryEnum.attachments ||
+        productCategoryEnum == CategoryEnum.sparesService) {
       selectedQuantityUnit = listOfQuantityUnits[0];
       showQuantityDropdown = false;
     }
@@ -1127,9 +1127,9 @@ class _ProductPostState extends State<ProductPost> {
             padding: const EdgeInsets.only(left: 15.0, right: 15.0),
             child: Row(
               children: [
-                (productCategoryEnum == CategoryEnum.vehicles ||
-                        productCategoryEnum == CategoryEnum.equipments ||
-                        productCategoryEnum == CategoryEnum.tools)
+                (productCategoryEnum == CategoryEnum.machines ||
+                        productCategoryEnum == CategoryEnum.attachments ||
+                        productCategoryEnum == CategoryEnum.sparesService)
                     ? Expanded(
                         child: TextFormField(
                           controller: _priceController,

@@ -193,7 +193,30 @@ class _TestWidgetState extends State<TestWidget> {
                 },
                 child: Text('scam')),
             ElevatedButton(
-              onPressed: () async {},
+              onPressed: () async {
+                QuerySnapshot<Map<String, dynamic>> querySnapshot =
+                    await _firestore
+                        .collection('buyer')
+                        .where(FieldPath.documentId, isNotEqualTo: null)
+                        .where('profileData', isNotEqualTo: null)
+                        .get();
+
+                print('here2');
+
+                var documents = querySnapshot.docs;
+
+                print(documents[0]);
+                print('here3');
+
+                for (var document in documents) {
+                  Map<String, dynamic> data = document.data();
+
+                  if (data['profileData'] == null) {
+                    continue;
+                  }
+                  print(data['profileData']['address'][0]['pincode']);
+                }
+              },
               child: const Text('Back'),
             ),
           ],
