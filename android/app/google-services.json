@@ -12,7 +12,28 @@
           "package_name": "com.activeitzone.namur"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "581813390000-mlh50mite5poptcmq4lrck3dmfp6snli.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.activeitzone.namur",
+            "certificate_hash": "c8d579e9324d96c5f8a26253d9a712a33b374312"
+          }
+        },
+        {
+          "client_id": "581813390000-pdar2kg8fad4d85ou8b4vgegnmrhu6j5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.activeitzone.namur",
+            "certificate_hash": "05e4c5a7d7d6fbacab56bb115b886ed620b17bb0"
+          }
+        },
+        {
+          "client_id": "581813390000-cockp1hrdsac5h8b9k9ceas7bqe5p4tj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAvsmahZ-zyp9QuNbBo2CAjOQiDCKMJnHs"
@@ -20,7 +41,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "581813390000-cockp1hrdsac5h8b9k9ceas7bqe5p4tj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "581813390000-71tugo5f6j3uk6grgc6ftu4htkas3kcr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.activeitzone.ecommerceapplesignup"
+              }
+            }
+          ]
         }
       }
     }
