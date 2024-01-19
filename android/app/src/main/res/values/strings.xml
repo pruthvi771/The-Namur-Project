@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ActiveEcommerce</string>
+    <string name="app_name">Namur-Agro</string>
 
     <!-- Replace "000000000000" with your Facebook App ID here. -->
-    <string name="facebook_app_id"></string>
+    <string name="facebook_app_id">646768910801994</string>
 
-    <string name="facebook_client_token"></string>
+    <string name="facebook_client_token">83b4334bdf62998e51d4e3726b4fa8b3</string>
 
     <!--
       Replace "000000000000" with your Facebook App ID here.
       **NOTE**: The scheme needs to start with `fb` and then your ID.
     -->
-    <string name="fb_login_protocol_scheme">fb</string>
+    <string name="fb_login_protocol_scheme">fb646768910801994</string>
 
     <string name="flutter_downloader_notification_started">Download started</string>
     <string name="flutter_downloader_notification_in_progress">Download in progress</string>
