@@ -260,7 +260,7 @@ class _ParentScreenState extends State<ParentScreen> {
                       child: Text(
                         nameForCategoryEnum[item]!,
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 12,
                           fontWeight: FontWeight.w600,
                           // color: Colors.black,
                         ),
@@ -275,7 +275,6 @@ class _ParentScreenState extends State<ParentScreen> {
 
         Expanded(
           child: TabBarView(
-            physics: BouncingScrollPhysics(),
             children: List.generate(
               categoryListForParentEnum[widget.parentEnum]!.length,
               (index) {
@@ -283,108 +282,103 @@ class _ParentScreenState extends State<ParentScreen> {
                     categoryListForParentEnum[widget.parentEnum]![index];
                 return SingleChildScrollView(
                     // controller: _xcrollController,
-                    physics: const BouncingScrollPhysics(
-                        parent: AlwaysScrollableScrollPhysics()),
                     child: MasonryGridView.count(
-                      crossAxisCount: 3,
-                      mainAxisSpacing: 16,
-                      crossAxisSpacing: 16,
-                      itemCount:
-                          subCategoryListsForCategory[categoryEnum]!.length,
-                      shrinkWrap: true,
-                      padding: EdgeInsets.only(top: 10.0, left: 18, right: 18),
-                      physics: NeverScrollableScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      itemBuilder: (context, index) {
-                        enums.SubCategoryEnum subCategoryEnum =
-                            subCategoryListsForCategory[categoryEnum]![index];
-                        return InkWell(
-                          onTap: () {
-                            widget.isBuy
-                                ? Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => BuyProductList(
-                                              subCategoryEnum: subCategoryEnum,
-                                              isSecondHand: widget.isSecondHand,
-                                              isRent: isSwitched == null
-                                                  ? null
-                                                  : !isSwitched!,
-                                            )),
-                                  )
-                                : Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => ProductInventory(
-                                              subCategoryEnum: subCategoryEnum,
-                                              isSecondHand: widget.isSecondHand,
-                                            )));
-                          },
-                          child: Container(
-                            height: 120,
-                            padding: const EdgeInsets.symmetric(vertical: 5),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              border: Border.all(
-                                color: MyTheme.field_color,
-                              ),
-                            ),
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    margin: const EdgeInsets.all(5),
-                                    child: AspectRatio(
-                                      aspectRatio: 1,
-                                      child: CachedNetworkImage(
-                                        imageUrl: imageForName[
-                                                nameForSubCategoryEnum[
-                                                        subCategoryEnum]!
-                                                    .toLowerCase()] ??
-                                            imageForName['placeholder']!,
-                                        imageBuilder:
-                                            (context, imageProvider) =>
-                                                Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                            image: DecorationImage(
-                                              image: imageProvider,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
+                  crossAxisCount: 3,
+                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16,
+                  itemCount: subCategoryListsForCategory[categoryEnum]!.length,
+                  shrinkWrap: true,
+                  padding: EdgeInsets.only(top: 10.0, left: 18, right: 18),
+                  physics: NeverScrollableScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  itemBuilder: (context, index) {
+                    enums.SubCategoryEnum subCategoryEnum =
+                        subCategoryListsForCategory[categoryEnum]![index];
+                    return InkWell(
+                      onTap: () {
+                        widget.isBuy
+                            ? Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => BuyProductList(
+                                          subCategoryEnum: subCategoryEnum,
+                                          isSecondHand: widget.isSecondHand,
+                                          isRent: isSwitched == null
+                                              ? null
+                                              : !isSwitched!,
+                                        )),
+                              )
+                            : Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ProductInventory(
+                                          subCategoryEnum: subCategoryEnum,
+                                          isSecondHand: widget.isSecondHand,
+                                        )));
+                      },
+                      child: Container(
+                        height: 120,
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(
+                            color: MyTheme.field_color,
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                margin: const EdgeInsets.all(5),
+                                child: AspectRatio(
+                                  aspectRatio: 1,
+                                  child: CachedNetworkImage(
+                                    imageUrl: imageForName[
+                                            nameForSubCategoryEnum[
+                                                    subCategoryEnum]!
+                                                .toLowerCase()] ??
+                                        imageForName['placeholder']!,
+                                    imageBuilder: (context, imageProvider) =>
+                                        Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover,
                                         ),
-                                        placeholder: (context, url) => Center(
-                                            child: CircularProgressIndicator()),
-                                        errorWidget: (context, url, error) =>
-                                            Icon(Icons.error),
                                       ),
                                     ),
+                                    placeholder: (context, url) => Center(
+                                        child: CircularProgressIndicator()),
+                                    errorWidget: (context, url, error) =>
+                                        Icon(Icons.error),
                                   ),
                                 ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                FittedBox(
-                                  child: Text(
-                                    translatedName(
-                                      name: nameForSubCategoryEnum[
-                                              subCategoryEnum]!
-                                          .toLowerCase(),
-                                      context: context,
-                                    ),
-                                    style: TextStyle(
-                                      // fontSize: 14,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                )
-                              ],
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    ));
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              child: Text(
+                                translatedName(
+                                  name: nameForSubCategoryEnum[subCategoryEnum]!
+                                      .toLowerCase(),
+                                  context: context,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ));
               },
             ).toList(),
           ),

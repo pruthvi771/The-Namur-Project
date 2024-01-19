@@ -389,7 +389,7 @@ String translatedName({
       return AppLocalizations.of(context)!.areca;
     case 'root veggi':
       return AppLocalizations.of(context)!.root_veggi;
-    case 'other vegitables':
+    case 'other vegetables':
       return AppLocalizations.of(context)!.other_vegetables;
     case 'sapodilla':
       return AppLocalizations.of(context)!.sapodilla;
@@ -417,6 +417,8 @@ String translatedName({
       return AppLocalizations.of(context)!.sweeteners;
     case 'other crops':
       return AppLocalizations.of(context)!.other_crops;
+    case 'other fruits':
+      return AppLocalizations.of(context)!.other_fruits;
     case 'tiller':
       return AppLocalizations.of(context)!.tiller;
     case 'tractor big mini':
