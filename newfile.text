@@ -1,9 +1,11 @@
 {
   "hi": [
-    "area"
+    "area",
+    "renting_location"
   ],
 
   "kn": [
-    "area"
+    "area",
+    "renting_location"
   ]
 }

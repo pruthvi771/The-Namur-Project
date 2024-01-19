@@ -5,6 +5,7 @@ import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_add_
 import 'package:active_ecommerce_flutter/features/calendar/screens/cultivation_tips_screen.dart';
 import 'package:active_ecommerce_flutter/features/calendar/screens/pest_control_screen.dart';
 import 'package:active_ecommerce_flutter/features/calendar/screens/schedule_screen.dart';
+import 'package:active_ecommerce_flutter/features/calendar/screens/tutorial_screen.dart';
 import 'package:active_ecommerce_flutter/features/profile/address_list.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
@@ -276,85 +277,136 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               height: 100,
                               // color: Color(0xffC3FF77),
                               color: MyTheme.green_lighter,
+                              padding: EdgeInsets.symmetric(horizontal: 10),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   // cost esmite
-                                  InkWell(
-                                    onTap: docData['costEstimate'] == null ||
-                                            docData['costEstimate'] == ''
-                                        ? () {
-                                            ToastComponent.showDialog(
-                                                AppLocalizations.of(context)!
-                                                    .cost_estimate_hasnt_been_added_yet,
-                                                gravity: Toast.center,
-                                                duration: Toast.lengthLong);
-                                            return;
-                                          }
-                                        : () {
-                                            showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return AlertDialog(
-                                                    contentPadding:
-                                                        EdgeInsets.only(
-                                                            top: 10,
-                                                            left: 10,
-                                                            right: 10),
-                                                    // actionsPadding: EdgeInsets.all(0),
-                                                    content: Container(
-                                                      height: 300,
-                                                      child: CachedNetworkImage(
-                                                        imageUrl: docData[
-                                                            'costEstimate'],
-                                                        fit: BoxFit.fitWidth,
-                                                        progressIndicatorBuilder:
-                                                            (context, url,
-                                                                progress) {
-                                                          return Center(
-                                                            child: Container(
-                                                              width: 20,
-                                                              height: 20,
-                                                              child:
-                                                                  CircularProgressIndicator(),
-                                                            ),
-                                                          );
-                                                        },
-                                                      ),
-                                                    ),
-                                                    actions: [
-                                                      TextButton(
-                                                          onPressed: () {
-                                                            Navigator.pop(
-                                                                context);
+                                  Expanded(
+                                    child: InkWell(
+                                      onTap: docData['costEstimate'] == null ||
+                                              docData['costEstimate'] == ''
+                                          ? () {
+                                              ToastComponent.showDialog(
+                                                  AppLocalizations.of(context)!
+                                                      .cost_estimate_hasnt_been_added_yet,
+                                                  gravity: Toast.center,
+                                                  duration: Toast.lengthLong);
+                                              return;
+                                            }
+                                          : () {
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      contentPadding:
+                                                          EdgeInsets.only(
+                                                              top: 10,
+                                                              left: 10,
+                                                              right: 10),
+                                                      // actionsPadding: EdgeInsets.all(0),
+                                                      content: Container(
+                                                        height: 300,
+                                                        child:
+                                                            CachedNetworkImage(
+                                                          imageUrl: docData[
+                                                              'costEstimate'],
+                                                          fit: BoxFit.fitWidth,
+                                                          progressIndicatorBuilder:
+                                                              (context, url,
+                                                                  progress) {
+                                                            return Center(
+                                                              child: Container(
+                                                                width: 20,
+                                                                height: 20,
+                                                                child:
+                                                                    CircularProgressIndicator(),
+                                                              ),
+                                                            );
                                                           },
-                                                          child: Text(
-                                                              AppLocalizations.of(
-                                                                      context)!
-                                                                  .dismiss)),
-                                                    ],
-                                                  );
-                                                });
-                                          },
-                                    child: Container(
+                                                        ),
+                                                      ),
+                                                      actions: [
+                                                        TextButton(
+                                                            onPressed: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            child: Text(
+                                                                AppLocalizations.of(
+                                                                        context)!
+                                                                    .dismiss)),
+                                                      ],
+                                                    );
+                                                  });
+                                            },
+                                      child: Container(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              width: 55,
+                                              height: 50,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                              child: Image.asset(
+                                                  "assets/pests 1.png"),
+                                            ),
+                                            SizedBox(height: 3),
+                                            Text(
+                                              AppLocalizations.of(context)!
+                                                  .cost_estimate,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontFamily: "Poppins"),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 15),
+
+                                  // schedule
+                                  Expanded(
+                                    child: InkWell(
+                                      onTap: () {
+                                        // print('hello');
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ScheduleScreen(
+                                              cropName: currentCrop.cropName,
+                                              landSyno: currentCrop.landSyno,
+                                              cropId: currentCrop.id,
+                                            ),
+                                          ),
+                                        );
+                                      },
                                       child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
                                           Container(
                                             width: 55,
-                                            height: 50,
+                                            height: 55,
                                             decoration: BoxDecoration(
                                                 color: Colors.white,
                                                 borderRadius:
                                                     BorderRadius.circular(10)),
                                             child: Image.asset(
-                                                "assets/pests 1.png"),
+                                                "assets/cultivation 1.png"),
                                           ),
                                           SizedBox(height: 3),
                                           Text(
                                             AppLocalizations.of(context)!
-                                                .cost_estimate,
+                                                .schedule,
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w500,
                                                 fontFamily: "Poppins"),
@@ -363,125 +415,134 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                       ),
                                     ),
                                   ),
+
                                   SizedBox(width: 15),
 
-                                  // schedule
-                                  InkWell(
-                                    onTap: () {
-                                      // print('hello');
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => ScheduleScreen(
-                                            cropName: currentCrop.cropName,
-                                            landSyno: currentCrop.landSyno,
-                                            cropId: currentCrop.id,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          width: 55,
-                                          height: 55,
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          child: Image.asset(
-                                              "assets/cultivation 1.png"),
-                                        ),
-                                        SizedBox(height: 3),
-                                        Text(
-                                          AppLocalizations.of(context)!
-                                              .schedule,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              fontFamily: "Poppins"),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(width: 15),
-
-                                  // pest control
-                                  InkWell(
-                                    onTap: () {
-                                      Navigator.push(
+                                  Expanded(
+                                    child: InkWell(
+                                      onTap: () {
+                                        // print('hello');
+                                        Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) =>
-                                                  PestControlScreen(
-                                                    cropName:
-                                                        currentCrop.cropName,
-                                                  )));
-                                    },
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          width: 55,
-                                          height: 55,
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          child: Image.asset(
-                                              "assets/pests 1 (1).png"),
-                                        ),
-                                        SizedBox(height: 3),
-                                        Text(
-                                          AppLocalizations.of(context)!
-                                              .pest_control,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              fontFamily: "Poppins"),
-                                        )
-                                      ],
+                                            builder: (context) =>
+                                                TutorialScreen(
+                                              cropName: currentCrop.cropName,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            width: 55,
+                                            height: 55,
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                            child: Image.asset(
+                                                "assets/tutorial.png"),
+                                          ),
+                                          SizedBox(height: 3),
+                                          Text(
+                                            AppLocalizations.of(context)!
+                                                .tutorial_ucf,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                fontFamily: "Poppins"),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
+
+                                  SizedBox(width: 15),
+
+                                  // https://img.youtube.com/vi/$_id/hqdefault.jpg
+
+                                  // pest control
+                                  Expanded(
+                                    child: InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PestControlScreen(
+                                                      cropName:
+                                                          currentCrop.cropName,
+                                                    )));
+                                      },
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            width: 55,
+                                            height: 55,
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                            child: Image.asset(
+                                                "assets/pests 1 (1).png"),
+                                          ),
+                                          SizedBox(height: 3),
+                                          Text(
+                                            AppLocalizations.of(context)!
+                                                .pest_control,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                fontFamily: "Poppins"),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+
                                   SizedBox(width: 15),
 
                                   // cultivation tips
-                                  InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              CultivationTipsScreen(
-                                                  cropName:
-                                                      currentCrop.cropName),
-                                        ),
-                                      );
-                                    },
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          width: 55,
-                                          height: 55,
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          child: Image.asset(
-                                              "assets/cultivation 1 (1).png"),
-                                        ),
-                                        SizedBox(height: 3),
-                                        Text(
-                                          AppLocalizations.of(context)!
-                                              .cultivation_tips_ucf,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              fontFamily: "Poppins"),
-                                        )
-                                      ],
+                                  Expanded(
+                                    child: InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                CultivationTipsScreen(
+                                                    cropName:
+                                                        currentCrop.cropName),
+                                          ),
+                                        );
+                                      },
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            width: 55,
+                                            height: 55,
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                            child: Image.asset(
+                                                "assets/cultivation 1 (1).png"),
+                                          ),
+                                          SizedBox(height: 3),
+                                          Text(
+                                            AppLocalizations.of(context)!
+                                                .cultivation_tips_ucf,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                fontFamily: "Poppins"),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   )
                                 ],
@@ -489,7 +550,44 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             ),
 
                             SizedBox(
-                              height: 20,
+                              height: 10,
+                            ),
+
+                            Padding(
+                              padding: const EdgeInsets.only(right: 20),
+                              child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: TextButton(
+                                    style: TextButton.styleFrom(
+                                      // backgroundColor: MyTheme.accent_color,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                        side: BorderSide(
+                                          color: Colors.grey[200]!,
+                                          width: 2,
+                                        ),
+                                      ),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 20, vertical: 10),
+                                    ),
+                                    onPressed: () {
+                                      stopTrackingCrop(selectedIndex);
+                                    },
+                                    child: Text(
+                                      AppLocalizations.of(context)!
+                                          .stop_tracking,
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: .5,
+                                        fontFamily: 'Poppins',
+                                      ),
+                                    ),
+                                  )),
+                            ),
+
+                            SizedBox(
+                              height: 10,
                             ),
 
                             currentCrop.plantingDate == null
@@ -608,38 +706,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         ),
                       );
                     }),
-
-                Padding(
-                  padding: const EdgeInsets.only(right: 20),
-                  child: Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                          // backgroundColor: MyTheme.accent_color,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            side: BorderSide(
-                              color: Colors.grey[200]!,
-                              width: 2,
-                            ),
-                          ),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
-                        ),
-                        onPressed: () {
-                          stopTrackingCrop(selectedIndex);
-                        },
-                        child: Text(
-                          AppLocalizations.of(context)!.stop_tracking,
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: .5,
-                            fontFamily: 'Poppins',
-                          ),
-                        ),
-                      )),
-                ),
               ],
             );
           }

@@ -873,7 +873,8 @@ class _ProductPostState extends State<ProductPost> {
                                     padding: EdgeInsets.only(left: 20),
                                     child: DropdownButtonWidget(
                                       '',
-                                      AppLocalizations.of(context)!.select_land,
+                                      AppLocalizations.of(context)!
+                                          .renting_location,
                                       state.profileData.land
                                           .map((e) => DropdownMenuItem<String>(
                                                 child: Text(e.village),
@@ -1025,93 +1026,94 @@ class _ProductPostState extends State<ProductPost> {
             )),
 
         // product quantity
-        Container(
-          margin: const EdgeInsets.only(top: 20.0, left: 20.0, right: 15.0),
-          height: 50, // Specify a fixed height for the container
-          child: Row(
-            children: [
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: MyTheme.field_color,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: TextFormField(
-                    enabled: !hideQuantityBox,
-                    controller: _quantityController,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.only(left: 15),
-                      hintText: AppLocalizations.of(context)!.quantity_ucf,
-                      hintStyle: TextStyle(
-                        color: Colors.grey[600],
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'Poppins',
+        if (hideQuantityBox == false)
+          Container(
+            margin: const EdgeInsets.only(top: 20.0, left: 20.0, right: 15.0),
+            height: 50, // Specify a fixed height for the container
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: MyTheme.field_color,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: TextFormField(
+                      enabled: !hideQuantityBox,
+                      controller: _quantityController,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.only(left: 15),
+                        hintText: AppLocalizations.of(context)!.quantity_ucf,
+                        hintStyle: TextStyle(
+                          color: Colors.grey[600],
+                          fontWeight: FontWeight.w400,
+                          fontFamily: 'Poppins',
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(width: 10),
-              if (showQuantityDropdown)
-                Container(
-                  // width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: MyTheme.field_color,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 6),
-                        child: Icon(
-                          Icons.close,
-                          color: Colors.grey[600],
-                          size: 15,
-                        ),
-                      ),
-                      DropdownButton<String>(
-                        dropdownColor: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(18),
-                        menuMaxHeight: 200,
-                        padding: EdgeInsets.only(left: 15, right: 5),
-                        underline: Container(
-                          height: 0,
-                          color: Colors.transparent,
-                        ),
-                        value: selectedQuantityUnit,
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            selectedQuantityUnit = newValue!;
-                          });
-                        },
-                        items: listOfQuantityUnits
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        hint: Text(
-                          AppLocalizations.of(context)!.select_quantity_unit,
-                          style: TextStyle(
+                SizedBox(width: 10),
+                if (showQuantityDropdown)
+                  Container(
+                    // width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: MyTheme.field_color,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 6),
+                          child: Icon(
+                            Icons.close,
                             color: Colors.grey[600],
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Poppins',
+                            size: 15,
                           ),
                         ),
-                        // icon: SizedBox(width: 24),
-                      ),
-                    ],
+                        DropdownButton<String>(
+                          dropdownColor: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(18),
+                          menuMaxHeight: 200,
+                          padding: EdgeInsets.only(left: 15, right: 5),
+                          underline: Container(
+                            height: 0,
+                            color: Colors.transparent,
+                          ),
+                          value: selectedQuantityUnit,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedQuantityUnit = newValue!;
+                            });
+                          },
+                          items: listOfQuantityUnits
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          hint: Text(
+                            AppLocalizations.of(context)!.select_quantity_unit,
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
+                          // icon: SizedBox(width: 24),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
-        ),
 
         // product price
         Container(

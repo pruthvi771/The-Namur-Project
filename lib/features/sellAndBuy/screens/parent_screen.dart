@@ -17,10 +17,12 @@ class ParentScreen extends StatefulWidget {
   final enums.ParentEnum parentEnum;
   final bool isBuy;
   final bool isSecondHand;
+  final int initialIndexForTabBar;
   const ParentScreen({
     required this.parentEnum,
     this.isBuy = false,
     this.isSecondHand = false,
+    this.initialIndexForTabBar = 0,
   });
 
   @override
@@ -65,6 +67,7 @@ class _ParentScreenState extends State<ParentScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
+      initialIndex: widget.initialIndexForTabBar,
       length: categoryListForParentEnum[widget.parentEnum]!.length,
       child: Scaffold(
         appBar: AppBar(
