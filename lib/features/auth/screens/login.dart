@@ -114,14 +114,11 @@ class _LoginState extends State<Login> {
     );
   }
 
-  onPressedFacebookLogin() async {
+  onPressedFacebookLogin(BuildContext context) async {
     print('Facebook login attempted');
-    // final user = await AuthService.firebase().loginWithGoogle();
-    //
-    // Navigator.pushAndRemoveUntil(context,
-    //     MaterialPageRoute(builder: (context) {
-    //       return Main();
-    //     }), (newRoute) => false);
+    ToastComponent.showDialog(AppLocalizations.of(context)!.coming_soon,
+        gravity: Toast.bottom, duration: Toast.lengthLong);
+    return;
   }
 
   Location location = Location();
@@ -433,7 +430,7 @@ class _LoginState extends State<Login> {
                                     child: InkWell(
                                       onTap: () {
                                         // onPressedGoogleLogin(context);
-                                        print('facebook');
+                                        onPressedFacebookLogin(context);
                                       },
                                       child: Container(
                                         width: 40,

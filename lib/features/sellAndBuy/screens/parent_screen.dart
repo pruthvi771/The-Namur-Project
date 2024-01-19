@@ -360,6 +360,8 @@ class _ParentScreenState extends State<ParentScreen> {
                               height: 10,
                             ),
                             Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 5, vertical: 2),
                               child: Text(
                                 translatedName(
                                   name: nameForSubCategoryEnum[subCategoryEnum]!
