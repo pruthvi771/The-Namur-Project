@@ -355,6 +355,200 @@ String translatedName({
       return AppLocalizations.of(context)!.honeyTools;
     case 'hive':
       return AppLocalizations.of(context)!.hive;
+    case 'dairy products':
+      return AppLocalizations.of(context)!.dairy_products;
+    case 'honey':
+      return AppLocalizations.of(context)!.honey;
+    case 'pets':
+      return AppLocalizations.of(context)!.pets;
+    case 'other animals':
+      return AppLocalizations.of(context)!.other_animals;
+    case 'fish':
+      return AppLocalizations.of(context)!.fish;
+    case 'chicks':
+      return AppLocalizations.of(context)!.chicks;
+    case 'other birds':
+      return AppLocalizations.of(context)!.other_birds;
+    case 'pet food':
+      return AppLocalizations.of(context)!.pet_food;
+    case 'vet doctor':
+      return AppLocalizations.of(context)!.vet_doctor;
+    case 'pet medicine':
+      return AppLocalizations.of(context)!.pet_medicine;
+    case 'pet daily care':
+      return AppLocalizations.of(context)!.pet_daily_care;
+    case 'bee tools':
+      return AppLocalizations.of(context)!.bee_tools;
+    case 'pet toy tools':
+      return AppLocalizations.of(context)!.pet_toy_tools;
+    case 'other supplies':
+      return AppLocalizations.of(context)!.other_supplies;
+    case 'herekai sorekai agalkai':
+      return AppLocalizations.of(context)!.herekai_sorekai_agalkai;
+    case 'areca':
+      return AppLocalizations.of(context)!.areca;
+    case 'root veggi':
+      return AppLocalizations.of(context)!.root_veggi;
+    case 'other vegitables':
+      return AppLocalizations.of(context)!.other_vegetables;
+    case 'sapodilla':
+      return AppLocalizations.of(context)!.sapodilla;
+    case 'melon':
+      return AppLocalizations.of(context)!.melon;
+    case 'jamun fruit':
+      return AppLocalizations.of(context)!.jamun_fruit;
+    case 'berrys':
+      return AppLocalizations.of(context)!.berrys;
+    case 'fruit juice':
+      return AppLocalizations.of(context)!.fruit_juice;
+    case 'ragi millets':
+      return AppLocalizations.of(context)!.ragi_millet;
+    case 'millets':
+      return AppLocalizations.of(context)!.millets;
+    case 'oil seeds':
+      return AppLocalizations.of(context)!.oil_seeds;
+    case 'grams':
+      return AppLocalizations.of(context)!.grams;
+    case 'spices':
+      return AppLocalizations.of(context)!.spices;
+    case 'beverage crop':
+      return AppLocalizations.of(context)!.beverage_crop;
+    case 'sweeteners':
+      return AppLocalizations.of(context)!.sweeteners;
+    case 'other crops':
+      return AppLocalizations.of(context)!.other_crops;
+    case 'tiller':
+      return AppLocalizations.of(context)!.tiller;
+    case 'tractor big mini':
+      return AppLocalizations.of(context)!.tractor_big_mini;
+    case 'sprayer planter':
+      return AppLocalizations.of(context)!.sprayer_planter;
+    case 'truck big mini':
+      return AppLocalizations.of(context)!.truck_big_mini;
+    case 'water tanker':
+      return AppLocalizations.of(context)!.water_tanker;
+    case 'trailer attachments':
+      return AppLocalizations.of(context)!.trailer_attachments;
+    case 'taxi':
+      return AppLocalizations.of(context)!.taxi;
+    case 'logistics':
+      return AppLocalizations.of(context)!.logistics;
+    case 'maintenance':
+      return AppLocalizations.of(context)!.maintenance;
+    case 'other machines':
+      return AppLocalizations.of(context)!.other_machines;
+    case 'areca machines':
+      return AppLocalizations.of(context)!.areca_machines;
+    case 'soil testing':
+      return AppLocalizations.of(context)!.soil_testing;
+    case 'areca polisher':
+      return AppLocalizations.of(context)!.areca_polisher;
+    case 'leveler':
+      return AppLocalizations.of(context)!.leveler;
+    case 'auger drill':
+      return AppLocalizations.of(context)!.auger_drill;
+    case 'brush cutter':
+      return AppLocalizations.of(context)!.brush_cutter;
+    case 'chainsaw':
+      return AppLocalizations.of(context)!.chainsaw;
+    case 'lawnmower':
+      return AppLocalizations.of(context)!.lawnmower;
+    case 'water pump':
+      return AppLocalizations.of(context)!.water_pump;
+    case 'welding':
+      return AppLocalizations.of(context)!.welding;
+    case 'wheelbarrow':
+      return AppLocalizations.of(context)!.wheelbarrow;
+    case 'water hose':
+      return AppLocalizations.of(context)!.water_hose;
+    case 'other attachments':
+      return AppLocalizations.of(context)!.other_attachments;
+    case 'pipe drip sprinkler':
+      return AppLocalizations.of(context)!.pipe_drip_sprinkler;
+    case 'starter borewell':
+      return AppLocalizations.of(context)!.starter_borewell;
+    case 'drone services':
+      return AppLocalizations.of(context)!.drone_services;
+    case 'warehouse greenhouse':
+      return AppLocalizations.of(context)!.warehouse_greenhouse;
+    case 'farm security':
+      return AppLocalizations.of(context)!.farm_security;
+    case 'smart irrigation':
+      return AppLocalizations.of(context)!.smart_irrigation;
+    case 'smart farm':
+      return AppLocalizations.of(context)!.smart_farm;
+    case 'solar pump':
+      return AppLocalizations.of(context)!.solar_pump;
+    case 'solar energy':
+      return AppLocalizations.of(context)!.solar_energy;
+    case 'crop doctor':
+      return AppLocalizations.of(context)!.crop_doctor;
+    case 'finance service':
+      return AppLocalizations.of(context)!.finance_service;
+    case 'soft toys':
+      return AppLocalizations.of(context)!.soft_toys;
+    case 'electronic toys':
+      return AppLocalizations.of(context)!.electronic_toys;
+    case 'wooden toys':
+      return AppLocalizations.of(context)!.wooden_toys;
+    case 'misc':
+      return AppLocalizations.of(context)!.misc;
+    case 'other tools':
+      return AppLocalizations.of(context)!.other_tools;
+    case 'other toys':
+      return AppLocalizations.of(context)!.other_toys;
+    case 'other services':
+      return AppLocalizations.of(context)!.other_services;
+    case 'rental property':
+      return AppLocalizations.of(context)!.rental_property;
+    case 'farm stay':
+      return AppLocalizations.of(context)!.farm_stay;
+    case 'farm rental':
+      return AppLocalizations.of(context)!.farm_rental;
+    case 'buy & sale':
+      return AppLocalizations.of(context)!.buy_n_sale;
+    case 'farm labour':
+      return AppLocalizations.of(context)!.farm_labour;
+    case 'greenhouse':
+      return AppLocalizations.of(context)!.greenhouse;
+    case 'other properties':
+      return AppLocalizations.of(context)!.other_property;
+    case 'sensors meters':
+      return AppLocalizations.of(context)!.sensors_meters;
+    case 'local manufacturing':
+      return AppLocalizations.of(context)!.local_manufacturing;
+    case 'service':
+      return AppLocalizations.of(context)!.service;
+    case 'electronics':
+      return AppLocalizations.of(context)!.electronics;
+    case 'furniture':
+      return AppLocalizations.of(context)!.furniture;
+    case 'kitchen':
+      return AppLocalizations.of(context)!.kitchen;
+    case 'electricals':
+      return AppLocalizations.of(context)!.electricals;
+    case 'event function':
+      return AppLocalizations.of(context)!.event_function;
+    case 'clothing':
+      return AppLocalizations.of(context)!.clothing;
+    case 'other house items':
+      return AppLocalizations.of(context)!.other_house_items;
+    case 'farm extracts':
+      return AppLocalizations.of(context)!.farm_extracts;
+    case 'local brands':
+      return AppLocalizations.of(context)!.local_brands;
+    case 'oils & gels':
+      return AppLocalizations.of(context)!.oils_and_gels;
+    case 'local products':
+      return AppLocalizations.of(context)!.local_products;
+    case 'energy drinks':
+      return AppLocalizations.of(context)!.energy_drinks;
+    case 'artisans':
+      return AppLocalizations.of(context)!.artisans;
+    case 'home made':
+      return AppLocalizations.of(context)!.home_made;
+    case 'others':
+      return AppLocalizations.of(context)!.other_others;
     default:
       return name.capitalized();
   }
