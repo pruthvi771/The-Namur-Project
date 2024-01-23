@@ -1847,6 +1847,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       BlocListener<AuthBloc, authState.AuthState>(
                         listener: (context, state) {
                           if (state
+                              is authState.LandLocationsForPincodeNotReceived) {
+                            ToastComponent.showDialog(
+                                localContext.service_temporarily_unavailable,
+                                gravity: Toast.center,
+                                duration: Toast.lengthLong);
+                          }
+                          if (state
                               is authState.LandLocationsForPincodeReceived) {
                             ToastComponent.showDialog(
                                 localContext.locations_fetched,

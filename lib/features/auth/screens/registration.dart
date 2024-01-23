@@ -175,9 +175,17 @@ class _RegistrationState extends State<Registration> {
             ToastComponent.showDialog(errorMessage.trim(),
                 gravity: Toast.center, duration: Toast.lengthLong);
           }
+          if (state is LandLocationsForPincodeNotReceived) {
+            ToastComponent.showDialog(
+                AppLocalizations.of(context)!.service_temporarily_unavailable,
+                gravity: Toast.center,
+                duration: Toast.lengthLong);
+          }
           if (state is LocationsForPincodeReceived) {
-            ToastComponent.showDialog('Locations fetched successfully.',
-                gravity: Toast.center, duration: Toast.lengthLong);
+            ToastComponent.showDialog(
+                AppLocalizations.of(context)!.locations_fetched,
+                gravity: Toast.center,
+                duration: Toast.lengthLong);
           }
           if (state is SignUpPhoneVerificationCompleted) {
             Navigator.push(
@@ -213,8 +221,10 @@ class _RegistrationState extends State<Registration> {
             locationDropdownValue = null;
             clearAddressValues();
             locationsList.clear();
-            ToastComponent.showDialog('Fetching Locations...',
-                gravity: Toast.center, duration: Toast.lengthLong);
+            ToastComponent.showDialog(
+                AppLocalizations.of(context)!.fetching_locations,
+                gravity: Toast.center,
+                duration: Toast.lengthLong);
           }
         },
         child: BlocBuilder<AuthBloc, AuthState>(
@@ -268,13 +278,6 @@ class _RegistrationState extends State<Registration> {
   Container buildBody(BuildContext context, double _screen_width) {
     return Container(
       color: Colors.white,
-      // decoration: BoxDecoration(
-      //     borderRadius: BorderRadius.only(
-      //       topLeft: Radius.circular(30),
-      //       topRight: Radius.circular(30),
-      //     ),
-      //     // color: MyTheme.noColor.withOpacity(0)),
-      //     color: Colors.red),
       width: MediaQuery.of(context).size.width,
       child: SingleChildScrollView(
         child: Column(

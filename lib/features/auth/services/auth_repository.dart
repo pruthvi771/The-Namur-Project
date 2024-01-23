@@ -344,7 +344,7 @@ class AuthRepository {
         // return PostOfficeResponse.fromJson(jsonResponse);
         return PostOfficeResponse.fromJson(jsonResponse[0]);
       } else {
-        throw Exception('Failed to fetch locations. Please try again.');
+        return null;
       }
     } catch (e) {
       throw Exception('Failed to fetch locations. Please try again.');

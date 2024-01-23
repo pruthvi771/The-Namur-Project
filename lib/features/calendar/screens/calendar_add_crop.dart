@@ -141,278 +141,267 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      height: DeviceInfo(context).height,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0xff107B28), Color(0xff4C7B10)]),
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xff107B28), Color(0xff4C7B10)]),
           ),
-          title: Text(AppLocalizations.of(context)!.calender_ucf,
-              style: TextStyle(
-                  color: MyTheme.white,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: .5,
-                  fontFamily: 'Poppins')),
-          centerTitle: true,
-          actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: Icon(
-                Icons.keyboard_arrow_left,
-                size: 35,
+        ),
+        title: Text(AppLocalizations.of(context)!.calender_ucf,
+            style: TextStyle(
                 color: MyTheme.white,
-              ),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-          ],
-        ),
-        bottomSheet: Container(
-          height: 60,
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () async {
-              await onPressedAdd();
+                fontWeight: FontWeight.w500,
+                letterSpacing: .5,
+                fontFamily: 'Poppins')),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pop(context);
             },
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(MyTheme.primary_color),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(0))),
-            ),
-            child: Text(
-              AppLocalizations.of(context)!.add_crop_for_tracking,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500),
+            icon: Icon(
+              Icons.keyboard_arrow_left,
+              size: 35,
+              color: MyTheme.white,
             ),
           ),
+          SizedBox(
+            width: 10,
+          ),
+        ],
+      ),
+      bottomSheet: Container(
+        height: 60,
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: () async {
+            await onPressedAdd();
+          },
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(MyTheme.primary_color),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(0))),
+          ),
+          child: Text(
+            AppLocalizations.of(context)!.add_crop_for_tracking,
+            style: TextStyle(
+                color: Colors.white, fontSize: 20, fontWeight: FontWeight.w500),
+          ),
         ),
-        body: ListView(
-          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 15),
-          physics: BouncingScrollPhysics(),
-          children: [
-            SizedBox(
-              height: 10,
-            ),
+      ),
+      body: ListView(
+        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+        physics: BouncingScrollPhysics(),
+        children: [
+          SizedBox(
+            height: 10,
+          ),
 
-            TitleWidget(text: AppLocalizations.of(context)!.land),
+          TitleWidget(text: AppLocalizations.of(context)!.land),
 
-            SizedBox(
-              height: 20,
-            ),
+          SizedBox(
+            height: 20,
+          ),
 
-            // Select Land
-            FutureBuilder(
-                future: landList,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return snapshot.data!.length == 0
-                        ? Container(
-                            height: 100,
-                            child: Center(
-                                child: Text(
-                              AppLocalizations.of(context)!.no_land_added_yet,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black,
-                              ),
-                            )),
-                          )
-                        : Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            child: DropdownButtonWidget(
-                              hintText:
-                                  AppLocalizations.of(context)!.select_land,
-                              itemList: List.generate(
-                                  snapshot.data!.length,
-                                  (index) => DropdownMenuItem<String>(
-                                        value: snapshot.data![index].syno,
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                                child: Text(snapshot
-                                                    .data![index].village)),
-                                            Expanded(
-                                                child: Text(snapshot
-                                                    .data![index].syno)),
-                                          ],
-                                        ),
-                                      )).toList(),
-                              dropdownValue: landDropdownValue,
-                              onChanged: (value) {
-                                setState(() {
-                                  landDropdownValue = value;
-                                  cropListFuture =
-                                      getCropsList(landSyno: landDropdownValue);
-                                });
-                                //
-                              },
+          // Select Land
+          FutureBuilder(
+              future: landList,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return snapshot.data!.length == 0
+                      ? Container(
+                          height: 100,
+                          child: Center(
+                              child: Text(
+                            AppLocalizations.of(context)!.no_land_added_yet,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
                             ),
-                          );
-                  }
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }),
+                          )),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          child: DropdownButtonWidget(
+                            hintText: AppLocalizations.of(context)!.select_land,
+                            itemList: List.generate(
+                                snapshot.data!.length,
+                                (index) => DropdownMenuItem<String>(
+                                      value: snapshot.data![index].syno,
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                              child: Text(snapshot
+                                                  .data![index].village)),
+                                          Expanded(
+                                              child: Text(
+                                                  snapshot.data![index].syno)),
+                                        ],
+                                      ),
+                                    )).toList(),
+                            dropdownValue: landDropdownValue,
+                            onChanged: (value) {
+                              setState(() {
+                                landDropdownValue = value;
+                                cropListFuture =
+                                    getCropsList(landSyno: landDropdownValue);
+                              });
+                              //
+                            },
+                          ),
+                        );
+                }
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }),
 
-            SizedBox(
-              height: 10,
-            ),
+          SizedBox(
+            height: 10,
+          ),
 
-            TitleWidget(text: AppLocalizations.of(context)!.crop_selection),
+          TitleWidget(text: AppLocalizations.of(context)!.crop_selection),
 
-            SizedBox(
-              height: 15,
-            ),
+          SizedBox(
+            height: 15,
+          ),
 
-            FutureBuilder(
-                future: cropListFuture,
-                builder: (context, cropSnapshot) {
-                  if (cropSnapshot.connectionState == ConnectionState.waiting) {
-                    return Container(
-                      height: 100,
-                      child: Center(child: CircularProgressIndicator()),
-                    );
-                  } else if (cropSnapshot.hasData &&
-                      cropSnapshot.data != null) {
-                    List<Crop> cropList = cropSnapshot.data!;
-                    return cropList.length == 0
-                        ? Container(
-                            height: 100,
-                            child: Center(
-                                child: Text(
-                              AppLocalizations.of(context)!
-                                  .no_crops_added_for_this_land,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black,
-                              ),
-                            )),
-                          )
-                        : Container(
-                            height: 140,
-                            padding: EdgeInsets.symmetric(horizontal: 5),
-                            child: ListView.builder(
-                              physics: BouncingScrollPhysics(),
-                              itemCount: cropList.length,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                // return usedIDs.contains(cropList[index].id)
-                                //     ? SizedBox.shrink()
-                                return GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      selectedIndex = index;
-                                      selectedCropName = cropList[index].name;
-                                      idOfCrop = cropList[index].id;
-                                    });
-                                  },
-                                  child: EquipmentWidget(
-                                    image: imageForNameCloud[cropList[index]
-                                            .name
-                                            .toLowerCase()] ??
-                                        imageForNameCloud['placeholder']!,
-                                    title: translatedName(
-                                      name: cropList[index].name.toLowerCase(),
-                                      context: context,
-                                    ),
-                                    isSelected: selectedIndex == index,
-                                  ),
-                                );
-                              },
-                            ),
-                          );
-                  }
+          FutureBuilder(
+              future: cropListFuture,
+              builder: (context, cropSnapshot) {
+                if (cropSnapshot.connectionState == ConnectionState.waiting) {
                   return Container(
                     height: 100,
-                    child: Center(
-                        child: Text(
-                      AppLocalizations.of(context)!.select_land_to_see_crops,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
-                      ),
-                    )),
+                    child: Center(child: CircularProgressIndicator()),
                   );
-                }),
+                } else if (cropSnapshot.hasData && cropSnapshot.data != null) {
+                  List<Crop> cropList = cropSnapshot.data!;
+                  return cropList.length == 0
+                      ? Container(
+                          height: 100,
+                          child: Center(
+                              child: Text(
+                            AppLocalizations.of(context)!
+                                .no_crops_added_for_this_land,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                            ),
+                          )),
+                        )
+                      : Container(
+                          height: 140,
+                          padding: EdgeInsets.symmetric(horizontal: 5),
+                          child: ListView.builder(
+                            physics: BouncingScrollPhysics(),
+                            itemCount: cropList.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              // return usedIDs.contains(cropList[index].id)
+                              //     ? SizedBox.shrink()
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedIndex = index;
+                                    selectedCropName = cropList[index].name;
+                                    idOfCrop = cropList[index].id;
+                                  });
+                                },
+                                child: EquipmentWidget(
+                                  image: imageForNameCloud[
+                                          cropList[index].name.toLowerCase()] ??
+                                      imageForNameCloud['placeholder']!,
+                                  title: translatedName(
+                                    name: cropList[index].name.toLowerCase(),
+                                    context: context,
+                                  ),
+                                  isSelected: selectedIndex == index,
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                }
+                return Container(
+                  height: 100,
+                  child: Center(
+                      child: Text(
+                    AppLocalizations.of(context)!.select_land_to_see_crops,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
+                    ),
+                  )),
+                );
+              }),
 
-            SizedBox(
-              height: 15,
-            ),
+          SizedBox(
+            height: 15,
+          ),
 
-            // TitleWidget(text: AppLocalizations.of(context)!.planting_date),
+          // TitleWidget(text: AppLocalizations.of(context)!.planting_date),
 
-            // // Planting Date
-            // Container(
-            //   padding: EdgeInsets.symmetric(horizontal: 4),
-            //   child: Row(
-            //     children: [
-            //       Expanded(
-            //         child: Container(
-            //           height: 60,
-            //           padding: EdgeInsets.all(8),
-            //           child: ElevatedButton(
-            //             onPressed: () async {
-            //               DateTime? newData = await showDatePicker(
-            //                   context: context,
-            //                   initialDate: dateNow,
-            //                   firstDate: DateTime(2000),
-            //                   lastDate: DateTime(2025));
-            //               if (newData != null) {
-            //                 setState(() {
-            //                   dateOfRenting = newData;
-            //                 });
-            //               }
-            //             },
-            //             child: Text(
-            //               dateOfRenting != null
-            //                   ? '${dateOfRenting!.day}/${dateOfRenting!.month}/${dateOfRenting!.year}'
-            //                   : AppLocalizations.of(context)!.date_ucf,
-            //               style: TextStyle(
-            //                 color: Colors.black,
-            //                 fontWeight: FontWeight.w800,
-            //                 fontSize: 15,
-            //               ),
-            //             ),
-            //             style: ButtonStyle(
-            //                 elevation: MaterialStateProperty.all(0),
-            //                 shape: MaterialStateProperty.all<
-            //                         RoundedRectangleBorder>(
-            //                     RoundedRectangleBorder(
-            //                         borderRadius: BorderRadius.circular(12),
-            //                         side: BorderSide(
-            //                             color: Colors.transparent, width: 0))),
-            //                 backgroundColor: MaterialStateProperty.all(
-            //                     const Color.fromARGB(255, 255, 243, 131))),
-            //           ),
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
+          // // Planting Date
+          // Container(
+          //   padding: EdgeInsets.symmetric(horizontal: 4),
+          //   child: Row(
+          //     children: [
+          //       Expanded(
+          //         child: Container(
+          //           height: 60,
+          //           padding: EdgeInsets.all(8),
+          //           child: ElevatedButton(
+          //             onPressed: () async {
+          //               DateTime? newData = await showDatePicker(
+          //                   context: context,
+          //                   initialDate: dateNow,
+          //                   firstDate: DateTime(2000),
+          //                   lastDate: DateTime(2025));
+          //               if (newData != null) {
+          //                 setState(() {
+          //                   dateOfRenting = newData;
+          //                 });
+          //               }
+          //             },
+          //             child: Text(
+          //               dateOfRenting != null
+          //                   ? '${dateOfRenting!.day}/${dateOfRenting!.month}/${dateOfRenting!.year}'
+          //                   : AppLocalizations.of(context)!.date_ucf,
+          //               style: TextStyle(
+          //                 color: Colors.black,
+          //                 fontWeight: FontWeight.w800,
+          //                 fontSize: 15,
+          //               ),
+          //             ),
+          //             style: ButtonStyle(
+          //                 elevation: MaterialStateProperty.all(0),
+          //                 shape: MaterialStateProperty.all<
+          //                         RoundedRectangleBorder>(
+          //                     RoundedRectangleBorder(
+          //                         borderRadius: BorderRadius.circular(12),
+          //                         side: BorderSide(
+          //                             color: Colors.transparent, width: 0))),
+          //                 backgroundColor: MaterialStateProperty.all(
+          //                     const Color.fromARGB(255, 255, 243, 131))),
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
 
-            Container(
-              height: 65,
-            ),
-          ],
-        ),
+          Container(
+            height: 65,
+          ),
+        ],
       ),
     );
   }

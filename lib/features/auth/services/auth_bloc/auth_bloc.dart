@@ -177,8 +177,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         var postOfficeResponse =
             await authRepository.getLocationsForPincode(pinCode: event.pinCode);
+
+        if (postOfficeResponse == null) {
+          emit(LocationsForPincodeNotReceived());
+          return;
+        }
         emit(LocationsForPincodeReceived(
-            postOfficeResponse: postOfficeResponse!));
+            postOfficeResponse: postOfficeResponse));
       } catch (e) {
         emit(AuthError(e.toString()));
         emit(LocationsForPincodeNotReceived());
@@ -190,8 +195,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         var postOfficeResponse =
             await authRepository.getLocationsForPincode(pinCode: event.pinCode);
+
+        if (postOfficeResponse == null) {
+          emit(LandLocationsForPincodeNotReceived());
+          return;
+        }
+
         emit(LandLocationsForPincodeReceived(
-            postOfficeResponse: postOfficeResponse!));
+            postOfficeResponse: postOfficeResponse));
       } catch (e) {
         emit(AuthError(e.toString()));
         emit(LandLocationsForPincodeNotReceived());
