@@ -1547,7 +1547,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       '${localContext.gram_panchayat}: ${item.gramPanchayat}'),
                                   Text(
                                       '${localContext.village}: ${item.village}'),
-                                  Text('Pincode: ${item.pincode}'),
+                                  Text(
+                                      '${localContext.pincode}: ${item.pincode}'),
                                 ],
                               ),
                               Column(
@@ -1629,7 +1630,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               children: [
                                 TexiFieldWidgetForDouble(
                                   _pinCodeController,
-                                  "Pincode",
+                                  localContext.pincode,
                                 ),
                                 SizedBox(
                                   height: 10,
@@ -1900,7 +1901,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             autofocus: false,
                                             decoration: InputDecorations
                                                 .buildInputDecoration_1(
-                                                    hint_text: "Pincode"),
+                                                    hint_text:
+                                                        localContext.pincode),
                                           ),
                                         ),
                                       ),

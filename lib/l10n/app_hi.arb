@@ -1135,5 +1135,6 @@
   "artisans": "कलाकार",
   "home_made": "घर का बना",
   "other_others": "अन्य",
-  "service_temporarily_unavailable": "सेवा अस्थाई रूप से अनुपलब्ध"
+  "service_temporarily_unavailable": "सेवा अस्थाई रूप से अनुपलब्ध",
+  "pincode":"पिन कोड"
 }

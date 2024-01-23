@@ -1135,5 +1135,6 @@
 "artisans": "Artisans",
 "home_made": "Home Made",
 "other_others": "Others",
-"service_temporarily_unavailable": "Service temporarily unavailable"
+"service_temporarily_unavailable": "Service temporarily unavailable",
+"pincode":"Pincode"
 }

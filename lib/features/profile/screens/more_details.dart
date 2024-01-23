@@ -469,7 +469,7 @@ class _MoreDetailsState extends State<MoreDetails> {
             ExpandedTileWidget(
               controller: _addressController,
               title:
-                  'Pincode, ${AppLocalizations.of(context)!.district}, ${AppLocalizations.of(context)!.gram_panchayat}, ${AppLocalizations.of(context)!.taluk}, ${AppLocalizations.of(context)!.village}',
+                  '${AppLocalizations.of(context)!.pincode}, ${AppLocalizations.of(context)!.district}, ${AppLocalizations.of(context)!.gram_panchayat}, ${AppLocalizations.of(context)!.taluk}, ${AppLocalizations.of(context)!.village}',
               children: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: (profileData!.address.length > 0)
@@ -496,7 +496,7 @@ class _MoreDetailsState extends State<MoreDetails> {
                                       children: [
                                         Expanded(
                                             child: Text(
-                                          'Pincode',
+                                          AppLocalizations.of(context)!.pincode,
                                           style: TextStyle(
                                               fontSize: 13.5,
                                               fontWeight: FontWeight.w800),

@@ -719,7 +719,7 @@
   "recheck_slot_and_try_again": "ದಯವಿಟ್ಟು ಲಭ್ಯವಿರುವ ಸ್ಲೋಟ್‌ಗಳನ್ನು ಮರುನೋಡಿ ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ",
   "already_booked_slots": "ಈಗಾಗಲೇ ಬುಕ್ ಮಾಡಿದ ಸ್ಲೋಟ್‌ಗಳು",
   "sell_upper": "ಮಾರಿಕೊಳ್ಳಿ",
-  "buy_upper": "ಖರೀದಿಸಿ",
+  "buy_upper": "ಖರೀದಿ",
   "calendar": "ಕ್ಯಾಲೆಂಡರ್",
   "complate_profile_to_become_seller": "ವिक्रೇತಾಗಲು ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಪೂರ್ಣಗೊಳಿಸಿ",
   "complate_profile": "ಪ್ರೊಫೈಲ್ ಪೂರ್ಣಗೊಳಿಸಿ",
@@ -758,7 +758,7 @@
   "address_details": "ವಿಳಾಸ ವಿವರಗಳು",
   "land_details": "ಭೂಮಿ ವಿವರಗಳು",
   "farm_details": "ಹೊನ್ನು ವಿವರಗಳು",
-  "enter_pincode_first": "ಮೊದಲು Pincode ನಮೂದಿಸಿ",
+  "enter_pincode_first": "ಮೊದಲು ಪಿನ್‌ಕೋಡ್ ನಮೂದಿಸಿ",
   "enter_area_in_acres": "ವಿಸ್ತರಣವನ್ನು ನಮೂದಿಸಿ (ಏಕರೆಗಳಲ್ಲಿ)",
   "enter_crop_area": "ಫಸಲ ಪ್ರದೇಶವನ್ನು ನಮೂದಿಸಿ",
   "track_another_crop": "ಇನ್ನೊಂದು ಬೆಳೆಗಳನ್ನು ಹಾಕಿ",
@@ -813,7 +813,7 @@
   "not_added": "ಸೇರಿಸಲಾಗಿಲ್ಲ",
   "farmer": "ರೈತ",
   "my_account": "ನನ್ನ ಖಾತಾ",
-  "updates": "ನವಿದಾದಗಳು",
+  "updates": "ಅಪ್ಡೇಟ್",
   "my_stock": "ನನ್ನ ಸ್ಟಾಕ್",
   "could_not_fetch_data_try_again": "ಡೇಟಾ ಪಡೆಯಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯಾಸಿಸಿ.",
   "profile_image_updated": "ಪ್ರೊಫೈಲ್ ಚಿತ್ರ ನವೀಕರಿಸಲಾಗಿದೆ",
@@ -1135,5 +1135,6 @@
 "artisans": "ಕುಶಲಕರ್ಮಿಗಳು",
 "home_made": "ಹೋಮ್ ಮೇಡ್",
 "other_others": "ಇತರ",
-"service_temporarily_unavailable":"ತಾತ್ಕಾಲಿಕವಾಗಿ ಸೇವೆ ಲಭ್ಯವಿಲ್ಲ"
+"service_temporarily_unavailable":"ತಾತ್ಕಾಲಿಕವಾಗಿ ಸೇವೆ ಲಭ್ಯವಿಲ್ಲ",
+"pincode":"ಪಿನ್‌ಕೋಡ್"
 }
