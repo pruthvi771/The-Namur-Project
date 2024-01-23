@@ -122,9 +122,9 @@
 
 //   scrollControllerPosition() {
 //     _scrollController.addListener(() {
-//       print("po");
-//       //print("position: " + _xcrollController.position.pixels.toString());
-//       //print("max: " + _xcrollController.position.maxScrollExtent.toString());
+//       
+//       //
+//       //
 
 //       if (_scrollController.position.pixels ==
 //           _scrollController.position.maxScrollExtent) {
@@ -138,7 +138,7 @@
 //   }
 
 //   cleanAll() {
-//     print("clean all");
+//     
 //     _isProductInit = false;
 //     _showMoreProductLoadingContainer = false;
 //     _productList = [];
@@ -408,7 +408,7 @@
 //               itemCount: _productList.length + 1,
 //               shrinkWrap: true,
 //               itemBuilder: (context, index) {
-//                 // print(index);
+//                 // 
 //                 if (index == _productList.length) {
 //                   return moreProductLoading();
 //                 }
@@ -613,7 +613,7 @@
 //   }
 
 //   void showChangeStatusDialog(int? index, id) {
-//     //print(index.toString()+" "+_productStatus[index].toString());
+//     //
 //     showDialog(
 //         context: context,
 //         builder: (context) {
@@ -654,8 +654,8 @@
 
 
 //   void showFeaturedUnFeaturedDialog(int index, id) {
-//     //print(_productFeatured[index]);
-//     print(index);
+//     //
+//     
 //     showDialog(
 //         context: context,
 //         builder: (context) {

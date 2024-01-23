@@ -148,7 +148,7 @@ class _CartScreenState extends State<CartScreen> {
                         } else {
                           var productsInCart =
                               cartSnapshot.data!['products'] ?? [];
-                          // print(productsInCart);
+                          //
 
                           if (productsInCart.isEmpty) {
                             return Column(
@@ -326,7 +326,6 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
         .get();
 
     if (!cartDoc.exists) {
-      print('Cart not found for user: ${widget.currentUser.uid}');
       return null;
     }
 
@@ -348,13 +347,10 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
         final price = productDoc.data()?['price'] as double;
         final productTotal = price * quantity;
         totalAmount += productTotal;
-      } else {
-        print('Product not found for ID: $productId');
-      }
+      } else {}
     }
 
     // Step 4: Calculate the total amount
-    print('Total Amount: $totalAmount');
 
     return totalAmount;
   }

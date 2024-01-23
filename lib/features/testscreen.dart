@@ -42,7 +42,6 @@ class _TestWidgetState extends State<TestWidget> {
 
       return downloadURL;
     } catch (e) {
-      print('Error uploading asset: $e');
       return null;
     }
   }
@@ -69,7 +68,6 @@ class _TestWidgetState extends State<TestWidget> {
       String downloadURL = await ref.getDownloadURL();
       return downloadURL;
     } catch (e) {
-      print('Error uploading file: $e');
       return null;
     }
   }
@@ -201,12 +199,7 @@ class _TestWidgetState extends State<TestWidget> {
                         .where('profileData', isNotEqualTo: null)
                         .get();
 
-                print('here2');
-
                 var documents = querySnapshot.docs;
-
-                print(documents[0].data());
-                print('here3');
 
                 // for (var document in documents) {
                 //   Map<String, dynamic> data = document.data()!;
@@ -215,7 +208,7 @@ class _TestWidgetState extends State<TestWidget> {
                 //     if (data['profileData']['address'][0]['pincode'] ==
                 //         savedData.address[0].pincode) {
                 //       friendsCount++;
-                //       print('count incremented');
+                //
                 //     }
                 //   }
                 // }
@@ -223,19 +216,17 @@ class _TestWidgetState extends State<TestWidget> {
                 for (var document in documents) {
                   Map<String, dynamic> data = document.data();
 
-                  print(data.toString());
-
                   // if (data['profileData'] == null) {
                   //   continue;
                   // }
 
-                  // print(data['profileData']['address'][0]['pincode']);
-                  // print(savedData.address[0].pincode);
+                  //
+                  //
 
                   // if (data['profileData']['address'][0]['pincode'] ==
                   //     savedData.address[0].pincode) {
                   //   friendsCount++;
-                  //   print('count incremented');
+                  //
                   // }
                 }
               },

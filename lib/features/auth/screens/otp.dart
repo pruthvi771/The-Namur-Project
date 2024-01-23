@@ -77,7 +77,6 @@ class _OtpState extends State<Otp> {
     // var code = _verificationController.toString();
     // String code = otp.join('');
     String code = enteredOTP;
-    print('OTP: $code');
 
     if (code == "") {
       ToastComponent.showDialog(
@@ -127,12 +126,8 @@ class _OtpState extends State<Otp> {
     var savedData = dataBox.get('locationData');
 
     if (savedData != null) {
-      print("saved Latitude: ${savedData.latitude}");
-      print("saved Longitude: ${savedData.longitude}");
       return;
     }
-
-    print('no saved location data found');
 
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
@@ -148,15 +143,11 @@ class _OtpState extends State<Otp> {
     }
 
     _locationData = await location.getLocation();
-    print("new Latitude: ${_locationData.latitude}");
-    print("new Longitude: ${_locationData.longitude}");
 
     String? address = await _weatherRepository.getNameFromLatLong(
         _locationData.latitude!, _locationData.longitude!);
 
-    if (address == null) {
-      print('Error getting address from lat and long');
-    }
+    if (address == null) {}
 
     var primaryLocation = hiveModels.PrimaryLocation()
       ..id = "locationData"
@@ -283,14 +274,11 @@ class _OtpState extends State<Otp> {
                       children: [
                         Center(
                           child: OTPInputField(
-                            onCompleted: (value) {
-                              print('Completed: $value');
-                            },
+                            onCompleted: (value) {},
                             onOTPChanged: (otpValue) {
                               setState(() {
                                 enteredOTP = otpValue;
                               });
-                              print('Changed: $otpValue');
                             },
                           ),
                         ),

@@ -53,7 +53,7 @@ class AuthRepository {
       "secret_token": "$secret_token"
     });
 
-    // // print(post_body);
+    // //
     Uri url = Uri.parse("${AppConfig.BASE_URL}/auth/social-login");
     final response = await http.post(url,
         headers: {
@@ -61,8 +61,8 @@ class AuthRepository {
           "App-Language": app_language.$!,
         },
         body: post_body);
-    // // // print(post_body);
-    // // print(response.body.toString());
+    // // //
+    // //
     return loginResponseFromJson(response.body);
   }
 
@@ -76,7 +76,7 @@ class AuthRepository {
       },
     );
 
-    // print(response.body);
+    //
 
     return logoutResponseFromJson(response.body);
   }
@@ -84,9 +84,9 @@ class AuthRepository {
   Future<CommonResponse> getAccountDeleteResponse() async {
     Uri url = Uri.parse("${AppConfig.BASE_URL}/auth/account-deletion");
 
-    // print(url.toString());
+    //
 
-    // print("Bearer ${access_token.$}");
+    //
     final response = await http.get(
       url,
       headers: {
@@ -94,7 +94,7 @@ class AuthRepository {
         "App-Language": app_language.$!,
       },
     );
-    // print(response.body);
+    //
     return commonResponseFromJson(response.body);
   }
 
@@ -122,7 +122,7 @@ class AuthRepository {
           "App-Language": app_language.$!,
         },
         body: post_body);
-    // print(response.body);
+    //
 
     return signupResponseFromJson(response.body);
   }
@@ -168,8 +168,8 @@ class AuthRepository {
       "${AppConfig.BASE_URL}/auth/password/forget_request",
     );
 
-    // print(url.toString());
-    // print(post_body.toString());
+    //
+    //
 
     final response = await http.post(url,
         headers: {
@@ -178,7 +178,7 @@ class AuthRepository {
         },
         body: post_body);
 
-    //// print(response.body.toString());
+    ////
 
     return passwordForgetResponseFromJson(response.body);
   }

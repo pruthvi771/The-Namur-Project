@@ -58,14 +58,14 @@
 //     fetchAll();
 
 //     _mainScrollController.addListener(() {
-//       //print("position: " + _xcrollController.position.pixels.toString());
-//       //print("max: " + _xcrollController.position.maxScrollExtent.toString());
+//       //
+//       //
 
 //       if (_mainScrollController.position.pixels ==
 //           _mainScrollController.position.maxScrollExtent) {
 //         if(tabOptionIndex ==2) {
 
-//           print("object");
+//           
 //           setState(() {
 //           _page++;
 //         });
@@ -79,7 +79,7 @@
 //   }
 
 //   Future  addFollow(id) async {
-//     print(id);
+//     
 //     var shopResponse = await ShopRepository().followedAdd(widget.id);
 //     //if(shopResponse.result){
 //       _isThisSellerFollowed = shopResponse.result;
@@ -102,8 +102,8 @@
 
 //   Future  checkFollowed() async {
 //     var shopResponse = await ShopRepository().followedCheck(widget.id);
-//     print(shopResponse.result);
-//     print(shopResponse.message);
+//     
+//     
 
 
 //       _isThisSellerFollowed = shopResponse.result;
@@ -139,7 +139,7 @@
 //   fetchShopDetails() async {
 //     var shopDetailsResponse = await ShopRepository().getShopInfo(id: widget.id);
 
-//     //print('ss:' + shopDetailsResponse.toString());
+//     //
 //     if (shopDetailsResponse.shop !=null) {
 //       _shopDetails = shopDetailsResponse.shop;
 //     }
@@ -1006,7 +1006,7 @@
 //           ),
 //           itemPadding: EdgeInsets.only(right: 4.0),
 //           onRatingUpdate: (rating) {
-//             print(rating);
+//             
 //           },
 //         ),
 //       ],

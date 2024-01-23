@@ -14,8 +14,8 @@ class OrderRepository {
       {page = 1, payment_status = "", delivery_status = ""}) async {
     Uri url = Uri.parse("${AppConfig.BASE_URL}/purchase-history" +
         "?page=${page}&payment_status=${payment_status}&delivery_status=${delivery_status}");
-    // print("url:" +url.toString());
-    // print("token:" +access_token.$!);
+    //
+    //
     final response = await http.get(url, headers: {
       "Authorization": "Bearer ${access_token.$}",
       "App-Language": app_language.$!,
@@ -62,7 +62,7 @@ class OrderRepository {
   }) async {
     Uri url =
         Uri.parse("${AppConfig.BASE_URL}/digital/purchased-list?page=$page");
-    // print(url.toString());
+    //
 
     final response = await http.get(url, headers: {
       "App-Language": app_language.$!,

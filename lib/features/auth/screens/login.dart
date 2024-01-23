@@ -83,7 +83,7 @@ class _LoginState extends State<Login> {
   // late User loggedInUser;
 
   onPressedLogin(BuildContext buildContext) async {
-    // print('login clicked');
+    //
     var phone = newPhone;
 
     // if (_login_by == 'email' && email == "") {
@@ -115,7 +115,6 @@ class _LoginState extends State<Login> {
   }
 
   onPressedFacebookLogin(BuildContext context) async {
-    print('Facebook login attempted');
     ToastComponent.showDialog(AppLocalizations.of(context)!.coming_soon,
         gravity: Toast.bottom, duration: Toast.lengthLong);
     return;
@@ -132,12 +131,8 @@ class _LoginState extends State<Login> {
     var savedData = dataBox.get('locationData');
 
     if (savedData != null) {
-      print("saved Latitude: ${savedData.latitude}");
-      print("saved Longitude: ${savedData.longitude}");
       return;
     }
-
-    print('no saved location data found');
 
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
@@ -153,15 +148,11 @@ class _LoginState extends State<Login> {
     }
 
     _locationData = await location.getLocation();
-    print("new Latitude: ${_locationData.latitude}");
-    print("new Longitude: ${_locationData.longitude}");
 
     String? address = await _weatherRepository.getNameFromLatLong(
         _locationData.latitude!, _locationData.longitude!);
 
-    if (address == null) {
-      print('Error getting address from lat and long');
-    }
+    if (address == null) {}
 
     var primaryLocation = hiveModels.PrimaryLocation()
       ..id = "locationData"
@@ -366,7 +357,6 @@ class _LoginState extends State<Login> {
                                         newPhone =
                                             '${phone.countryCode} ${phone.number}';
                                       });
-                                      print(newPhone);
                                     },
                                   ),
                                 ),
@@ -413,7 +403,7 @@ class _LoginState extends State<Login> {
                                         InkWell(
                                           onTap: () {
                                             onPressedGoogleLogin(context);
-                                            // print('google');
+                                            //
                                           },
                                           child: Container(
                                             width: 40,

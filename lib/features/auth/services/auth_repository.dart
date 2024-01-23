@@ -166,11 +166,9 @@ class AuthRepository {
       } else if (e.code == 'play-services-not-available') {
         throw Exception('Please install Google Play Store first.');
       } else {
-        print(e);
         throw Exception('Something went wrong. Please try again.');
       }
     } catch (_) {
-      print(_);
       throw Exception('Something went wrong. Please try again.');
     }
   }
@@ -183,17 +181,12 @@ class AuthRepository {
 
       await _firebaseAuth.verifyPhoneNumber(
         phoneNumber: phone,
-        verificationCompleted: (_) {
-          print('Phone number automatically verified and user signed in: ');
-        },
+        verificationCompleted: (_) {},
         verificationFailed: (FirebaseAuthException e) {
-          print(e.code);
-          print(e.message);
           verificationIdCompleter.completeError(
               'Verification failed. Please check your phone number and try again.');
         },
         codeSent: (String verificationId, int? resendToken) {
-          print('OTP sent to your phone number');
           verificationIdCompleter.complete(verificationId);
         },
         codeAutoRetrievalTimeout: (String verificationId) {},
@@ -240,11 +233,11 @@ class AuthRepository {
       } else if (e.code == 'session-expired') {
         throw Exception('OTP expired. Please try again.');
       } else {
-        // print(e);
+        //
         throw Exception('Something went wrong. Please try again.');
       }
     } catch (_) {
-      // print(_);
+      //
       throw Exception('Something went wrong. Please try again.');
     }
   }
@@ -308,11 +301,11 @@ class AuthRepository {
       } else if (e.code == 'session-expired') {
         throw Exception('OTP expired. Please try again.');
       } else {
-        // print(e);
+        //
         throw Exception('Something went wrong. Please try again.');
       }
     } catch (_) {
-      // print(_);
+      //
       throw Exception('Something went wrong. Please try again.');
     }
   }
@@ -340,24 +333,20 @@ class AuthRepository {
   Future<PostOfficeResponse?> getLocationsForPincode(
       {required String pinCode}) async {
     try {
-      print('starting');
       var postOfficeResponse = await http
           .get(Uri.parse('https://api.postalpincode.in/pincode/$pinCode'));
 
       // if (postOfficeResponse.statusCode == 200) {
       var jsonResponse = json.decode(postOfficeResponse.body);
 
-      // print(jsonResponse);
+      //
       if (jsonResponse[0]['Status'] == 'Success') {
-        print('success');
         // return PostOfficeResponse.fromJson(jsonResponse);
         return PostOfficeResponse.fromJson(jsonResponse[0]);
       } else {
-        print('error happened in forecast');
         throw Exception('Failed to fetch locations. Please try again.');
       }
     } catch (e) {
-      print(e);
       throw Exception('Failed to fetch locations. Please try again.');
     }
   }

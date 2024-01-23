@@ -279,8 +279,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ..pincode = pincode;
 
     // if (savedData != null) {
-    // print('object detected');
-    print(savedData.id);
+    //
+
     var newData = ProfileData()
       ..id = savedData.id
       ..updated = savedData.updated
@@ -289,7 +289,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ..land = savedData.land;
 
     await dataBox.put(newData.id, newData);
-    // print('object updated');
+    //
 
     BlocProvider.of<HiveBloc>(context).add(
       SyncHiveToFirestoreRequested(profileData: newData),
@@ -361,8 +361,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ..equipments = [];
 
     if (savedData != null) {
-      // print('object detected');
-      print(savedData.id);
+      //
+
       var newData = ProfileData()
         ..id = savedData.id
         ..updated = savedData.updated
@@ -371,7 +371,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ..land = [...savedData.land, land];
 
       await dataBox.put(newData.id, newData);
-      // print('object updated');
+      //
 
       BlocProvider.of<HiveBloc>(context).add(
         SyncHiveToFirestoreRequested(profileData: newData),
@@ -647,11 +647,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       BlocProvider.of<HiveBloc>(context).add(
         SyncHiveToFirestoreRequested(profileData: savedData),
       );
-
-      print('Crop added');
     } else {
       // Handle the case where the Land instance with the specified syno is not found
-      print('Land with syno $landSyno not found.');
     }
 
     _yieldController.clear();
@@ -678,7 +675,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
       dataBox.put(savedData.id, savedData);
 
-      // print('Crop removed');
+      //
       dataBox.put(savedData.id, savedData);
 
       BlocProvider.of<MiscBloc>(context).add(
@@ -689,7 +686,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         SyncHiveToFirestoreRequested(profileData: savedData),
       );
     } else {
-      // print('Land with syno $landSyno not found.');
+      //
     }
 
     BlocProvider.of<HiveBloc>(context).add(
@@ -756,7 +753,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       );
     } else {
       // Handle the case where the Land instance with the specified syno is not found
-      print('Land with syno $landSyno not found.');
     }
 
     // _animalNameController.clear();
@@ -785,14 +781,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
       dataBox.put(savedData.id, savedData);
 
-      // print('Crop removed');
+      //
       dataBox.put(savedData.id, savedData);
 
       BlocProvider.of<HiveBloc>(context).add(
         SyncHiveToFirestoreRequested(profileData: savedData),
       );
     } else {
-      // print('Land with syno $landSyno not found.');
+      //
     }
 
     BlocProvider.of<HiveBloc>(context).add(
@@ -873,11 +869,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       BlocProvider.of<HiveBloc>(context).add(
         SyncHiveToFirestoreRequested(profileData: savedData),
       );
-
-      print('equipment added');
     } else {
       // Handle the case where the Land instance with the specified syno is not found
-      print('Land with syno $landSyno not found.');
     }
 
     BlocProvider.of<HiveBloc>(context).add(
@@ -902,7 +895,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
       dataBox.put(savedData.id, savedData);
 
-      print('equipment removed');
       dataBox.put(savedData.id, savedData);
 
       BlocProvider.of<HiveBloc>(context).add(
@@ -910,7 +902,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       );
     } else {
       // Handle the case where the Land instance with the specified syno is not found
-      print('Land with syno $landSyno not found.');
     }
 
     BlocProvider.of<HiveBloc>(context).add(
@@ -1097,16 +1088,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
       body: BlocListener<HiveBloc, HiveState>(
         listener: (context, state) {
-          if (state is Error) {
-            print('STATE: Error: ${state.error}');
-          }
-          if (state is HiveDataNotReceived) {
-            print('STATE: No Data Found');
-          }
-          if (state is HiveDataReceived) {
-            print('STATE: Data Received');
-            print(state.profileData.land);
-          }
+          if (state is Error) {}
+          if (state is HiveDataNotReceived) {}
+          if (state is HiveDataReceived) {}
         },
         child: BlocBuilder<HiveBloc, HiveState>(
           builder: (context, state) {
@@ -1875,8 +1859,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               locationsListForLand.add(postOffice.name);
                             }
                             isDropdownForLandEnabled = true;
-                            // print(state.postOfficeResponse.postOffices[0].name);
-                            // print(state.postOfficeResponse.message);
+                            //
+                            //
                           }
                           if (state
                               is authState.LandLocationsForPincodeLoading) {

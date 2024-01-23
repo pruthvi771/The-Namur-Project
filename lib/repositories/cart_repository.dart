@@ -99,8 +99,11 @@ class CartRepository {
     return cartProcessResponseFromJson(response.body);
   }
 
-  Future<dynamic> getCartAddResponse(@required int? id, @required String? variant,
-      @required int? user_id, @required int? quantity) async {
+  Future<dynamic> getCartAddResponse(
+      @required int? id,
+      @required String? variant,
+      @required int? user_id,
+      @required int? quantity) async {
     var post_body = jsonEncode({
       "id": "${id}",
       "variant": variant,
@@ -127,7 +130,7 @@ class CartRepository {
 
   Future<dynamic> getCartSummaryResponse() async {
     Uri url = Uri.parse("${AppConfig.BASE_URL}/cart-summary");
-    print(" cart summary");
+
     final response = await http.get(
       url,
       headers: {

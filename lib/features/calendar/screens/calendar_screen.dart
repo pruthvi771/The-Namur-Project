@@ -376,7 +376,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                   Expanded(
                                     child: InkWell(
                                       onTap: () {
-                                        // print('hello');
+                                        //
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -421,7 +421,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                   Expanded(
                                     child: InkWell(
                                       onTap: () {
-                                        // print('hello');
+                                        //
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(

@@ -123,7 +123,7 @@ class _ProductPostState extends State<ProductPost> {
   }
 
   onPressedPost(BuildContext buildContext) async {
-    // print('login clicked');
+    //
     var productName = _nameController.text.toString();
     var productSubSubCategory = _selectedItem;
     var description = _additionalController.text.toString();
@@ -311,7 +311,7 @@ class _ProductPostState extends State<ProductPost> {
   }
 
   onPressedEdit(BuildContext buildContext) async {
-    // print('login clicked');
+    //
     var productName = _nameController.text.toString();
     var productSubSubCategory = _selectedItem;
     var description = _additionalController.text.toString();
@@ -804,8 +804,6 @@ class _ProductPostState extends State<ProductPost> {
                     machines.add(machine);
                   }
                 }
-
-                print(machines);
 
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 20),

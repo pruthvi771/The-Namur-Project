@@ -50,9 +50,9 @@ class CustomerPackageRepository {
       "photo": "${photo}",
     });
 
-    // print(post_body);
-    // print(access_token.$);
-    // print(url.toString());
+    //
+    //
+    //
     final response = await http.post(url,
         headers: {
           "Content-Type": "application/json",

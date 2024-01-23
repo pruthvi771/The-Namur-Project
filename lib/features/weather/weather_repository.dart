@@ -67,7 +67,6 @@ class WeatherRepository {
           ...secondaryResponseList
         ];
       } else {
-        print('error happened in forecast');
         throw Exception('Failed to load album');
       }
     }
@@ -78,7 +77,7 @@ class WeatherRepository {
     //     var jsonResponse = json.decode(response.body);
     //     return ForecastWeatherResponse.fromJson(jsonResponse);
     //   } else {
-    //     print('error happened in forecast');
+    //
     //     throw Exception('Failed to load album');
     //   }
   }
@@ -91,8 +90,8 @@ class WeatherRepository {
     if (savedData == null) {
       return [null, null, null];
       // throw Exception('no-Location-data');
-      // print("saved Latitude: ${savedData.latitude}");
-      // print("saved Longitude: ${savedData.longitude}");
+      //
+      //
       // return;
     } else {
       var response;
@@ -110,11 +109,8 @@ class WeatherRepository {
       var secondarySavedData = secondaryDataBox.get('secondaryLocations');
 
       if (secondarySavedData == null) {
-        print('no secondary data found');
       } else {
-        for (var secondaryDataBox in secondarySavedData.address) {
-          print(secondaryDataBox);
-        }
+        for (var secondaryDataBox in secondarySavedData.address) {}
       }
 
       var secondaryCurrentResponseList = [];
@@ -143,15 +139,14 @@ class WeatherRepository {
       }
 
       if (response.statusCode == 200) {
-        // print('I am here');
+        //
         var jsonResponse = json.decode(response.body);
-        // print(jsonResponse);
+        //
         return [
           CurrentWeatherResponse.fromJson(jsonResponse),
           ...secondaryCurrentResponseList
         ];
       } else {
-        print('error happened in current weather');
         throw Exception('Failed to load album');
       }
     }
@@ -167,7 +162,6 @@ class WeatherRepository {
       var jsonResponse = json.decode(response.body);
       return jsonResponse['location']['name'];
     } else {
-      print('error happened in getNameFromLatLong');
       return null;
       // throw Exception('Failed to load album');
     }

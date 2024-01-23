@@ -39,7 +39,7 @@ class _PestControlScreenState extends State<PestControlScreen> {
         return [];
       }
       List returnVal = (userSnapshot.data() as Map)['pest control'];
-      print(returnVal);
+
       return returnVal;
     } else {
       return [];

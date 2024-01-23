@@ -122,15 +122,15 @@ class _CategoryListState extends State<CategoryList> {
                       // TitleBar(),
 
                       // screen database button
-                      TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => TestWidget()),
-                            );
-                          },
-                          child: Text('Test Widget')),
+                      // TextButton(
+                      //     onPressed: () {
+                      //       Navigator.push(
+                      //         context,
+                      //         MaterialPageRoute(
+                      //             builder: (context) => TestWidget()),
+                      //       );
+                      //     },
+                      //     child: Text('Test Widget')),
 
                       SizedBox(height: 10),
 
@@ -401,13 +401,11 @@ class _CategoryListState extends State<CategoryList> {
   // Widget buildCategoryItemCard(categoryResponse, index, isvalue) {
   Widget buildCategoryItemCard(index, isvalue, isBuy) {
     var itemWidth = ((DeviceInfo(context).width! - 31) / 2);
-    print(itemWidth);
 
     return Container(
       // decoration: BoxDecorations.buildBoxDecoration_1(),
       child: InkWell(
         onTap: () {
-          print('Tapped index $index');
           // if (index == 2 || index == 3) {
           //   return;
           // }

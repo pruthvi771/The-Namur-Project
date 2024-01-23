@@ -64,18 +64,18 @@ class _CheckoutDetailsState extends State<CheckoutDetails> {
         await FirebaseFirestore.instance.collection('buyer').doc(uid).get();
 
     var docData = docSnapshot.data() as Map<String, dynamic>;
-    // print(docData);
+    //
 
     if (docData['address'] == null || docData['address'].isEmpty) {
       return addressList;
     }
     docData['address'].forEach((address) {
-      // print(address['houseNumber']);
-      // print(address['streetName']);
-      // print(address['city']);
-      // print(address['state']);
-      // print(address['pincode']);
-      // print(address['landmark']);
+      //
+      //
+      //
+      //
+      //
+      //
       addressList.add(
         CheckoutAddress(
           houseNumber: address['houseNumber'],
@@ -264,9 +264,7 @@ class _CheckoutDetailsState extends State<CheckoutDetails> {
                           addressList.length,
                           (index) {
                             return GestureDetector(
-                              onTap: () {
-                                print('ge $index');
-                              },
+                              onTap: () {},
                               child: Container(
                                 // color: Colors.red[100],
                                 height: 50,

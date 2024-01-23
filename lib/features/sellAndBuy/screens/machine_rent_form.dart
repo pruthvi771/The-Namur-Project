@@ -221,7 +221,7 @@ class _MachineRentFormState extends State<MachineRentForm> {
             '-' +
             dateOfRenting!.year.toString()];
 
-    // print(alreadyBookedSlotsBroken);
+    //
 
     // return;
 
@@ -229,8 +229,6 @@ class _MachineRentFormState extends State<MachineRentForm> {
         '${timeRangeOfRenting!.startTime.hour}:${timeRangeOfRenting!.startTime.minute == 0 ? '00' : timeRangeOfRenting!.startTime.minute} - ${timeRangeOfRenting!.endTime.hour}:${timeRangeOfRenting!.endTime.minute == 0 ? '00' : timeRangeOfRenting!.endTime.minute}';
 
     var checkerBookedSlotsBroken = splitTimeRange(hour24format);
-    print(hour24format);
-    print(checkerBookedSlotsBroken);
 
     if (alreadyBookedSlotsBroken == null ||
         alreadyBookedSlotsBroken.length == 0) {
@@ -724,8 +722,6 @@ class _MachineRentFormState extends State<MachineRentForm> {
                         fontSize: 26,
                         fontWeight: FontWeight.bold),
                   );
-
-                  print("result " + result.toString());
 
                   setState(() {
                     timeRangeOfRenting = result;

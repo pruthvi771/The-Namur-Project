@@ -23,7 +23,6 @@ class CheckoutRepository {
 
       return data;
     } catch (e) {
-      print('Error fetching cart document: $e');
       return null;
     }
   }
@@ -41,7 +40,6 @@ class CheckoutRepository {
 
       return data;
     } catch (e) {
-      print('Error fetching cart document: $e');
       return null;
     }
   }
@@ -60,7 +58,6 @@ class CheckoutRepository {
 
       int currentQuantity = (productSnapshot.data() as Map)['quantity'] ?? 0;
       if (currentQuantity < quantityToReduce) {
-        print('not enough');
         return [ReduceQuantityResponseEnum.NotEnoughQuantity, currentQuantity];
       }
 
@@ -68,10 +65,8 @@ class CheckoutRepository {
 
       await productRef.update({'quantity': newQuantity});
 
-      print('Quantity for $productId updated. New quantity: $newQuantity');
       return [ReduceQuantityResponseEnum.Success, 0];
     } catch (error) {
-      print('Error reducing quantity: $error');
       return [ReduceQuantityResponseEnum.Error, 0];
     }
   }
@@ -86,7 +81,6 @@ class CheckoutRepository {
 
       int currentQuantity = (productSnapshot.data() as Map)['quantity'] ?? 0;
       if (currentQuantity < quantityToReduce) {
-        print('not enough');
         return [false, currentQuantity];
       }
 
@@ -96,10 +90,9 @@ class CheckoutRepository {
 
       // await productRef.update({'quantity': newQuantity});
 
-      // print('Quantity for $productId updated. New quantity: $newQuantity');
+      //
       // return [ReduceQuantityResponseEnum.Success, 0];
     } catch (error) {
-      print('Error reducing quantity: $error');
       return [ReduceQuantityResponseEnum.Error, 0];
     }
   }
@@ -122,11 +115,8 @@ class CheckoutRepository {
         },
       );
 
-      print('Order created successfully! Order ID: ${orderDocRef.id}');
       return orderDocRef.id;
-    } catch (e) {
-      print('Error creating order: $e');
-    }
+    } catch (e) {}
   }
 
   double calculateTotalAmount(List<OrderItem> items) {

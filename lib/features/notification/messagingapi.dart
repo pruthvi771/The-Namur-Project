@@ -8,10 +8,6 @@ import 'package:one_context/one_context.dart';
 
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
   //print message title body and data
-  print('Handling a background message ${message.messageId}');
-  print(message.notification?.title);
-  print(message.notification?.body);
-  print(message.data);
 }
 
 class MessagingAPI {
@@ -102,7 +98,6 @@ class MessagingAPI {
     _firebaseMessaging.requestPermission(provisional: true);
     //get FCM token for device
     final FCMToken = await _firebaseMessaging.getToken();
-    print('TOKEN : $FCMToken');
 
     initPushNotifications();
     initLocalNotifications();

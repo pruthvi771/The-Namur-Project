@@ -113,7 +113,7 @@
 //     late var addressUpdateInCartResponse;
 
 //     if (_seleted_shipping_address != 0) {
-//       print(_seleted_shipping_address.toString() + "dddd");
+//       
 //       addressUpdateInCartResponse = await AddressRepository()
 //           .getAddressUpdateInCartResponse(
 //           address_id: _seleted_shipping_address);
@@ -133,9 +133,9 @@
 //       onPopped(value);
 //     });
 //     // } else if (_seleted_shipping_pickup_point != 0) {
-//     //   print("Selected pickup point ");
+//     //   
 //     // } else {
-//     //   print("..........something is wrong...........");
+//     //   
 //     // }
 //   }
 

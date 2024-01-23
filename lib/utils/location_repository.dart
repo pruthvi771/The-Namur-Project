@@ -24,7 +24,6 @@ class LocationRepository {
 
       return districtsList;
     } catch (e) {
-      print(e);
       throw Exception('Failed to fetch locations. Please try again.');
     }
   }

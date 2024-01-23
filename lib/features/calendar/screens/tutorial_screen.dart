@@ -42,7 +42,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
         return [];
       }
       List returnVal = (userSnapshot.data() as Map)['tutorial'];
-      print(returnVal);
+
       return returnVal;
     } else {
       return [];
@@ -202,7 +202,6 @@ class _TutorialScreenState extends State<TutorialScreen> {
   }
 
   _launchYouTubeVideo(url) async {
-    print('clicked');
     if (url == null) {
       return;
     }

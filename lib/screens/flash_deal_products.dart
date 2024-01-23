@@ -54,13 +54,13 @@
 //         ? blank_zeros
 //         : txt;
 
-//     // print(txt + " " + default_length.toString());
-//     // print(newtxt);
+//     // 
+//     // 
 
 //     if (default_length > txt.length) {
 //       newtxt = leading_zeros + newtxt;
 //     }
-//     //print(newtxt);
+//     //
 
 //     return newtxt;
 //   }
@@ -77,13 +77,13 @@
 
 //   _buildSearchList(search_key) async {
 //     _searchList.clear();
-//     //print(_fullList.length);
+//     //
 
 //     if (search_key.isEmpty) {
 //       _searchList.addAll(_fullList);
 //       setState(() {});
-//       //print("_searchList.length on empty " + _searchList.length.toString());
-//       //print("_fullList.length on empty " + _fullList.length.toString());
+//       //
+//       //
 //     } else {
 //       for (var i = 0; i < _fullList.length; i++) {
 //         if (StringHelper().stringContains(_fullList[i].name, search_key)!) {
@@ -92,8 +92,8 @@
 //         }
 //       }
 
-//       //print("_searchList.length with txt " + _searchList.length.toString());
-//       //print("_fullList.length with txt " + _fullList.length.toString());
+//       //
+//       //
 //     }
 //   }
 
@@ -137,10 +137,10 @@
 //         child: TextField(
 //           controller: _searchController,
 //           onChanged: (txt) {
-//             print(txt);
+//             
 //             _buildSearchList(txt);
-//             // print(_searchList.toString());
-//             // print(_searchList.length);
+//             // 
+//             // 
 //           },
 //           onTap: () {},
 //           autofocus: true,
@@ -179,8 +179,8 @@
 //         builder: (context,AsyncSnapshot<ProductMiniResponse> snapshot) {
 //           if (snapshot.hasError) {
 //             //snapshot.hasError
-//             //print("product error");
-//             //print(snapshot.error.toString());
+//             //
+//             //
 //             return Container();
 //           } else if (snapshot.hasData) {
 //             var productResponse = snapshot.data;
@@ -189,7 +189,7 @@
 //               _searchList.addAll(productResponse!.products!);
 //             }
 
-//             //print('called');
+//             //
 
 //             return SingleChildScrollView(
 //               child: Column(

@@ -19,9 +19,9 @@ class WeatherSectionBloc
         emit(WeatherSectionDataReceived(responseData: currentData as dynamic));
         // });
       } catch (e) {
-        // print(e);
+        //
         final errorMessage = e.toString().replaceAll('Exception:', '');
-        print('error message: $errorMessage');
+
         emit(Error(e.toString()));
       }
     });

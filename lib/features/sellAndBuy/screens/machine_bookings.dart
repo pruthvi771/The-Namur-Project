@@ -230,7 +230,6 @@ class _MachineBookingsState extends State<MachineBookings> {
                             }
 
                             if (snapshot.hasData && snapshot.data != null) {
-                              print(snapshot.data!.docs.length);
                               return snapshot.data!.docs.length == 0
                                   ? Container(
                                       height: 100,
@@ -262,7 +261,7 @@ class _MachineBookingsState extends State<MachineBookings> {
                                                   buyerSnapshot.data != null) {
                                                 var sellerData =
                                                     buyerSnapshot.data!.data();
-                                                print(sellerData);
+
                                                 return BookingOrderCard(
                                                   locationName:
                                                       orderData['locationName'],
@@ -305,7 +304,6 @@ class _MachineBookingsState extends State<MachineBookings> {
                   );
                 }
                 if (snapshot.hasError) {
-                  print(snapshot.error);
                   return Center(
                     child: Text(
                       AppLocalizations.of(context)!

@@ -5,11 +5,10 @@ import 'package:active_ecommerce_flutter/helpers/response_check.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:http/http.dart' as http;
 
-class ShippingRepository{
+class ShippingRepository {
   Future<dynamic> getDeliveryInfo() async {
-    Uri url =
-    Uri.parse("${AppConfig.BASE_URL}/delivery-info");
-    print(url.toString());
+    Uri url = Uri.parse("${AppConfig.BASE_URL}/delivery-info");
+
     final response = await http.get(
       url,
       headers: {
@@ -21,11 +20,8 @@ class ShippingRepository{
 
     bool checkResult = ResponseCheck.apply(response.body);
 
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
-
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return deliveryInfoResponseFromJson(response.body);
   }
-
 }

@@ -22,8 +22,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         emit(AddToCartSuccessful(quantity: 1));
       } catch (e) {
         // emit(SellAddProductErrorState(message: e.toString()));
-        print('error happened in AddToCartRequested');
-        print(e.toString());
       }
     });
 
@@ -40,8 +38,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         }
       } catch (e) {
         // emit(SellAddProductErrorState(message: e.toString()));
-        print('error happened in AddToCartRequested');
-        print(e.toString());
       }
     });
 
@@ -73,8 +69,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         }
       } catch (e) {
         // emit(SellAddProductErrorState(message: e.toString()));
-        print('error happened in AddToCartRequested');
-        print(e.toString());
       }
     });
   }

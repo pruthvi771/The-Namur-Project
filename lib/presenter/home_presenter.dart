@@ -58,7 +58,7 @@ class HomePresenter extends ChangeNotifier {
 
   fetchTodayDealData() async {
     var deal = await ProductRepository().getTodaysDealProducts();
-    // print(deal.products!.length);
+    //
     if (deal.success! && deal.products!.isNotEmpty) {
       isTodayDeal = true;
       notifyListeners();
@@ -176,8 +176,8 @@ class HomePresenter extends ChangeNotifier {
 
   mainScrollListener() {
     mainScrollController.addListener(() {
-      //print("position: " + xcrollController.position.pixels.toString());
-      //print("max: " + xcrollController.position.maxScrollExtent.toString());
+      //
+      //
 
       if (mainScrollController.position.pixels ==
           mainScrollController.position.maxScrollExtent) {

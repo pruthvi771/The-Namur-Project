@@ -24,7 +24,7 @@ class PaymentRepository {
     Uri url = Uri.parse(
         "${AppConfig.BASE_URL}/payment-types?mode=${mode}&list=${list}");
 
-    // print("getPaymentResponseList url " + url.toString());
+    //
 
     final response = await http.get(url, headers: {
       "App-Language": app_language.$!,
@@ -70,7 +70,7 @@ class PaymentRepository {
       "App-Language": app_language.$!,
     });
 
-    //// print(response.body.toString());
+    ////
     return paypalUrlResponseFromJson(response.body);
   }
 
@@ -86,8 +86,8 @@ class PaymentRepository {
       "App-Language": app_language.$!,
     });
 
-    //// print(url);
-    //// print(response.body.toString());
+    ////
+    ////
     return flutterwaveUrlResponseFromJson(response.body);
   }
 
@@ -172,7 +172,7 @@ class PaymentRepository {
       "payment_details": "${payment_details}"
     });
 
-    //// print(post_body.toString());
+    ////
 
     Uri url = Uri.parse("${AppConfig.BASE_URL}/razorpay/success");
 
@@ -184,7 +184,7 @@ class PaymentRepository {
         },
         body: post_body);
 
-    //// print(response.body.toString());
+    ////
     return razorpayPaymentSuccessResponseFromJson(response.body);
   }
 
@@ -209,7 +209,7 @@ class PaymentRepository {
         },
         body: post_body);
 
-    //// print(response.body.toString());
+    ////
     return paystackPaymentSuccessResponseFromJson(response.body);
   }
 
@@ -234,7 +234,7 @@ class PaymentRepository {
         },
         body: post_body);
 
-    //// print(response.body.toString());
+    ////
     return iyzicoPaymentSuccessResponseFromJson(response.body);
   }
 
@@ -246,13 +246,13 @@ class PaymentRepository {
     Uri url = Uri.parse(
         "${AppConfig.BASE_URL}/bkash/begin?payment_type=${payment_type}&combined_order_id=${combined_order_id}&amount=${amount}&user_id=${user_id.$}&package_id=${package_id}");
 
-    // print(url.toString());
+    //
     final response = await http.get(
       url,
       headers: {"Authorization": "Bearer ${access_token.$}"},
     );
 
-    // print(response.body.toString());
+    //
     return bkashBeginResponseFromJson(response.body);
   }
 
@@ -283,7 +283,7 @@ class PaymentRepository {
         },
         body: post_body);
 
-    //// print(response.body.toString());
+    ////
     return bkashPaymentProcessResponseFromJson(response.body);
   }
 
@@ -303,7 +303,7 @@ class PaymentRepository {
       },
     );
 
-    // print(response.body.toString());
+    //
     return sslcommerzBeginResponseFromJson(response.body);
   }
 
@@ -323,7 +323,7 @@ class PaymentRepository {
       },
     );
 
-    // print(response.body.toString());
+    //
     return nagadBeginResponseFromJson(response.body);
   }
 
@@ -350,7 +350,7 @@ class PaymentRepository {
         },
         body: post_body);
 
-    //// print(response.body.toString());
+    ////
     return nagadPaymentProcessResponseFromJson(response.body);
   }
 }

@@ -64,7 +64,7 @@ class _MachineDetailsState extends State<MachineDetails> {
 
   void openWhatsAppChat(String phoneNumber) async {
     String formattedPhoneNumber = phoneNumber.replaceAll(RegExp(r'[^\d]'), '');
-    print(formattedPhoneNumber);
+
     String whatsappUrl = "https://wa.me/$formattedPhoneNumber";
     final Uri _url = Uri.parse(whatsappUrl);
 
@@ -78,7 +78,6 @@ class _MachineDetailsState extends State<MachineDetails> {
         throw 'Could not launch WhatsApp';
       }
     } catch (e) {
-      print(e);
       // Handle exceptions, if any
     }
   }

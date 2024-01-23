@@ -32,8 +32,6 @@ class RentBloc extends Bloc<RentEvent, RentState> {
         emit(RentSuccess(documentId: documentId!));
       } catch (e) {
         // emit(SellAddProductErrorState(message: e.toString()));
-        print('error happened in ProductsForSubCategoryRequested');
-        print(e.toString());
       }
     });
   }

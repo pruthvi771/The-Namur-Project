@@ -31,7 +31,7 @@ class AddressRepository {
       },
     );
     bool checkResult = ResponseCheck.apply(response.body);
-    // print("Bearer ${access_token.$}");
+    //
     if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return addressResponseFromJson(response.body);
@@ -48,7 +48,7 @@ class AddressRepository {
       },
     );
     bool checkResult = ResponseCheck.apply(response.body);
-    //  print("Bearer ${access_token.$}");
+    //
 
     if (!checkResult) return responseCheckModelFromJson(response.body);
 
@@ -282,9 +282,9 @@ class AddressRepository {
 
     Uri url = Uri.parse("${AppConfig.BASE_URL}/update-shipping-type-in-cart");
 
-    // print(url.toString());
-    // print(post_body.toString());
-    // print(access_token.$.toString());
+    //
+    //
+    //
     final response = await http.post(url,
         headers: {
           "Content-Type": "application/json",

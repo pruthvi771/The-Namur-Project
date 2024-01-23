@@ -10,8 +10,8 @@ class CurrencyPresenter extends ChangeNotifier {
   fetchListData() async {
     currencyList.clear();
     var res = await CurrencyRepository().getListResponse();
-    // print("res.data ${system_currency.$}");
-    // print(res.data.toString());
+    //
+    //
     currencyList.addAll(res.data!);
 
     currencyList.forEach((element) {

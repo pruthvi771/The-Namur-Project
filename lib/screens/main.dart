@@ -62,7 +62,7 @@ class _MainState extends State<Main> {
     setState(() {
       _currentIndex = i;
     });
-    //print("i$i");
+    //
   }
 
   getCartCount() async {
@@ -103,7 +103,7 @@ class _MainState extends State<Main> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        //print("_currentIndex");
+        //
         if (_currentIndex != 0) {
           fetchAll();
           setState(() {

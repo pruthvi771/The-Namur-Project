@@ -10,8 +10,7 @@ import 'package:active_ecommerce_flutter/data_model/coupon_remove_response.dart'
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 
 class CouponRepository {
-  Future<dynamic> getCouponApplyResponse(
-      @required String coupon_code) async {
+  Future<dynamic> getCouponApplyResponse(@required String coupon_code) async {
     var post_body =
         jsonEncode({"user_id": "${user_id.$}", "coupon_code": "$coupon_code"});
 
@@ -25,9 +24,7 @@ class CouponRepository {
         body: post_body);
     bool checkResult = ResponseCheck.apply(response.body);
 
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
-
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return couponApplyResponseFromJson(response.body);
   }
@@ -44,10 +41,8 @@ class CouponRepository {
         },
         body: post_body);
     bool checkResult = ResponseCheck.apply(response.body);
-print("${access_token}lkj");
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
 
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return couponRemoveResponseFromJson(response.body);
   }

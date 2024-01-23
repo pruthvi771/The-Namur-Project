@@ -598,7 +598,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     );
                   }
                   if (snapshot.hasError) {
-                    print(snapshot.error);
                     return Center(
                       child: Text(
                         AppLocalizations.of(context)!

@@ -133,9 +133,6 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
       await dataBox.put('calendar', newData);
     }
 
-    print(landDropdownValue);
-    print(selectedCropName);
-    print(dateOfRenting);
     Navigator.of(context).pop();
     Navigator.of(context).pop();
     Navigator.push(
@@ -263,7 +260,7 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
                                   cropListFuture =
                                       getCropsList(landSyno: landDropdownValue);
                                 });
-                                // print(landDropdownValue);
+                                //
                               },
                             ),
                           );

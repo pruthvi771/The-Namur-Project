@@ -194,11 +194,9 @@ class _TitleBarState extends State<TitleBar> {
             BlocListener<WeatherSectionBloc, WeatherSectionState>(
               listener: (context, state) {
                 if (state is WeatherSectionDataReceived) {
-                  print('state is WeatherSectionDataReceived');
                 } else if (state is LoadingSection) {
-                  print('state is LOADING');
                 } else if (state is WeatherSectionDataNotReceived) {
-                  // print('state is WeatherSectionDataNotReceived');
+                  //
                 }
                 if (state is Error) {
                   ToastComponent.showDialog('Network error. Try again later',

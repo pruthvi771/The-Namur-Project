@@ -175,7 +175,6 @@ class _AddPhoneState extends State<AddPhone> {
                       // isNewNumberValid = phone.isValidNumber();
                       isPhoneNumberEmpty = phone.number.isEmpty;
                     });
-                    print(newPhone2);
                   },
                 ),
               ),

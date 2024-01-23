@@ -334,7 +334,6 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
 
   CustomScrollView buildBodyChildren(profileSection) {
     _launchYouTubeVideo(url) async {
-      print('clicked');
       final Uri _url = Uri.parse(url);
       if (await canLaunchUrl(_url)) {
         await launchUrl(_url);
@@ -359,9 +358,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
               Navigator.pop(context);
               return;
             }
-            if (state is ProfileDataReceived) {
-              print('STATE: ProfileDataReceived');
-            }
+            if (state is ProfileDataReceived) {}
           },
           child:
               BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
@@ -682,12 +679,10 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                               );
                             }
                             if (snapshot.hasData && snapshot.data != null) {
-                              // print(snapshot.data![0].cropName);
+                              //
                               return BlocBuilder<HiveBloc, HiveState>(
                                 builder: (context, state) {
                                   if (state is HiveDataReceived) {
-                                    print(state.profileData.land.length);
-
                                     List<CropProfileDisplay> cropsToDisplay =
                                         [];
 

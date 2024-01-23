@@ -97,7 +97,7 @@
 
 //         case 'shipping_type':
 //           {
-//             print(element.value.toString());
+//             
 //             if (element.value.toString() == "carrier_wise_shipping") {
 //               carrier_base_shipping.$ = true;
 //             } else {
@@ -107,8 +107,8 @@
 //           break;
 //         case 'google_recaptcha':
 //           {
-//             print(element.type.toString());
-//             print(element.value.toString());
+//             
+//             
 //             if (element.value.toString() == "1") {
 //               google_recaptcha.$ = true;
 //             } else {
@@ -118,8 +118,8 @@
 //           break;
 //         case 'vendor_system_activation':
 //           {
-//             print(element.type.toString());
-//             print(element.value.toString());
+//             
+//             
 //             if (element.value.toString() == "1") {
 //               vendor_system.$ = true;
 //             } else {

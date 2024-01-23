@@ -42,7 +42,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
   Set<String> dropdownSet = {};
 
   _launchURL(url) async {
-    // print('clicked');
+    //
     final Uri _url = Uri.parse(url);
     if (await canLaunchUrl(_url)) {
       await launchUrl(_url);
@@ -188,12 +188,12 @@ class _WeatherScreenState extends State<WeatherScreen> {
                       dropdownSet.length < 3 &&
                       !dropdownSet.contains(data.locationName)) {
                     dropdownSet.add(data.locationName);
-                    // print('object added : ${data.locationName}');
+                    //
                   }
                 }
                 dropdownList = dropdownSet.toList();
                 dropdownValue = dropdownList[index];
-                // print('dropdown value: $dropdownValue');
+                //
                 // print(
                 //     'object : ${state.responseData[0]!.locationName == dropdownValue}');
                 return Column(
@@ -683,7 +683,6 @@ class WeatherDayCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(image);
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(9),

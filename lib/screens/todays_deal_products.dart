@@ -55,8 +55,8 @@
 //         builder: (context,AsyncSnapshot<ProductMiniResponse> snapshot) {
 //           if (snapshot.hasError) {
 //             //snapshot.hasError
-//             /*print("product error");
-//             print(snapshot.error.toString());*/
+//             /*
+//             */
 //             return Container();
 //           } else if (snapshot.hasData) {
 //             var productResponse = snapshot.data;

@@ -83,7 +83,6 @@ class SellBloc extends Bloc<SellEvent, SellState> {
         // emit(SellAddProductSuccessState());
       } catch (e) {
         // emit(SellAddProductErrorState(message: e.toString()));
-        print('error happened');
       }
     });
 
@@ -105,7 +104,6 @@ class SellBloc extends Bloc<SellEvent, SellState> {
         emit(ProductAddEditDeleteSuccessfully());
       } catch (e) {
         // emit(SellAddProductErrorState(message: e.toString()));
-        print('error trying to update address in products');
       }
     });
 
@@ -120,8 +118,6 @@ class SellBloc extends Bloc<SellEvent, SellState> {
         emit(ProductsForSubCategoryReceived(products: products));
       } catch (e) {
         // emit(SellAddProductErrorState(message: e.toString()));
-        print('error happened in ProductsForSubCategoryRequested');
-        print(e.toString());
       }
     });
 
@@ -136,8 +132,6 @@ class SellBloc extends Bloc<SellEvent, SellState> {
         emit(ProductAddEditDeleteSuccessfully());
       } catch (e) {
         // emit(SellAddProductErrorState(message: e.toString()));
-        print('error happened in DeleteProductRequested');
-        print(e.toString());
       }
     });
 
@@ -184,8 +178,6 @@ class SellBloc extends Bloc<SellEvent, SellState> {
         emit(ProductAddEditDeleteSuccessfully());
       } catch (e) {
         // emit(SellAddProductErrorState(message: e.toString()));
-        print('error happened in EditProductRequested');
-        print(e.toString());
       }
     });
 
@@ -197,8 +189,6 @@ class SellBloc extends Bloc<SellEvent, SellState> {
         emit(SellerInventoryReceived(products: products));
       } catch (e) {
         // emit(SellAddProductErrorState(message: e.toString()));
-        print('error happened in ProductsForSubCategoryRequested');
-        print(e.toString());
       }
     });
   }

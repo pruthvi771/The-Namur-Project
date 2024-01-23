@@ -43,7 +43,6 @@ class _AddWeatherLocationState extends State<AddWeatherLocation> {
     BlocProvider.of<HiveBloc>(context).add(
       HiveLocationDataRequested(),
     );
-    print('bloc called');
   }
 
   Future<void> addPrimaryLocationToHive() async {
@@ -59,7 +58,7 @@ class _AddWeatherLocationState extends State<AddWeatherLocation> {
       ..address = districtDropdownValue;
 
     await dataBox.put(primaryLocation.id, primaryLocation);
-    print('WeatherLocationAdded');
+
     // BlocProvider.of<HiveBloc>(context).add(
     //   HiveLocationDataRequested(),
     // );
@@ -157,8 +156,6 @@ class _AddWeatherLocationState extends State<AddWeatherLocation> {
 
     await SecondaryDataBox.put(secondaryLocations.id, secondaryLocations);
 
-    print('Secondary WeatherLocationAdded');
-
     BlocProvider.of<HiveBloc>(context).add(
       HiveLocationDataRequested(),
       // HiveAppendAddress(context: context),
@@ -204,12 +201,8 @@ class _AddWeatherLocationState extends State<AddWeatherLocation> {
             ),
             BlocListener<HiveBloc, HiveState>(
               listener: (context, state) {
-                if (state is Error) {
-                  print('STATE: Error: ${state.error}');
-                }
-                if (state is HiveLocationDataReceived) {
-                  print('STATE: HiveLocationDataReceived');
-                }
+                if (state is Error) {}
+                if (state is HiveLocationDataReceived) {}
               },
               child:
                   BlocBuilder<HiveBloc, HiveState>(builder: (context, state) {
@@ -305,7 +298,7 @@ class _AddWeatherLocationState extends State<AddWeatherLocation> {
                       ),
                     ),
                     onPressed: () async {
-                      // print('tapped');
+                      //
                       if (widget.isPrimaryLocation) {
                         await addPrimaryLocationToHive();
                       } else {

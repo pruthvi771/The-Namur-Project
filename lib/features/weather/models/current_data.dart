@@ -55,7 +55,6 @@ class CurrentWeatherResponse {
   });
 
   factory CurrentWeatherResponse.fromJson(Map<String, dynamic> json) {
-    print('weather code: ${json['current']['condition']['code']}');
     return CurrentWeatherResponse(
       currentData: CurrentData.fromJson(json['current']),
       locationName: json['location']['name'],

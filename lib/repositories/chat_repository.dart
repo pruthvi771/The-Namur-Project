@@ -100,10 +100,10 @@ class ChatRepository {
       "message": "${message}"
     });
 
-    // print(post_body);
+    //
 
     Uri url = Uri.parse("${AppConfig.BASE_URL}/chat/create-conversation");
-    // print("Bearer ${access_token.$}");
+    //
     final response = await http.post(url,
         headers: {
           "Content-Type": "application/json",
@@ -115,7 +115,7 @@ class ChatRepository {
 
     if (!checkResult) return responseCheckModelFromJson(response.body);
 
-    // print(response.body);
+    //
     return conversationCreateResponseFromJson(response.body);
   }
 }

@@ -24,7 +24,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         emit(CheckoutLoading());
         var userCartDocument = await checkoutRepository.getCartDocumenyByUserId(
             userID: event.userID);
-        print(userCartDocument);
+
         await Future.delayed(Duration(seconds: 2));
         List<OrderItem> orderItems = [];
         for (var product in userCartDocument!['products']) {
@@ -36,8 +36,6 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
           var response = await checkoutRepository.canReduceProductQuantity(
               productId: product['productId'],
               quantityToReduce: product['quantity']);
-
-          print(product);
 
           if (response[0] == false) {
             emit(
@@ -67,10 +65,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         //     await checkoutRepository.createOrder(event.userID, orderItems);
         // await cartRepository.clearCart();
         emit(CheckoutApproved());
-      } catch (e) {
-        print('error happened in AddToCartRequested');
-        print(e.toString());
-      }
+      } catch (e) {}
     });
 
     on<CreateOrderRequested>((event, emit) async {
@@ -78,7 +73,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         emit(CheckoutLoading());
         var userCartDocument = await checkoutRepository.getCartDocumenyByUserId(
             userID: event.userID);
-        print(userCartDocument);
+
         await Future.delayed(Duration(seconds: 2));
         List<OrderItem> orderItems = [];
         for (var product in userCartDocument!['products']) {
@@ -90,8 +85,6 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
           var response = await checkoutRepository.reduceProductQuantity(
               productId: product['productId'],
               quantityToReduce: product['quantity']);
-
-          print(product);
 
           if (response[0] == false) {
             emit(
@@ -121,10 +114,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
             event.userID, orderItems, event.address);
         await cartRepository.clearCart();
         emit(CheckoutCompleted(orderId: orderID!));
-      } catch (e) {
-        print('error happened in AddToCartRequested');
-        print(e.toString());
-      }
+      } catch (e) {}
     });
   }
 }

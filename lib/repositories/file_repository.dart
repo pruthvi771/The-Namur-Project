@@ -12,7 +12,7 @@ class FileRepository {
   Future<dynamic> getSimpleImageUploadResponse(
       @required String image, @required String filename) async {
     var post_body = jsonEncode({"image": "${image}", "filename": "$filename"});
-    //print(post_body.toString());
+    //
 
     Uri url = Uri.parse("${AppConfig.BASE_URL}/file/image-upload");
     final response = await http.post(url,
@@ -25,10 +25,9 @@ class FileRepository {
 
     bool checkResult = ResponseCheck.apply(response.body);
 
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
-    //print(response.body.toString());
+    //
     return simpleImageUploadResponseFromJson(response.body);
   }
 }

@@ -88,12 +88,8 @@ class CartRepository {
 
         await userCartRef.update({'products': products});
         return CartProduct(productId: productId, quantity: newQuantity);
-      } else {
-        print('Product with productId $productId not found in the cart.');
-      }
-    } else {
-      print('User\'s cart document does not exist.');
-    }
+      } else {}
+    } else {}
 
     return null;
   }
@@ -120,12 +116,8 @@ class CartRepository {
         await cartCollection
             .doc(currentUser.uid)
             .update({'products': products});
-      } else {
-        print('Product with productId $productId not found in the cart.');
-      }
-    } else {
-      print('User\'s cart document does not exist.');
-    }
+      } else {}
+    } else {}
   }
 
   Future<void> clearCart() async {
@@ -138,9 +130,7 @@ class CartRepository {
 
     if (cartSnapshot.exists) {
       await cartCollection.doc(currentUser.uid).delete();
-    } else {
-      print('User\'s cart document does not exist.');
-    }
+    } else {}
   }
 }
 

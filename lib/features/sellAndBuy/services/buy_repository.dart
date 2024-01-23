@@ -19,7 +19,7 @@ class BuyRepository {
 
     var products = querySnapshot.docs.map((doc) {
       Map<String, dynamic> data = doc.data();
-      print(doc.id);
+
       return SellProduct(
         id: doc.id,
         productName: data['name'],
@@ -41,7 +41,6 @@ class BuyRepository {
         createdAt: data['createdAt'].toDate(),
       );
     }).toList();
-    print(products.length);
 
     return products;
   }
@@ -62,7 +61,7 @@ class BuyRepository {
 
     var products = querySnapshot.docs.map((doc) {
       Map<String, dynamic> data = doc.data();
-      print(doc.id);
+
       return SellProduct(
         id: doc.id,
         productName: data['name'],
@@ -84,7 +83,6 @@ class BuyRepository {
         createdAt: data['createdAt'].toDate(),
       );
     }).toList();
-    print(products.length);
 
     return products;
   }
@@ -192,7 +190,7 @@ class BuyRepository {
 
     var products = querySnapshot.docs.map((doc) {
       Map<String, dynamic> data = doc.data();
-      print(doc.id);
+
       return SellProduct(
         id: doc.id,
         productName: data['name'],
@@ -214,7 +212,6 @@ class BuyRepository {
         createdAt: data['createdAt'].toDate(),
       );
     }).toList();
-    print(products.length);
 
     return products;
   }

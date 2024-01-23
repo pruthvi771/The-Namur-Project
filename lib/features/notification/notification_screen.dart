@@ -83,7 +83,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(notificationSettings);
     return Container(
       color: Colors.white,
       height: DeviceInfo(context).height,

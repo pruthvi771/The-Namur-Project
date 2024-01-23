@@ -101,7 +101,7 @@ class ProductRepository {
       "Currency-Exchange-Rate":
           SystemConfig.systemCurrency!.exchangeRate.toString(),
     });
-    // print(url.toString());
+    //
     return productMiniResponseFromJson(response.body);
   }
 
@@ -116,7 +116,7 @@ class ProductRepository {
     Uri url = Uri.parse("${AppConfig.BASE_URL}/products/search" +
         "?page=${page}&name=${name}&sort_key=${sort_key}&brands=${brands}&categories=${categories}&min=${min}&max=${max}");
 
-    // print(url.toString());
+    //
     final response = await http.get(url, headers: {
       "App-Language": app_language.$!,
       "Currency-Code": SystemConfig.systemCurrency!.code!,
@@ -130,7 +130,7 @@ class ProductRepository {
     page = 1,
   }) async {
     Uri url = Uri.parse("${AppConfig.BASE_URL}/products/digital?page=$page");
-    // print(url.toString());
+    //
 
     final response = await http.get(url, headers: {
       "App-Language": app_language.$!,
@@ -138,7 +138,7 @@ class ProductRepository {
       "Currency-Exchange-Rate":
           SystemConfig.systemCurrency!.exchangeRate.toString(),
     });
-    // print(response.body);
+    //
     return productMiniResponseFromJson(response.body);
   }
 
@@ -146,7 +146,7 @@ class ProductRepository {
     page = 1,
   }) async {
     Uri url = Uri.parse("${AppConfig.BASE_URL}/classified/all?page=$page");
-    // print(url.toString());
+    //
 
     final response = await http.get(url, headers: {
       "App-Language": app_language.$!,
@@ -154,7 +154,7 @@ class ProductRepository {
       "Currency-Exchange-Rate":
           SystemConfig.systemCurrency!.exchangeRate.toString(),
     });
-    // print(response.body);
+    //
     return classifiedAdsResponseFromJson(response.body);
   }
 
@@ -171,7 +171,7 @@ class ProductRepository {
       "Currency-Exchange-Rate":
           SystemConfig.systemCurrency!.exchangeRate.toString(),
     });
-    // print(response.body);
+    //
     return classifiedAdsResponseFromJson(response.body);
   }
 
@@ -180,7 +180,7 @@ class ProductRepository {
   }) async {
     Uri url =
         Uri.parse("${AppConfig.BASE_URL}/classified/related-products/$id");
-    // print(url.toString());
+    //
 
     final response = await http.get(url, headers: {
       "App-Language": app_language.$!,
@@ -188,13 +188,13 @@ class ProductRepository {
       "Currency-Exchange-Rate":
           SystemConfig.systemCurrency!.exchangeRate.toString(),
     });
-    // print(response.body);
+    //
     return classifiedAdsResponseFromJson(response.body);
   }
 
   Future<ClassifiedAdsDetailsResponse> getClassifiedProductsDetails(id) async {
     Uri url = Uri.parse("${AppConfig.BASE_URL}/classified/product-details/$id");
-    // print(url.toString());
+    //
 
     final response = await http.get(url, headers: {
       "App-Language": app_language.$!,
@@ -202,13 +202,13 @@ class ProductRepository {
       "Currency-Exchange-Rate":
           SystemConfig.systemCurrency!.exchangeRate.toString(),
     });
-    // print(response.body);
+    //
     return classifiedAdsDetailsResponseFromJson(response.body);
   }
 
   Future<CommonResponse> getDeleteClassifiedProductResponse(id) async {
     Uri url = Uri.parse("${AppConfig.BASE_URL}/classified/delete/$id");
-    // print(url.toString());
+    //
 
     final response = await http.delete(url, headers: {
       "App-Language": app_language.$!,
@@ -240,8 +240,8 @@ class ProductRepository {
   Future<ProductDetailsResponse> getProductDetails(
       {@required int? id = 0}) async {
     Uri url = Uri.parse("${AppConfig.BASE_URL}/products/" + id.toString());
-    // print(url.toString());
-    // print(SystemConfig.systemCurrency!.code.toString());
+    //
+    //
     final response = await http.get(url, headers: {
       "App-Language": app_language.$!,
       "Currency-Code": SystemConfig.systemCurrency!.code!,
@@ -255,7 +255,7 @@ class ProductRepository {
   Future<ProductDetailsResponse> getDigitalProductDetails(
       {@required int id = 0}) async {
     Uri url = Uri.parse("${AppConfig.BASE_URL}/products/" + id.toString());
-    // print(url.toString());
+    //
     final response = await http.get(url, headers: {
       "App-Language": app_language.$!,
       "Currency-Code": SystemConfig.systemCurrency!.code!,
@@ -263,7 +263,7 @@ class ProductRepository {
           SystemConfig.systemCurrency!.exchangeRate.toString(),
     });
 
-    //// print(response.body.toString());
+    ////
     return productDetailsResponseFromJson(response.body);
   }
 
@@ -291,8 +291,8 @@ class ProductRepository {
           SystemConfig.systemCurrency!.exchangeRate.toString(),
     });
 
-    // print("top selling product url ${url.toString()}");
-    // print("top selling product ${response.body.toString()}");
+    //
+    //
 
     return productMiniResponseFromJson(response.body);
   }
@@ -325,8 +325,8 @@ class ProductRepository {
     Uri url = Uri.parse("${AppConfig.BASE_URL}/varient-price");
 
     var post_body = jsonEncode({"id": id, "quantity": quantity});
-    // print(url.toString());
-    // print(post_body.toString());
+    //
+    //
     final response = await http.post(url,
         headers: {
           "App-Language": app_language.$!,

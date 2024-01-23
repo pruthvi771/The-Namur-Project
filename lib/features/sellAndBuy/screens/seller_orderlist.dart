@@ -58,7 +58,7 @@ class _SellerOrderListState extends State<SellerOrderList> {
     if (documentSnapshot.docs.isNotEmpty) {
       // You can loop through all documents if needed
       for (var doc in documentSnapshot.docs) {
-        // print(doc.data());
+        //
         sellerOrderList.add(OrderListItem(
           orderID: doc.id,
           totalAmount: doc.data()['totalAmount'].toDouble(),
@@ -66,17 +66,15 @@ class _SellerOrderListState extends State<SellerOrderList> {
           timestamp: doc.data()['orderDate'],
         ));
       }
-    } else {
-      print('No orders found for this user.');
-    }
+    } else {}
 
     // for (var order in sellerOrderList) {
-    //   print(order.toMap());
+    //
     // }
 
     return sellerOrderList;
     // } catch (error) {
-    //   print('Error fetching orders: $error');
+    //
     //   throw error;
     // }
   }

@@ -230,8 +230,8 @@ class _SplashScreenState extends State<SplashScreen> {
     await system_currency.load();
     // Provider.of<CurrencyPresenter>(context, listen: false).fetchListData();
 
-    // print("new splash screen ${app_mobile_language.$}");
-    // print("new splash screen app_language_rtl ${app_language_rtl.$}");
+    //
+    //
 
     return app_mobile_language.$;
   }

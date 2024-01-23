@@ -58,7 +58,6 @@ class SellRepository {
       });
       return documentReference.id;
     } catch (e) {
-      print('Error adding document: $e');
       return null; // Return null in case of error
     }
   }
@@ -119,7 +118,6 @@ class SellRepository {
       });
       return documentReference.id;
     } catch (e) {
-      print('Error adding document: $e');
       return null; // Return null in case of error
     }
   }
@@ -158,7 +156,6 @@ class SellRepository {
         });
       }
     } catch (e) {
-      print('Error updating product: $e');
       // Handle the error according to your application's requirements
     }
   }
@@ -180,7 +177,6 @@ class SellRepository {
         'taluk': taluk,
       });
     } catch (e) {
-      print('Error updating product: $e');
       // Handle the error according to your application's requirements
     }
   }
@@ -196,7 +192,6 @@ class SellRepository {
         'productParentNames': FieldValue.arrayUnion([parentName])
       });
     } catch (e) {
-      print('Error updating product: $e');
       // Handle the error according to your application's requirements
     }
   }
@@ -210,9 +205,6 @@ class SellRepository {
 
       List<String> products = [];
 
-      print(userSnapshot.data()!['products'].length.toString());
-      print(userSnapshot.data()!['secondHandProducts'].length.toString());
-
       for (var product in userSnapshot.data()!['products']) {
         products.add(product);
       }
@@ -221,7 +213,7 @@ class SellRepository {
         products.add(product);
       }
 
-      // print(products.length);
+      //
 
       if (products.length == 0) {
         return null;
@@ -229,7 +221,6 @@ class SellRepository {
 
       return products;
     } catch (e) {
-      print('Error updating product: $e');
       // Handle the error according to your application's requirements
     }
   }
@@ -263,7 +254,6 @@ class SellRepository {
         // 'imageURL': imageURL,
       });
     } catch (e) {
-      print('Error updating product: $e');
       // Handle the error according to your application's requirements
     }
   }
@@ -288,7 +278,6 @@ class SellRepository {
     CollectionReference products = _firestore.collection('products');
 
     try {
-      print("land syno value: $landSynoValue");
       await products.doc(productId).update({
         'name': productName,
         'description': productDescription,
@@ -306,7 +295,6 @@ class SellRepository {
         // 'imageURL': imageURL,
       });
     } catch (e) {
-      print('Error updating product: $e');
       // Handle the error according to your application's requirements
     }
   }
@@ -329,7 +317,7 @@ class SellRepository {
 
     var products = querySnapshot.docs.map((doc) {
       Map<String, dynamic> data = doc.data();
-      print(doc.id);
+
       return SellProduct(
         id: doc.id,
         productName: data['name'],
@@ -351,7 +339,6 @@ class SellRepository {
         createdAt: data['createdAt'].toDate(),
       );
     }).toList();
-    print(products.length);
 
     return products;
   }
@@ -369,7 +356,7 @@ class SellRepository {
 
     var products = querySnapshot.docs.map((doc) {
       Map<String, dynamic> data = doc.data();
-      print(doc.id);
+
       return SellProduct(
         id: doc.id,
         productName: data['name'],
@@ -391,7 +378,6 @@ class SellRepository {
         createdAt: data['createdAt'].toDate(),
       );
     }).toList();
-    print(products.length);
 
     return products;
   }
@@ -402,7 +388,6 @@ class SellRepository {
     try {
       await _firestore.collection('products').doc(productId).delete();
     } catch (_) {
-      print(_);
       throw Exception('Something went wrong. Please try again.');
     }
   }
@@ -417,7 +402,6 @@ class SellRepository {
         'isDeleted': true,
       });
     } catch (e) {
-      print('Error updating product: $e');
       // Handle the error according to your application's requirements
     }
   }
@@ -431,9 +415,7 @@ class SellRepository {
         'products': FieldValue.arrayRemove([productId]),
         'secondHandProducts': FieldValue.arrayRemove([productId])
       });
-    } catch (e) {
-      print('Error updating seller document for adding product: $e');
-    }
+    } catch (e) {}
   }
 
   Future<List<String>?> uploadImagesToFirebaseStorage({
@@ -464,9 +446,7 @@ class SellRepository {
       }
 
       return downloadURLs;
-    } catch (e) {
-      print('Error uploading images: $e');
-    }
+    } catch (e) {}
     return null;
   }
 
@@ -481,7 +461,6 @@ class SellRepository {
         'imageURL': imageURL,
       });
     } catch (_) {
-      print(_);
       throw Exception('Something went wrong. Please try again.');
     }
   }
@@ -503,7 +482,6 @@ class SellRepository {
         'imageURL': [],
       });
     } catch (error) {
-      print(error);
       throw Exception('Failed to delete product images. Please try again.');
     }
   }
@@ -531,7 +509,6 @@ class SellRepository {
       //   });
       // }
     } catch (e) {
-      print('Error updating seller document for adding product: $e');
       // Handle the error according to your application's requirements
     }
   }

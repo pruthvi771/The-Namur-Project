@@ -16,7 +16,7 @@ class ShopRepository {
     Uri url =
         Uri.parse("${AppConfig.BASE_URL}/shops" + "?page=${page}&name=${name}");
 
-    // print(url.toString());
+    //
 
     final response = await http.get(
       url,
@@ -34,7 +34,7 @@ class ShopRepository {
 
   Future<ShopDetailsResponse> getShopInfo({@required id = 0}) async {
     Uri url = Uri.parse("${AppConfig.BASE_URL}/shops/details/${id}");
-    // print(url.toString());
+    //
     final response = await http.get(
       url,
       headers: {
@@ -142,7 +142,7 @@ class ShopRepository {
         "App-Language": app_language.$!,
       },
     );
-    // print(response.body);
+    //
     return followedSellersResponseFromJson(response.body);
   }
 }

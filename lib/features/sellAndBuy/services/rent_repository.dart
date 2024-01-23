@@ -35,7 +35,6 @@ class RentRepository {
       );
       return documentReference.id;
     } catch (e) {
-      print('Error adding document: $e');
       return null; // Return null in case of error
     }
   }

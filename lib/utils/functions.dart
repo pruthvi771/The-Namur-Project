@@ -4,7 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 void openWhatsAppChat(String phoneNumber) async {
   String formattedPhoneNumber = phoneNumber.replaceAll(RegExp(r'[^\d]'), '');
-  print(formattedPhoneNumber);
+
   String whatsappUrl = "https://wa.me/$formattedPhoneNumber";
   final Uri _url = Uri.parse(whatsappUrl);
 
@@ -18,7 +18,6 @@ void openWhatsAppChat(String phoneNumber) async {
       throw 'Could not launch WhatsApp';
     }
   } catch (e) {
-    print(e);
     // Handle exceptions, if any
   }
 }
@@ -32,11 +31,8 @@ void openPDF(String link) async {
         _url,
         mode: LaunchMode.platformDefault,
       );
-    } else {
-      print('Could not open PDF');
-    }
+    } else {}
   } catch (e) {
-    print(e);
     // Handle exceptions, if any
   }
 }
@@ -62,9 +58,7 @@ Address? getUserLocationFromHive() {
   }
 }
 
-void printError(String text) {
-  print('\x1B[31m$text\x1B[0m');
-}
+void printError(String text) {}
 
 String formatDate(String inputDate) {
   // Parse inputDate into a DateTime object

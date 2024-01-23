@@ -87,7 +87,7 @@ class _FriendsState extends State<Friends> {
       }
       if (!categoryList.contains(item)) {
         categoryList.add(item);
-        // print('Item "$item" added successfully.');
+        //
       }
     }
 
@@ -651,7 +651,7 @@ class _FriendsState extends State<Friends> {
                                               },
                                             );
                                     }
-                                    print(state);
+
                                     return Container(
                                       height: 200,
                                       child: Center(
@@ -664,7 +664,6 @@ class _FriendsState extends State<Friends> {
                               );
                             }
                             if (snapshot.hasError) {
-                              print(snapshot.error);
                               return Container(
                                 height: 200,
                                 // color: Colors.red,

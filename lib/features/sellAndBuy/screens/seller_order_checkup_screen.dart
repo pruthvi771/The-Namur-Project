@@ -423,7 +423,6 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
                   );
                 }
                 if (snapshot.hasError) {
-                  print(snapshot.error);
                   return Center(
                     child: Text(
                       AppLocalizations.of(context)!

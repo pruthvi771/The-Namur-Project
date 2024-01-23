@@ -99,7 +99,7 @@
 //         await ProductRepository().getClassifiedOtherAds(id: widget.id);
 
 //     _relatedProducts.addAll(relatedProductResponse.data!);
-//     print(_relatedProducts.length.toString() + "ddd");
+//     
 //     _relatedProductInit = true;
 
 //     setState(() {});
@@ -194,7 +194,7 @@
 //                             style: TextStyle(color: Colors.white),
 //                           ),
 //                           onPressed: () {
-//                             print("share links ${_productDetails!.link}");
+//                             
 //                             SocialShare.shareOptions(_productDetails!.link!);
 //                           },
 //                         ),
@@ -266,7 +266,7 @@
 //           }
 //         }
 //       }
-//       print("opachity{} $_scrollPosition");
+//       
 
 //       setState(() {});
 //     });
@@ -729,7 +729,7 @@
 //   }
 
 //   Widget buildSellerRow(BuildContext context) {
-//     //print("sl:" +  _productDetails.shop_logo);
+//     //
 //     return Container(
 //       color: MyTheme.light_grey,
 //       padding: EdgeInsets.symmetric(horizontal: 14, vertical: 14),
@@ -1131,7 +1131,7 @@
 //                       return GestureDetector(
 //                         onTap: () {
 //                           _currentImage = itemIndex;
-//                           print(_currentImage);
+//                           
 //                           setState(() {});
 //                         },
 //                         child: Container(
@@ -1203,7 +1203,7 @@
 //             enlargeCenterPage: false,
 //             scrollDirection: Axis.horizontal,
 //             onPageChanged: (index, reason) {
-//               print(index);
+//               
 //               setState(() {
 //                 _currentImage = index;
 //               });

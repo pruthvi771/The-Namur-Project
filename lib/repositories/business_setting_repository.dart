@@ -22,10 +22,10 @@
 //       //'keys':params
 //       "keys":params
 //     };
-//     //print("business ${body}");
+//     //
 //     var response = await http.post(url,body: body);
 
-//     print("business ${response.body}");
+//     
 
 //     return businessSettingListResponseFromJson(response.body);
 //   }

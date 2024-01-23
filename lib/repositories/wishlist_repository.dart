@@ -21,8 +21,7 @@ class WishListRepository {
 
     bool checkResult = ResponseCheck.apply(response.body);
 
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return wishlistResponseFromJson(response.body);
   }
@@ -40,14 +39,12 @@ class WishListRepository {
     );
     bool checkResult = ResponseCheck.apply(response.body);
 
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return wishlistDeleteResponseFromJson(response.body);
   }
 
-  Future<dynamic> isProductInUserWishList(
-      {@required product_id = 0}) async {
+  Future<dynamic> isProductInUserWishList({@required product_id = 0}) async {
     Uri url = Uri.parse(
         "${AppConfig.BASE_URL}/wishlists-check-product?product_id=${product_id}");
     final response = await http.get(
@@ -59,8 +56,7 @@ class WishListRepository {
     );
     bool checkResult = ResponseCheck.apply(response.body);
 
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return wishListChekResponseFromJson(response.body);
   }
@@ -69,7 +65,6 @@ class WishListRepository {
     Uri url = Uri.parse(
         "${AppConfig.BASE_URL}/wishlists-add-product?product_id=${product_id}");
 
-    print(url.toString());
     final response = await http.get(
       url,
       headers: {
@@ -79,9 +74,7 @@ class WishListRepository {
     );
     bool checkResult = ResponseCheck.apply(response.body);
 
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
-
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return wishListChekResponseFromJson(response.body);
   }
@@ -98,8 +91,7 @@ class WishListRepository {
     );
     bool checkResult = ResponseCheck.apply(response.body);
 
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
     return wishListChekResponseFromJson(response.body);
   }

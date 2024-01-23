@@ -124,8 +124,8 @@ class _RegistrationState extends State<Registration> {
       return;
     }
 
-    // print('phone login attempted');
-    // print('phone number is $phone');
+    //
+    //
     // String newNumber = '+91 $phone_confirm';
 
     BlocProvider.of<AuthBloc>(buildContext).add(
@@ -180,7 +180,6 @@ class _RegistrationState extends State<Registration> {
                 gravity: Toast.center, duration: Toast.lengthLong);
           }
           if (state is SignUpPhoneVerificationCompleted) {
-            print('State: $state SIGNUPPHONEVERIFICATIONCOMPLETED');
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -207,8 +206,8 @@ class _RegistrationState extends State<Registration> {
               locationsList.add(postOffice.name);
             }
             isDropdownEnabled = true;
-            // print(state.postOfficeResponse.postOffices[0].name);
-            // print(state.postOfficeResponse.message);
+            //
+            //
           }
           if (state is LocationsForPincodeLoading) {
             locationDropdownValue = null;
@@ -348,7 +347,6 @@ class _RegistrationState extends State<Registration> {
                       // isNewNumberValid = phone.isValidNumber();
                       isPhoneNumberEmpty = phone.number.isEmpty;
                     });
-                    print(newPhone2);
                   },
                 ),
               ),

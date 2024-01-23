@@ -31,7 +31,7 @@
 
 // Future  fetchShopData() async {
 //     var shopResponse = await ShopRepository().followedList(page:page );
-//     print(shopResponse.data!.length);
+//     
 //     sellers.addAll(shopResponse.data!);
 //     _isShopsInitial = true;
 //     if(shopResponse.meta!.lastPage == page){

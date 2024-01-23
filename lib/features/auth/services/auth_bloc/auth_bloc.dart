@@ -12,7 +12,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc({required this.authRepository, required this.firestoreRepository})
       : super(UnAuthenticated()) {
     on<SignInWithEmailRequested>((event, emit) async {
-      print('SignInWithEmailRequested started');
       emit(Loading());
       try {
         await authRepository.loginWithEmail(
@@ -72,14 +71,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         var registeredPhoneNumbers;
         registeredPhoneNumbers =
             await firestoreRepository.getAllRegisteredPhoneNumbers();
-        // print('YOUR NUMBER: ${event.phoneNumber}');
+        //
 
         if (registeredPhoneNumbers.contains(event.phoneNumber)) {
           bool isGoogleSignedIn =
               await firestoreRepository.isGoogleSignedIn(event.phoneNumber);
 
           if (!isGoogleSignedIn) {
-            print('PHONE NUMBER EXISTS IN THE DATABASE');
             final verificationId = await authRepository.phoneNumberVerification(
                 phone: event.phoneNumber);
             emit(PhoneVerificationCompleted(verificationId: verificationId));
@@ -101,29 +99,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SignUpPhoneVerificationRequested>((event, emit) async {
       emit(SignUpLoading());
       try {
-        // print('THIS IS A DRILL SIGN UP VERIFICATION REQUESTED.');
+        //
         var registeredPhoneNumbers;
         registeredPhoneNumbers =
             await firestoreRepository.getAllRegisteredPhoneNumbers();
-        print('YOUR NUMBER: ${event.phoneNumber}');
-        for (var number in registeredPhoneNumbers) {
-          print(number);
-        }
+
+        for (var number in registeredPhoneNumbers) {}
 
         if (registeredPhoneNumbers.contains(event.phoneNumber)) {
           // throw Exception('Phone number already registered.');
-          print('PHONE NUMBER EXISTS IN THE DATABASE');
+
           emit(AuthError('Phone number already registered.'));
           emit(UnAuthenticated());
         } else {
-          print('PHONE NUMBER DOESN NOT EXIST IN THE DATABASE');
           final verificationId = await authRepository.phoneNumberVerification(
               phone: event.phoneNumber);
           emit(
               SignUpPhoneVerificationCompleted(verificationId: verificationId));
-          print('sign up verification completed emitting');
+
           emit(Loading());
-          print('sign up verification completed emitted');
         }
       } catch (e) {
         emit(AuthError(e.toString()));

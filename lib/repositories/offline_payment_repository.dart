@@ -25,9 +25,6 @@ class OfflinePaymentRepository {
 
     Uri url = Uri.parse("${AppConfig.BASE_URL}/offline/payment/submit");
 
-    print(post_body);
-    print(url);
-
     final response = await http.post(url,
         headers: {
           "Content-Type": "application/json",
@@ -37,13 +34,9 @@ class OfflinePaymentRepository {
         body: post_body);
     bool checkResult = ResponseCheck.apply(response.body);
 
-    if(!checkResult)
-      return responseCheckModelFromJson(response.body);
+    if (!checkResult) return responseCheckModelFromJson(response.body);
 
-   // print("hello" + response.body.toString());
+    //
     return offlinePaymentSubmitResponseFromJson(response.body);
   }
-
-
-
 }

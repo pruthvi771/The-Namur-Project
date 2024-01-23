@@ -54,7 +54,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
     // Land newLand =
     //     savedData.land.firstWhere((element) => element.syno == widget.landSyno);
-    // print(newLand.animals);
+    //
 
     currentLand =
         savedData.land.firstWhere((element) => element.syno == widget.landSyno);

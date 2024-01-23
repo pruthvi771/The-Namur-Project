@@ -58,7 +58,7 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
               profileData = snapshot.data;
               TabController tabController =
                   TabController(length: profileData!.land.length, vsync: this);
-              print(profileData!.land.length);
+
               if (profileData!.land.length == 0)
                 return Scaffold(
                   backgroundColor: Colors.transparent,
@@ -170,8 +170,8 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
                             profileData!.land.length,
                             (index) {
                               var item = profileData!.land[index];
-                              // print('crops: ${item.crops.length}');
-                              // print('machines: ${item.equipments.length}');
+                              //
+                              //
                               return SingleChildScrollView(
                                 padding: EdgeInsets.only(bottom: 20),
                                 physics: BouncingScrollPhysics(),

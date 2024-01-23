@@ -52,9 +52,6 @@ class MiscBloc extends Bloc<MiscEvent, MiscState> {
         for (var document in documents) {
           Map<String, dynamic> data = document.data();
 
-          print(data.toString());
-          print(data['profileData']);
-
           if (data['profileData'] == null ||
               data['profileData']['address'] == null ||
               data['profileData']['address'].length == 0) {
@@ -74,7 +71,6 @@ class MiscBloc extends Bloc<MiscEvent, MiscState> {
           pincode: pincode,
         ));
       } catch (e) {
-        print(e);
         emit(MiscError());
       }
     });

@@ -29,7 +29,7 @@
 
 //   @override
 //   Widget build(BuildContext context) {
-//     print("object");
+//     
 //     return Directionality(
 //       textDirection: app_language_rtl.$! ? TextDirection.rtl : TextDirection.ltr,
 //       child: Scaffold(
@@ -45,8 +45,8 @@
 //         builder: (context,AsyncSnapshot<FlashDealResponse> snapshot) {
 //           if (snapshot.hasError) {
 //             //snapshot.hasError
-//             //print("flashDeal error");
-//             //print(snapshot.error.toString());
+//             //
+//             //
 //             return Center(child: Text("Network Error!"),);
 //           }else
 //             if (snapshot.hasData) {
@@ -112,13 +112,13 @@
 //         ? blank_zeros
 //         : txt;
 
-//     // print(txt + " " + default_length.toString());
-//     // print(newtxt);
+//     // 
+//     // 
 
 //     if (default_length > txt.length) {
 //       newtxt = leading_zeros + newtxt;
 //     }
-//     //print(newtxt);
+//     //
 
 //     return newtxt;
 //   }

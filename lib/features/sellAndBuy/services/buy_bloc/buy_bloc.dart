@@ -21,13 +21,11 @@ class BuyBloc extends Bloc<BuyEvent, BuyState> {
           // isSecondHand: event.isSecondHand,
         );
 
-        // print(products[0].productName);
+        //
 
         emit(BuyProductsForSubCategoryReceived(products: products));
       } catch (e) {
         // emit(SellAddProductErrorState(message: e.toString()));
-        print('error happened in ProductsForSubCategoryRequested');
-        print(e.toString());
       }
     });
 
@@ -51,8 +49,8 @@ class BuyBloc extends Bloc<BuyEvent, BuyState> {
       emit(RatingDataReceived(rating: event.rating));
       // } catch (e) {
       //   // emit(SellAddProductErrorState(message: e.toString()));
-      //   print('error happened in RatingUpdateRequested');
-      //   print(e.toString());
+      //
+      //
       // }
     });
 
@@ -68,8 +66,8 @@ class BuyBloc extends Bloc<BuyEvent, BuyState> {
     //     emit(RatingDataReceived(rating: rating));
     //   } catch (e) {
     //     // emit(SellAddProductErrorState(message: e.toString()));
-    //     print('error happened in RatingUpdateRequested');
-    //     print(e.toString());
+    //
+    //
     //   }
     // });
   }
