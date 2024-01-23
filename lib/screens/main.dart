@@ -8,14 +8,10 @@ import 'package:active_ecommerce_flutter/presenter/bottom_appbar_index.dart';
 import 'package:active_ecommerce_flutter/presenter/cart_counter.dart';
 import 'package:active_ecommerce_flutter/screens/address.dart';
 import 'package:active_ecommerce_flutter/screens/category_list.dart';
-// import 'package:active_ecommerce_flutter/screens/home.dart';
-// import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
-// import 'package:active_ecommerce_flutter/features/profile/screens/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-// import 'package:route_transitions/route_transitions.dart';
 
 import 'my_account/my_account.dart';
 
