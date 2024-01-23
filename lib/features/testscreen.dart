@@ -205,16 +205,38 @@ class _TestWidgetState extends State<TestWidget> {
 
                 var documents = querySnapshot.docs;
 
-                print(documents[0]);
+                print(documents[0].data());
                 print('here3');
+
+                // for (var document in documents) {
+                //   Map<String, dynamic> data = document.data()!;
+                //   if (data['profileData']['address'].isNotEmpty) {
+                //     Map<String, dynamic> data = document.data()!;
+                //     if (data['profileData']['address'][0]['pincode'] ==
+                //         savedData.address[0].pincode) {
+                //       friendsCount++;
+                //       print('count incremented');
+                //     }
+                //   }
+                // }
 
                 for (var document in documents) {
                   Map<String, dynamic> data = document.data();
 
-                  if (data['profileData'] == null) {
-                    continue;
-                  }
-                  print(data['profileData']['address'][0]['pincode']);
+                  print(data.toString());
+
+                  // if (data['profileData'] == null) {
+                  //   continue;
+                  // }
+
+                  // print(data['profileData']['address'][0]['pincode']);
+                  // print(savedData.address[0].pincode);
+
+                  // if (data['profileData']['address'][0]['pincode'] ==
+                  //     savedData.address[0].pincode) {
+                  //   friendsCount++;
+                  //   print('count incremented');
+                  // }
                 }
               },
               child: const Text('Back'),
