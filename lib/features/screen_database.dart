@@ -4,15 +4,6 @@ import 'package:active_ecommerce_flutter/screens/change_language.dart';
 import 'package:active_ecommerce_flutter/screens/setting/setting.dart';
 import 'package:flutter/material.dart';
 
-// import 'package:active_ecommerce_flutter/screens/about_us/about_us.dart';
-// import 'package:active_ecommerce_flutter/screens/calender/calender.dart';
-// import 'package:active_ecommerce_flutter/screens/description/description.dart';
-// import 'package:active_ecommerce_flutter/screens/my_account/my_account.dart';
-// import 'package:active_ecommerce_flutter/sell_screen/more_detail/more_detail.dart';
-// import 'package:active_ecommerce_flutter/sell_screen/product_inventory/product_inventory.dart';
-// import 'package:active_ecommerce_flutter/sell_screen/product_post/product_post.dart';
-// import 'package:active_ecommerce_flutter/sell_screen/seller_platform/seller_platform.dart';
-
 class ScreenDatabase extends StatefulWidget {
   ScreenDatabase({super.key});
 

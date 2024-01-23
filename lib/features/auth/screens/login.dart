@@ -1,8 +1,6 @@
-// translation done.
-
 import 'package:active_ecommerce_flutter/features/auth/screens/add_phone.dart';
 import 'package:active_ecommerce_flutter/features/auth/screens/otp.dart';
-// import 'package:active_ecommerce_flutter/screens/password_otp.dart';
+
 import 'package:active_ecommerce_flutter/features/auth/screens/registration.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_bloc.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_state.dart';
@@ -12,20 +10,18 @@ import 'package:active_ecommerce_flutter/screens/change_language.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart'
     as hiveModels;
 import 'package:active_ecommerce_flutter/features/weather/weather_repository.dart';
-// import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-// import 'package:google_sign_in/google_sign_in.dart';
+
 import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart'
     as permissionHandler;
-// import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+
 import 'package:toast/toast.dart';
 
 import '../../../app_config.dart';

@@ -1,5 +1,3 @@
-// translation done.
-
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/order_item.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/checkout_address_add.dart';

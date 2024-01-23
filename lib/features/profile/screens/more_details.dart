@@ -1,5 +1,3 @@
-// translation done.
-
 import 'package:active_ecommerce_flutter/features/profile/address_list.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/expanded_tile_widget.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_bloc.dart';

@@ -1,5 +1,3 @@
-// translation done.
-
 import 'package:active_ecommerce_flutter/utils/profile_completion_bloc/profile_completion_bloc.dart';
 import 'package:active_ecommerce_flutter/utils/profile_completion_bloc/profile_completion_event.dart';
 import 'package:uuid/uuid.dart';

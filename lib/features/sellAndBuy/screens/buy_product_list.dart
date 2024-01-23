@@ -1,7 +1,3 @@
-// translation done.
-
-// ignore_for_file: non_constant_identifier_names
-
 import 'package:active_ecommerce_flutter/features/profile/screens/edit_profile.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/subSubCategory_filter_item.dart';

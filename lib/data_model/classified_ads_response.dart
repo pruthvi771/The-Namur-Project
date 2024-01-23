@@ -1,12 +1,10 @@
-// To parse this JSON data, do
-//
-//     final classifiedAdsResponse = classifiedAdsResponseFromJson(jsonString);
-
 import 'dart:convert';
 
-ClassifiedAdsResponse classifiedAdsResponseFromJson(String str) => ClassifiedAdsResponse.fromJson(json.decode(str));
+ClassifiedAdsResponse classifiedAdsResponseFromJson(String str) =>
+    ClassifiedAdsResponse.fromJson(json.decode(str));
 
-String classifiedAdsResponseToJson(ClassifiedAdsResponse data) => json.encode(data.toJson());
+String classifiedAdsResponseToJson(ClassifiedAdsResponse data) =>
+    json.encode(data.toJson());
 
 class ClassifiedAdsResponse {
   ClassifiedAdsResponse({
@@ -23,21 +21,23 @@ class ClassifiedAdsResponse {
   bool? success;
   int? status;
 
-  factory ClassifiedAdsResponse.fromJson(Map<String, dynamic> json) => ClassifiedAdsResponse(
-    data: List<ClassifiedAdsMiniData>.from(json["data"].map((x) => ClassifiedAdsMiniData.fromJson(x))),
-    links: Links.fromJson(json["links"]),
-    meta: Meta.fromJson(json["meta"]),
-    success: json["success"],
-    status: json["status"],
-  );
+  factory ClassifiedAdsResponse.fromJson(Map<String, dynamic> json) =>
+      ClassifiedAdsResponse(
+        data: List<ClassifiedAdsMiniData>.from(
+            json["data"].map((x) => ClassifiedAdsMiniData.fromJson(x))),
+        links: Links.fromJson(json["links"]),
+        meta: Meta.fromJson(json["meta"]),
+        success: json["success"],
+        status: json["status"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "data": List<dynamic>.from(data!.map((x) => x.toJson())),
-    "links": links!.toJson(),
-    "meta": meta!.toJson(),
-    "success": success,
-    "status": status,
-  };
+        "data": List<dynamic>.from(data!.map((x) => x.toJson())),
+        "links": links!.toJson(),
+        "meta": meta!.toJson(),
+        "success": success,
+        "status": status,
+      };
 }
 
 class ClassifiedAdsMiniData {
@@ -62,27 +62,28 @@ class ClassifiedAdsMiniData {
   String? category;
   String? unitPrice;
 
-  factory ClassifiedAdsMiniData.fromJson(Map<String, dynamic> json) => ClassifiedAdsMiniData(
-    id: json["id"],
-    name: json["name"],
-    thumbnailImage: json["thumbnail_image"],
-    condition: json["condition"],
-    published: json["published"],
-    status: json["status"],
-    category: json["category"],
-    unitPrice: json["unit_price"],
-  );
+  factory ClassifiedAdsMiniData.fromJson(Map<String, dynamic> json) =>
+      ClassifiedAdsMiniData(
+        id: json["id"],
+        name: json["name"],
+        thumbnailImage: json["thumbnail_image"],
+        condition: json["condition"],
+        published: json["published"],
+        status: json["status"],
+        category: json["category"],
+        unitPrice: json["unit_price"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "thumbnail_image": thumbnailImage,
-    "condition": condition,
-    "published": published,
-    "status": status,
-    "category": category,
-    "unit_price": unitPrice,
-  };
+        "id": id,
+        "name": name,
+        "thumbnail_image": thumbnailImage,
+        "condition": condition,
+        "published": published,
+        "status": status,
+        "category": category,
+        "unit_price": unitPrice,
+      };
 }
 
 class Links {
@@ -99,18 +100,18 @@ class Links {
   dynamic next;
 
   factory Links.fromJson(Map<String, dynamic> json) => Links(
-    first: json["first"],
-    last: json["last"],
-    prev: json["prev"],
-    next: json["next"],
-  );
+        first: json["first"],
+        last: json["last"],
+        prev: json["prev"],
+        next: json["next"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "first": first,
-    "last": last,
-    "prev": prev,
-    "next": next,
-  };
+        "first": first,
+        "last": last,
+        "prev": prev,
+        "next": next,
+      };
 }
 
 class Meta {
@@ -135,26 +136,26 @@ class Meta {
   int? total;
 
   factory Meta.fromJson(Map<String, dynamic> json) => Meta(
-    currentPage: json["current_page"],
-    from: json["from"],
-    lastPage: json["last_page"],
-    links: List<Link>.from(json["links"].map((x) => Link.fromJson(x))),
-    path: json["path"],
-    perPage: json["per_page"],
-    to: json["to"],
-    total: json["total"],
-  );
+        currentPage: json["current_page"],
+        from: json["from"],
+        lastPage: json["last_page"],
+        links: List<Link>.from(json["links"].map((x) => Link.fromJson(x))),
+        path: json["path"],
+        perPage: json["per_page"],
+        to: json["to"],
+        total: json["total"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "current_page": currentPage,
-    "from": from,
-    "last_page": lastPage,
-    "links": List<dynamic>.from(links!.map((x) => x.toJson())),
-    "path": path,
-    "per_page": perPage,
-    "to": to,
-    "total": total,
-  };
+        "current_page": currentPage,
+        "from": from,
+        "last_page": lastPage,
+        "links": List<dynamic>.from(links!.map((x) => x.toJson())),
+        "path": path,
+        "per_page": perPage,
+        "to": to,
+        "total": total,
+      };
 }
 
 class Link {
@@ -169,14 +170,14 @@ class Link {
   bool? active;
 
   factory Link.fromJson(Map<String, dynamic> json) => Link(
-    url: json["url"] == null ? null : json["url"],
-    label: json["label"],
-    active: json["active"],
-  );
+        url: json["url"] == null ? null : json["url"],
+        label: json["label"],
+        active: json["active"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "url": url == null ? null : url,
-    "label": label,
-    "active": active,
-  };
+        "url": url == null ? null : url,
+        "label": label,
+        "active": active,
+      };
 }

@@ -47,7 +47,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'lang_config.dart';
 import 'package:firebase_core/firebase_core.dart';
-// import 'screens/package/packages.dart';
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();

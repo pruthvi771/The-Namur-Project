@@ -1,5 +1,3 @@
-// translation done.
-
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/parent_screen.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';

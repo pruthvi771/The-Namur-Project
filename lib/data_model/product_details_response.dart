@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final productDetailsResponse = productDetailsResponseFromJson(jsonString);
-// https://app.quicktype.io/
 import 'dart:convert';
 
 ProductDetailsResponse productDetailsResponseFromJson(String str) =>

@@ -1,5 +1,3 @@
-// translation done.
-
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
@@ -37,7 +35,6 @@ import 'package:toast/toast.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-// ignore: must_be_immutable
 class Profile extends StatefulWidget {
   Profile({Key? key}) : super(key: key);
 

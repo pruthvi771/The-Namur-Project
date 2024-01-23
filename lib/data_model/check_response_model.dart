@@ -1,12 +1,10 @@
-// To parse this JSON data, do
-//
-//     final responseCheckModel = responseCheckModelFromJson(jsonString);
-
 import 'dart:convert';
 
-ResponseCheckModel responseCheckModelFromJson(String str) => ResponseCheckModel.fromJson(json.decode(str));
+ResponseCheckModel responseCheckModelFromJson(String str) =>
+    ResponseCheckModel.fromJson(json.decode(str));
 
-String responseCheckModelToJson(ResponseCheckModel data) => json.encode(data.toJson());
+String responseCheckModelToJson(ResponseCheckModel data) =>
+    json.encode(data.toJson());
 
 class ResponseCheckModel {
   ResponseCheckModel({
@@ -19,15 +17,16 @@ class ResponseCheckModel {
   String? message;
   String? resultKey;
 
-  factory ResponseCheckModel.fromJson(Map<String, dynamic> json) => ResponseCheckModel(
-    result: json["result"],
-    message: json["message"],
-    resultKey: json["result_key"],
-  );
+  factory ResponseCheckModel.fromJson(Map<String, dynamic> json) =>
+      ResponseCheckModel(
+        result: json["result"],
+        message: json["message"],
+        resultKey: json["result_key"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "result": result,
-    "message": message,
-    "result_key": resultKey,
-  };
+        "result": result,
+        "message": message,
+        "result_key": resultKey,
+      };
 }

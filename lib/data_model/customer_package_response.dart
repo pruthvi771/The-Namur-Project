@@ -1,12 +1,10 @@
-// To parse this JSON data, do
-//
-//     final CustomerPackageResponse = CustomerPackageResponseFromJson(jsonString);
-
 import 'dart:convert';
 
-CustomerPackageResponse customerPackageResponseFromJson(String str) => CustomerPackageResponse.fromJson(json.decode(str));
+CustomerPackageResponse customerPackageResponseFromJson(String str) =>
+    CustomerPackageResponse.fromJson(json.decode(str));
 
-String customerPackageResponseToJson(CustomerPackageResponse data) => json.encode(data.toJson());
+String customerPackageResponseToJson(CustomerPackageResponse data) =>
+    json.encode(data.toJson());
 
 class CustomerPackageResponse {
   CustomerPackageResponse({
@@ -15,13 +13,14 @@ class CustomerPackageResponse {
 
   List<Package>? data;
 
-  factory CustomerPackageResponse.fromJson(Map<String, dynamic> json) => CustomerPackageResponse(
-    data: List<Package>.from(json["data"].map((x) => Package.fromJson(x))),
-  );
+  factory CustomerPackageResponse.fromJson(Map<String, dynamic> json) =>
+      CustomerPackageResponse(
+        data: List<Package>.from(json["data"].map((x) => Package.fromJson(x))),
+      );
 
   Map<String, dynamic> toJson() => {
-    "data": List<dynamic>.from(data!.map((x) => x.toJson())),
-  };
+        "data": List<dynamic>.from(data!.map((x) => x.toJson())),
+      };
 }
 
 class Package {
@@ -32,7 +31,6 @@ class Package {
     this.productUploadLimit,
     this.amount,
     this.price,
-
   });
 
   int? id;
@@ -42,23 +40,21 @@ class Package {
   String? amount;
   var price;
 
-
   factory Package.fromJson(Map<String, dynamic> json) => Package(
-    id: json["id"],
-    name: json["name"],
-    logo: json["logo"],
-    productUploadLimit: json["product_upload_limit"],
-    amount: json["amount"],
-    price: json["price"],
-
-  );
+        id: json["id"],
+        name: json["name"],
+        logo: json["logo"],
+        productUploadLimit: json["product_upload_limit"],
+        amount: json["amount"],
+        price: json["price"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "logo": logo,
-    "product_upload_limit": productUploadLimit,
-    "amount": amount,
-    "price": price,
-  };
+        "id": id,
+        "name": name,
+        "logo": logo,
+        "product_upload_limit": productUploadLimit,
+        "amount": amount,
+        "price": price,
+      };
 }

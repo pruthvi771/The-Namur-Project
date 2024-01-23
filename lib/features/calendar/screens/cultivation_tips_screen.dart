@@ -273,7 +273,7 @@ class _CultivationTipsScreenState extends State<CultivationTipsScreen> {
   }
 }
 
-// var data = [
+
   //   {
   //     'name': 'Leaf Eaters',
   //     'image':

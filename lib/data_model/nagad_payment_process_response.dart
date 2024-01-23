@@ -1,12 +1,10 @@
-// To parse this JSON data, do
-//
-//     final nagadPaymentProcessResponse = nagadPaymentProcessResponseFromJson(jsonString);
-
 import 'dart:convert';
 
-NagadPaymentProcessResponse nagadPaymentProcessResponseFromJson(String str) => NagadPaymentProcessResponse.fromJson(json.decode(str));
+NagadPaymentProcessResponse nagadPaymentProcessResponseFromJson(String str) =>
+    NagadPaymentProcessResponse.fromJson(json.decode(str));
 
-String nagadPaymentProcessResponseToJson(NagadPaymentProcessResponse data) => json.encode(data.toJson());
+String nagadPaymentProcessResponseToJson(NagadPaymentProcessResponse data) =>
+    json.encode(data.toJson());
 
 class NagadPaymentProcessResponse {
   NagadPaymentProcessResponse({
@@ -17,13 +15,14 @@ class NagadPaymentProcessResponse {
   bool? result;
   String? message;
 
-  factory NagadPaymentProcessResponse.fromJson(Map<String, dynamic> json) => NagadPaymentProcessResponse(
-    result: json["result"],
-    message: json["message"],
-  );
+  factory NagadPaymentProcessResponse.fromJson(Map<String, dynamic> json) =>
+      NagadPaymentProcessResponse(
+        result: json["result"],
+        message: json["message"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "result": result,
-    "message": message,
-  };
+        "result": result,
+        "message": message,
+      };
 }

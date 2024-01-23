@@ -1,5 +1,3 @@
-// translation done.
-
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/order_item.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/checkout_details_screen.dart';
@@ -19,8 +17,6 @@ import 'package:intl/intl.dart';
 import 'package:toast/toast.dart';
 
 import 'package:time_range_picker/time_range_picker.dart';
-
-// import '../seller_platform/seller_platform.dart';
 
 class MachineRentForm extends StatefulWidget {
   final String machineId;

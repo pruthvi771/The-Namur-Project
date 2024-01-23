@@ -1,5 +1,3 @@
-// translations done.
-
 import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/machine_rent_form.dart';

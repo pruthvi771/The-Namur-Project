@@ -1,5 +1,3 @@
-// translation done.
-
 import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
 import 'package:active_ecommerce_flutter/features/auth/models/seller_group_item.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';

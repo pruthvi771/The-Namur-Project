@@ -1,5 +1,3 @@
-// translation done.
-
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_add_crop.dart';
 import 'package:active_ecommerce_flutter/features/calendar/screens/cultivation_tips_screen.dart';

@@ -1,12 +1,10 @@
-// To parse this JSON data, do
-//
-//     final shopDetailsResponse = shopDetailsResponseFromJson(jsonString);
-// https://app.quicktype.io/
 import 'dart:convert';
 
-ShopDetailsResponse shopDetailsResponseFromJson(String str) => ShopDetailsResponse.fromJson(json.decode(str));
+ShopDetailsResponse shopDetailsResponseFromJson(String str) =>
+    ShopDetailsResponse.fromJson(json.decode(str));
 
-String shopDetailsResponseToJson(ShopDetailsResponse data) => json.encode(data.toJson());
+String shopDetailsResponseToJson(ShopDetailsResponse data) =>
+    json.encode(data.toJson());
 
 class ShopDetailsResponse {
   ShopDetailsResponse({
@@ -19,17 +17,18 @@ class ShopDetailsResponse {
   bool? success;
   int? status;
 
-  factory ShopDetailsResponse.fromJson(Map<String, dynamic> json) => ShopDetailsResponse(
-    shop:  Shop.fromJson(json["data"]),
-    success: json["success"],
-    status: json["status"],
-  );
+  factory ShopDetailsResponse.fromJson(Map<String, dynamic> json) =>
+      ShopDetailsResponse(
+        shop: Shop.fromJson(json["data"]),
+        success: json["success"],
+        status: json["status"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "data": shop!.toJson(),
-    "success": success,
-    "status": status,
-  };
+        "data": shop!.toJson(),
+        "success": success,
+        "status": status,
+      };
 }
 
 class Shop {
@@ -60,30 +59,30 @@ class Shop {
   int? rating;
 
   factory Shop.fromJson(Map<String, dynamic> json) => Shop(
-    id: json["id"],
-    user_id: json["user_id"],
-    name: json["name"],
-    logo: json["logo"],
-    sliders: List<String>.from(json["sliders"].map((x) => x)),
-    address: json["address"] == null ? null : json["address"],
-    facebook: json["facebook"] == null ? null : json["facebook"],
-    google: json["google"] == null ? null : json["google"],
-    twitter: json["twitter"] == null ? null : json["twitter"],
-    true_rating: json["true_rating"],
-    rating: json["rating"],
-  );
+        id: json["id"],
+        user_id: json["user_id"],
+        name: json["name"],
+        logo: json["logo"],
+        sliders: List<String>.from(json["sliders"].map((x) => x)),
+        address: json["address"] == null ? null : json["address"],
+        facebook: json["facebook"] == null ? null : json["facebook"],
+        google: json["google"] == null ? null : json["google"],
+        twitter: json["twitter"] == null ? null : json["twitter"],
+        true_rating: json["true_rating"],
+        rating: json["rating"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "user_id": user_id,
-    "name": name,
-    "logo": logo,
-    "sliders": List<dynamic>.from(sliders!.map((x) => x)),
-    "address": address == null ? null : address,
-    "facebook": facebook == null ? null : facebook,
-    "google": google == null ? null : google,
-    "twitter": twitter == null ? null : twitter,
-    "true_rating": true_rating,
-    "rating": rating,
-  };
+        "id": id,
+        "user_id": user_id,
+        "name": name,
+        "logo": logo,
+        "sliders": List<dynamic>.from(sliders!.map((x) => x)),
+        "address": address == null ? null : address,
+        "facebook": facebook == null ? null : facebook,
+        "google": google == null ? null : google,
+        "twitter": twitter == null ? null : twitter,
+        "true_rating": true_rating,
+        "rating": rating,
+      };
 }

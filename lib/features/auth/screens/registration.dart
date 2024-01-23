@@ -1,5 +1,3 @@
-//modified
-
 import 'package:active_ecommerce_flutter/app_config.dart';
 import 'package:active_ecommerce_flutter/custom/btn.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
@@ -13,13 +11,11 @@ import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
-// import 'package:active_ecommerce_flutter/repositories/auth_repository.dart';
+
 import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
 import 'package:active_ecommerce_flutter/features/auth/screens/otp.dart';
 import 'package:active_ecommerce_flutter/screens/common_webview_screen.dart';
-// import 'package:active_ecommerce_flutter/features/auth/services/auth_service.text';
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -278,6 +274,13 @@ class _RegistrationState extends State<Registration> {
   Container buildBody(BuildContext context, double _screen_width) {
     return Container(
       color: Colors.white,
+      // decoration: BoxDecoration(
+      //     borderRadius: BorderRadius.only(
+      //       topLeft: Radius.circular(30),
+      //       topRight: Radius.circular(30),
+      //     ),
+      //     // color: MyTheme.noColor.withOpacity(0)),
+      //     color: Colors.red),
       width: MediaQuery.of(context).size.width,
       child: SingleChildScrollView(
         child: Column(

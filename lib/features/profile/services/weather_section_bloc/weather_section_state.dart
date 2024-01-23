@@ -1,11 +1,6 @@
 import 'package:active_ecommerce_flutter/features/weather/models/current_data.dart';
 import 'package:equatable/equatable.dart';
 
-// @immutable
-// sealed class WeatherSectionState {}
-
-// final class WeatherSectionInitial extends WeatherSectionState {}
-
 abstract class WeatherSectionState extends Equatable {}
 
 final class WeatherSectionDataReceived extends WeatherSectionState {

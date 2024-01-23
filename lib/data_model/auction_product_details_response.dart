@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final auctionProductDeatilsResponse = auctionProductDeatilsResponseFromJson(jsonString);
-
 import 'dart:convert';
 
 AuctionProductDetailsResponse auctionProductDetailsResponseFromJson(

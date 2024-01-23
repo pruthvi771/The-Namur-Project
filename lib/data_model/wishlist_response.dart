@@ -1,12 +1,10 @@
-// To parse this JSON data, do
-//
-//     final wishlistResponse = wishlistResponseFromJson(jsonString);
-//https://app.quicktype.io/
 import 'dart:convert';
 
-WishlistResponse wishlistResponseFromJson(String str) => WishlistResponse.fromJson(json.decode(str));
+WishlistResponse wishlistResponseFromJson(String str) =>
+    WishlistResponse.fromJson(json.decode(str));
 
-String wishlistResponseToJson(WishlistResponse data) => json.encode(data.toJson());
+String wishlistResponseToJson(WishlistResponse data) =>
+    json.encode(data.toJson());
 
 class WishlistResponse {
   WishlistResponse({
@@ -19,17 +17,19 @@ class WishlistResponse {
   bool? success;
   int? status;
 
-  factory WishlistResponse.fromJson(Map<String, dynamic> json) => WishlistResponse(
-    wishlist_items: List<WishlistItem>.from(json["data"].map((x) => WishlistItem.fromJson(x))),
-    success: json["success"],
-    status: json["status"],
-  );
+  factory WishlistResponse.fromJson(Map<String, dynamic> json) =>
+      WishlistResponse(
+        wishlist_items: List<WishlistItem>.from(
+            json["data"].map((x) => WishlistItem.fromJson(x))),
+        success: json["success"],
+        status: json["status"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "data": List<dynamic>.from(wishlist_items!.map((x) => x.toJson())),
-    "success": success,
-    "status": status,
-  };
+        "data": List<dynamic>.from(wishlist_items!.map((x) => x.toJson())),
+        "success": success,
+        "status": status,
+      };
 }
 
 class WishlistItem {
@@ -42,14 +42,14 @@ class WishlistItem {
   Product? product;
 
   factory WishlistItem.fromJson(Map<String, dynamic> json) => WishlistItem(
-    id: json["id"],
-    product: Product.fromJson(json["product"]),
-  );
+        id: json["id"],
+        product: Product.fromJson(json["product"]),
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "product": product!.toJson(),
-  };
+        "id": id,
+        "product": product!.toJson(),
+      };
 }
 
 class Product {
@@ -68,18 +68,18 @@ class Product {
   int? rating;
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
-    id: json["id"],
-    name: json["name"],
-    thumbnail_image: json["thumbnail_image"],
-    base_price: json["base_price"],
-    rating: json["rating"],
-  );
+        id: json["id"],
+        name: json["name"],
+        thumbnail_image: json["thumbnail_image"],
+        base_price: json["base_price"],
+        rating: json["rating"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "thumbnail_image": thumbnail_image,
-    "base_price": base_price,
-    "rating": rating,
-  };
+        "id": id,
+        "name": name,
+        "thumbnail_image": thumbnail_image,
+        "base_price": base_price,
+        "rating": rating,
+      };
 }

@@ -1,12 +1,10 @@
-// To parse this JSON data, do
-//
-//     final userInfoResponse = userInfoResponseFromJson(jsonString);
-
 import 'dart:convert';
 
-UserInfoResponse userInfoResponseFromJson(String str) => UserInfoResponse.fromJson(json.decode(str));
+UserInfoResponse userInfoResponseFromJson(String str) =>
+    UserInfoResponse.fromJson(json.decode(str));
 
-String userInfoResponseToJson(UserInfoResponse data) => json.encode(data.toJson());
+String userInfoResponseToJson(UserInfoResponse data) =>
+    json.encode(data.toJson());
 
 class UserInfoResponse {
   UserInfoResponse({
@@ -19,17 +17,19 @@ class UserInfoResponse {
   bool? success;
   int? status;
 
-  factory UserInfoResponse.fromJson(Map<String, dynamic> json) => UserInfoResponse(
-    data: List<UserInformation>.from(json["data"].map((x) => UserInformation.fromJson(x))),
-    success: json["success"],
-    status: json["status"],
-  );
+  factory UserInfoResponse.fromJson(Map<String, dynamic> json) =>
+      UserInfoResponse(
+        data: List<UserInformation>.from(
+            json["data"].map((x) => UserInformation.fromJson(x))),
+        success: json["success"],
+        status: json["status"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "data": List<dynamic>.from(data!.map((x) => x.toJson())),
-    "success": success,
-    "status": status,
-  };
+        "data": List<dynamic>.from(data!.map((x) => x.toJson())),
+        "success": success,
+        "status": status,
+      };
 }
 
 class UserInformation {
@@ -63,35 +63,36 @@ class UserInformation {
   var packageId;
   String? packageName;
 
-  factory UserInformation.fromJson(Map<String, dynamic> json) => UserInformation(
-    name: json["name"],
-    email: json["email"],
-    avatar: json["avatar"],
-    address: json["address"],
-    country: json["country"],
-    state: json["state"],
-    city: json["city"],
-    postalCode: json["postal_code"],
-    phone: json["phone"],
-    balance: json["balance"],
-    remainingUploads: json["remaining_uploads"],
-    packageId: json["package_id"],
-    packageName: json["package_name"],
-  );
+  factory UserInformation.fromJson(Map<String, dynamic> json) =>
+      UserInformation(
+        name: json["name"],
+        email: json["email"],
+        avatar: json["avatar"],
+        address: json["address"],
+        country: json["country"],
+        state: json["state"],
+        city: json["city"],
+        postalCode: json["postal_code"],
+        phone: json["phone"],
+        balance: json["balance"],
+        remainingUploads: json["remaining_uploads"],
+        packageId: json["package_id"],
+        packageName: json["package_name"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "name": name,
-    "email": email,
-    "avatar": avatar,
-    "address": address,
-    "country": country,
-    "state": state,
-    "city": city,
-    "postal_code": postalCode,
-    "phone": phone,
-    "balance": balance,
-    "remaining_uploads": remainingUploads,
-    "package_id": packageId,
-    "package_name": packageName,
-  };
+        "name": name,
+        "email": email,
+        "avatar": avatar,
+        "address": address,
+        "country": country,
+        "state": state,
+        "city": city,
+        "postal_code": postalCode,
+        "phone": phone,
+        "balance": balance,
+        "remaining_uploads": remainingUploads,
+        "package_id": packageId,
+        "package_name": packageName,
+      };
 }

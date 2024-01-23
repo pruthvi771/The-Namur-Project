@@ -38,19 +38,6 @@ class BuyerData {
   }
 }
 
-// address = {
-//   'house number/ flat number and floor'
-//   'street name'
-//   'landmark' (optional)
-//   'city'
-//   'pincode'
-//   'state'
-// }
-
-// checkout -> payment type ->
-
-// user can add multiple addresses
-
 class SellerDataForFriendsScreen {
   final String name;
   final String email;

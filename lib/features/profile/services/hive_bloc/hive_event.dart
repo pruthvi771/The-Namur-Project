@@ -1,10 +1,6 @@
-// part of 'weather_bloc.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-
-// @immutable
-// sealed class WeatherEvent {}
 
 abstract class HiveEvent extends Equatable {
   @override

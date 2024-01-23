@@ -1,12 +1,10 @@
-// To parse this JSON data, do
-//
-//     final countryResponse = countryResponseFromJson(jsonString);
-
 import 'dart:convert';
 
-CountryResponse countryResponseFromJson(String str) => CountryResponse.fromJson(json.decode(str));
+CountryResponse countryResponseFromJson(String str) =>
+    CountryResponse.fromJson(json.decode(str));
 
-String countryResponseToJson(CountryResponse data) => json.encode(data.toJson());
+String countryResponseToJson(CountryResponse data) =>
+    json.encode(data.toJson());
 
 class CountryResponse {
   CountryResponse({
@@ -19,17 +17,19 @@ class CountryResponse {
   bool? success;
   int? status;
 
-  factory CountryResponse.fromJson(Map<String, dynamic> json) => CountryResponse(
-    countries: List<Country>.from(json["data"].map((x) => Country.fromJson(x))),
-    success: json["success"],
-    status: json["status"],
-  );
+  factory CountryResponse.fromJson(Map<String, dynamic> json) =>
+      CountryResponse(
+        countries:
+            List<Country>.from(json["data"].map((x) => Country.fromJson(x))),
+        success: json["success"],
+        status: json["status"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "data": List<dynamic>.from(countries!.map((x) => x.toJson())),
-    "success": success,
-    "status": status,
-  };
+        "data": List<dynamic>.from(countries!.map((x) => x.toJson())),
+        "success": success,
+        "status": status,
+      };
 }
 
 class Country {
@@ -40,7 +40,8 @@ class Country {
     this.status,
   });
 
-  @override toString() => '$name';
+  @override
+  toString() => '$name';
 
   int? id;
   String? code;
@@ -48,16 +49,16 @@ class Country {
   int? status;
 
   factory Country.fromJson(Map<String, dynamic> json) => Country(
-    id: json["id"],
-    code: json["code"],
-    name: json["name"],
-    status: json["status"],
-  );
+        id: json["id"],
+        code: json["code"],
+        name: json["name"],
+        status: json["status"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "code": code,
-    "name": name,
-    "status": status,
-  };
+        "id": id,
+        "code": code,
+        "name": name,
+        "status": status,
+      };
 }

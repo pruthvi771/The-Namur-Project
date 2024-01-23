@@ -1,5 +1,3 @@
-// translation done.
-
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_screen.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';

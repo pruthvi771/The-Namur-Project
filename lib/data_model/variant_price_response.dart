@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final variantPriceResponse = variantPriceResponseFromJson(jsonString);
-
 import 'dart:convert';
 
 VariantPriceResponse variantPriceResponseFromJson(String str) =>

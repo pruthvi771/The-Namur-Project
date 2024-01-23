@@ -1,5 +1,3 @@
-// translation done.
-
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_event.dart';

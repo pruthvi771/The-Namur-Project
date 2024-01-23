@@ -236,5 +236,3 @@ class _TestWidgetState extends State<TestWidget> {
         ));
   }
 }
-
-// https://api.weatherapi.com/v1/current.json?key=424c2d85d4af4f2b8fd230429230110&q=Delhi&aqi=no

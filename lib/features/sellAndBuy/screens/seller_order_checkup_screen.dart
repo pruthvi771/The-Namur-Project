@@ -1,7 +1,3 @@
-// translation done
-
-// ignore_for_file: unnecessary_null_comparison
-
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/order_item.dart';
 import 'package:active_ecommerce_flutter/utils/functions.dart';
 import 'package:cached_network_image/cached_network_image.dart';

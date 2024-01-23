@@ -1,5 +1,3 @@
-// translation done.
-
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

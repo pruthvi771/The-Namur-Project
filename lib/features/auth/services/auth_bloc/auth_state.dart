@@ -4,12 +4,7 @@ import 'package:flutter/material.dart';
 
 @immutable
 abstract class AuthState extends Equatable {}
-//   final String? verificationId;
 
-//   AuthState({this.verificationId});
-// }
-
-// When the user presses the signin or signup button the state is changed to loading first and then to Authenticated.
 class Loading extends AuthState {
   @override
   List<Object?> get props => throw UnimplementedError();

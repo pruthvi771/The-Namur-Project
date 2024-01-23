@@ -1,5 +1,3 @@
-// translation done.
-
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
 import 'package:active_ecommerce_flutter/utils/functions.dart';
 import 'package:active_ecommerce_flutter/utils/imageLinks.dart';

@@ -1,5 +1,3 @@
-// translation done.
-
 import 'dart:ui';
 
 import 'package:active_ecommerce_flutter/custom/box_decorations.dart';

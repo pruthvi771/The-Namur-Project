@@ -1,5 +1,3 @@
-// translation done
-
 import 'package:flutter/services.dart';
 import 'dart:async';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/order_item.dart';

@@ -11,8 +11,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter_expanded_tile/flutter_expanded_tile.dart';
 
-// import '../seller_platform/seller_platform.dart';
-
 class LandScreen extends StatefulWidget {
   const LandScreen({Key? key}) : super(key: key);
 

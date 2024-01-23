@@ -11,7 +11,7 @@ import 'package:active_ecommerce_flutter/data_model/state_response.dart';
 import 'package:active_ecommerce_flutter/data_model/country_response.dart';
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:toast/toast.dart';
-// import 'package:active_ecommerce_flutter/screens/map_location.dart';
+
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 

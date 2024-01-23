@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final productMiniResponse = productMiniResponseFromJson(jsonString);
-//https://app.quicktype.io/
 import 'dart:convert';
 
 ProductMiniResponse productMiniResponseFromJson(String str) =>

@@ -1,12 +1,10 @@
-// To parse this JSON data, do
-//
-//     final walletRechargeResponse = walletRechargeResponseFromJson(jsonString);
-//https://app.quicktype.io/
 import 'dart:convert';
 
-WalletRechargeResponse walletRechargeResponseFromJson(String str) => WalletRechargeResponse.fromJson(json.decode(str));
+WalletRechargeResponse walletRechargeResponseFromJson(String str) =>
+    WalletRechargeResponse.fromJson(json.decode(str));
 
-String walletRechargeResponseToJson(WalletRechargeResponse data) => json.encode(data.toJson());
+String walletRechargeResponseToJson(WalletRechargeResponse data) =>
+    json.encode(data.toJson());
 
 class WalletRechargeResponse {
   WalletRechargeResponse({
@@ -23,21 +21,23 @@ class WalletRechargeResponse {
   bool? result;
   int? status;
 
-  factory WalletRechargeResponse.fromJson(Map<String, dynamic> json) => WalletRechargeResponse(
-    recharges: List<Recharge>.from(json["data"].map((x) => Recharge.fromJson(x))),
-    links: Links.fromJson(json["links"]),
-    meta: Meta.fromJson(json["meta"]),
-    result: json["result"],
-    status: json["status"],
-  );
+  factory WalletRechargeResponse.fromJson(Map<String, dynamic> json) =>
+      WalletRechargeResponse(
+        recharges:
+            List<Recharge>.from(json["data"].map((x) => Recharge.fromJson(x))),
+        links: Links.fromJson(json["links"]),
+        meta: Meta.fromJson(json["meta"]),
+        result: json["result"],
+        status: json["status"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "data": List<dynamic>.from(recharges!.map((x) => x.toJson())),
-    "links": links!.toJson(),
-    "meta": meta!.toJson(),
-    "result": result,
-    "status": status,
-  };
+        "data": List<dynamic>.from(recharges!.map((x) => x.toJson())),
+        "links": links!.toJson(),
+        "meta": meta!.toJson(),
+        "result": result,
+        "status": status,
+      };
 }
 
 class Recharge {
@@ -54,18 +54,18 @@ class Recharge {
   String? date;
 
   factory Recharge.fromJson(Map<String, dynamic> json) => Recharge(
-    amount: json["amount"],
-    payment_method: json["payment_method"],
-    approval_string: json["approval_string"],
-    date: json["date"],
-  );
+        amount: json["amount"],
+        payment_method: json["payment_method"],
+        approval_string: json["approval_string"],
+        date: json["date"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "amount": amount,
-    "payment_method": payment_method,
-    "approval_string": approval_string,
-    "date": date,
-  };
+        "amount": amount,
+        "payment_method": payment_method,
+        "approval_string": approval_string,
+        "date": date,
+      };
 }
 
 class Links {
@@ -82,18 +82,18 @@ class Links {
   dynamic next;
 
   factory Links.fromJson(Map<String, dynamic> json) => Links(
-    first: json["first"],
-    last: json["last"],
-    prev: json["prev"],
-    next: json["next"],
-  );
+        first: json["first"],
+        last: json["last"],
+        prev: json["prev"],
+        next: json["next"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "first": first,
-    "last": last,
-    "prev": prev,
-    "next": next,
-  };
+        "first": first,
+        "last": last,
+        "prev": prev,
+        "next": next,
+      };
 }
 
 class Meta {
@@ -116,22 +116,22 @@ class Meta {
   int? total;
 
   factory Meta.fromJson(Map<String, dynamic> json) => Meta(
-    currentPage: json["current_page"],
-    from: json["from"],
-    lastPage: json["last_page"],
-    path: json["path"],
-    perPage: json["per_page"],
-    to: json["to"],
-    total: json["total"],
-  );
+        currentPage: json["current_page"],
+        from: json["from"],
+        lastPage: json["last_page"],
+        path: json["path"],
+        perPage: json["per_page"],
+        to: json["to"],
+        total: json["total"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "current_page": currentPage,
-    "from": from,
-    "last_page": lastPage,
-    "path": path,
-    "per_page": perPage,
-    "to": to,
-    "total": total,
-  };
+        "current_page": currentPage,
+        "from": from,
+        "last_page": lastPage,
+        "path": path,
+        "per_page": perPage,
+        "to": to,
+        "total": total,
+      };
 }

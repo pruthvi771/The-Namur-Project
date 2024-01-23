@@ -1,12 +1,10 @@
-// To parse this JSON data, do
-//
-//     final cartDeleteResponse = cartDeleteResponseFromJson(jsonString);
-
 import 'dart:convert';
 
-CartDeleteResponse cartDeleteResponseFromJson(String str) => CartDeleteResponse.fromJson(json.decode(str));
+CartDeleteResponse cartDeleteResponseFromJson(String str) =>
+    CartDeleteResponse.fromJson(json.decode(str));
 
-String cartDeleteResponseToJson(CartDeleteResponse data) => json.encode(data.toJson());
+String cartDeleteResponseToJson(CartDeleteResponse data) =>
+    json.encode(data.toJson());
 
 class CartDeleteResponse {
   CartDeleteResponse({
@@ -17,13 +15,14 @@ class CartDeleteResponse {
   bool? result;
   String? message;
 
-  factory CartDeleteResponse.fromJson(Map<String, dynamic> json) => CartDeleteResponse(
-    result: json["result"],
-    message: json["message"],
-  );
+  factory CartDeleteResponse.fromJson(Map<String, dynamic> json) =>
+      CartDeleteResponse(
+        result: json["result"],
+        message: json["message"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "result": result,
-    "message": message,
-  };
+        "result": result,
+        "message": message,
+      };
 }

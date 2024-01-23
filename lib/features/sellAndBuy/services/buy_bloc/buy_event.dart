@@ -60,14 +60,3 @@ class RatingDataRequested extends BuyEvent {
         orderId,
       ];
 }
-
-// class SellerDataRequested extends BuyEvent {
-//   final String sellerId;
-
-//   const SellerDataRequested({
-//     required this.sellerId,
-//   });
-
-//   @override
-//   List<Object> get props => [sellerId];
-// }
