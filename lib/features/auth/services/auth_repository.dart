@@ -346,10 +346,54 @@ class AuthRepository {
         return null;
       }
     } catch (e) {
-      throw Exception('Failed to fetch locations. Please try again.');
+      return null;
     }
   }
 
-  // Future<bool> isGoogleSignInUser(String userId) async {
-  // User? user = await _firebaseAuth.getUserById(userId);
+  Future<PostOfficeResponse?> getLocationsForPincodeFromRapidAPI(
+      {required String pinCode}) async {
+    try {
+      var postOfficeResponse = await http.post(
+        Uri.parse('https://pincode.p.rapidapi.com/'),
+        headers: <String, String>{
+          'content-type': 'application/json',
+          'Content-Type': 'application/json',
+          'X-RapidAPI-Key':
+              'eaa65359f4mshafc281c7573fbe7p1d83eajsncdf2af96ce07',
+          'X-RapidAPI-Host': 'pincode.p.rapidapi.com'
+        },
+        body: jsonEncode(<String, String>{
+          'searchBy': 'pincode',
+          'value': pinCode,
+        }),
+      );
+
+      if (postOfficeResponse.statusCode == 200) {
+        var jsonResponse = json.decode(postOfficeResponse.body);
+
+        List<PostOffice> postOffices = [];
+
+        for (Map postOffice in jsonResponse) {
+          postOffices.add(
+            PostOffice(
+                name: postOffice['office'],
+                circle: postOffice['circle'],
+                district: postOffice['district'],
+                division: postOffice['division'],
+                region: postOffice['region']),
+          );
+        }
+
+        return PostOfficeResponse(
+          message: 'Postal Pincode Offices Service from RapidAPI',
+          status: 'Success',
+          postOffices: postOffices,
+        );
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
 }

@@ -25,32 +25,32 @@ class PostOfficeResponse {
 
 class PostOffice {
   String name;
-  String deliveryStatus;
+  // String deliveryStatus;
   String circle;
   String district;
   String division;
   String region;
-  String block;
+  // String block;
 
   PostOffice({
     required this.name,
-    required this.deliveryStatus,
+    // required this.deliveryStatus,
     required this.circle,
     required this.district,
     required this.division,
     required this.region,
-    required this.block,
+    // required this.block,
   });
 
   factory PostOffice.fromJson(Map<String, dynamic> json) {
     return PostOffice(
       name: json['Name'],
-      deliveryStatus: json['DeliveryStatus'],
+      // deliveryStatus: json['DeliveryStatus'],
       circle: json['Circle'],
       district: json['District'],
       division: json['Division'],
       region: json['Region'],
-      block: json['Block'],
+      // block: json['Block'],
     );
   }
 }

@@ -7,6 +7,8 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'package:http/http.dart' as http;
+
 class TestWidget extends StatefulWidget {
   const TestWidget({super.key});
 
@@ -73,39 +75,6 @@ class _TestWidgetState extends State<TestWidget> {
   }
 
   var animalAndBirdsImages = {
-    // 'honey': 'assets/ikons/animals/honey.png',
-    // 'veterinarian': 'assets/ikons/animals/veterinarian.png',
-    // 'veterinary': 'assets/ikons/animals/veterinary.png',
-    // 'shampoo': 'assets/ikons/animals/shampoo.png',
-    // 'smoker': 'assets/ikons/animals/smoker.png',
-    // 'rabbit': 'assets/ikons/animals/rabbit.png',
-    // 'kennel': 'assets/ikons/animals/kennel.png',
-    // 'milk tank': 'assets/ikons/animals/milk-tank.png',
-    // 'pet food': 'assets/ikons/animals/pet-food.png',
-    // 'pet supplies': 'assets/ikons/animals/pet-supplies.png',
-    // 'dairy products': 'assets/ikons/animals/dairy-products.png',
-    // 'dog-carrier': 'assets/ikons/animals/dog-carrier.png',
-    // 'buffalo': 'assets/ikons/animals/buffalo.png',
-    // 'cow': 'assets/ikons/animals/cow.png',
-    // 'duck': 'assets/ikons/animals/duck.png',
-    // 'bee': 'assets/ikons/animals/bee.png',
-    // 'beehive': 'assets/ikons/animals/beehive.png',
-    // 'hive': 'assets/ikons/animals/hive.png',
-    // 'bird': 'assets/ikons/animals/bird.png',
-    // 'donkey': 'assets/ikons/animals/donkey.png',
-    // 'dog': 'assets/ikons/animals/dog.png',
-    // 'fish': 'assets/ikons/animals/fish.png',
-    // 'pig': 'assets/ikons/animals/pig.png',
-    // 'pork': 'assets/ikons/animals/pork.png',
-    // 'pills': 'assets/ikons/animals/pills.png',
-    // 'sheep': 'assets/ikons/animals/sheep.png',
-    // 'turkey': 'assets/ikons/animals/turkey.png',
-    // 'hen': 'assets/ikons/animals/hen.png',
-    // 'goat': 'assets/ikons/animals/goat.png',
-    // 'fertilizer': 'assets/ikons/animals/fertilizer.png',
-    // 'first aid kit': 'assets/ikons/animals/first-aid-kit.png',
-    'cat': 'assets/ikons/animals/cat.png',
-    'egg': 'assets/ikons/animals/egg.png',
     'emu': 'assets/ikons/animals/emu.png',
     'black cat': 'assets/ikons/animals/black-cat.png',
   };
@@ -192,42 +161,26 @@ class _TestWidgetState extends State<TestWidget> {
                 child: Text('scam')),
             ElevatedButton(
               onPressed: () async {
-                QuerySnapshot<Map<String, dynamic>> querySnapshot =
-                    await _firestore
-                        .collection('buyer')
-                        .where(FieldPath.documentId, isNotEqualTo: null)
-                        .where('profileData', isNotEqualTo: null)
-                        .get();
+                var postOfficeResponse = await http.post(
+                  Uri.parse('https://pincode.p.rapidapi.com/'),
+                  headers: <String, String>{
+                    'content-type': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-RapidAPI-Key':
+                        'eaa65359f4mshafc281c7573fbe7p1d83eajsncdf2af96ce07',
+                    'X-RapidAPI-Host': 'pincode.p.rapidapi.com'
+                  },
+                  body: jsonEncode(<String, String>{
+                    'searchBy': 'pincode',
+                    'value': "110052",
+                  }),
+                );
 
-                var documents = querySnapshot.docs;
+                if (postOfficeResponse.statusCode == 200) {
+                  var jsonResponse = json.decode(postOfficeResponse.body);
+                  print(jsonResponse);
 
-                // for (var document in documents) {
-                //   Map<String, dynamic> data = document.data()!;
-                //   if (data['profileData']['address'].isNotEmpty) {
-                //     Map<String, dynamic> data = document.data()!;
-                //     if (data['profileData']['address'][0]['pincode'] ==
-                //         savedData.address[0].pincode) {
-                //       friendsCount++;
-                //
-                //     }
-                //   }
-                // }
-
-                for (var document in documents) {
-                  Map<String, dynamic> data = document.data();
-
-                  // if (data['profileData'] == null) {
-                  //   continue;
-                  // }
-
-                  //
-                  //
-
-                  // if (data['profileData']['address'][0]['pincode'] ==
-                  //     savedData.address[0].pincode) {
-                  //   friendsCount++;
-                  //
-                  // }
+                  // List<PostOffice> postOffices = [];
                 }
               },
               child: const Text('Back'),
