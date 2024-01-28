@@ -77,6 +77,11 @@ class _CheckoutAddressAddState extends State<CheckoutAddressAdd> {
       },
     );
 
+    ToastComponent.showDialog(
+        AppLocalizations.of(context)!.refresh_page_to_see_new_address,
+        gravity: Toast.center,
+        duration: Toast.lengthLong);
+
     Navigator.pop(context);
   }
 

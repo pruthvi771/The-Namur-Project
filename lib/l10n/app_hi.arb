@@ -1136,5 +1136,7 @@
   "home_made": "घर का बना",
   "other_others": "अन्य",
   "service_temporarily_unavailable": "सेवा अस्थाई रूप से अनुपलब्ध",
-  "pincode":"पिन कोड"
+  "pincode":"पिन कोड",
+"refresh_page_to_see_new_address": "नया पता देखने के लिए पेज को रीफ़्रेश करें"
+
 }

@@ -526,11 +526,23 @@ class _FriendsState extends State<Friends> {
                                                                         Container(
                                                                       width: double
                                                                           .infinity,
-                                                                      child: CachedNetworkImage(
-                                                                          imageUrl: sellersList[index]
-                                                                              .imageURL,
-                                                                          fit: BoxFit
-                                                                              .cover),
+                                                                      child:
+                                                                          CachedNetworkImage(
+                                                                        imageUrl:
+                                                                            sellersList[index].imageURL,
+                                                                        fit: BoxFit
+                                                                            .cover,
+                                                                        errorWidget: (context,
+                                                                            url,
+                                                                            error) {
+                                                                          return Image
+                                                                              .asset(
+                                                                            "assets/default_profile2.png",
+                                                                            fit:
+                                                                                BoxFit.cover,
+                                                                          );
+                                                                        },
+                                                                      ),
                                                                     ),
                                                                   ),
                                                                   SizedBox(
@@ -632,22 +644,62 @@ class _FriendsState extends State<Friends> {
                                                         children: [
                                                           AspectRatio(
                                                             aspectRatio: 1 / 1,
-                                                            child:
-                                                                CachedNetworkImage(
-                                                              imageUrl:
-                                                                  sellersList[
-                                                                          index]
-                                                                      .imageURL,
-                                                              fit: BoxFit.cover,
-                                                            ),
+                                                            child: sellersList[index]
+                                                                            .imageURL ==
+                                                                        null ||
+                                                                    sellersList[index]
+                                                                            .imageURL ==
+                                                                        ""
+                                                                ? CachedNetworkImage(
+                                                                    imageUrl: sellersList[
+                                                                            index]
+                                                                        .imageURL,
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                    errorWidget:
+                                                                        (context,
+                                                                            url,
+                                                                            error) {
+                                                                      return Image
+                                                                          .asset(
+                                                                        "assets/default_profile2.png",
+                                                                        fit: BoxFit
+                                                                            .cover,
+                                                                      );
+                                                                    },
+                                                                  )
+                                                                : Image.asset(
+                                                                    "assets/default_profile2.png",
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                  ),
                                                           ),
                                                         ],
                                                       ),
                                                     ),
                                                   ),
+                                                  // child: Container(
+                                                  //   height: 20,
+                                                  //   width: 20,
+                                                  //   color: Colors.black,
+                                                  // ),
                                                 );
                                               },
                                             );
+                                      // : Container(
+                                      //     height: 200,
+                                      //     child: ListView(
+                                      //       children: [
+                                      //         for (var seller
+                                      //             in sellersList)
+                                      //           Container(
+                                      //             height: 100,
+                                      //             color: Colors.red,
+                                      //             child: Text(seller.name),
+                                      //           ),
+                                      //       ],
+                                      //     ),
+                                      //   );
                                     }
 
                                     return Container(

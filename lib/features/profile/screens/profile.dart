@@ -347,6 +347,11 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
       slivers: [
         BlocListener<ProfileBloc, ProfileState>(
           listener: (context, state) {
+            if (state is ProfileImageUpdated) {
+              BlocProvider.of<ProfileBloc>(context).add(
+                ProfileDataRequested(),
+              );
+            }
             if (state is ProfileDataNotReceived) {
               ToastComponent.showDialog(
                   AppLocalizations.of(context)!.could_not_fetch_data_try_again,

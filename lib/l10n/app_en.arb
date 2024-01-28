@@ -1136,5 +1136,6 @@
 "home_made": "Home Made",
 "other_others": "Others",
 "service_temporarily_unavailable": "Service temporarily unavailable",
-"pincode":"Pincode"
+"pincode":"Pincode",
+"refresh_page_to_see_new_address": "Refresh page to see new address"
 }

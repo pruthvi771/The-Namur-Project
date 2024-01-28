@@ -1136,5 +1136,7 @@
 "home_made": "ಹೋಮ್ ಮೇಡ್",
 "other_others": "ಇತರ",
 "service_temporarily_unavailable":"ತಾತ್ಕಾಲಿಕವಾಗಿ ಸೇವೆ ಲಭ್ಯವಿಲ್ಲ",
-"pincode":"ಪಿನ್‌ಕೋಡ್"
+"pincode":"ಪಿನ್‌ಕೋಡ್",
+"refresh_page_to_see_new_address": "ಹೊಸ ವಿಳಾಸವನ್ನು ನೋಡಲು ಪುಟವನ್ನು ರಿಫ್ರೆಶ್ ಮಾಡಿ"
+
 }
