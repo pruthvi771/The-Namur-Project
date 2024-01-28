@@ -2,6 +2,7 @@ import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/order_item.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/checkout_address_add.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/checkout_screen.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/razorpay_payments.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/checkout_bloc/checkout_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/checkout_bloc/checkout_event.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/checkout_bloc/checkout_state.dart';
@@ -404,10 +405,18 @@ class _CheckoutDetailsState extends State<CheckoutDetails> {
               ),
               GestureDetector(
                 onTap: () {
-                  ToastComponent.showDialog(
-                      AppLocalizations.of(context)!.coming_soon,
-                      gravity: Toast.center,
-                      duration: Toast.lengthLong);
+                  // ToastComponent.showDialog(
+                  //     AppLocalizations.of(context)!.coming_soon,
+                  //     gravity: Toast.center,
+                  //     duration: Toast.lengthLong);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => RazorpayPayment(
+                        amount: 2000000,
+                      ),
+                    ),
+                  );
                 },
                 child: Container(
                   height: 40,

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/razorpay_payments.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -100,65 +101,16 @@ class _TestWidgetState extends State<TestWidget> {
             // Text(downloadLinks.toString()),
             ElevatedButton(
                 onPressed: () async {
-                  FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-                  // Reference to the document in the specified collection
-                  DocumentReference documentReference =
-                      firestore.collection('calendar').doc('cauliflower');
-
-                  // Update the specific field in the document
-                  await documentReference.update({
-                    'pest control': [
-                      {
-                        'stageName': 'Planting Stage',
-                        'pests': [
-                          {
-                            'name': 'Swirling Virus',
-                            'image': 'assets/swirling.png',
-                            'description': 'Swirling Virus is a virus'
-                          },
-                          {
-                            'name': 'Leaf Eaters',
-                            'image':
-                                'https://cdn-developer-wp.arc.dev/wp-content/uploads/2021/08/Adham-Dannaway-home.gif',
-                            'description':
-                                'Leaf Eaters are insects that eat leaves. Leaf Eaters are insects that eat leaves. Leaf Eaters are insects that eat leaves. Leaf Eaters are insects that eat leaves. Leaf Eaters are insects that eat leaves. Leaf Eaters are insects that eat leaves. Leaf Eaters are insects that eat leaves. Leaf Eaters are insects that eat leaves'
-                          },
-                          {
-                            'name': 'Fruit Flies',
-                            'image': 'assets/fruit_flies.png',
-                            'description':
-                                'Fruit Flies are small flying insects that infest fruits'
-                          },
-                        ]
-                      },
-                      {
-                        'stageName': 'Planting Stage 2',
-                        'pests': [
-                          {
-                            'name': 'Swirling Virus',
-                            'image': 'assets/swirling.png',
-                            'description': 'Swirling Virus is a virus'
-                          },
-                          {
-                            'name': 'Leaf Eaters',
-                            'image':
-                                'https://cdn-developer-wp.arc.dev/wp-content/uploads/2021/08/Adham-Dannaway-home.gif',
-                            'description':
-                                'Leaf Eaters are insects that eat leaves. Leaf Eaters are insects that eat leaves. Leaf Eaters are insects that eat leaves. Leaf Eaters are insects that eat leaves. Leaf Eaters are insects that eat leaves. Leaf Eaters are insects that eat leaves. Leaf Eaters are insects that eat leaves. Leaf Eaters are insects that eat leaves'
-                          },
-                          {
-                            'name': 'Fruit Flies',
-                            'image': 'assets/fruit_flies.png',
-                            'description':
-                                'Fruit Flies are small flying insects that infest fruits'
-                          },
-                        ]
-                      },
-                    ]
-                  });
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => RazorpayPayment(
+                        amount: 2,
+                      ),
+                    ),
+                  );
                 },
-                child: Text('scam')),
+                child: Text('payment')),
             ElevatedButton(
               onPressed: () async {
                 var postOfficeResponse = await http.post(

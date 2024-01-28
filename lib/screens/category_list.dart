@@ -120,15 +120,15 @@ class _CategoryListState extends State<CategoryList> {
                       // TitleBar(),
 
                       // screen database button
-                      // TextButton(
-                      //     onPressed: () {
-                      //       Navigator.push(
-                      //         context,
-                      //         MaterialPageRoute(
-                      //             builder: (context) => TestWidget()),
-                      //       );
-                      //     },
-                      //     child: Text('Test Widget')),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => TestWidget()),
+                            );
+                          },
+                          child: Text('Test Widget')),
 
                       SizedBox(height: 10),
 
