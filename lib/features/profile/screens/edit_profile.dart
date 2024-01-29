@@ -187,7 +187,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     List<String> temp = await locationRepository.getTaluksForDistrict(
         districtName: districtName);
     setState(() {
-      taluksList = temp;
+      taluksList = List.from(temp)..sort();
       isTalukEnabled = true;
     });
   }
@@ -198,7 +198,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     List<String> temp =
         await locationRepository.getGramPanchayatsForTaluk(taluk: talukName);
     setState(() {
-      gramPanchayatsList = temp;
+      gramPanchayatsList = List.from(temp)..sort();
       isGramPanchayadEnabled = true;
     });
   }
@@ -209,7 +209,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     List<String> temp = await locationRepository.getVillagesForGramPanchayat(
         gramPanchayat: gramPanchayatName);
     setState(() {
-      villageNamesList = temp;
+      villageNamesList = List.from(temp)..sort();
       isVillageNameEnabled = true;
     });
   }
@@ -283,7 +283,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ..id = savedData.id
       ..updated = savedData.updated
       ..address = [...savedData.address, address]
-      ..kyc = savedData.kyc
       ..land = savedData.land;
 
     await dataBox.put(newData.id, newData);
@@ -365,7 +364,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ..id = savedData.id
         ..updated = savedData.updated
         ..address = savedData.address
-        ..kyc = savedData.kyc
         ..land = [...savedData.land, land];
 
       await dataBox.put(newData.id, newData);
@@ -400,15 +398,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     var savedData = dataBox.get('profile');
 
     if (savedData == null) {
-      var kyc = KYC()
-        ..aadhar = ''
-        ..pan = ''
-        ..gst = '';
       var emptyProfileData = ProfileData()
         ..id = 'profile'
         ..updated = true
         ..address = []
-        ..kyc = kyc
         ..land = [];
       dataBox.put(emptyProfileData.id, emptyProfileData);
     }
@@ -424,80 +417,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   void dispose() {
     super.dispose();
-  }
-
-  void _saveKycToHive(aadhar, pan, gst) async {
-    if (aadhar.length != 12) {
-      ToastComponent.showDialog(localContext.enter_valid_aadhar_number,
-          gravity: Toast.center, duration: Toast.lengthLong);
-      return;
-    }
-
-    var dataBox = Hive.box<ProfileData>('profileDataBox3');
-
-    var savedData = dataBox.get('profile');
-
-    if (savedData != null) {
-      var kyc = KYC()
-        ..aadhar = aadhar
-        ..pan = pan
-        ..gst = gst;
-
-      var newData = ProfileData()
-        ..id = savedData.id
-        ..updated = savedData.updated
-        ..address = savedData.address
-        ..kyc = kyc
-        ..land = savedData.land;
-
-      await dataBox.put(newData.id, newData);
-
-      BlocProvider.of<HiveBloc>(context).add(
-        SyncHiveToFirestoreRequested(profileData: newData),
-      );
-    }
-
-    BlocProvider.of<HiveBloc>(context).add(
-      HiveDataRequested(),
-    );
-
-    BlocProvider.of<ProfileCompletionBloc>(context).add(
-      ProfileCompletionDataRequested(),
-    );
-  }
-
-  void _deleteKycFromHive() async {
-    var dataBox = Hive.box<ProfileData>('profileDataBox3');
-
-    var savedData = dataBox.get('profile');
-
-    if (savedData != null) {
-      var kyc = KYC()
-        ..aadhar = ''
-        ..pan = ''
-        ..gst = '';
-
-      var newData = ProfileData()
-        ..id = savedData.id
-        ..updated = savedData.updated
-        ..address = savedData.address
-        ..kyc = kyc
-        ..land = savedData.land;
-
-      await dataBox.put(newData.id, newData);
-
-      BlocProvider.of<HiveBloc>(context).add(
-        SyncHiveToFirestoreRequested(profileData: newData),
-      );
-    }
-
-    BlocProvider.of<HiveBloc>(context).add(
-      HiveDataRequested(),
-    );
-
-    BlocProvider.of<ProfileCompletionBloc>(context).add(
-      ProfileCompletionDataRequested(),
-    );
   }
 
   void _deleteDataFromHive(DataCollectionType dataCollectionType, index) async {
@@ -528,7 +447,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ..id = savedData!.id
       ..updated = savedData.updated
       ..address = savedData.address
-      ..kyc = savedData.kyc
       ..land = savedData.land;
 
     await dataBox.put(newData.id, newData);
@@ -1393,128 +1311,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ),
                   ),
 
-                  HeadingTextWidget('KYC'),
-
-                  if (state.profileData.kyc.aadhar.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0, vertical: 0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: MyTheme.green_lighter,
-                        ),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                      'Aadhar: ${state.profileData.kyc.aadhar}'),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                      "PAN: ${state.profileData.kyc.pan == '' ? 'N/A' : state.profileData.kyc.pan}"),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                      "GST: ${state.profileData.kyc.gst == '' ? 'N/A' : state.profileData.kyc.gst}"),
-                                ),
-                              ],
-                            ),
-                            // Expanded(child: Text('PAN')),
-                            InkWell(
-                              onTap: () {
-                                _aadharController.text =
-                                    state.profileData.kyc.aadhar;
-                                _panController.text =
-                                    state.profileData.kyc.pan.toString();
-                                _gstController.text =
-                                    state.profileData.kyc.gst.toString();
-                                _deleteKycFromHive();
-                                // _editKyc();
-                              },
-                              child: CircleAvatar(
-                                radius: 12,
-                                backgroundColor: MyTheme.green,
-                                child: Icon(
-                                  Icons.edit,
-                                  size: 15.0,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                  // SizedBox(
-                  //   height: 10,
-                  // ),
-
-                  if (state.profileData.kyc.aadhar.isEmpty)
-                    Column(
-                      children: [
-                        TextFieldWidget('Aadhar Card', _aadharController,
-                            '${localContext.enter} Aadhar Card'),
-                        Row(
-                          children: [
-                            Expanded(child: SizedBox.shrink()),
-                            Text(
-                              '${_aadharController.text.length}/12',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: _aadharController.text.length > 12
-                                    ? Colors.red
-                                    : _aadharController.text.length == 12
-                                        ? Colors.green
-                                        : Colors.grey,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        TextFieldWidget('PAN Card', _panController,
-                            '${localContext.enter} PAN Card'),
-                        TextFieldWidget('GST', _gstController,
-                            '${localContext.enter} GST Number'),
-                        Row(
-                          children: [
-                            Expanded(child: SizedBox()),
-                            TextButton(
-                              child: Text(localContext.save_ucf),
-                              onPressed: () {
-                                _saveKycToHive(_aadharController.text,
-                                    _panController.text, _gstController.text);
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-
-                  // divider
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8, bottom: 5),
-                    child: Divider(
-                      // color: MyTheme.grey_153,
-                      thickness: 2,
-                    ),
-                  ),
-
                   HeadingTextWidget(localContext.address_details),
                   Column(
                     children: List.generate(
@@ -1640,7 +1436,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     hintText: localContext.search,
                                     context: context,
                                     dropdownValue: districtsDropdownValue,
-                                    listOfItems: districtSnapshot.data!,
+                                    // listOfItems: districtSnapshot.data!,
+                                    listOfItems:
+                                        List.from(districtSnapshot.data!)
+                                          ..sort(),
                                     searchController: textEditingController,
                                     onChanged: (String? newValue) {
                                       setState(() {
@@ -1805,8 +1604,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                            '${localContext.village}: ${item.village}'),
+                                        Text(item.village),
                                         Text('Syno: ${item.syno}'),
                                         Text(
                                             '${localContext.area}: ${item.area.toString()}'),

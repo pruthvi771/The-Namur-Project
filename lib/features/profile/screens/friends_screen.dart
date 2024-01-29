@@ -644,35 +644,24 @@ class _FriendsState extends State<Friends> {
                                                         children: [
                                                           AspectRatio(
                                                             aspectRatio: 1 / 1,
-                                                            child: sellersList[index]
-                                                                            .imageURL ==
-                                                                        null ||
-                                                                    sellersList[index]
-                                                                            .imageURL ==
-                                                                        ""
-                                                                ? CachedNetworkImage(
-                                                                    imageUrl: sellersList[
-                                                                            index]
-                                                                        .imageURL,
-                                                                    fit: BoxFit
-                                                                        .cover,
-                                                                    errorWidget:
-                                                                        (context,
-                                                                            url,
-                                                                            error) {
-                                                                      return Image
-                                                                          .asset(
-                                                                        "assets/default_profile2.png",
-                                                                        fit: BoxFit
-                                                                            .cover,
-                                                                      );
-                                                                    },
-                                                                  )
-                                                                : Image.asset(
-                                                                    "assets/default_profile2.png",
-                                                                    fit: BoxFit
-                                                                        .cover,
-                                                                  ),
+                                                            child:
+                                                                CachedNetworkImage(
+                                                              imageUrl:
+                                                                  sellersList[
+                                                                          index]
+                                                                      .imageURL,
+                                                              fit: BoxFit.cover,
+                                                              errorWidget:
+                                                                  (context, url,
+                                                                      error) {
+                                                                return Image
+                                                                    .asset(
+                                                                  "assets/default_profile2.png",
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                );
+                                                              },
+                                                            ),
                                                           ),
                                                         ],
                                                       ),

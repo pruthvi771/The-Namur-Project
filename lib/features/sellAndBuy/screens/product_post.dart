@@ -556,7 +556,7 @@ class _ProductPostState extends State<ProductPost> {
         productCategoryEnum == CategoryEnum.attachments ||
         productCategoryEnum == CategoryEnum.sparesService) {
       selectedQuantityUnit = listOfQuantityUnits[0];
-      showQuantityDropdown = false;
+      showQuantityDropdown = true;
     }
     if (_selectedItem == "On Rent") {
       machinePriceHintText = 'Price (per hr)';
@@ -606,37 +606,12 @@ class _ProductPostState extends State<ProductPost> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.add,
-                                        color: MyTheme.primary_color,
-                                      ),
-                                      Text(
-                                        AppLocalizations.of(context)!
-                                            .add_featured_image,
-                                        style: TextStyle(
-                                            color: MyTheme.primary_color,
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  ),
-                                  Text(
-                                    "Supported formats are JPG and PNG",
-                                    style: TextStyle(
-                                      color: MyTheme.dark_grey,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  Divider(),
                                   InkWell(
                                     onTap: () {
                                       selectImages();
                                     },
                                     child: Container(
-                                      height: 110,
+                                      height: 170,
                                       width: MediaQuery.of(context).size.width,
                                       child: Image.asset(
                                         "assets/imgplaceholder.png",
@@ -705,37 +680,12 @@ class _ProductPostState extends State<ProductPost> {
                           : Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.add,
-                                      color: MyTheme.primary_color,
-                                    ),
-                                    Text(
-                                      AppLocalizations.of(context)!
-                                          .add_featured_image,
-                                      style: TextStyle(
-                                          color: MyTheme.primary_color,
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                                Text(
-                                  "Supported formats are JPG and PNG",
-                                  style: TextStyle(
-                                    color: MyTheme.dark_grey,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                Divider(),
                                 InkWell(
                                   onTap: () {
                                     selectImages();
                                   },
                                   child: Container(
-                                    height: 110,
+                                    height: 170,
                                     width: MediaQuery.of(context).size.width,
                                     child: Image.asset(
                                       "assets/imgplaceholder.png",
@@ -748,37 +698,12 @@ class _ProductPostState extends State<ProductPost> {
                       : Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.add,
-                                  color: MyTheme.primary_color,
-                                ),
-                                Text(
-                                  AppLocalizations.of(context)!
-                                      .add_featured_image,
-                                  style: TextStyle(
-                                      color: MyTheme.primary_color,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            Text(
-                              "Supported formats are JPG and PNG",
-                              style: TextStyle(
-                                color: MyTheme.dark_grey,
-                                fontSize: 14,
-                              ),
-                            ),
-                            Divider(),
                             InkWell(
                               onTap: () {
                                 selectImages();
                               },
                               child: Container(
-                                height: 110,
+                                height: 170,
                                 width: MediaQuery.of(context).size.width,
                                 child: Image.asset(
                                   "assets/imgplaceholder.png",
@@ -790,6 +715,28 @@ class _ProductPostState extends State<ProductPost> {
                         ),
                 ),
               ),
+
+        // product name
+        Padding(
+          padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+          child: Container(
+            decoration: BoxDecoration(
+                color: MyTheme.field_color,
+                borderRadius: BorderRadius.circular(10)),
+            child: TextFormField(
+              controller: _nameController,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.only(left: 15),
+                hintText: AppLocalizations.of(context)!.product_name_ucf,
+                hintStyle: TextStyle(
+                    color: Colors.grey[600],
+                    fontWeight: FontWeight.w400,
+                    fontFamily: 'Poppins'),
+              ),
+            ),
+          ),
+        ),
 
         if (parentEnum == ParentEnum.machine)
           BlocBuilder<HiveBloc, HiveState>(
@@ -804,7 +751,7 @@ class _ProductPostState extends State<ProductPost> {
                 }
 
                 return Padding(
-                  padding: const EdgeInsets.only(bottom: 20),
+                  padding: const EdgeInsets.only(top: 20),
                   child: Column(
                     children: [
                       Padding(
@@ -959,28 +906,6 @@ class _ProductPostState extends State<ProductPost> {
               }
             },
           ),
-
-        // product name
-        Padding(
-          padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-          child: Container(
-            decoration: BoxDecoration(
-                color: MyTheme.field_color,
-                borderRadius: BorderRadius.circular(10)),
-            child: TextFormField(
-              controller: _nameController,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.only(left: 15),
-                hintText: AppLocalizations.of(context)!.product_name_ucf,
-                hintStyle: TextStyle(
-                    color: Colors.grey[600],
-                    fontWeight: FontWeight.w400,
-                    fontFamily: 'Poppins'),
-              ),
-            ),
-          ),
-        ),
 
         // product category
         Container(

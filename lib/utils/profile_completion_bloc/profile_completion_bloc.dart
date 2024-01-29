@@ -26,11 +26,11 @@ class ProfileCompletionBloc
       var tempProgress = 0.0;
 
       if (!(profileData.address.length == 0)) {
-        tempProgress += 0.2;
+        tempProgress += 0.25;
       }
-      if (profileData.kyc.aadhar.isNotEmpty) {
-        tempProgress += 0.2;
-      }
+      // if (profileData.kyc.aadhar.isNotEmpty) {
+      //   tempProgress += 0.2;
+      // }
       int cropCount = 0;
 
       for (Land land in profileData.land) {
@@ -38,7 +38,7 @@ class ProfileCompletionBloc
       }
 
       if (cropCount > 0) {
-        tempProgress += 0.2;
+        tempProgress += 0.25;
       }
 
       int machineCount = 0;
@@ -48,11 +48,11 @@ class ProfileCompletionBloc
       }
 
       if (machineCount > 0) {
-        tempProgress += 0.2;
+        tempProgress += 0.25;
       }
 
       if (!(profileData.land.length == 0)) {
-        tempProgress += 0.2;
+        tempProgress += 0.25;
       }
 
       emit(ProfileCompletionDataReceived(profileProgress: tempProgress));

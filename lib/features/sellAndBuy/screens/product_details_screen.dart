@@ -1,5 +1,6 @@
 import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/product_image_expanded.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/buy_repository.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_event.dart';
@@ -28,6 +29,13 @@ class ProductDetails extends StatefulWidget {
 
 class _ProductDetailsState extends State<ProductDetails> {
   initState() {
+    if (widget.sellProduct.productDescription.length < 100) {
+      isDescriptionExpanded = true;
+      showDescExpandButton = false;
+    } else {
+      isDescriptionExpanded = false;
+      showDescExpandButton = true;
+    }
     _getSellerData = getSellerDataFuture();
     ratingDataFuture = getRating();
     BlocProvider.of<CartBloc>(context).add(
@@ -38,6 +46,8 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   late Future<BuyerData> _getSellerData;
   late Future ratingDataFuture;
+  late bool isDescriptionExpanded;
+  late bool showDescExpandButton;
 
   Future<BuyerData> getSellerDataFuture() async {
     BuyerData user = await BuyRepository()
@@ -137,15 +147,30 @@ class _ProductDetailsState extends State<ProductDetails> {
             items: widget.sellProduct.imageURL.map((fileURL) {
               return Builder(
                 builder: (BuildContext context) {
-                  return Container(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(5),
-                      ),
-                      child: CachedNetworkImage(
-                        imageUrl: fileURL,
-                        fit: BoxFit.cover,
-                        width: MediaQuery.of(context).size.width,
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProductImageExpanded(
+                            sellProduct: widget.sellProduct,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(5),
+                        ),
+                        child: Hero(
+                          tag: 'carousel',
+                          child: CachedNetworkImage(
+                            imageUrl: fileURL,
+                            fit: BoxFit.fitHeight,
+                            width: MediaQuery.of(context).size.width,
+                          ),
+                        ),
                       ),
                     ),
                   );
@@ -299,152 +324,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 fontFamily: 'Poppins'),
                           ),
                         );
-                      // if (state is CartUpdated)
-                      //   return Padding(
-                      //   padding: const EdgeInsets.only(top: 5, bottom: 5),
-                      //   child: Row(
-                      //     children: [
-                      //       Container(
-                      //         width: 35,
-                      //         height: 35,
-                      //         decoration: BoxDecoration(
-                      //           border: Border.all(
-                      //             color: MyTheme.primary_color,
-                      //             width: 2.0,
-                      //           ),
-                      //           borderRadius: BorderRadius.circular(8.0),
-                      //         ),
-                      //         child: TextButton(
-                      //           onPressed: () {
-                      //             BlocProvider.of<CartBloc>(context).add(
-                      //               UpdateCartQuantityRequested(
-                      //                 productId: widget.sellProduct.id,
-                      //                 currentQuantity: state.quantity,
-                      //                 type: UpdateCartQuantityType.decrement,
-                      //               ),
-                      //             );
-                      //           },
-                      //           style: ElevatedButton.styleFrom(
-                      //             padding: EdgeInsets.all(0),
-                      //             elevation: 0,
-                      //           ),
-                      //           child: Icon(
-                      //             Icons.remove,
-                      //             color: MyTheme.primary_color,
-                      //           ),
-                      //         ),
-                      //       ),
-                      //       Padding(
-                      //         padding:
-                      //             const EdgeInsets.symmetric(horizontal: 12),
-                      //         child: Text(
-                      //           state.quantity.toString(),
-                      //           style: TextStyle(
-                      //               color: Colors.grey[700],
-                      //               fontSize: 20,
-                      //               fontWeight: FontWeight.w700,
-                      //               letterSpacing: .5,
-                      //               fontFamily: 'Poppins'),
-                      //         ),
-                      //       ),
-                      //       Container(
-                      //         width: 35,
-                      //         height: 35,
-                      //         decoration: BoxDecoration(
-                      //           border: Border.all(
-                      //             color:
-                      //                 MyTheme.primary_color, // Border color
-                      //             width: 2.0, // Border width
-                      //           ),
-                      //           borderRadius: BorderRadius.circular(
-                      //               8.0), // Border radius
-                      //         ),
-                      //         child: TextButton(
-                      //           onPressed: () {
-                      //             BlocProvider.of<CartBloc>(context).add(
-                      //               UpdateCartQuantityRequested(
-                      //                 productId: widget.sellProduct.id,
-                      //                 currentQuantity: state.quantity,
-                      //                 type: UpdateCartQuantityType.increment,
-                      //               ),
-                      //             );
-                      //           },
-                      //           style: ElevatedButton.styleFrom(
-                      //             padding: EdgeInsets.all(0),
-                      //             elevation: 0,
-                      //           ),
-                      //           child: Icon(
-                      //             Icons.add,
-                      //             color: MyTheme.primary_color,
-                      //           ),
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // );
-                      // if (state is CartQuantityLoading)
-                      //   return Padding(
-                      //     padding: const EdgeInsets.only(top: 5, bottom: 5),
-                      //     child: Row(
-                      //       children: [
-                      //         Container(
-                      //           width: 35,
-                      //           height: 35,
-                      //           decoration: BoxDecoration(
-                      //             border: Border.all(
-                      //               color: MyTheme.primary_color,
-                      //               width: 2.0,
-                      //             ),
-                      //             borderRadius: BorderRadius.circular(8.0),
-                      //           ),
-                      //           child: TextButton(
-                      //             onPressed: () {},
-                      //             style: ElevatedButton.styleFrom(
-                      //               padding: EdgeInsets.all(0),
-                      //               elevation: 0,
-                      //             ),
-                      //             child: Icon(
-                      //               Icons.remove,
-                      //               color: MyTheme.primary_color,
-                      //             ),
-                      //           ),
-                      //         ),
-                      //         Container(
-                      //             height: 40,
-                      //             width: 40,
-                      //             padding: const EdgeInsets.symmetric(
-                      //                 horizontal: 10, vertical: 10),
-                      //             child: Center(
-                      //               child: CircularProgressIndicator(
-                      //                 color: MyTheme.primary_color,
-                      //                 strokeWidth: 3,
-                      //               ),
-                      //             )),
-                      //         Container(
-                      //           width: 35,
-                      //           height: 35,
-                      //           decoration: BoxDecoration(
-                      //             border: Border.all(
-                      //               color: MyTheme.primary_color,
-                      //               width: 2.0,
-                      //             ),
-                      //             borderRadius: BorderRadius.circular(8.0),
-                      //           ),
-                      //           child: TextButton(
-                      //             onPressed: () {},
-                      //             style: ElevatedButton.styleFrom(
-                      //               padding: EdgeInsets.all(0),
-                      //               elevation: 0,
-                      //             ),
-                      //             child: Icon(
-                      //               Icons.add,
-                      //               color: MyTheme.primary_color,
-                      //             ),
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   );
                       return ElevatedButton(
                         onPressed: () {
                           BlocProvider.of<CartBloc>(context).add(
@@ -475,7 +354,8 @@ class _ProductDetailsState extends State<ProductDetails> {
         ),
 
         // description
-        Container(
+        AnimatedContainer(
+          duration: Duration(milliseconds: 1000),
           margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
@@ -486,6 +366,9 @@ class _ProductDetailsState extends State<ProductDetails> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(
+                height: 5,
+              ),
               Text(
                 AppLocalizations.of(context)!.description_ucf,
                 // "aksbfkjafknangg englkng lkegnang kegne",
@@ -496,10 +379,15 @@ class _ProductDetailsState extends State<ProductDetails> {
                     letterSpacing: .5,
                     fontFamily: 'Poppins'),
               ),
+              SizedBox(
+                height: 5,
+              ),
               Padding(
                 padding: const EdgeInsets.only(top: 5, bottom: 5, left: 8),
                 child: Text(
-                  widget.sellProduct.productDescription,
+                  isDescriptionExpanded
+                      ? widget.sellProduct.productDescription
+                      : widget.sellProduct.productDescription.substring(0, 100),
                   style: TextStyle(
                       fontSize: 15,
                       height: 1.4,
@@ -507,6 +395,32 @@ class _ProductDetailsState extends State<ProductDetails> {
                       fontFamily: 'Poppins'),
                 ),
               ),
+              if (showDescExpandButton)
+                Container(
+                  height: 30,
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () {
+                        setState(() {
+                          isDescriptionExpanded = !isDescriptionExpanded;
+                        });
+                      },
+                      child: Text(
+                        isDescriptionExpanded
+                            ? AppLocalizations.of(context)!.show_less
+                            : AppLocalizations.of(context)!.show_more,
+                        // "aksbfkjafknangg englkng lkegnang kegne",
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: MyTheme.primary_color,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: .5,
+                            fontFamily: 'Poppins'),
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
         ),

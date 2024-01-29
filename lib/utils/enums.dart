@@ -4,7 +4,7 @@ enum ProductType {
   // onRent,
 }
 
-enum ProductQuantity { units, wkg, w500g, w250g, ltr, mtr, acre, feet }
+enum ProductQuantity { units, wkg, w500g, w250g, ltr, mtr, acre, feet, sqFt }
 
 var nameForProductQuantity = {
   ProductQuantity.units: "Units",
@@ -15,6 +15,7 @@ var nameForProductQuantity = {
   ProductQuantity.mtr: "Mtr",
   ProductQuantity.acre: "Acre",
   ProductQuantity.feet: "Feet",
+  ProductQuantity.sqFt: "Sq Ft",
 };
 
 enum ParentEnum {

@@ -405,18 +405,18 @@ class _CheckoutDetailsState extends State<CheckoutDetails> {
               ),
               GestureDetector(
                 onTap: () {
-                  // ToastComponent.showDialog(
-                  //     AppLocalizations.of(context)!.coming_soon,
-                  //     gravity: Toast.center,
-                  //     duration: Toast.lengthLong);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => RazorpayPayment(
-                        amount: 2000000,
-                      ),
-                    ),
-                  );
+                  ToastComponent.showDialog(
+                      AppLocalizations.of(context)!.coming_soon,
+                      gravity: Toast.center,
+                      duration: Toast.lengthLong);
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => RazorpayPayment(
+                  //       amount: 2000000,
+                  //     ),
+                  //   ),
+                  // );
                 },
                 child: Container(
                   height: 40,

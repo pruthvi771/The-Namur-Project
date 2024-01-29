@@ -46,15 +46,10 @@ class _MoreDetailsState extends State<MoreDetails> {
     var savedData = dataBox.get('profile');
 
     if (savedData == null) {
-      var kyc = KYC()
-        ..aadhar = ''
-        ..pan = ''
-        ..gst = '';
       var emptyProfileData = ProfileData()
         ..id = 'profile'
         ..updated = true
         ..address = []
-        ..kyc = kyc
         ..land = [];
       dataBox.put(emptyProfileData.id, emptyProfileData);
     }
@@ -161,15 +156,10 @@ class _MoreDetailsState extends State<MoreDetails> {
           var savedData = dataBox.get('profile');
 
           if (savedData == null) {
-            var kyc = KYC()
-              ..aadhar = ''
-              ..pan = ''
-              ..gst = '';
             var emptyProfileData = ProfileData()
               ..id = 'profile'
               ..updated = true
               ..address = []
-              ..kyc = kyc
               ..land = [];
             dataBox.put(emptyProfileData.id, emptyProfileData);
           }
@@ -347,122 +337,6 @@ class _MoreDetailsState extends State<MoreDetails> {
 
             SizedBox(
               height: 20,
-            ),
-
-            //KYC Section
-            ExpandedTileWidget(
-              controller: _kycController,
-              title: 'KYC',
-              children: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5, left: 7, right: 7),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                              child: Text(
-                            '1. Adhaar Card',
-                            style: TextStyle(
-                              fontSize: 13,
-                            ),
-                          )),
-                          (profileData!.kyc.aadhar.isNotEmpty)
-                              ? Expanded(
-                                  child: Text(
-                                  profileData!.kyc.aadhar,
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                  ),
-                                ))
-                              : Expanded(
-                                  child: Text(
-                                  AppLocalizations.of(context)!.not_added,
-                                  style: TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 13,
-                                  ),
-                                )),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5, left: 7, right: 7),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                              child: Text(
-                            '2. PAN Card',
-                            style: TextStyle(
-                              fontSize: 13,
-                            ),
-                          )),
-                          (profileData!.kyc.pan.isNotEmpty)
-                              ? Expanded(
-                                  child: Text(
-                                  profileData!.kyc.pan,
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                  ),
-                                ))
-                              : Expanded(
-                                  child: Text(
-                                  AppLocalizations.of(context)!.not_added,
-                                  style: TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 13,
-                                  ),
-                                )),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5, left: 7, right: 7),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                              child: Text(
-                            '3. GST',
-                            style: TextStyle(
-                              fontSize: 13,
-                            ),
-                          )),
-                          (profileData!.kyc.gst.isNotEmpty)
-                              ? Expanded(
-                                  child: Text(
-                                  profileData!.kyc.gst,
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                  ),
-                                ))
-                              : Expanded(
-                                  child: Text(
-                                  AppLocalizations.of(context)!.not_added,
-                                  style: TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 13,
-                                  ),
-                                )),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 15,
             ),
 
             //Address Section

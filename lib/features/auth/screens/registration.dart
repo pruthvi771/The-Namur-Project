@@ -573,13 +573,19 @@ class _RegistrationState extends State<Registration> {
               padding: const EdgeInsets.only(top: 5.0, left: 20, right: 20),
               child: Container(
                 height: 44,
-                child: Btn.minWidthFixHeight(
-                  minWidth: MediaQuery.of(context).size.width,
-                  height: 50,
-                  color: MyTheme.primary_color,
-                  shape: RoundedRectangleBorder(
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(10.0))),
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _isAgree!
+                      ? () {
+                          onPressSignUp(context);
+                        }
+                      : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: MyTheme.primary_color,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
                   child: Text(
                     // 'Sign Up with Phone',
                     AppLocalizations.of(context)!.sign_up_ucf,
@@ -588,11 +594,6 @@ class _RegistrationState extends State<Registration> {
                         fontSize: 14,
                         fontWeight: FontWeight.w600),
                   ),
-                  onPressed: _isAgree!
-                      ? () {
-                          onPressSignUp(context);
-                        }
-                      : null,
                 ),
               ),
             ),

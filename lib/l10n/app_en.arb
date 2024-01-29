@@ -1137,5 +1137,7 @@
 "other_others": "Others",
 "service_temporarily_unavailable": "Service temporarily unavailable",
 "pincode":"Pincode",
-"refresh_page_to_see_new_address": "Refresh page to see new address"
+"refresh_page_to_see_new_address": "Refresh page to see new address",
+"show_more": "Show More",
+"show_less": "Show Less"
 }

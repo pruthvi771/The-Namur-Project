@@ -230,7 +230,7 @@ var imageForNameCloud = {
   'olive oil':
       'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FfruitsAndVeg%2FOlive%20Oil.png?alt=media&token=12f5ceea-58a5-4c0e-bae5-9fee7f3096c7',
   'onion':
-      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FfruitsAndVeg%2FOnion.png?alt=media&token=fd5aa0c1-6bb2-486c-b264-9e6ab52ee3f9',
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FfruitsAndVeg%2F01_onion.png?alt=media&token=c5e8bf08-a199-412d-af4a-3e06e6e7ae62',
   'orange':
       'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FfruitsAndVeg%2FOrange.png?alt=media&token=966f0f77-b485-43a6-b24a-aa2e8e9e1c46',
   'mushroom':
@@ -322,7 +322,7 @@ var imageForNameCloud = {
   'brush cutter':
       'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FmanAndMcs%2F05_brush%20cutter.png?alt=media&token=8bc3f242-9a0c-439d-91d3-7cc6ae3d4da6',
   'lawnmower':
-      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FmanAndMcs%2F05_brush%20cutter.png?alt=media&token=8bc3f242-9a0c-439d-91d3-7cc6ae3d4da6',
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FmanAndMcs%2F05_lawnmower.png?alt=media&token=af931098-805c-4976-8d2e-ce8ae5b051af',
   'water pump':
       'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FmanAndMcs%2F05_water%20pump.png?alt=media&token=704882fd-49f9-4430-aaf9-0d3934813055',
   'welding':
@@ -386,7 +386,10 @@ var imageForNameCloud = {
   'loader':
       'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FmanAndMcs%2FLoader.png?alt=media&token=b1613855-0554-4123-84ad-15d0133a5e29',
   'jcb':
-      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FmanAndMcs%2FLoader.png?alt=media&token=b1613855-0554-4123-84ad-15d0133a5e29',
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FmanAndMcs%2F02_JCB.png?alt=media&token=c90db698-f547-47fa-b226-ee4866849b7e',
+  'tractor':
+      'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FmanAndMcs%2FTractor.png?alt=media&token=42e725b1-8142-4258-a1a4-caafd6cf9ee8',
+
   'tractor big mini':
       'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FmanAndMcs%2FTractor.png?alt=media&token=42e725b1-8142-4258-a1a4-caafd6cf9ee8',
   'car':

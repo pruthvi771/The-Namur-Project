@@ -279,11 +279,6 @@ class FirestoreRepository {
             ..pincode = item['pincode'])
           .toList();
 
-      var kyc = KYC()
-        ..aadhar = data['profileData']['kyc']['aadhar']
-        ..pan = data['profileData']['kyc']['pan']
-        ..gst = data['profileData']['kyc']['gst'];
-
       var lands = (data['profileData']['land'] as List)
           .map((item) => Land()
             ..village = item['village']
@@ -315,7 +310,6 @@ class FirestoreRepository {
         ..id = 'profile'
         ..updated = updated
         ..address = addresses
-        ..kyc = kyc
         ..land = lands;
 
       var dataBox = Hive.box<ProfileData>('profileDataBox3');
@@ -343,11 +337,6 @@ class FirestoreRepository {
                       'pincode': address.pincode
                     })
                 .toList(),
-            'kyc': {
-              'aadhar': profileData.kyc.aadhar,
-              'pan': profileData.kyc.pan,
-              'gst': profileData.kyc.gst,
-            },
             'land': profileData.land
                 .map((land) => {
                       'village': land.village,
@@ -393,16 +382,10 @@ class FirestoreRepository {
 
     var dataBox = Hive.box<ProfileData>('profileDataBox3');
 
-    var kyc = KYC()
-      ..aadhar = ''
-      ..pan = ''
-      ..gst = '';
-
     var emptyProfileData = ProfileData()
       ..id = 'profile'
       ..updated = true
       ..address = isAddressAvailable ? [address] : []
-      ..kyc = kyc
       ..land = [];
 
     dataBox.put(emptyProfileData.id, emptyProfileData);

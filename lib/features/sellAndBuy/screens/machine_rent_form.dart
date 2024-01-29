@@ -327,6 +327,21 @@ class _MachineRentFormState extends State<MachineRentForm> {
               fontFamily: 'Poppins'),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.keyboard_arrow_left,
+              size: 35,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          SizedBox(
+            width: 10,
+          ),
+        ],
       ),
       bottomSheet: Container(
         height: 60,

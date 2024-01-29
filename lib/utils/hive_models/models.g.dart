@@ -1,4 +1,10 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
 part of 'models.dart';
+
+// **************************************************************************
+// TypeAdapterGenerator
+// **************************************************************************
 
 class AddressAdapter extends TypeAdapter<Address> {
   @override
@@ -45,48 +51,9 @@ class AddressAdapter extends TypeAdapter<Address> {
           typeId == other.typeId;
 }
 
-class KYCAdapter extends TypeAdapter<KYC> {
-  @override
-  final int typeId = 1;
-
-  @override
-  KYC read(BinaryReader reader) {
-    final numOfFields = reader.readByte();
-    final fields = <int, dynamic>{
-      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
-    };
-    return KYC()
-      ..aadhar = fields[0] as String
-      ..pan = fields[1] as String
-      ..gst = fields[2] as String;
-  }
-
-  @override
-  void write(BinaryWriter writer, KYC obj) {
-    writer
-      ..writeByte(3)
-      ..writeByte(0)
-      ..write(obj.aadhar)
-      ..writeByte(1)
-      ..write(obj.pan)
-      ..writeByte(2)
-      ..write(obj.gst);
-  }
-
-  @override
-  int get hashCode => typeId.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is KYCAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
-}
-
 class LandAdapter extends TypeAdapter<Land> {
   @override
-  final int typeId = 2;
+  final int typeId = 1;
 
   @override
   Land read(BinaryReader reader) {
@@ -134,7 +101,7 @@ class LandAdapter extends TypeAdapter<Land> {
 
 class ProfileDataAdapter extends TypeAdapter<ProfileData> {
   @override
-  final int typeId = 3;
+  final int typeId = 2;
 
   @override
   ProfileData read(BinaryReader reader) {
@@ -146,14 +113,13 @@ class ProfileDataAdapter extends TypeAdapter<ProfileData> {
       ..id = fields[0] as String
       ..updated = fields[1] as bool
       ..address = (fields[2] as List).cast<Address>()
-      ..kyc = fields[3] as KYC
-      ..land = (fields[4] as List).cast<Land>();
+      ..land = (fields[3] as List).cast<Land>();
   }
 
   @override
   void write(BinaryWriter writer, ProfileData obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -161,8 +127,6 @@ class ProfileDataAdapter extends TypeAdapter<ProfileData> {
       ..writeByte(2)
       ..write(obj.address)
       ..writeByte(3)
-      ..write(obj.kyc)
-      ..writeByte(4)
       ..write(obj.land);
   }
 
@@ -179,7 +143,7 @@ class ProfileDataAdapter extends TypeAdapter<ProfileData> {
 
 class CropAdapter extends TypeAdapter<Crop> {
   @override
-  final int typeId = 4;
+  final int typeId = 3;
 
   @override
   Crop read(BinaryReader reader) {
@@ -218,7 +182,7 @@ class CropAdapter extends TypeAdapter<Crop> {
 
 class PrimaryLocationAdapter extends TypeAdapter<PrimaryLocation> {
   @override
-  final int typeId = 5;
+  final int typeId = 4;
 
   @override
   PrimaryLocation read(BinaryReader reader) {
@@ -263,7 +227,7 @@ class PrimaryLocationAdapter extends TypeAdapter<PrimaryLocation> {
 
 class SecondaryLocationsAdapter extends TypeAdapter<SecondaryLocations> {
   @override
-  final int typeId = 6;
+  final int typeId = 5;
 
   @override
   SecondaryLocations read(BinaryReader reader) {
@@ -299,7 +263,7 @@ class SecondaryLocationsAdapter extends TypeAdapter<SecondaryLocations> {
 
 class CropCalendarItemAdapter extends TypeAdapter<CropCalendarItem> {
   @override
-  final int typeId = 7;
+  final int typeId = 6;
 
   @override
   CropCalendarItem read(BinaryReader reader) {
@@ -341,7 +305,7 @@ class CropCalendarItemAdapter extends TypeAdapter<CropCalendarItem> {
 
 class CropCalendarDataAdapter extends TypeAdapter<CropCalendarData> {
   @override
-  final int typeId = 8;
+  final int typeId = 7;
 
   @override
   CropCalendarData read(BinaryReader reader) {
@@ -374,7 +338,7 @@ class CropCalendarDataAdapter extends TypeAdapter<CropCalendarData> {
 
 class AnimalAdapter extends TypeAdapter<Animal> {
   @override
-  final int typeId = 9;
+  final int typeId = 8;
 
   @override
   Animal read(BinaryReader reader) {

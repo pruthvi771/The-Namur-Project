@@ -66,7 +66,6 @@ main() async {
 
   await Hive.initFlutter();
   Hive.registerAdapter(hiveModels.AddressAdapter());
-  Hive.registerAdapter(hiveModels.KYCAdapter());
   Hive.registerAdapter(hiveModels.LandAdapter());
   Hive.registerAdapter(hiveModels.CropAdapter());
   Hive.registerAdapter(hiveModels.AnimalAdapter());

@@ -556,6 +556,7 @@ String translatedName({
   }
 }
 
+// sorted
 List<String> crops = [
   // '',
   'Banana',
@@ -620,6 +621,7 @@ List<String> crops = [
   'Wheat'
 ];
 
+// sorted
 List<String> equipment = [
   // '',
   'Backhoe',
@@ -637,57 +639,48 @@ List<String> equipment = [
   'Tractor',
 ];
 
+// sorted
 var districtListForWeather = [
   '',
-  // 'Bagalkote',
   'Ballari',
   'Belagavi',
   'Bengaluru',
+  'Bijapur',
   'Bidar',
-  // 'Chamarajanagara',
-  // 'Chikkaballapura',
-  // 'Chikkmagaluru',
   'Chitradurga',
-  // 'Dakshina Kannada',
-  // 'Davanagere',
   'Dharwad',
   'Gadag',
   'Hassan',
   'Haveri',
-  // 'Kalaburagi',
-  // 'Kodagu',
   'Kolar',
-  // 'Koppala',
   'Mandya',
   'Mysuru',
-  // 'Raichuru',
   'Ramanagara',
   'Shivamogga',
   'Tumakuru',
   'Udupi',
-  'Bijapur',
 ];
 
+// sorted
 List<String> animals = [
-  'Parrot',
-  'Pigeon',
-  'Sparrow',
-  'Bull',
-  'Rabbit',
-  'Buffalo',
   'Bee',
-  'Duck',
-  'Donkey',
-  'Dog',
-  'Cow',
-  'Fish',
-  'Pig',
-  'Pork',
-  'Sheep',
-  'Turkey',
-  'Hen',
-  'Goat',
-  'Emu',
-  'Cat',
   'Black Cat',
+  'Buffalo',
+  'Bull',
+  'Cat',
+  'Cow',
+  'Dog',
+  'Donkey',
+  'Duck',
+  'Emu',
+  'Fish',
+  'Goat',
+  'Hen',
+  'Parrot',
+  'Pig',
+  'Pigeon',
+  'Rabbit',
+  'Sheep',
+  'Sparrow',
+  'Turkey'
 ];

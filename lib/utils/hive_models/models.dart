@@ -21,18 +21,6 @@ class Address {
 }
 
 @HiveType(typeId: 1)
-class KYC {
-  @HiveField(0)
-  late String aadhar;
-
-  @HiveField(1)
-  late String pan;
-
-  @HiveField(2)
-  late String gst;
-}
-
-@HiveType(typeId: 2)
 class Land {
   @HiveField(0)
   late String village;
@@ -53,7 +41,7 @@ class Land {
   late List<Animal> animals;
 }
 
-@HiveType(typeId: 3)
+@HiveType(typeId: 2)
 class ProfileData {
   @HiveField(0)
   late String id;
@@ -65,13 +53,10 @@ class ProfileData {
   late List<Address> address;
 
   @HiveField(3)
-  late KYC kyc;
-
-  @HiveField(4)
   late List<Land> land;
 }
 
-@HiveType(typeId: 4)
+@HiveType(typeId: 3)
 class Crop {
   @HiveField(0)
   late String name;
@@ -83,7 +68,7 @@ class Crop {
   late String id;
 }
 
-@HiveType(typeId: 5)
+@HiveType(typeId: 4)
 class PrimaryLocation {
   @HiveField(0)
   late String id;
@@ -101,7 +86,7 @@ class PrimaryLocation {
   late String? address;
 }
 
-@HiveType(typeId: 6)
+@HiveType(typeId: 5)
 class SecondaryLocations {
   @HiveField(0)
   late String id;
@@ -110,7 +95,7 @@ class SecondaryLocations {
   late List<String> address;
 }
 
-@HiveType(typeId: 7)
+@HiveType(typeId: 6)
 class CropCalendarItem {
   @HiveField(0)
   late String cropName;
@@ -125,13 +110,13 @@ class CropCalendarItem {
   late String id;
 }
 
-@HiveType(typeId: 8)
+@HiveType(typeId: 7)
 class CropCalendarData {
   @HiveField(0)
   late List<CropCalendarItem> cropCalendarItems;
 }
 
-@HiveType(typeId: 9)
+@HiveType(typeId: 8)
 class Animal {
   @HiveField(0)
   late String name;
