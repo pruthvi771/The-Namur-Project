@@ -30,11 +30,11 @@ class Otp extends StatefulWidget {
     this.name,
     this.email,
     this.phoneNumber,
-    this.pincode,
-    this.addressName,
-    this.districtName,
-    this.addressCircle,
-    this.addressRegion,
+    // this.pincode,
+    // this.addressName,
+    // this.districtName,
+    // this.addressCircle,
+    // this.addressRegion,
     required this.verificationId,
   }) : super(key: key);
   final bool signUp;
@@ -44,11 +44,11 @@ class Otp extends StatefulWidget {
   final String? email;
   final String? phoneNumber;
 
-  final String? pincode;
-  final String? addressName;
-  final String? districtName;
-  final String? addressCircle;
-  final String? addressRegion;
+  // final String? pincode;
+  // final String? addressName;
+  // final String? districtName;
+  // final String? addressCircle;
+  // final String? addressRegion;
 
   @override
   _OtpState createState() => _OtpState();
@@ -103,11 +103,11 @@ class _OtpState extends State<Otp> {
         widget.name!,
         widget.email!,
         widget.phoneNumber!,
-        widget.pincode!,
-        widget.addressName!,
-        widget.districtName!,
-        widget.addressCircle!,
-        widget.addressRegion!,
+        // widget.pincode!,
+        // widget.addressName!,
+        // widget.districtName!,
+        // widget.addressCircle!,
+        // widget.addressRegion!,
       ));
     } else {
       BlocProvider.of<AuthBloc>(buildContext)

@@ -247,11 +247,6 @@ class AuthRepository {
     required String otp,
     required String username,
     required String email,
-    required String addressName,
-    required String districtName,
-    required String addressCircle,
-    required String addressRegion,
-    required String pincode,
   }) async {
     final credentials = PhoneAuthProvider.credential(
       verificationId: verificationId,
@@ -283,12 +278,6 @@ class AuthRepository {
 
         firestoreRepository.createEmptyHiveDataInstance(
           userId: userCredential.user!.uid,
-          isAddressAvailable: true,
-          village: addressName,
-          district: districtName,
-          taluk: addressRegion,
-          gramPanchayat: addressCircle,
-          pincode: pincode,
         );
       }
     } on FirebaseAuthException catch (e) {

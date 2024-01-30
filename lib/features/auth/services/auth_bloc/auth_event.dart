@@ -53,23 +53,14 @@ class SignUpWithPhoneNumberRequested extends AuthEvent {
   final String name;
   final String email;
   final String phoneNumber;
-  final String pincode;
-  final String addressName;
-  final String districtName;
-  final String addressCircle;
-  final String addressRegion;
 
   SignUpWithPhoneNumberRequested(
-      this.verificationId,
-      this.otp,
-      this.name,
-      this.email,
-      this.phoneNumber,
-      this.pincode,
-      this.addressName,
-      this.districtName,
-      this.addressCircle,
-      this.addressRegion);
+    this.verificationId,
+    this.otp,
+    this.name,
+    this.email,
+    this.phoneNumber,
+  );
 }
 
 class LocationsForPincodeRequested extends AuthEvent {

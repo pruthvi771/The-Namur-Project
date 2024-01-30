@@ -47,32 +47,6 @@ class _RegistrationState extends State<Registration> {
   //controllers
   TextEditingController _nameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
-  // TextEditingController _phoneNumberController = TextEditingController();
-  TextEditingController _pinCodeController = TextEditingController();
-
-  bool isDropdownEnabled = false;
-  List<String> locationsList = [];
-  String? locationDropdownValue;
-
-  PostOfficeResponse? postOfficeResponse;
-
-  // String? pincode;
-  String? addressName;
-  String? districtName;
-  String? addressCircle;
-  String? addressRegion;
-
-  void fetchLocations(BuildContext buildContext) {
-    if (_pinCodeController.text.toString().isEmpty ||
-        _pinCodeController.text.toString().length != 6) {
-      ToastComponent.showDialog('Enter a valid Pincode',
-          gravity: Toast.center, duration: Toast.lengthLong);
-      return;
-    }
-    BlocProvider.of<AuthBloc>(buildContext).add(
-      LocationsForPincodeRequested(_pinCodeController.text.toString()),
-    );
-  }
 
   @override
   void initState() {
@@ -93,7 +67,6 @@ class _RegistrationState extends State<Registration> {
   onPressSignUp(BuildContext buildContext) async {
     var name = _nameController.text.toString();
     var email = _emailController.text.toString();
-    var pincode = _pinCodeController.text.toString();
     var phone = newPhone2;
 
     if (name == "") {
@@ -110,14 +83,6 @@ class _RegistrationState extends State<Registration> {
       ToastComponent.showDialog('Enter a valid email address',
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
-    } else if (pincode.isEmpty) {
-      ToastComponent.showDialog('Enter a Pin Code and Select A Location',
-          gravity: Toast.center, duration: Toast.lengthLong);
-      return;
-    } else if (locationDropdownValue == null) {
-      ToastComponent.showDialog('Select A Location',
-          gravity: Toast.center, duration: Toast.lengthLong);
-      return;
     }
 
     //
@@ -127,24 +92,6 @@ class _RegistrationState extends State<Registration> {
     BlocProvider.of<AuthBloc>(buildContext).add(
       SignUpPhoneVerificationRequested(phone!),
     );
-  }
-
-  getAddressValues() {
-    postOfficeResponse!.postOffices.forEach((postOffice) {
-      if (postOffice.name == locationDropdownValue) {
-        addressName = postOffice.name;
-        districtName = postOffice.district;
-        addressCircle = postOffice.circle;
-        addressRegion = postOffice.region;
-      }
-    });
-  }
-
-  clearAddressValues() {
-    addressName = null;
-    districtName = null;
-    addressCircle = null;
-    addressRegion = null;
   }
 
   @override
@@ -194,33 +141,8 @@ class _RegistrationState extends State<Registration> {
                         signUp: true,
                         // phoneNumber: _phoneNumberController.text.toString(),
                         phoneNumber: newPhone2,
-                        pincode: _pinCodeController.text.toString(),
-                        addressName: addressName,
-                        districtName: districtName,
-                        addressCircle: addressCircle,
-                        addressRegion: addressRegion,
                       )),
             );
-          }
-          if (state is LocationsForPincodeReceived) {
-            ToastComponent.showDialog('Locations fetched.',
-                gravity: Toast.center, duration: Toast.lengthLong);
-            postOfficeResponse = state.postOfficeResponse;
-            for (var postOffice in state.postOfficeResponse.postOffices) {
-              locationsList.add(postOffice.name);
-            }
-            isDropdownEnabled = true;
-            //
-            //
-          }
-          if (state is LocationsForPincodeLoading) {
-            locationDropdownValue = null;
-            clearAddressValues();
-            locationsList.clear();
-            ToastComponent.showDialog(
-                AppLocalizations.of(context)!.fetching_locations,
-                gravity: Toast.center,
-                duration: Toast.lengthLong);
           }
         },
         child: BlocBuilder<AuthBloc, AuthState>(
@@ -369,117 +291,6 @@ class _RegistrationState extends State<Registration> {
                   autofocus: false,
                   decoration: InputDecorations.buildInputDecoration_1(
                       hint_text: AppLocalizations.of(context)!.email_ucf),
-                ),
-              ),
-            ),
-
-            // pincode textbox
-            Container(
-              height: 40,
-              padding: const EdgeInsets.only(right: 20, left: 20),
-              child: Row(
-                // crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Expanded(
-                    child: Container(
-                      // height: 40,
-                      child: TextField(
-                        keyboardType:
-                            TextInputType.numberWithOptions(decimal: true),
-                        controller: _pinCodeController,
-                        autofocus: false,
-                        decoration: InputDecorations.buildInputDecoration_1(
-                            hint_text:
-                                AppLocalizations.of(context)!.enter_pincode),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      fetchLocations(context);
-                    },
-                    child: Container(
-                      height: double.infinity,
-                      color: MyTheme.green_lighter,
-                      margin: EdgeInsets.only(
-                        left: 10,
-                        top: 2,
-                        bottom: 2,
-                      ),
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Center(
-                        child: Text(
-                          AppLocalizations.of(context)!.search,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-
-            SizedBox(
-              height: 10,
-            ),
-
-            // location dropdown
-            Padding(
-              padding: const EdgeInsets.only(right: 20, left: 20),
-              child: Container(
-                height: 40,
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color:
-                        Colors.grey, // You can customize the border color here
-                  ),
-                ),
-                child: DropdownButton<String>(
-                  isExpanded: true,
-                  hint: Text(
-                    AppLocalizations.of(context)!.select_a_location,
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 13,
-                    ),
-                  ),
-                  disabledHint: Text(
-                    AppLocalizations.of(context)!.enter_pincode_first,
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 13,
-                    ),
-                  ),
-                  value: locationDropdownValue,
-                  icon: Icon(Icons.arrow_drop_down),
-                  iconSize: 24,
-                  elevation: 16,
-                  underline: SizedBox(), // Remove the underline
-                  style: TextStyle(
-                    fontSize: 16,
-                    color:
-                        Colors.black, // You can customize the text color here
-                  ),
-                  onChanged: isDropdownEnabled
-                      ? (String? newValue) {
-                          setState(() {
-                            locationDropdownValue = newValue!;
-                            getAddressValues();
-                          });
-                        }
-                      : null,
-                  items: locationsList
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
                 ),
               ),
             ),

@@ -146,11 +146,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           username: event.name,
           email: event.email,
           phoneNumber: event.phoneNumber,
-          pincode: event.pincode,
-          addressName: event.addressName,
-          districtName: event.districtName,
-          addressCircle: event.addressCircle,
-          addressRegion: event.addressRegion,
         );
         // var userId = auth.FirebaseAuth.instance.currentUser!.uid;
         // await createEmptyHiveDataInstance(userId);
