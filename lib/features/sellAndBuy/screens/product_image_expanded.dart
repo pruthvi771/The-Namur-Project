@@ -3,6 +3,7 @@ import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart';
 
 class ProductImageExpanded extends StatefulWidget {
   final SellProduct sellProduct;
@@ -68,17 +69,20 @@ class _ProductImageExpandedState extends State<ProductImageExpanded> {
               items: widget.sellProduct.imageURL.map((fileURL) {
                 return Builder(
                   builder: (BuildContext context) {
-                    return Container(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(5),
-                        ),
-                        child: Hero(
-                          tag: 'carousel',
-                          child: CachedNetworkImage(
-                            imageUrl: fileURL,
+                    return ClipRRect(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(5),
+                      ),
+                      child: Hero(
+                        tag: 'carousel',
+                        child: PhotoView(
+                          backgroundDecoration: BoxDecoration(
+                            color: Colors.transparent,
+                          ),
+                          imageProvider: NetworkImage(
+                            fileURL,
                             // fit: BoxFit.fill,
-                            width: MediaQuery.of(context).size.width,
+                            // width: MediaQuery.of(context).size.width,
                           ),
                         ),
                       ),

@@ -8,6 +8,7 @@ import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart' as intl;
 
 class SellerOrderCheckupScreen extends StatefulWidget {
   final String orderID;
@@ -188,7 +189,11 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
                                     ),
                                   ),
                                   Text(
-                                    orderDocument.timestamp.toDate().toString(),
+                                    intl.DateFormat('dd/MM/yyyy, HH:mm')
+                                        .format(
+                                            orderDocument.timestamp.toDate())
+                                        .toString(),
+                                    // orderDocument.timestamp.toDate().toString(),
                                     style: TextStyle(
                                       color: Colors.green,
                                       fontWeight: FontWeight.bold,
