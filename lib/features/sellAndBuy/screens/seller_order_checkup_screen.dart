@@ -288,29 +288,35 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
                                   buyerSnapshot.data != null) {
                                 var buyerData = buyerSnapshot.data!.data()!;
 
-                                bool addressAvailable = buyerData['profileData']
-                                            ?['address']
-                                        .length !=
-                                    0;
-                                var address = addressAvailable
-                                    ? buyerData['profileData']['address'][0]
-                                    : 'NaN';
-
-                                return BuyerInfoCard(
-                                  context: context,
-                                  buyerImageURL: buyerData['photoURL'],
-                                  email: buyerData['email'],
-                                  buyerName: buyerData['name'],
-                                  buyerPhone: buyerData['phone number'],
-                                  district: addressAvailable
-                                      ? address['district']
-                                      : 'NaN',
-                                  taluk: addressAvailable
-                                      ? address['taluk']
-                                      : 'NaN',
-                                  village: addressAvailable
-                                      ? address['village']
-                                      : 'NaN',
+                                return FutureBuilder(
+                                  future: _firestore
+                                      .collection('orders')
+                                      .doc(widget.orderID)
+                                      .get(),
+                                  builder: (context, orderSnapshot) {
+                                    if (orderSnapshot.hasData &&
+                                        orderSnapshot.data != null) {
+                                      var addressData = orderSnapshot.data!
+                                          .data()!['address'];
+                                      return BuyerInfoCard(
+                                        context: context,
+                                        buyerImageURL: buyerData['photoURL'],
+                                        email: buyerData['email'],
+                                        buyerName: buyerData['name'],
+                                        buyerPhone: buyerData['phone number'],
+                                        pincode:
+                                            addressData['pincode'] ?? 'NaN',
+                                        state: addressData['state'] ?? 'NaN',
+                                        streetName:
+                                            addressData['streetName'] ?? 'NaN',
+                                        landmark: addressData['landmark'] ?? '',
+                                        houseNumber:
+                                            addressData['houseNumber'] ?? 'NaN',
+                                        city: addressData['city'] ?? 'NaN',
+                                      );
+                                    }
+                                    return SizedBox.shrink();
+                                  },
                                 );
                               }
                               return SizedBox.shrink();
@@ -639,9 +645,12 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
     required String buyerImageURL,
     required String buyerName,
     required String email,
-    required String? village,
-    required String? district,
-    required String? taluk,
+    required String? city,
+    required String? houseNumber,
+    required String? landmark,
+    required String? pincode,
+    required String? state,
+    required String? streetName,
     required String? buyerPhone,
   }) {
     return Padding(
@@ -658,7 +667,7 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
               borderRadius: BorderRadius.circular(6),
               border: Border.all(
                   width: 1, color: MyTheme.medium_grey.withOpacity(0.5))),
-          height: 160,
+          height: 180,
           width: MediaQuery.of(context).size.width,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
@@ -710,8 +719,8 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
                           ),
                         ),
 
+                        // buyerName,
                         Text(
-                          // buyerName,
                           email,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -722,7 +731,7 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
                         ),
 
                         Container(
-                          // height: 30,
+                          // height: 40,
                           child: Row(
                             children: [
                               FaIcon(
@@ -735,9 +744,8 @@ class _SellerOrderCheckupScreenState extends State<SellerOrderCheckupScreen> {
                               ),
                               Expanded(
                                 child: Text(
-                                  maxLines: 2,
-                                  '$village, $district, $taluk',
-                                  // 'village, district',
+                                  maxLines: 3,
+                                  '$houseNumber, $landmark, $streetName, $city - $pincode, $state',
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontSize: 14,
