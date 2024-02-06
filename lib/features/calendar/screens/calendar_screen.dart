@@ -674,12 +674,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                                     [index]['0']['name'],
                                                 stage2text: docData['stages']
                                                     [index]['1']['name'],
-                                                initialDate: currentCrop
-                                                    .plantingDate!
-                                                    .add(Duration(
-                                                        days: docData['stages']
-                                                                [index]['0']
-                                                            ['days'])),
+                                                initialDate:
+                                                    currentCrop.plantingDate!,
+                                                // .add(Duration(
+                                                //     days: docData['stages']
+                                                //             [index]['0']
+                                                //         ['days'])),
                                                 stage1days: docData['stages']
                                                     [index]['0']['days'],
                                                 stage2days: docData['stages']
