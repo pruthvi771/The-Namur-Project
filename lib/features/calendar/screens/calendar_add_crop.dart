@@ -94,11 +94,11 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
       return;
     }
 
-    // if (dateOfRenting == null) {
-    //   ToastComponent.showDialog(AppLocalizations.of(context)!.select_date,
-    //       gravity: Toast.center, duration: Toast.lengthLong);
-    //   return;
-    // }
+    if (dateOfRenting == null) {
+      ToastComponent.showDialog(AppLocalizations.of(context)!.select_date,
+          gravity: Toast.center, duration: Toast.lengthLong);
+      return;
+    }
 
     var dataBox = Hive.box<CropCalendarData>('cropCalendarDataBox');
     var savedData = dataBox.get('calendar');
@@ -107,7 +107,7 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
       ..cropName = selectedCropName!
       ..landSyno = landDropdownValue!
       ..id = idOfCrop!
-      ..plantingDate = null;
+      ..plantingDate = dateOfRenting;
 
     if (savedData == null) {
       var newData = CropCalendarData()..cropCalendarItems = [cropCalendarItem];
@@ -345,56 +345,57 @@ class _CalendarAddCropState extends State<CalendarAddCrop> {
             height: 15,
           ),
 
-          // TitleWidget(text: AppLocalizations.of(context)!.planting_date),
+          TitleWidget(text: AppLocalizations.of(context)!.planting_date),
 
-          // // Planting Date
-          // Container(
-          //   padding: EdgeInsets.symmetric(horizontal: 4),
-          //   child: Row(
-          //     children: [
-          //       Expanded(
-          //         child: Container(
-          //           height: 60,
-          //           padding: EdgeInsets.all(8),
-          //           child: ElevatedButton(
-          //             onPressed: () async {
-          //               DateTime? newData = await showDatePicker(
-          //                   context: context,
-          //                   initialDate: dateNow,
-          //                   firstDate: DateTime(2000),
-          //                   lastDate: DateTime(2025));
-          //               if (newData != null) {
-          //                 setState(() {
-          //                   dateOfRenting = newData;
-          //                 });
-          //               }
-          //             },
-          //             child: Text(
-          //               dateOfRenting != null
-          //                   ? '${dateOfRenting!.day}/${dateOfRenting!.month}/${dateOfRenting!.year}'
-          //                   : AppLocalizations.of(context)!.date_ucf,
-          //               style: TextStyle(
-          //                 color: Colors.black,
-          //                 fontWeight: FontWeight.w800,
-          //                 fontSize: 15,
-          //               ),
-          //             ),
-          //             style: ButtonStyle(
-          //                 elevation: MaterialStateProperty.all(0),
-          //                 shape: MaterialStateProperty.all<
-          //                         RoundedRectangleBorder>(
-          //                     RoundedRectangleBorder(
-          //                         borderRadius: BorderRadius.circular(12),
-          //                         side: BorderSide(
-          //                             color: Colors.transparent, width: 0))),
-          //                 backgroundColor: MaterialStateProperty.all(
-          //                     const Color.fromARGB(255, 255, 243, 131))),
-          //           ),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
+          // Planting Date
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 4),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 60,
+                    padding: EdgeInsets.all(8),
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        DateTime? newData = await showDatePicker(
+                            context: context,
+                            initialDate: dateNow,
+                            firstDate: DateTime(2000),
+                            lastDate: DateTime(2025));
+                        if (newData != null) {
+                          setState(() {
+                            dateOfRenting = newData;
+                          });
+                        }
+                      },
+                      child: Text(
+                        dateOfRenting != null
+                            ? '${dateOfRenting!.day}/${dateOfRenting!.month}/${dateOfRenting!.year}'
+                            : AppLocalizations.of(context)!.date_ucf,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 15,
+                        ),
+                      ),
+                      style: ButtonStyle(
+                          elevation: MaterialStateProperty.all(0),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      side: BorderSide(
+                                          color: Colors.transparent,
+                                          width: 0))),
+                          backgroundColor: MaterialStateProperty.all(
+                              const Color.fromARGB(255, 255, 243, 131))),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
 
           Container(
             height: 65,
