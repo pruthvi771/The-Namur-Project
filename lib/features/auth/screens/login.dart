@@ -112,7 +112,7 @@ class _LoginState extends State<Login> {
 
   onPressedFacebookLogin(BuildContext context) async {
     ToastComponent.showDialog(AppLocalizations.of(context)!.coming_soon,
-        gravity: Toast.bottom, duration: Toast.lengthLong);
+        gravity: Toast.bottom, duration: Toast.lengthLong, );
     return;
   }
 
@@ -315,7 +315,7 @@ class _LoginState extends State<Login> {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Container(
-                                  height: 65,
+                                  height: 75,
                                   padding: EdgeInsets.symmetric(horizontal: 10),
                                   child: IntlPhoneField(
                                     disableLengthCheck: true,
@@ -324,10 +324,10 @@ class _LoginState extends State<Login> {
                                       labelText: AppLocalizations.of(context)!
                                           .phone_number_ucf,
                                       labelStyle: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 13,
+                                        color: Colors.black,
+                                        fontSize: 16,
                                       ),
-                                      hintStyle: TextStyle(color: Colors.grey),
+                                      hintStyle: TextStyle(color: Colors.black),
                                       border: OutlineInputBorder(
                                         borderSide: BorderSide(),
                                         borderRadius: BorderRadius.circular(10),
@@ -341,7 +341,7 @@ class _LoginState extends State<Login> {
                                     ),
                                     cursorColor: MyTheme.green_light,
                                     dropdownTextStyle: TextStyle(
-                                        color: MyTheme.font_grey, fontSize: 13),
+                                        color: MyTheme.font_grey, fontSize: 16),
                                     style: TextStyle(color: MyTheme.font_grey),
                                     flagsButtonPadding:
                                         EdgeInsets.symmetric(horizontal: 15),
