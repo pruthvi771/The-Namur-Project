@@ -182,9 +182,9 @@ class _CultivationTipsScreenState extends State<CultivationTipsScreen> {
                                                 child: Text(
                                                   description.toString(),
                                                   style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w600),
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
                                                 ),
                                               ),
                                             ),
