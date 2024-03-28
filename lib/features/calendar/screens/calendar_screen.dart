@@ -61,7 +61,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   Future getCropDocForInfo({required String cropName}) async {
     DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
-        .collection('calendar')
+        .collection('calendar_namur')
         .doc(cropName.toLowerCase())
         .get();
 
@@ -268,8 +268,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             .data!.cropCalendarItems[selectedIndex];
                         return Column(
                           children: [
-                            // Text(docData['stages'].toString()),
-
                             // cost estimate, schedule, pest control, cultivation tips
                             Container(
                               height: 100,
@@ -619,13 +617,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                           ),
                                         ),
                                       ),
-
                                       SizedBox(
                                         height: 20,
                                       ),
-
-                                      // SizedBox(height: 20),
-
                                       Padding(
                                         padding:
                                             const EdgeInsets.only(left: 20),
@@ -651,11 +645,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                           ),
                                         ),
                                       ),
-
                                       SizedBox(
                                         height: 15,
                                       ),
-
                                       Padding(
                                         padding: const EdgeInsets.only(
                                             left: 20.0, right: 20),
@@ -671,9 +663,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                                 stageName:
                                                     '${AppLocalizations.of(context)!.stage_for_calendar} ${index + 1}',
                                                 stage1text: docData['stages']
-                                                    [index]['0']['name'],
+                                                        [index]['substages'][0]
+                                                    ['name'],
                                                 stage2text: docData['stages']
-                                                    [index]['1']['name'],
+                                                        [index]['substages'][1]
+                                                    ['name'],
                                                 initialDate:
                                                     currentCrop.plantingDate!,
                                                 // .add(Duration(
@@ -681,9 +675,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                                 //             [index]['0']
                                                 //         ['days'])),
                                                 stage1days: docData['stages']
-                                                    [index]['0']['days'],
+                                                        [index]['substages'][0]
+                                                    ['days'],
                                                 stage2days: docData['stages']
-                                                    [index]['1']['days'],
+                                                        [index]['substages'][1]
+                                                    ['days'],
                                               );
                                             },
                                           ),

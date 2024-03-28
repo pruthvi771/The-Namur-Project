@@ -30,15 +30,16 @@ class _CultivationTipsScreenState extends State<CultivationTipsScreen> {
   Future<List<dynamic>> getCultivationTipsForCropName(
       {required String cropName}) async {
     DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
-        .collection('calendar')
+        .collection('calendar_namur')
         .doc(cropName.toLowerCase())
         .get();
 
     if (userSnapshot.exists) {
-      if ((userSnapshot.data() as Map)['cultivation'] == null) {
+      if ((userSnapshot.data() as Map)['cultivation_tips'] == null) {
         return [];
       }
-      List<dynamic> returnVal = (userSnapshot.data() as Map)['cultivation'];
+      List<dynamic> returnVal =
+          (userSnapshot.data() as Map)['cultivation_tips'];
       return returnVal;
     } else {
       return [];
@@ -121,9 +122,9 @@ class _CultivationTipsScreenState extends State<CultivationTipsScreen> {
                       physics: NeverScrollableScrollPhysics(),
                       scrollDirection: Axis.vertical,
                       itemBuilder: (context, index) {
-                        var imageLink = cultivationData[index]['image'];
-                        var name = cultivationData[index]['name'];
-                        var description = cultivationData[index]['description'];
+                        var imageLink = cultivationData[index]['logoUrl'];
+                        var name = cultivationData[index]['title'];
+                        var description = cultivationData[index]['dataUrl'];
                         return InkWell(
                           onTap: () {
                             showDialog(
@@ -180,7 +181,9 @@ class _CultivationTipsScreenState extends State<CultivationTipsScreen> {
                                                     vertical: 10),
                                                 width: double.infinity,
                                                 child: Text(
-                                                  description.toString(),
+                                                  description.toString() == ''
+                                                      ? "No description Data Exists"
+                                                      : description.toString(),
                                                   style: TextStyle(
                                                     fontSize: 16,
                                                     fontWeight: FontWeight.w600,
@@ -226,9 +229,9 @@ class _CultivationTipsScreenState extends State<CultivationTipsScreen> {
                                 ),
                                 Text(
                                   name.toString(),
-                                  maxLines: 1,
-                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500),

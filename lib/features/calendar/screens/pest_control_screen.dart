@@ -6,14 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-void printWarning(String? text) {
-  print('\x1B[33m$text\x1B[0m');
-}
-
-void printError(String? text) {
-  print('\x1B[31m$text\x1B[0m');
-}
-
 class PestControlScreen extends StatefulWidget {
   final String cropName;
 
@@ -38,18 +30,16 @@ class _PestControlScreenState extends State<PestControlScreen> {
 
   Future<List> getPestControlDataForCropName({required String cropName}) async {
     DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
-        .collection('calendar_namur')
+        .collection('calendar')
         .doc(cropName.toLowerCase())
         .get();
 
     if (userSnapshot.exists) {
-      printWarning("WE HAVE DATA-----");
-      print((userSnapshot.data() as Map)['stages']);
-      if ((userSnapshot.data() as Map)['stages'] == null) {
+      if ((userSnapshot.data() as Map)['pest control'] == null) {
         return [];
       }
-      List returnVal = (userSnapshot.data() as Map)['stages'];
-      printError(returnVal.toString() + "pest control data");
+      List returnVal = (userSnapshot.data() as Map)['pest control'];
+
       return returnVal;
     } else {
       return [];
@@ -114,14 +104,13 @@ class _PestControlScreenState extends State<PestControlScreen> {
             return pestControlData.length == 0
                 ? Container(
                     child: Center(
-                      child: Text(
-                        AppLocalizations.of(context)!.no_data_is_available,
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey),
-                      ),
-                    ),
+                        child: Text(
+                      AppLocalizations.of(context)!.no_data_is_available,
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey),
+                    )),
                   )
                 : ListView(
                     padding: EdgeInsets.only(top: 15),
