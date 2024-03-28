@@ -1,4 +1,5 @@
 import 'package:active_ecommerce_flutter/my_theme.dart';
+import 'package:active_ecommerce_flutter/utils/functions.dart';
 import 'package:active_ecommerce_flutter/utils/imageLinks.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -30,16 +31,15 @@ class _PestControlScreenState extends State<PestControlScreen> {
 
   Future<List> getPestControlDataForCropName({required String cropName}) async {
     DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
-        .collection('calendar')
+        .collection('calendar_namur')
         .doc(cropName.toLowerCase())
         .get();
 
     if (userSnapshot.exists) {
-      if ((userSnapshot.data() as Map)['pest control'] == null) {
+      if ((userSnapshot.data() as Map)['stages'] == null) {
         return [];
       }
-      List returnVal = (userSnapshot.data() as Map)['pest control'];
-
+      List returnVal = (userSnapshot.data() as Map)['stages'];
       return returnVal;
     } else {
       return [];
@@ -121,7 +121,8 @@ class _PestControlScreenState extends State<PestControlScreen> {
                           children: [
                             StageHeading(
                                 pestControlData[index]['stageName'].toString()),
-                            pestControlData[index]['pests'].length == 0
+                            pestControlData[index]['pestAndDiseases'].length ==
+                                    0
                                 ? Container(
                                     height: 100,
                                     child: Center(
@@ -137,8 +138,9 @@ class _PestControlScreenState extends State<PestControlScreen> {
                                     crossAxisCount: 3,
                                     mainAxisSpacing: 16,
                                     crossAxisSpacing: 16,
-                                    itemCount:
-                                        pestControlData[index]['pests'].length,
+                                    itemCount: pestControlData[index]
+                                            ['pestAndDiseases']
+                                        .length,
                                     shrinkWrap: true,
                                     padding: EdgeInsets.only(
                                         top: 20,
@@ -149,11 +151,17 @@ class _PestControlScreenState extends State<PestControlScreen> {
                                     scrollDirection: Axis.vertical,
                                     itemBuilder: (context, index2) {
                                       var imageLink = pestControlData[index]
-                                          ['pests'][index2]['image'];
-                                      var name = pestControlData[index]['pests']
-                                          [index2]['name'];
+                                          ['pestAndDiseases'][index2]['image'];
+                                      var name = pestControlData[index]
+                                          ['pestAndDiseases'][index2]['name'];
                                       var description = pestControlData[index]
-                                          ['pests'][index2]['description'];
+                                              ['pestAndDiseases'][index2]
+                                          ['contentUrl'];
+                                      printError(
+                                        imageLink,
+                                      );
+                                      printError(name);
+                                      printError(description);
                                       return InkWell(
                                         onTap: () {
                                           showDialog(

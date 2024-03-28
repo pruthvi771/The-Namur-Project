@@ -659,28 +659,42 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                             physics:
                                                 NeverScrollableScrollPhysics(),
                                             itemBuilder: (context, index) {
-                                              return CalendarStageItem(
-                                                stageName:
-                                                    '${AppLocalizations.of(context)!.stage_for_calendar} ${index + 1}',
-                                                stage1text: docData['stages']
-                                                        [index]['substages'][0]
-                                                    ['name'],
-                                                stage2text: docData['stages']
-                                                        [index]['substages'][1]
-                                                    ['name'],
-                                                initialDate:
-                                                    currentCrop.plantingDate!,
-                                                // .add(Duration(
-                                                //     days: docData['stages']
-                                                //             [index]['0']
-                                                //         ['days'])),
-                                                stage1days: docData['stages']
-                                                        [index]['substages'][0]
-                                                    ['days'],
-                                                stage2days: docData['stages']
-                                                        [index]['substages'][1]
-                                                    ['days'],
-                                              );
+                                              return docData['stages'][index]
+                                                          ['substages'] !=
+                                                      null
+                                                  ? CalendarStageItem(
+                                                      stageName:
+                                                          '${AppLocalizations.of(context)!.stage_for_calendar} ${index + 1}',
+                                                      stage1text:
+                                                          docData['stages']
+                                                                      [index]
+                                                                  ['substages']
+                                                              [0]['name'],
+                                                      stage2text:
+                                                          docData['stages']
+                                                                      [index]
+                                                                  ['substages']
+                                                              [1]['name'],
+                                                      initialDate: currentCrop
+                                                          .plantingDate!,
+                                                      // .add(Duration(
+                                                      //     days: docData['stages']
+                                                      //             [index]['0']
+                                                      //         ['days'])),
+                                                      stage1days:
+                                                          docData['stages']
+                                                                      [index]
+                                                                  ['substages']
+                                                              [0]['days'],
+                                                      stage2days:
+                                                          docData['stages']
+                                                                      [index]
+                                                                  ['substages']
+                                                              [1]['days'],
+                                                    )
+                                                  : SizedBox(
+                                                      height: 10,
+                                                    );
                                             },
                                           ),
                                         ),
