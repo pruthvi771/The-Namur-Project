@@ -7,19 +7,15 @@ class InputDecorations {
         hintText: hint_text,
         filled: true,
         fillColor: MyTheme.white,
-        hintStyle: TextStyle(fontSize: 12.0, color: MyTheme.dark_grey),
+        hintStyle: TextStyle(fontSize: 15.0, color: Colors.grey[900]),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-              color: MyTheme.dark_grey,
-              width: 0.5),
+          borderSide: BorderSide(color: Colors.black87, width: 0.5),
           borderRadius: const BorderRadius.all(
             const Radius.circular(10.0),
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-              color: MyTheme.light_grey,
-              width: 0.5),
+          borderSide: BorderSide(color: Colors.black, width: 0.5),
           borderRadius: const BorderRadius.all(
             const Radius.circular(10.0),
           ),
@@ -52,17 +48,13 @@ class InputDecorations {
         fillColor: MyTheme.white,
         hintStyle: TextStyle(fontSize: 12.0, color: MyTheme.dark_grey),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-              color: MyTheme.dark_grey,
-              width: 0.5),
+          borderSide: BorderSide(color: MyTheme.dark_grey, width: 0.5),
           borderRadius: const BorderRadius.all(
             const Radius.circular(10.0),
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-              color: MyTheme.light_grey,
-              width: 0.5),
+          borderSide: BorderSide(color: MyTheme.light_grey, width: 0.5),
           borderRadius: const BorderRadius.all(
             const Radius.circular(10.0),
           ),

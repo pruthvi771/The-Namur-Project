@@ -16,6 +16,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive/hive.dart';
+import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
 import 'package:location/location.dart';
@@ -111,8 +112,11 @@ class _LoginState extends State<Login> {
   }
 
   onPressedFacebookLogin(BuildContext context) async {
-    ToastComponent.showDialog(AppLocalizations.of(context)!.coming_soon,
-        gravity: Toast.bottom, duration: Toast.lengthLong);
+    ToastComponent.showDialog(
+      AppLocalizations.of(context)!.coming_soon,
+      gravity: Toast.bottom,
+      duration: Toast.lengthLong,
+    );
     return;
   }
 
@@ -250,7 +254,7 @@ class _LoginState extends State<Login> {
             children: [
               Container(
                 width: _screen_width,
-                height: MediaQuery.of(context).size.height / 2.01,
+                height: MediaQuery.of(context).size.height / 2.1,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -315,19 +319,30 @@ class _LoginState extends State<Login> {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Container(
-                                  height: 65,
+                                  height: 75,
                                   padding: EdgeInsets.symmetric(horizontal: 10),
                                   child: IntlPhoneField(
+                                    pickerDialogStyle: PickerDialogStyle(
+                                      backgroundColor: Colors.white,
+                                      searchFieldInputDecoration:
+                                          InputDecoration(
+                                        hintText: AppLocalizations.of(context)!
+                                            .search,
+                                        hintStyle: TextStyle(
+                                          color: Colors.grey[900],
+                                        ),
+                                      ),
+                                    ),
                                     disableLengthCheck: true,
                                     decoration: InputDecoration(
                                       contentPadding: EdgeInsets.all(8),
                                       labelText: AppLocalizations.of(context)!
                                           .phone_number_ucf,
                                       labelStyle: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 13,
+                                        color: Colors.black,
+                                        fontSize: 15,
                                       ),
-                                      hintStyle: TextStyle(color: Colors.grey),
+                                      hintStyle: TextStyle(color: Colors.black),
                                       border: OutlineInputBorder(
                                         borderSide: BorderSide(),
                                         borderRadius: BorderRadius.circular(10),
@@ -338,10 +353,11 @@ class _LoginState extends State<Login> {
                                             color: Colors
                                                 .green), // Set your desired border color when focused
                                       ),
+                                      fillColor: Colors.white,
                                     ),
                                     cursorColor: MyTheme.green_light,
                                     dropdownTextStyle: TextStyle(
-                                        color: MyTheme.font_grey, fontSize: 13),
+                                        color: MyTheme.font_grey, fontSize: 15),
                                     style: TextStyle(color: MyTheme.font_grey),
                                     flagsButtonPadding:
                                         EdgeInsets.symmetric(horizontal: 15),
@@ -460,7 +476,6 @@ class _LoginState extends State<Login> {
                               ),
                             ],
                           ),
-                          SizedBox(),
                         ],
                       ),
                     ),

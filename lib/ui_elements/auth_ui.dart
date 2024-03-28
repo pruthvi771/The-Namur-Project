@@ -1,7 +1,8 @@
+import 'package:flutter/material.dart';
+
 import 'package:active_ecommerce_flutter/custom/box_decorations.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
-import 'package:flutter/material.dart';
 
 class AuthScreen {
   static Widget buildScreen(
@@ -13,17 +14,16 @@ class AuthScreen {
         backgroundColor: Colors.white,
         body: Stack(
           children: [
-            Column(
-              children: [
-                Container(
-                  height: MediaQuery.of(context).size.height / 2,
-                  width: DeviceInfo(context).width,
-                  child: Image.asset(
-                    "assets/Group 211.png",
-                    fit: BoxFit.cover,
-                  ),
+            Positioned(
+              top: 0,
+              child: Container(
+                height: MediaQuery.of(context).size.height / 2,
+                width: DeviceInfo(context).width,
+                child: Image.asset(
+                  "assets/Group 211.png",
+                  fit: BoxFit.cover,
                 ),
-              ],
+              ),
             ),
             Positioned(
               bottom: 0,
