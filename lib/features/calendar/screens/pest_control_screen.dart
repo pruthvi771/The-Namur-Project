@@ -157,11 +157,6 @@ class _PestControlScreenState extends State<PestControlScreen> {
                                       var description = pestControlData[index]
                                               ['pestAndDiseases'][index2]
                                           ['contentUrl'];
-                                      printError(
-                                        imageLink,
-                                      );
-                                      printError(name);
-                                      printError(description);
                                       return InkWell(
                                         onTap: () {
                                           showDialog(
