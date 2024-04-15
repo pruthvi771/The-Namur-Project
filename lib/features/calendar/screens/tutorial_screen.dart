@@ -31,15 +31,16 @@ class _TutorialScreenState extends State<TutorialScreen> {
 
   Future<List> getTutorialDataForCropName({required String cropName}) async {
     DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
-        .collection('calendar')
+        .collection('calendar_namur')
         .doc(cropName.toLowerCase())
         .get();
 
     if (userSnapshot.exists) {
-      if ((userSnapshot.data() as Map)['tutorial'] == null) {
+      print((userSnapshot.data() as Map)['tutorials']);
+      if ((userSnapshot.data() as Map)['tutorials'] == null) {
         return [];
       }
-      List returnVal = (userSnapshot.data() as Map)['tutorial'];
+      List returnVal = (userSnapshot.data() as Map)['tutorials'];
 
       return returnVal;
     } else {
@@ -264,7 +265,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                                 child: InkWell(
                                   onTap: () async {
                                     await _launchYouTubeVideo(
-                                        pestControlData[index]['link']);
+                                        pestControlData[index]['videoUrl']);
                                   },
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
@@ -280,7 +281,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
                                               child: Image.network(
                                                 getImageLinkFromVideoLink(
                                                     pestControlData[index]
-                                                        ['link']),
+                                                        ['videoUrl']),
                                                 fit: BoxFit.cover,
                                                 width: double.infinity,
                                               ),
