@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PestControlScreen extends StatefulWidget {
   final String cropName;
@@ -26,7 +27,28 @@ class _PestControlScreenState extends State<PestControlScreen> {
   void initState() {
     pestControlDataFuture =
         getPestControlDataForCropName(cropName: widget.cropName.toLowerCase());
+    Future.delayed(Duration(milliseconds: 500), () {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Single Tap to view PDF, Double Tap to view image",
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor: MyTheme.accent_color,
+          duration: Duration(seconds: 3),
+        ),
+      );
+    });
     super.initState();
+  }
+
+  void _launchPDF(String url) async {
+    String pdfUrl = url;
+    if (await canLaunchUrl(Uri.parse(pdfUrl))) {
+      await launchUrl(Uri.parse(pdfUrl));
+    } else {
+      throw 'Could not launch $pdfUrl';
+    }
   }
 
   Future<List> getPestControlDataForCropName({required String cropName}) async {
@@ -101,6 +123,8 @@ class _PestControlScreenState extends State<PestControlScreen> {
           }
           if (snapshot.hasData && snapshot.data != null) {
             List pestControlData = snapshot.data!;
+            print(pestControlData);
+
             return pestControlData.length == 0
                 ? Container(
                     child: Center(
@@ -121,18 +145,21 @@ class _PestControlScreenState extends State<PestControlScreen> {
                           children: [
                             StageHeading(
                                 pestControlData[index]['stageName'].toString()),
-                            pestControlData[index]['pestAndDiseases'].length ==
-                                    0
+                            pestControlData[index]['pestAndDiseases'] == null ||
+                                    pestControlData[index]['pestAndDiseases']
+                                            .length ==
+                                        0
                                 ? Container(
                                     height: 100,
                                     child: Center(
-                                        child: Text(
-                                      AppLocalizations.of(context)!
-                                          .no_data_is_available,
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500),
-                                    )),
+                                      child: Text(
+                                        AppLocalizations.of(context)!
+                                            .no_data_is_available,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
                                   )
                                 : MasonryGridView.count(
                                     crossAxisCount: 3,
@@ -158,7 +185,8 @@ class _PestControlScreenState extends State<PestControlScreen> {
                                               ['pestAndDiseases'][index2]
                                           ['contentUrl'];
                                       return InkWell(
-                                        onTap: () {
+                                        onTap: () => _launchPDF(description),
+                                        onDoubleTap: () {
                                           showDialog(
                                               context: context,
                                               builder: (dialogContext) {
@@ -176,7 +204,7 @@ class _PestControlScreenState extends State<PestControlScreen> {
                                                     height: MediaQuery.sizeOf(
                                                                 context)
                                                             .height *
-                                                        0.5,
+                                                        0.35,
                                                     padding: EdgeInsets.only(
                                                         top: 10),
                                                     child: Column(
@@ -223,33 +251,33 @@ class _PestControlScreenState extends State<PestControlScreen> {
                                                         ),
 
                                                         // description
-                                                        Expanded(
-                                                          child:
-                                                              SingleChildScrollView(
-                                                            physics:
-                                                                BouncingScrollPhysics(),
-                                                            child: Container(
-                                                              padding: EdgeInsets
-                                                                  .symmetric(
-                                                                      horizontal:
-                                                                          10,
-                                                                      vertical:
-                                                                          10),
-                                                              width: double
-                                                                  .infinity,
-                                                              child: Text(
-                                                                description
-                                                                    .toString(),
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        16,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
+                                                        // Expanded(
+                                                        //   child:
+                                                        //       SingleChildScrollView(
+                                                        //     physics:
+                                                        //         BouncingScrollPhysics(),
+                                                        //     child: Container(
+                                                        //       padding: EdgeInsets
+                                                        //           .symmetric(
+                                                        //               horizontal:
+                                                        //                   10,
+                                                        //               vertical:
+                                                        //                   10),
+                                                        //       width: double
+                                                        //           .infinity,
+                                                        //       child: Text(
+                                                        //         description
+                                                        //             .toString(),
+                                                        //         style: TextStyle(
+                                                        //             fontSize:
+                                                        //                 16,
+                                                        //             fontWeight:
+                                                        //                 FontWeight
+                                                        //                     .w600),
+                                                        //       ),
+                                                        //     ),
+                                                        //   ),
+                                                        // ),
                                                       ],
                                                     ),
                                                   ),
