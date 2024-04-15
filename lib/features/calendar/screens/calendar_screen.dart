@@ -659,22 +659,71 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                             physics:
                                                 NeverScrollableScrollPhysics(),
                                             itemBuilder: (context, index) {
+                                              var substageList =
+                                                  (docData['stages'][index]
+                                                      ['substages']);
+                                              int len = substageList.length;
+                                              if (len == 0) {
+                                                return SizedBox(
+                                                  height: 10,
+                                                );
+                                              }
+                                              if (len == 1) {
+                                                return CalendarStageItem(
+                                                  stageName:
+                                                      '${AppLocalizations.of(context)!.stage_for_calendar} ${index + 1}',
+                                                  stage1text: docData['stages']
+                                                                      [index]
+                                                                  ['substages']
+                                                              [0]['name'] !=
+                                                          ""
+                                                      ? docData['stages'][index]
+                                                              ['substages'][0]
+                                                          ['name']
+                                                      : "N/A",
+                                                  stage2text: "N/A",
+                                                  initialDate:
+                                                      currentCrop.plantingDate!,
+                                                  // .add(Duration(
+                                                  //     days: docData['stages']
+                                                  //             [index]['0']
+                                                  //         ['days'])),
+                                                  stage1days: docData['stages']
+                                                          [index]['substages']
+                                                      [0]['days'],
+                                                  stage2days: 0,
+                                                );
+                                              }
                                               return docData['stages'][index]
                                                           ['substages'] !=
                                                       null
                                                   ? CalendarStageItem(
                                                       stageName:
                                                           '${AppLocalizations.of(context)!.stage_for_calendar} ${index + 1}',
-                                                      stage1text:
-                                                          docData['stages']
+                                                      stage1text: docData['stages']
+                                                                          [
+                                                                          index]
+                                                                      [
+                                                                      'substages']
+                                                                  [0]['name'] !=
+                                                              ""
+                                                          ? docData['stages']
                                                                       [index]
                                                                   ['substages']
-                                                              [0]['name'],
-                                                      stage2text:
-                                                          docData['stages']
+                                                              [0]['name']
+                                                          : "N/A",
+                                                      stage2text: docData['stages']
+                                                                          [
+                                                                          index]
+                                                                      [
+                                                                      'substages']
+                                                                  [1]['name'] !=
+                                                              ""
+                                                          ? docData['stages']
                                                                       [index]
                                                                   ['substages']
-                                                              [1]['name'],
+                                                              [1]['name']
+                                                          : "N/A",
                                                       initialDate: currentCrop
                                                           .plantingDate!,
                                                       // .add(Duration(
@@ -686,11 +735,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                                                       [index]
                                                                   ['substages']
                                                               [0]['days'],
-                                                      stage2days:
-                                                          docData['stages']
-                                                                      [index]
-                                                                  ['substages']
-                                                              [1]['days'],
+                                                      stage2days: 0,
                                                     )
                                                   : SizedBox(
                                                       height: 10,
@@ -884,30 +929,34 @@ class _CalendarScreenState extends State<CalendarScreen> {
               ),
             ],
           ),
-          Row(
-            children: [
-              Container(
-                child: Text(
-                  "${stage2Date.day}/${stage2Date.month}/${stage2Date.year}:",
-                  style: TextStyle(
-                      color: MyTheme.primary_color,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: "Poppins"),
+          stage2text == "N/A"
+              ? SizedBox(
+                  height: 20,
+                )
+              : Row(
+                  children: [
+                    Container(
+                      child: Text(
+                        "${stage2Date.day}/${stage2Date.month}/${stage2Date.year}:",
+                        style: TextStyle(
+                            color: MyTheme.primary_color,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: "Poppins"),
+                      ),
+                    ),
+                    SizedBox(width: 15),
+                    Container(
+                      child: Text(
+                        stage2text,
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: "Poppins"),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              SizedBox(width: 15),
-              Container(
-                child: Text(
-                  stage2text,
-                  style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: "Poppins"),
-                ),
-              ),
-            ],
-          ),
           SizedBox(
             height: 20,
           )

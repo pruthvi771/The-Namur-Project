@@ -1,10 +1,12 @@
-import 'package:active_ecommerce_flutter/my_theme.dart';
-import 'package:active_ecommerce_flutter/utils/imageLinks.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import 'package:active_ecommerce_flutter/my_theme.dart';
+import 'package:active_ecommerce_flutter/utils/imageLinks.dart';
 
 class CultivationTipsScreen extends StatefulWidget {
   final String cropName;
@@ -24,7 +26,28 @@ class _CultivationTipsScreenState extends State<CultivationTipsScreen> {
   void initState() {
     cultivationDataFuture =
         getCultivationTipsForCropName(cropName: widget.cropName.toLowerCase());
+    Future.delayed(Duration(milliseconds: 500), () {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Single Tap to view PDF, Double Tap to view image",
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor: MyTheme.accent_color,
+          duration: Duration(seconds: 3),
+        ),
+      );
+    });
     super.initState();
+  }
+
+  void _launchPDF(String url) async {
+    String pdfUrl = url;
+    if (await canLaunchUrl(Uri.parse(pdfUrl))) {
+      await launchUrl(Uri.parse(pdfUrl));
+    } else {
+      throw 'Could not launch $pdfUrl';
+    }
   }
 
   Future<List<dynamic>> getCultivationTipsForCropName(
@@ -126,7 +149,8 @@ class _CultivationTipsScreenState extends State<CultivationTipsScreen> {
                         var name = cultivationData[index]['title'];
                         var description = cultivationData[index]['dataUrl'];
                         return InkWell(
-                          onTap: () {
+                          onTap: () => _launchPDF(description),
+                          onDoubleTap: () {
                             showDialog(
                                 context: context,
                                 builder: (dialogContext) {
@@ -138,7 +162,7 @@ class _CultivationTipsScreenState extends State<CultivationTipsScreen> {
                                     content: Container(
                                       height:
                                           MediaQuery.sizeOf(context).height *
-                                              0.5,
+                                              0.35,
                                       padding: EdgeInsets.only(top: 10),
                                       child: Column(
                                         mainAxisAlignment:
@@ -172,26 +196,26 @@ class _CultivationTipsScreenState extends State<CultivationTipsScreen> {
                                           ),
 
                                           // description
-                                          Expanded(
-                                            child: SingleChildScrollView(
-                                              physics: BouncingScrollPhysics(),
-                                              child: Container(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 10,
-                                                    vertical: 10),
-                                                width: double.infinity,
-                                                child: Text(
-                                                  description.toString() == ''
-                                                      ? "No description Data Exists"
-                                                      : description.toString(),
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
+                                          // Expanded(
+                                          //   child: SingleChildScrollView(
+                                          //     physics: BouncingScrollPhysics(),
+                                          //     child: Container(
+                                          //       padding: EdgeInsets.symmetric(
+                                          //           horizontal: 10,
+                                          //           vertical: 10),
+                                          //       width: double.infinity,
+                                          //       child: Text(
+                                          //         description.toString() == ''
+                                          //             ? "No description Data Exists"
+                                          //             : description.toString(),
+                                          //         style: TextStyle(
+                                          //           fontSize: 16,
+                                          //           fontWeight: FontWeight.w600,
+                                          //         ),
+                                          //       ),
+                                          //     ),
+                                          //   ),
+                                          // ),
                                         ],
                                       ),
                                     ),
