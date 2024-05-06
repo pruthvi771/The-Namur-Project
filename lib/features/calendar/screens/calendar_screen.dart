@@ -3,7 +3,6 @@ import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_add_
 import 'package:active_ecommerce_flutter/features/calendar/screens/cultivation_tips_screen.dart';
 import 'package:active_ecommerce_flutter/features/calendar/screens/pest_control_screen.dart';
 import 'package:active_ecommerce_flutter/features/calendar/screens/schedule_screen.dart';
-import 'package:active_ecommerce_flutter/features/calendar/screens/tutorial_screen.dart';
 import 'package:active_ecommerce_flutter/features/profile/address_list.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
@@ -403,49 +402,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                           Text(
                                             AppLocalizations.of(context)!
                                                 .schedule,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                fontFamily: "Poppins"),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-
-                                  SizedBox(width: 15),
-
-                                  Expanded(
-                                    child: InkWell(
-                                      onTap: () {
-                                        //
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                TutorialScreen(
-                                              cropName: currentCrop.cropName,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            width: 55,
-                                            height: 55,
-                                            decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
-                                            child: Image.asset(
-                                                "assets/tutorial.png"),
-                                          ),
-                                          SizedBox(height: 3),
-                                          Text(
-                                            AppLocalizations.of(context)!
-                                                .tutorial_ucf,
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w500,
                                                 fontFamily: "Poppins"),

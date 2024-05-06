@@ -1,3 +1,4 @@
+import 'package:active_ecommerce_flutter/features/calendar/screens/tutorial_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -71,45 +72,79 @@ class _CultivationTipsScreenState extends State<CultivationTipsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Scaffold(
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            flexibleSpace: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Color(0xff107B28), Color(0xff4C7B10)]),
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xff107B28), Color(0xff4C7B10)]),
+          ),
+        ),
+        title: Text(AppLocalizations.of(context)!.cultivation_tips_ucf,
+            style: TextStyle(
+                color: MyTheme.white,
+                fontWeight: FontWeight.w500,
+                letterSpacing: .5,
+                fontFamily: 'Poppins')),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              Icons.keyboard_arrow_left,
+              size: 35,
+              color: MyTheme.white,
+            ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+        ],
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          buildBody(),
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TutorialScreen(
+                    cropName: widget.cropName,
+                  ),
+                ),
+              );
+            },
+            child: Container(
+              color: MyTheme.green_light,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    "assets/tutorial.png",
+                    height: 65,
+                    width: 65,
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    AppLocalizations.of(context)!.tutorial_ucf,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                        fontFamily: "Poppins"),
+                  )
+                ],
               ),
             ),
-            title: Text(AppLocalizations.of(context)!.cultivation_tips_ucf,
-                style: TextStyle(
-                    color: MyTheme.white,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: .5,
-                    fontFamily: 'Poppins')),
-            centerTitle: true,
-            actions: [
-              IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(
-                  Icons.keyboard_arrow_left,
-                  size: 35,
-                  color: MyTheme.white,
-                ),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-            ],
           ),
-          body: buildBody(),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
