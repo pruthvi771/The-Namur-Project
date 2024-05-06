@@ -13,6 +13,7 @@
   "add_new_products_ucf": "नए उत्पाद जोड़ें",
   "add_to_cart_ucf": "कार्ट में जोड़ें",
   "add_ucf": "जोड़ें",
+  "acres": "एकड़",
   "add_your_coupon_code_ucf": "अपना कूपन कोड जोड़ें",
   "added_to_cart": "कार्ट में जोड़ा गया",
   "address_ucf": "पता",
@@ -1136,8 +1137,8 @@
   "home_made": "घर का बना",
   "other_others": "अन्य",
   "service_temporarily_unavailable": "सेवा अस्थाई रूप से अनुपलब्ध",
-  "pincode":"पिन कोड",
-"refresh_page_to_see_new_address": "नया पता देखने के लिए पेज को रीफ़्रेश करें",
-"show_more": "और दिखाएँ",
-"show_less": "कम दिखाएँ"
+  "pincode": "पिन कोड",
+  "refresh_page_to_see_new_address": "नया पता देखने के लिए पेज को रीफ़्रेश करें",
+  "show_more": "और दिखाएँ",
+  "show_less": "कम दिखाएँ"
 }
