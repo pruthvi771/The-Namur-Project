@@ -556,7 +556,7 @@ class _ProductPostState extends State<ProductPost> {
         productCategoryEnum == CategoryEnum.attachments ||
         productCategoryEnum == CategoryEnum.sparesService) {
       selectedQuantityUnit = listOfQuantityUnits[0];
-      showQuantityDropdown = true;
+      showQuantityDropdown = false;
     }
     if (_selectedItem == "On Rent") {
       machinePriceHintText = 'Price (per hr)';
@@ -980,58 +980,77 @@ class _ProductPostState extends State<ProductPost> {
                   ),
                 ),
                 SizedBox(width: 10),
-                if (showQuantityDropdown)
-                  Container(
-                    // width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: MyTheme.field_color,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 6),
-                          child: Icon(
-                            Icons.close,
-                            color: Colors.grey[600],
-                            size: 15,
-                          ),
+                showQuantityDropdown
+                    ? Container(
+                        // width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: MyTheme.field_color,
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        DropdownButton<String>(
-                          dropdownColor: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(18),
-                          menuMaxHeight: 200,
-                          padding: EdgeInsets.only(left: 15, right: 5),
-                          underline: Container(
-                            height: 0,
-                            color: Colors.transparent,
-                          ),
-                          value: selectedQuantityUnit,
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              selectedQuantityUnit = newValue!;
-                            });
-                          },
-                          items: listOfQuantityUnits
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                          hint: Text(
-                            AppLocalizations.of(context)!.select_quantity_unit,
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontWeight: FontWeight.w400,
-                              fontFamily: 'Poppins',
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 6),
+                              child: Icon(
+                                Icons.close,
+                                color: Colors.grey[600],
+                                size: 15,
+                              ),
                             ),
-                          ),
-                          // icon: SizedBox(width: 24),
+                            DropdownButton<String>(
+                              dropdownColor: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(18),
+                              menuMaxHeight: 200,
+                              padding: EdgeInsets.only(left: 15, right: 5),
+                              underline: Container(
+                                height: 0,
+                                color: Colors.transparent,
+                              ),
+                              value: selectedQuantityUnit,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedQuantityUnit = newValue!;
+                                });
+                              },
+                              items: listOfQuantityUnits
+                                  .map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                              hint: Text(
+                                AppLocalizations.of(context)!
+                                    .select_quantity_unit,
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: 'Poppins',
+                                ),
+                              ),
+                              // icon: SizedBox(width: 24),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
+                      )
+                    : Container(
+                        height: 200,
+                        decoration: BoxDecoration(
+                          color: MyTheme.field_color,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        width: MediaQuery.sizeOf(context).width / 5,
+                        child: Center(
+                            child: Text(
+                          'Units',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: MyTheme.font_grey,
+                          ),
+                        )),
+                      ),
               ],
             ),
           ),
