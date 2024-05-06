@@ -426,21 +426,21 @@ class _LoginState extends State<Login> {
                                       ],
                                     ),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 10, right: 20),
-                                    child: InkWell(
-                                      onTap: () {
-                                        // onPressedGoogleLogin(context);
-                                        onPressedFacebookLogin(context);
-                                      },
-                                      child: Container(
-                                        width: 40,
-                                        child: Image.asset(
-                                            "assets/facebook_logo.png"),
-                                      ),
-                                    ),
-                                  ),
+                                  // Padding(
+                                  //   padding: const EdgeInsets.only(
+                                  //       left: 10, right: 20),
+                                  //   child: InkWell(
+                                  //     onTap: () {
+                                  //       // onPressedGoogleLogin(context);
+                                  //       onPressedFacebookLogin(context);
+                                  //     },
+                                  //     child: Container(
+                                  //       width: 40,
+                                  //       child: Image.asset(
+                                  //           "assets/facebook_logo.png"),
+                                  //     ),
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                               Padding(

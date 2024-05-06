@@ -44,7 +44,7 @@ class _RegistrationState extends State<Registration> {
 
   bool isPhoneNumberEmpty = true;
 
-  bool? _isAgree = false;
+  bool? _isAgree = true;
   //controllers
   TextEditingController _nameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
