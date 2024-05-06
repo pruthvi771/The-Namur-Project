@@ -1803,7 +1803,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
 
                       TextFieldWidget('Syno', _synoController,
-                          '${localContext.enter} Syno'),
+                          '${localContext.enter} Surveyno'),
 
                       //custom Area text field for accepting double values
                       TexiFieldWidgetForDouble(
@@ -2003,9 +2003,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           Expanded(
                                             flex: 2,
                                             child: TexiFieldWidgetForDouble(
-                                                // 'Yield',
-                                                _yieldController,
-                                                localContext.enter_crop_area),
+                                              // 'Yield',
+                                              _yieldController,
+                                              localContext.acres,
+                                            ),
                                           ),
                                         ],
                                       ),
