@@ -56,6 +56,86 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:581813390000:android:be2f9158368c7521ae8975",
+        "android_client_info": {
+          "package_name": "com.inkaanalysis.namur"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "581813390000-cockp1hrdsac5h8b9k9ceas7bqe5p4tj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvsmahZ-zyp9QuNbBo2CAjOQiDCKMJnHs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "581813390000-cockp1hrdsac5h8b9k9ceas7bqe5p4tj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "581813390000-71tugo5f6j3uk6grgc6ftu4htkas3kcr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.activeitzone.ecommerceapplesignup"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:581813390000:android:18f3e1b674dc832aae8975",
+        "android_client_info": {
+          "package_name": "com.inkannalysis.calendar_namur"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "581813390000-4g3rt2sdc63dhfdbr7ahnuv0lfh5u88q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.inkannalysis.calendar_namur",
+            "certificate_hash": "321a4639a78ff6724d34d291f60ebf1943d511c7"
+          }
+        },
+        {
+          "client_id": "581813390000-cockp1hrdsac5h8b9k9ceas7bqe5p4tj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvsmahZ-zyp9QuNbBo2CAjOQiDCKMJnHs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "581813390000-cockp1hrdsac5h8b9k9ceas7bqe5p4tj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "581813390000-71tugo5f6j3uk6grgc6ftu4htkas3kcr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.activeitzone.ecommerceapplesignup"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

@@ -3,23 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>620463100599-ach14i3qo4h3pbgsh57hj6c0pc0dnjgg.apps.googleusercontent.com</string>
+	<string>581813390000-71tugo5f6j3uk6grgc6ftu4htkas3kcr.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.620463100599-ach14i3qo4h3pbgsh57hj6c0pc0dnjgg</string>
+	<string>com.googleusercontent.apps.581813390000-71tugo5f6j3uk6grgc6ftu4htkas3kcr</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>620463100599-6ugm9kpt4scqtr7hl4j35c0loe3mga6c.apps.googleusercontent.com</string>
+	<string>581813390000-3a1134gmu9v843b7204ttbv138mgosuq.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyBbeqHlQdo_R_S59Z2slzGyJ73Tp-dbbNk</string>
+	<string>AIzaSyC5mBmkal_0t0dG1DVyCLSWJZZT3s_MEj8</string>
 	<key>GCM_SENDER_ID</key>
-	<string>620463100599</string>
+	<string>581813390000</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.activeitzone.ecommerceapplesignup</string>
 	<key>PROJECT_ID</key>
-	<string>testproject-43</string>
+	<string>namur-5095e</string>
 	<key>STORAGE_BUCKET</key>
-	<string>testproject-43.appspot.com</string>
+	<string>namur-5095e.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:620463100599:ios:736cbf21eb3a56fd253332</string>
+	<string>1:581813390000:ios:fb81e29ad898f8b2ae8975</string>
 </dict>
 </plist>

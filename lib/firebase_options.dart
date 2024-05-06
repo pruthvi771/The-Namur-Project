@@ -39,7 +39,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAvsmahZ-zyp9QuNbBo2CAjOQiDCKMJnHs',
-    appId: '1:581813390000:android:7db1ed5bdb5ea630ae8975',
+    appId: '1:581813390000:android:be2f9158368c7521ae8975',
     messagingSenderId: '581813390000',
     projectId: 'namur-5095e',
     storageBucket: 'namur-5095e.appspot.com',
@@ -51,6 +51,9 @@ class DefaultFirebaseOptions {
     messagingSenderId: '581813390000',
     projectId: 'namur-5095e',
     storageBucket: 'namur-5095e.appspot.com',
+    androidClientId: '581813390000-3a1134gmu9v843b7204ttbv138mgosuq.apps.googleusercontent.com',
+    iosClientId: '581813390000-71tugo5f6j3uk6grgc6ftu4htkas3kcr.apps.googleusercontent.com',
     iosBundleId: 'com.activeitzone.ecommerceapplesignup',
   );
+
 }

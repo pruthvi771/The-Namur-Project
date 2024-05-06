@@ -1,4 +1,4 @@
-package com.enamour.app
+package com.inkaanalysis.namur
 
 import io.flutter.embedding.android.FlutterActivity
 
