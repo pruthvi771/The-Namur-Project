@@ -320,7 +320,7 @@ String translatedName({
     case 'cultivator':
       return AppLocalizations.of(context)!.cultivator;
     case 'backhoe':
-      return AppLocalizations.of(context)!.backhoe;
+      return "JCB";
     case 'billhook':
       return AppLocalizations.of(context)!.billhook;
     case 'car':
