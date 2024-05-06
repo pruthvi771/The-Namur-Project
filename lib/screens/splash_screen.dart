@@ -29,7 +29,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _initPackageInfo();
     getSharedValueHelperData().then((value) {
@@ -37,7 +36,6 @@ class _SplashScreenState extends State<SplashScreen> {
         Provider.of<LocaleProvider>(context, listen: false)
             .setLocale(app_mobile_language.$!);
 
-        // user = AuthService.firebase().currentUser;
         final FirebaseAuth auth = FirebaseAuth.instance;
         final User? user = auth.currentUser;
         if (user != null) {
@@ -76,7 +74,7 @@ class _SplashScreenState extends State<SplashScreen> {
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  return Login(); // Main(go_back: false,);
+                  return Login();
                 },
               ),
               (route) => false,
@@ -87,7 +85,7 @@ class _SplashScreenState extends State<SplashScreen> {
             context,
             MaterialPageRoute(
               builder: (context) {
-                return Login(); // Main(go_back: false,);
+                return Login();
               },
             ),
             (route) => false,
@@ -114,16 +112,9 @@ class _SplashScreenState extends State<SplashScreen> {
           children: <Widget>[
             Hero(
               tag: "backgroundImageInSplash",
-              // child: Ima(
-              //   // height: MediaQuery.of(context).size.height / 4.5,
-              //   width: MediaQuery.of(context).size.width / 1,
-              //   // child: Image.asset("assets/splash.png"),
-              //   child: Image.asset("assets/pp.png"),
-              // ),
               child: Image.asset(
                 "assets/pp2.png",
                 width: MediaQuery.of(context).size.width / 2.4,
-                // filterQuality: FilterQuality.high,
               ),
             ),
             SizedBox(
@@ -132,86 +123,28 @@ class _SplashScreenState extends State<SplashScreen> {
             Hero(
               tag: "backgroundImageInSplash",
               child: Image.asset(
-                "assets/Namur_logo_text.png",
-                width: MediaQuery.of(context).size.width / 2.6,
+                "assets/kannada-namur-splash.jpg",
+                width: MediaQuery.of(context).size.width,
               ),
             ),
-
-            /* Positioned.fill(
-              top: DeviceInfo(context).height!/2-72,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10.0),
-                    child: Hero(
-                      tag: "splashscreenImage",
-                      child: Container(
-                        height: 500,
-                        width: 500,
-                        padding: EdgeInsets.symmetric(horizontal: 12,vertical: 12),
-                        decoration: BoxDecoration(
-                          color: MyTheme.white,
-                          borderRadius: BorderRadius.circular(8)
-                        ),
-                        child: Image.asset(
-                            "assets/splash.png",
-                          filterQuality: FilterQuality.high,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 5.0),
-                    child: Text(
-                      AppConfig.app_name,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14.0,
-                          color: Colors.white),
-                    ),
-                  ),
-                  Text(
-                    "V " + _packageInfo.version,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14.0,
-                        color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
+            SizedBox(
+              height: 5,
             ),
-*/
-
-            /* Positioned.fill(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 51.0),
-                  child: Text(
-                    AppConfig.copyright_text,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 13.0,
-                      color: Colors.white,
-                    ),
+            Stack(
+              children: [
+                Image.asset(
+                  "assets/namur-english-splashbackground.png",
+                  width: MediaQuery.of(context).size.width,
+                ),
+                Positioned(
+                  right: -MediaQuery.of(context).size.width / 5.5,
+                  child: Image.asset(
+                    "assets/namur-splash-text.png",
+                    width: MediaQuery.of(context).size.width,
                   ),
                 ),
-              ),
-            ),*/
-/*
-            Padding(
-              padding: const EdgeInsets.only(top: 120.0),
-              child: Container(
-                  width: double.infinity,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-
-                    ],
-                  )),
-            ),*/
+              ],
+            ),
           ],
         ),
       ),
@@ -222,16 +155,11 @@ class _SplashScreenState extends State<SplashScreen> {
     access_token.load().whenComplete(() {
       AuthHelper().fetch_and_set();
     });
-    // AddonsHelper().setAddonsData();
-    // BusinessSettingHelper().setBusinessSettingData();
+
     await app_language.load();
     await app_mobile_language.load();
     await app_language_rtl.load();
     await system_currency.load();
-    // Provider.of<CurrencyPresenter>(context, listen: false).fetchListData();
-
-    //
-    //
 
     return app_mobile_language.$;
   }

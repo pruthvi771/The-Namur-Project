@@ -1315,16 +1315,16 @@ class _AddressState extends State<Address> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            AppLocalizations.of(context)!.addresses_of_user,
+            AppLocalizations.of(context)!.coming_soon,
             style: TextStyle(
                 fontSize: 16,
                 color: MyTheme.white,
                 fontWeight: FontWeight.bold),
           ),
-          Text(
-            "* ${AppLocalizations.of(context)!.double_tap_on_an_address_to_make_it_default}",
-            style: TextStyle(fontSize: 10, color: MyTheme.medium_grey),
-          ),
+          // Text(
+          //   "* ${AppLocalizations.of(context)!.double_tap_on_an_address_to_make_it_default}",
+          //   style: TextStyle(fontSize: 10, color: MyTheme.medium_grey),
+          // ),
         ],
       ),
       elevation: 0.0,
