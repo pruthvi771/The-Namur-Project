@@ -13,6 +13,8 @@ String translatedName({
   switch (name) {
     case 'banana':
       return AppLocalizations.of(context)!.banana;
+    case 'N/A':
+      return 'N/A';
     case 'beetroot':
       return AppLocalizations.of(context)!.beetroot;
     case 'betel nut':
@@ -558,6 +560,7 @@ String translatedName({
 
 // sorted
 List<String> crops = [
+  'N/A',
   // '',
   'Banana',
   'Beetroot',
@@ -619,11 +622,12 @@ List<String> crops = [
   'Sweet Potato',
   'Tamarind',
   'Tomato',
-  'Wheat'
+  'Wheat',
 ];
 
 // sorted
 List<String> equipment = [
+  'N/A',
   // '',
   'Backhoe',
   'Billhook',
@@ -664,6 +668,7 @@ var districtListForWeather = [
 
 // sorted
 List<String> animals = [
+  'N/A',
   'Bee',
   'Black Cat',
   'Buffalo',
@@ -683,5 +688,5 @@ List<String> animals = [
   'Rabbit',
   'Sheep',
   'Sparrow',
-  'Turkey'
+  'Turkey',
 ];
