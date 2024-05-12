@@ -618,12 +618,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                               var substageList =
                                                   (docData['stages'][index]
                                                       ['substages']);
-                                              int len = substageList.length;
-                                              if (len == 0) {
+
+                                              if (substageList == null) {
                                                 return SizedBox(
                                                   height: 10,
                                                 );
                                               }
+                                              int len = substageList!.length;
                                               if (len == 1) {
                                                 return CalendarStageItem(
                                                   stageName:
