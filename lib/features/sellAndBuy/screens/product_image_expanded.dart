@@ -23,6 +23,7 @@ class _ProductImageExpandedState extends State<ProductImageExpanded> {
 
   @override
   Widget build(BuildContext context) {
+    int totalNumberOfImages = widget.sellProduct.imageURL.length;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -62,8 +63,8 @@ class _ProductImageExpandedState extends State<ProductImageExpanded> {
         children: [
           // product images
           Container(
-            margin: EdgeInsets.all(15),
-            height: MediaQuery.of(context).size.height * 0.6,
+            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            // height: MediaQuery.of(context).size.height * 0.6,
             // color: Colors.red[100],
             child: CarouselSlider(
               items: widget.sellProduct.imageURL.map((fileURL) {
@@ -95,7 +96,7 @@ class _ProductImageExpandedState extends State<ProductImageExpanded> {
                   viewportFraction: 1,
                   autoPlay: false,
                   enlargeCenterPage: true,
-                  enableInfiniteScroll: false,
+                  enableInfiniteScroll: totalNumberOfImages > 1 ? true : false,
                   aspectRatio: 1 / 1.5,
                   onPageChanged: (index, reason) {
                     setState(() {
