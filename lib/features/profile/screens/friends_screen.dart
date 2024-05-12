@@ -2,6 +2,7 @@ import 'package:active_ecommerce_flutter/features/auth/models/auth_user.dart';
 import 'package:active_ecommerce_flutter/features/auth/models/seller_group_item.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
+import 'package:active_ecommerce_flutter/features/profile/screens/edit_profile.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/friends_bloc/friends_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/misc_bloc/misc_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/subSubCategory_filter_item.dart';
@@ -134,9 +135,27 @@ class _FriendsState extends State<Friends> {
       ),
       body: userAddress == null
           ? Center(
-              child: Text(
-                AppLocalizations.of(context)!.add_address_to_see_this,
-                style: TextStyle(fontSize: 17, color: Colors.black45),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.add_address_to_see_this,
+                    style: TextStyle(fontSize: 17, color: Colors.black45),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => EditProfileScreen()));
+                    },
+                    child: Text(AppLocalizations.of(context)!.add_address),
+                  ),
+                ],
               ),
             )
           : FutureBuilder(
