@@ -46,7 +46,7 @@ class _AddWeatherLocationState extends State<AddWeatherLocation> {
   Future<void> addPrimaryLocationToHive() async {
     var dataBox = Hive.box<hiveModels.PrimaryLocation>('primaryLocationBox');
 
-    var savedData = dataBox.get('locationData');
+    // var savedData = dataBox.get('locationData');
 
     var primaryLocation = hiveModels.PrimaryLocation()
       ..id = "locationData"

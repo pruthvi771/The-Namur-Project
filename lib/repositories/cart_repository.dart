@@ -11,12 +11,11 @@ import 'package:active_ecommerce_flutter/data_model/check_response_model.dart';
 import 'package:active_ecommerce_flutter/helpers/response_check.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 import 'package:active_ecommerce_flutter/helpers/system_config.dart';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class CartRepository {
   Future<dynamic> getCartResponseList(
-    @required int? user_id,
+    int? userId,
   ) async {
     Uri url = Uri.parse("${AppConfig.BASE_URL}/carts");
     final response = await http.post(
@@ -60,9 +59,9 @@ class CartRepository {
   }
 
   Future<dynamic> getCartDeleteResponse(
-    @required int? cart_id,
+    int? cartId,
   ) async {
-    Uri url = Uri.parse("${AppConfig.BASE_URL}/carts/$cart_id");
+    Uri url = Uri.parse("${AppConfig.BASE_URL}/carts/$cartId");
     final response = await http.delete(
       url,
       headers: {
@@ -79,9 +78,9 @@ class CartRepository {
   }
 
   Future<dynamic> getCartProcessResponse(
-      @required String cart_ids, @required String cart_quantities) async {
-    var post_body = jsonEncode(
-        {"cart_ids": "${cart_ids}", "cart_quantities": "$cart_quantities"});
+      String cartIds, String cartQuantities) async {
+    var postBody = jsonEncode(
+        {"cart_ids": "$cartIds", "cart_quantities": "$cartQuantities"});
 
     Uri url = Uri.parse("${AppConfig.BASE_URL}/carts/process");
     final response = await http.post(url,
@@ -90,7 +89,7 @@ class CartRepository {
           "Authorization": "Bearer ${access_token.$}",
           "App-Language": app_language.$!
         },
-        body: post_body);
+        body: postBody);
     bool checkResult = ResponseCheck.apply(response.body);
 
     if (!checkResult) return responseCheckModelFromJson(response.body);
@@ -100,14 +99,11 @@ class CartRepository {
   }
 
   Future<dynamic> getCartAddResponse(
-      @required int? id,
-      @required String? variant,
-      @required int? user_id,
-      @required int? quantity) async {
-    var post_body = jsonEncode({
-      "id": "${id}",
+      int? id, String? variant, int? userId, int? quantity) async {
+    var postBody = jsonEncode({
+      "id": "$id",
       "variant": variant,
-      "user_id": "$user_id",
+      "user_id": "$userId",
       "quantity": "$quantity",
       "cost_matrix": AppConfig.purchase_code
     });
@@ -119,7 +115,7 @@ class CartRepository {
           "Authorization": "Bearer ${access_token.$}",
           "App-Language": app_language.$!
         },
-        body: post_body);
+        body: postBody);
 
     bool checkResult = ResponseCheck.apply(response.body);
 

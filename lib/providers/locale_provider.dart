@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 import 'package:flutter/material.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
 

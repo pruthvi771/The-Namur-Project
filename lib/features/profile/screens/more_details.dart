@@ -31,7 +31,7 @@ class MoreDetails extends StatefulWidget {
 }
 
 class _MoreDetailsState extends State<MoreDetails> {
-  final _kycController = ExpandedTileController(isExpanded: true);
+  // final _kycController = ExpandedTileController(isExpanded: true);
   final _addressController = new ExpandedTileController(isExpanded: true);
   // final _landDetailsController = new ExpandedTileController();
   final _cropsController = new ExpandedTileController(isExpanded: true);

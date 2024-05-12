@@ -25,7 +25,7 @@ class ResponseCheck {
         return false;
       }
     } on Exception catch (e) {
-      // TODO
+      print(e);
     }
     return true;
   }

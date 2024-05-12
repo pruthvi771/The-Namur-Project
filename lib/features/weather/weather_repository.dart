@@ -108,10 +108,10 @@ class WeatherRepository {
 
       var secondarySavedData = secondaryDataBox.get('secondaryLocations');
 
-      if (secondarySavedData == null) {
-      } else {
-        for (var secondaryDataBox in secondarySavedData.address) {}
-      }
+      // if (secondarySavedData == null) {
+      // } else {
+      //   for (var secondaryDataBox in secondarySavedData.address) {}
+      // }
 
       var secondaryCurrentResponseList = [];
 

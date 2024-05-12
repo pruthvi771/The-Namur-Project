@@ -4,7 +4,7 @@ import 'package:active_ecommerce_flutter/custom/box_decorations.dart';
 import 'package:active_ecommerce_flutter/custom/device_info.dart';
 import 'package:active_ecommerce_flutter/features/calendar/screens/calendar_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/parent_screen.dart';
-import 'package:active_ecommerce_flutter/features/testscreen.dart';
+// import 'package:active_ecommerce_flutter/features/testscreen.dart';
 import 'package:active_ecommerce_flutter/helpers/shimmer_helper.dart';
 import 'package:active_ecommerce_flutter/presenter/bottom_appbar_index.dart';
 import 'package:active_ecommerce_flutter/utils/enums.dart';
@@ -27,17 +27,17 @@ import 'package:get/get.dart';
 class CategoryList extends StatefulWidget {
   CategoryList({
     Key? key,
-    this.parent_category_id = 0,
-    this.parent_category_name = "",
-    this.is_base_category = false,
-    this.is_top_category = false,
+    this.parentCategoryId = 0,
+    this.parentCategoryName = "",
+    this.isBaseCategory = false,
+    this.isTopCategory = false,
     this.bottomAppbarIndex,
   }) : super(key: key);
 
-  final int parent_category_id;
-  final String parent_category_name;
-  final bool is_base_category;
-  final bool is_top_category;
+  final int parentCategoryId;
+  final String parentCategoryName;
+  final bool isBaseCategory;
+  final bool isTopCategory;
   final BottomAppbarIndex? bottomAppbarIndex;
 
   @override
@@ -344,7 +344,7 @@ class _CategoryListState extends State<CategoryList> {
                       ),
 
                       Container(
-                        height: widget.is_base_category ? 90 : 90,
+                        height: widget.isBaseCategory ? 90 : 90,
                       ),
                     ]))
                   ],
@@ -366,11 +366,11 @@ class _CategoryListState extends State<CategoryList> {
   // });
 
   String getAppBarTitle() {
-    String name = widget.parent_category_name == ""
-        ? (widget.is_top_category
+    String name = widget.parentCategoryName == ""
+        ? (widget.isTopCategory
             ? AppLocalizations.of(context)!.top_categories_ucf
             : AppLocalizations.of(context)!.home_ucf)
-        : widget.parent_category_name;
+        : widget.parentCategoryName;
 
     return name;
   }
@@ -385,7 +385,7 @@ class _CategoryListState extends State<CategoryList> {
       ),
       itemCount: 4,
       padding: EdgeInsets.only(
-          left: 18, right: 18, bottom: widget.is_base_category ? 10 : 0),
+          left: 18, right: 18, bottom: widget.isBaseCategory ? 10 : 0),
       scrollDirection: Axis.vertical,
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
@@ -599,7 +599,7 @@ class _CategoryListState extends State<CategoryList> {
       ),
       itemCount: 18,
       padding: EdgeInsets.only(
-          left: 18, right: 18, bottom: widget.is_base_category ? 30 : 0),
+          left: 18, right: 18, bottom: widget.isBaseCategory ? 30 : 0),
       scrollDirection: Axis.vertical,
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,

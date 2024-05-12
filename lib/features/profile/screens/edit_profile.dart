@@ -50,9 +50,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController _synoController = TextEditingController();
   TextEditingController _areaController = TextEditingController();
 
-  TextEditingController _aadharController = TextEditingController();
-  TextEditingController _panController = TextEditingController();
-  TextEditingController _gstController = TextEditingController();
+  // TextEditingController _aadharController = TextEditingController();
+  // TextEditingController _panController = TextEditingController();
+  // TextEditingController _gstController = TextEditingController();
 
   TextEditingController _yieldController = TextEditingController();
   TextEditingController _pinCodeController = TextEditingController();

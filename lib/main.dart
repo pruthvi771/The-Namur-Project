@@ -226,10 +226,10 @@ class _MyAppState extends State<MyApp> {
                   // "/brand_products": (context) =>
                   //     BrandProducts(id: 0, brand_name: ""),
                   "/category_list": (context) => CategoryList(
-                      parent_category_id: 0,
-                      is_base_category: true,
-                      parent_category_name: "",
-                      is_top_category: false),
+                      parentCategoryId: 0,
+                      isBaseCategory: true,
+                      parentCategoryName: "",
+                      isTopCategory: false),
                   // "/category_products": (context) =>
                   //     CategoryProducts(category_id: 0, category_name: ""),
                   // "/chat": (context) => Chat(),

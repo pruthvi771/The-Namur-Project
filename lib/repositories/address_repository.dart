@@ -1,23 +1,23 @@
-import 'package:active_ecommerce_flutter/app_config.dart';
-import 'package:active_ecommerce_flutter/data_model/check_response_model.dart';
-import 'package:active_ecommerce_flutter/helpers/response_check.dart';
-import 'package:active_ecommerce_flutter/helpers/system_config.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'package:active_ecommerce_flutter/data_model/address_response.dart';
+import 'package:http/http.dart' as http;
+
+import 'package:active_ecommerce_flutter/app_config.dart';
 import 'package:active_ecommerce_flutter/data_model/address_add_response.dart';
-import 'package:active_ecommerce_flutter/data_model/address_update_response.dart';
-import 'package:active_ecommerce_flutter/data_model/address_update_location_response.dart';
 import 'package:active_ecommerce_flutter/data_model/address_delete_response.dart';
 import 'package:active_ecommerce_flutter/data_model/address_make_default_response.dart';
+import 'package:active_ecommerce_flutter/data_model/address_response.dart';
 import 'package:active_ecommerce_flutter/data_model/address_update_in_cart_response.dart';
+import 'package:active_ecommerce_flutter/data_model/address_update_location_response.dart';
+import 'package:active_ecommerce_flutter/data_model/address_update_response.dart';
+import 'package:active_ecommerce_flutter/data_model/check_response_model.dart';
 import 'package:active_ecommerce_flutter/data_model/city_response.dart';
-import 'package:active_ecommerce_flutter/data_model/state_response.dart';
 import 'package:active_ecommerce_flutter/data_model/country_response.dart';
 import 'package:active_ecommerce_flutter/data_model/shipping_cost_response.dart';
+import 'package:active_ecommerce_flutter/data_model/state_response.dart';
+import 'package:active_ecommerce_flutter/helpers/response_check.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
-import 'package:flutter/foundation.dart';
+import 'package:active_ecommerce_flutter/helpers/system_config.dart';
 
 class AddressRepository {
   Future<dynamic> getAddressList() async {
@@ -57,18 +57,18 @@ class AddressRepository {
 
   Future<dynamic> getAddressAddResponse(
       {required String address,
-      required int? country_id,
-      required int? state_id,
-      required int? city_id,
-      required String postal_code,
+      required int? countryId,
+      required int? stateId,
+      required int? cityId,
+      required String postalCode,
       required String phone}) async {
-    var post_body = jsonEncode({
+    var postBody = jsonEncode({
       "user_id": "${user_id.$}",
       "address": "$address",
-      "country_id": "$country_id",
-      "state_id": "$state_id",
-      "city_id": "$city_id",
-      "postal_code": "$postal_code",
+      "country_id": "$countryId",
+      "state_id": "$stateId",
+      "city_id": "$cityId",
+      "postal_code": "$postalCode",
       "phone": "$phone"
     });
 
@@ -79,7 +79,7 @@ class AddressRepository {
           "Authorization": "Bearer ${access_token.$}",
           "App-Language": app_language.$!
         },
-        body: post_body);
+        body: postBody);
 
     bool checkResult = ResponseCheck.apply(response.body);
 
@@ -91,19 +91,19 @@ class AddressRepository {
   Future<dynamic> getAddressUpdateResponse(
       {required int? id,
       required String address,
-      required int? country_id,
-      required int? state_id,
-      required int? city_id,
-      required String postal_code,
+      required int? countryId,
+      required int? stateId,
+      required int? cityId,
+      required String postalCode,
       required String phone}) async {
-    var post_body = jsonEncode({
-      "id": "${id}",
+    var postBody = jsonEncode({
+      "id": "$id",
       "user_id": "${user_id.$}",
       "address": "$address",
-      "country_id": "$country_id",
-      "state_id": "$state_id",
-      "city_id": "$city_id",
-      "postal_code": "$postal_code",
+      "country_id": "$countryId",
+      "state_id": "$stateId",
+      "city_id": "$cityId",
+      "postal_code": "$postalCode",
       "phone": "$phone"
     });
 
@@ -114,7 +114,7 @@ class AddressRepository {
           "Authorization": "Bearer ${access_token.$}",
           "App-Language": app_language.$!
         },
-        body: post_body);
+        body: postBody);
 
     bool checkResult = ResponseCheck.apply(response.body);
 
@@ -124,12 +124,12 @@ class AddressRepository {
   }
 
   Future<dynamic> getAddressUpdateLocationResponse(
-    @required int? id,
-    @required double? latitude,
-    @required double? longitude,
+    int? id,
+    double? latitude,
+    double? longitude,
   ) async {
-    var post_body = jsonEncode({
-      "id": "${id}",
+    var postBody = jsonEncode({
+      "id": "$id",
       "user_id": "${user_id.$}",
       "latitude": "$latitude",
       "longitude": "$longitude"
@@ -142,7 +142,7 @@ class AddressRepository {
           "Authorization": "Bearer ${access_token.$}",
           "App-Language": app_language.$!
         },
-        body: post_body);
+        body: postBody);
 
     bool checkResult = ResponseCheck.apply(response.body);
 
@@ -152,9 +152,9 @@ class AddressRepository {
   }
 
   Future<dynamic> getAddressMakeDefaultResponse(
-    @required int? id,
+    int? id,
   ) async {
-    var post_body = jsonEncode({
+    var postBody = jsonEncode({
       "id": "$id",
     });
 
@@ -162,10 +162,9 @@ class AddressRepository {
     final response = await http.post(url,
         headers: {
           "Content-Type": "application/json",
-          "Content-Type": "application/json",
           "Authorization": "Bearer ${access_token.$}"
         },
-        body: post_body);
+        body: postBody);
     bool checkResult = ResponseCheck.apply(response.body);
 
     if (!checkResult) return responseCheckModelFromJson(response.body);
@@ -174,7 +173,7 @@ class AddressRepository {
   }
 
   Future<dynamic> getAddressDeleteResponse(
-    @required int? id,
+    int? id,
   ) async {
     Uri url = Uri.parse("${AppConfig.BASE_URL}/user/shipping/delete/$id");
     final response = await http.get(
@@ -192,9 +191,9 @@ class AddressRepository {
     return addressDeleteResponseFromJson(response.body);
   }
 
-  Future<dynamic> getCityListByState({state_id = 0, name = ""}) async {
-    Uri url = Uri.parse(
-        "${AppConfig.BASE_URL}/cities-by-state/${state_id}?name=${name}");
+  Future<dynamic> getCityListByState({stateId = 0, name = ""}) async {
+    Uri url =
+        Uri.parse("${AppConfig.BASE_URL}/cities-by-state/$stateId?name=$name");
     final response = await http.get(url);
 
     bool checkResult = ResponseCheck.apply(response.body);
@@ -204,9 +203,9 @@ class AddressRepository {
     return cityResponseFromJson(response.body);
   }
 
-  Future<dynamic> getStateListByCountry({country_id = 0, name = ""}) async {
+  Future<dynamic> getStateListByCountry({countryId = 0, name = ""}) async {
     Uri url = Uri.parse(
-        "${AppConfig.BASE_URL}/states-by-country/${country_id}?name=${name}");
+        "${AppConfig.BASE_URL}/states-by-country/$countryId?name=$name");
     final response = await http.get(url);
 
     bool checkResult = ResponseCheck.apply(response.body);
@@ -217,7 +216,7 @@ class AddressRepository {
   }
 
   Future<dynamic> getCountryList({name = ""}) async {
-    Uri url = Uri.parse("${AppConfig.BASE_URL}/countries?name=${name}");
+    Uri url = Uri.parse("${AppConfig.BASE_URL}/countries?name=$name");
     final response = await http.get(url);
 
     bool checkResult = ResponseCheck.apply(response.body);
@@ -227,8 +226,8 @@ class AddressRepository {
     return countryResponseFromJson(response.body);
   }
 
-  Future<dynamic> getShippingCostResponse({shipping_type = ""}) async {
-    var post_body = jsonEncode({"seller_list": shipping_type});
+  Future<dynamic> getShippingCostResponse({shippingType = ""}) async {
+    var postBody = jsonEncode({"seller_list": shippingType});
 
     Uri url = Uri.parse("${AppConfig.BASE_URL}/shipping_cost");
 
@@ -241,7 +240,7 @@ class AddressRepository {
           "Currency-Exchange-Rate":
               SystemConfig.systemCurrency!.exchangeRate.toString(),
         },
-        body: post_body);
+        body: postBody);
     bool checkResult = ResponseCheck.apply(response.body);
 
     if (!checkResult) return responseCheckModelFromJson(response.body);
@@ -250,10 +249,10 @@ class AddressRepository {
   }
 
   Future<dynamic> getAddressUpdateInCartResponse(
-      {int? address_id = 0, int pickup_point_id = 0}) async {
-    var post_body = jsonEncode({
-      "address_id": "${address_id}",
-      "pickup_point_id": "${pickup_point_id}",
+      {int? addressId = 0, int pickupPointId = 0}) async {
+    var postBody = jsonEncode({
+      "address_id": "$addressId",
+      "pickup_point_id": "$pickupPointId",
       "user_id": "${user_id.$}"
     });
 
@@ -264,7 +263,7 @@ class AddressRepository {
           "Authorization": "Bearer ${access_token.$}",
           "App-Language": app_language.$!
         },
-        body: post_body);
+        body: postBody);
 
     bool checkResult = ResponseCheck.apply(response.body);
 
@@ -274,10 +273,10 @@ class AddressRepository {
   }
 
   Future<dynamic> getShippingTypeUpdateInCartResponse(
-      {required int shipping_id, shipping_type = "home_delivery"}) async {
-    var post_body = jsonEncode({
-      "shipping_id": "${shipping_id}",
-      "shipping_type": "$shipping_type",
+      {required int shippingId, shippingType = "home_delivery"}) async {
+    var postBody = jsonEncode({
+      "shipping_id": "$shippingId",
+      "shipping_type": "$shippingType",
     });
 
     Uri url = Uri.parse("${AppConfig.BASE_URL}/update-shipping-type-in-cart");
@@ -291,7 +290,7 @@ class AddressRepository {
           "Authorization": "Bearer ${access_token.$}",
           "App-Language": app_language.$!
         },
-        body: post_body);
+        body: postBody);
 
     bool checkResult = ResponseCheck.apply(response.body);
 

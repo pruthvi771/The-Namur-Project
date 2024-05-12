@@ -1,19 +1,18 @@
-import 'package:active_ecommerce_flutter/app_config.dart';
-import 'package:active_ecommerce_flutter/data_model/check_response_model.dart';
-import 'package:active_ecommerce_flutter/helpers/response_check.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:http/http.dart' as http;
+
+import 'package:active_ecommerce_flutter/app_config.dart';
+import 'package:active_ecommerce_flutter/data_model/check_response_model.dart';
+import 'package:active_ecommerce_flutter/data_model/conversation_create_response.dart';
 import 'package:active_ecommerce_flutter/data_model/conversation_response.dart';
 import 'package:active_ecommerce_flutter/data_model/message_response.dart';
-import 'package:active_ecommerce_flutter/data_model/conversation_create_response.dart';
+import 'package:active_ecommerce_flutter/helpers/response_check.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
-import 'package:flutter/foundation.dart';
 
 class ChatRepository {
-  Future<dynamic> getConversationResponse({@required page = 1}) async {
-    Uri url =
-        Uri.parse("${AppConfig.BASE_URL}/chat/conversations?page=${page}");
+  Future<dynamic> getConversationResponse({page = 1}) async {
+    Uri url = Uri.parse("${AppConfig.BASE_URL}/chat/conversations?page=$page");
     final response = await http.get(
       url,
       headers: {
@@ -30,9 +29,9 @@ class ChatRepository {
   }
 
   Future<dynamic> getMessageResponse(
-      {required conversation_id, @required page = 1}) async {
+      {required conversationId, page = 1}) async {
     Uri url = Uri.parse(
-        "${AppConfig.BASE_URL}/chat/messages/${conversation_id}?page=${page}");
+        "${AppConfig.BASE_URL}/chat/messages/$conversationId?page=$page");
     final response = await http.get(
       url,
       headers: {
@@ -49,11 +48,11 @@ class ChatRepository {
   }
 
   Future<dynamic> getInserMessageResponse(
-      {required conversation_id, required String message}) async {
-    var post_body = jsonEncode({
+      {required conversationId, required String message}) async {
+    var postBody = jsonEncode({
       "user_id": "${user_id.$}",
-      "conversation_id": "${conversation_id}",
-      "message": "${message}"
+      "conversation_id": "$conversationId",
+      "message": "$message"
     });
 
     Uri url = Uri.parse("${AppConfig.BASE_URL}/chat/insert-message");
@@ -63,7 +62,7 @@ class ChatRepository {
           "Authorization": "Bearer ${access_token.$}",
           "App-Language": app_language.$!
         },
-        body: post_body);
+        body: postBody);
     bool checkResult = ResponseCheck.apply(response.body);
 
     if (!checkResult) return responseCheckModelFromJson(response.body);
@@ -72,9 +71,9 @@ class ChatRepository {
   }
 
   Future<dynamic> getNewMessageResponse(
-      {required conversation_id, required last_message_id}) async {
+      {required conversationId, required lastMessageId}) async {
     Uri url = Uri.parse(
-        "${AppConfig.BASE_URL}/chat/get-new-messages/${conversation_id}/${last_message_id}");
+        "${AppConfig.BASE_URL}/chat/get-new-messages/$conversationId/$lastMessageId");
     final response = await http.get(
       url,
       headers: {
@@ -90,14 +89,14 @@ class ChatRepository {
   }
 
   Future<dynamic> getCreateConversationResponse(
-      {required product_id,
+      {required productId,
       required String title,
       required String message}) async {
-    var post_body = jsonEncode({
+    var postBody = jsonEncode({
       "user_id": "${user_id.$}",
-      "product_id": "${product_id}",
-      "title": "${title}",
-      "message": "${message}"
+      "product_id": "$productId",
+      "title": "$title",
+      "message": "$message"
     });
 
     //
@@ -110,7 +109,7 @@ class ChatRepository {
           "Authorization": "Bearer ${access_token.$}",
           "App-Language": app_language.$!
         },
-        body: post_body);
+        body: postBody);
     bool checkResult = ResponseCheck.apply(response.body);
 
     if (!checkResult) return responseCheckModelFromJson(response.body);

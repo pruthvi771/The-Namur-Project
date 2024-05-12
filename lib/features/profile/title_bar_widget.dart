@@ -1,4 +1,3 @@
-import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_event.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/misc_bloc/misc_bloc.dart';
@@ -10,12 +9,11 @@ import 'package:active_ecommerce_flutter/features/profile/screens/friends_screen
 import 'package:active_ecommerce_flutter/features/profile/screens/profile.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/weather_section_bloc/weather_section_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/weather_section_bloc/weather_section_event.dart';
-import 'package:active_ecommerce_flutter/features/profile/services/weather_section_bloc/weather_section_state.dart';
 import 'package:active_ecommerce_flutter/utils/imageLinks.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:toast/toast.dart';
+
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../my_theme.dart';

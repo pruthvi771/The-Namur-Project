@@ -15,10 +15,10 @@ import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PasswordOtp extends StatefulWidget {
-  PasswordOtp({Key? key, this.verify_by = "email", this.email_or_code})
+  PasswordOtp({Key? key, this.verifyBy = "email", this.emailOrCode})
       : super(key: key);
-  final String verify_by;
-  final String? email_or_code;
+  final String verifyBy;
+  final String? emailOrCode;
 
   @override
   _PasswordOtpState createState() => _PasswordOtpState();
@@ -29,7 +29,7 @@ class _PasswordOtpState extends State<PasswordOtp> {
   TextEditingController _codeController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _passwordConfirmController = TextEditingController();
-  bool _resetPasswordSuccess = false;
+  // bool _resetPasswordSuccess = false;
 
   String headeText = "";
 
@@ -58,7 +58,7 @@ class _PasswordOtpState extends State<PasswordOtp> {
   onPressConfirm() async {
     var code = _codeController.text.toString();
     var password = _passwordController.text.toString();
-    var password_confirm = _passwordConfirmController.text.toString();
+    var passwordConfirm = _passwordConfirmController.text.toString();
 
     if (code == "") {
       ToastComponent.showDialog(AppLocalizations.of(context)!.enter_the_code,
@@ -68,7 +68,7 @@ class _PasswordOtpState extends State<PasswordOtp> {
       ToastComponent.showDialog(AppLocalizations.of(context)!.enter_password,
           gravity: Toast.center, duration: Toast.lengthLong);
       return;
-    } else if (password_confirm == "") {
+    } else if (passwordConfirm == "") {
       ToastComponent.showDialog(
           AppLocalizations.of(context)!.confirm_your_password,
           gravity: Toast.center,
@@ -81,7 +81,7 @@ class _PasswordOtpState extends State<PasswordOtp> {
           gravity: Toast.center,
           duration: Toast.lengthLong);
       return;
-    } else if (password != password_confirm) {
+    } else if (password != passwordConfirm) {
       ToastComponent.showDialog(
           AppLocalizations.of(context)!.passwords_do_not_match,
           gravity: Toast.center,
@@ -107,7 +107,7 @@ class _PasswordOtpState extends State<PasswordOtp> {
 
   onTapResend() async {
     var passwordResendCodeResponse = await AuthRepository()
-        .getPasswordResendCodeResponse(widget.email_or_code, widget.verify_by);
+        .getPasswordResendCodeResponse(widget.emailOrCode, widget.verifyBy);
 
     if (passwordResendCodeResponse.result == false) {
       ToastComponent.showDialog(passwordResendCodeResponse.message!,
@@ -125,9 +125,9 @@ class _PasswordOtpState extends State<PasswordOtp> {
 
   @override
   Widget build(BuildContext context) {
-    String _verify_by = widget.verify_by; //phone or email
-    final _screen_height = MediaQuery.of(context).size.height;
-    final _screen_width = MediaQuery.of(context).size.width;
+    String verifyBy = widget.verifyBy; //phone or email
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     return AuthScreen.buildScreen(
         context,
         headeText,
@@ -136,11 +136,10 @@ class _PasswordOtpState extends State<PasswordOtp> {
               gotoLoginScreen();
               return Future.delayed(Duration.zero);
             },
-            child: buildBody(context, _screen_width, _verify_by)));
+            child: buildBody(context, screenWidth, verifyBy)));
   }
 
-  Widget buildBody(
-      BuildContext context, double _screen_width, String _verify_by) {
+  Widget buildBody(BuildContext context, double screenWidth, String verifyBy) {
     return FlipCard(
       flipOnTouch: false,
       controller: cardController,
@@ -148,15 +147,15 @@ class _PasswordOtpState extends State<PasswordOtp> {
       direction: FlipDirection.HORIZONTAL,
       // default
       front: Container(
-        width: _screen_width,
+        width: screenWidth,
         child: Column(
           //  crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
               padding: const EdgeInsets.only(bottom: 16.0),
               child: Container(
-                  width: _screen_width * (3 / 4),
-                  child: _verify_by == "email"
+                  width: screenWidth * (3 / 4),
+                  child: verifyBy == "email"
                       ? Text(
                           AppLocalizations.of(context)!
                               .enter_the_verification_code_that_sent_to_your_email_recently,
@@ -171,7 +170,7 @@ class _PasswordOtpState extends State<PasswordOtp> {
                               color: MyTheme.dark_grey, fontSize: 14))),
             ),
             Container(
-              width: _screen_width * (3 / 4),
+              width: screenWidth * (3 / 4),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -318,7 +317,7 @@ class _PasswordOtpState extends State<PasswordOtp> {
             Padding(
               padding: const EdgeInsets.only(bottom: 16.0),
               child: Container(
-                  width: _screen_width,
+                  width: screenWidth,
                   child: Text(LangText(context).local!.congratulations_ucf,
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -329,7 +328,7 @@ class _PasswordOtpState extends State<PasswordOtp> {
             Padding(
               padding: const EdgeInsets.only(bottom: 6.0),
               child: Container(
-                  width: _screen_width * (3 / 4),
+                  width: screenWidth * (3 / 4),
                   child: Text(
                       LangText(context)
                           .local!

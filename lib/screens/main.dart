@@ -1,5 +1,10 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+
 import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/cart.dart';
 import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
@@ -8,10 +13,6 @@ import 'package:active_ecommerce_flutter/presenter/bottom_appbar_index.dart';
 import 'package:active_ecommerce_flutter/presenter/cart_counter.dart';
 import 'package:active_ecommerce_flutter/screens/address.dart';
 import 'package:active_ecommerce_flutter/screens/category_list.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:provider/provider.dart';
 
 import 'my_account/my_account.dart';
 
@@ -69,7 +70,7 @@ class _MainState extends State<Main> {
     _children = [
       //  Home(),
       CategoryList(
-        is_base_category: true,
+        isBaseCategory: true,
       ),
       MyAccount(),
       // Cart(
@@ -84,7 +85,7 @@ class _MainState extends State<Main> {
           ),
     ];
     fetchAll();
-    // TODO: implement initState
+
     //re appear statusbar in case it was not there in the previous page
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]);

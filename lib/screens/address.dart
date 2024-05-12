@@ -272,10 +272,10 @@ class _AddressState extends State<Address> {
 
     var addressAddResponse = await AddressRepository().getAddressAddResponse(
         address: address,
-        country_id: _selected_country!.id,
-        state_id: _selected_state!.id,
-        city_id: _selected_city!.id,
-        postal_code: postal_code,
+        countryId: _selected_country!.id,
+        stateId: _selected_state!.id,
+        cityId: _selected_city!.id,
+        postalCode: postal_code,
         phone: phone);
 
     if (addressAddResponse.result == false) {
@@ -324,10 +324,10 @@ class _AddressState extends State<Address> {
         .getAddressUpdateResponse(
             id: id,
             address: address,
-            country_id: _selected_country_list_for_update[index].id,
-            state_id: _selected_state_list_for_update[index]!.id,
-            city_id: _selected_city_list_for_update[index]!.id,
-            postal_code: postal_code,
+            countryId: _selected_country_list_for_update[index].id,
+            stateId: _selected_state_list_for_update[index]!.id,
+            cityId: _selected_city_list_for_update[index]!.id,
+            postalCode: postal_code,
             phone: phone);
 
     if (addressUpdateResponse.result == false) {
@@ -668,7 +668,7 @@ class _AddressState extends State<Address> {
                               }
                               var stateResponse = await AddressRepository()
                                   .getStateListByCountry(
-                                      country_id: _selected_country!.id,
+                                      countryId: _selected_country!.id,
                                       name: name);
                               return stateResponse.states;
                             },
@@ -744,8 +744,7 @@ class _AddressState extends State<Address> {
                               }
                               var cityResponse = await AddressRepository()
                                   .getCityListByState(
-                                      state_id: _selected_state!.id,
-                                      name: name);
+                                      stateId: _selected_state!.id, name: name);
                               return cityResponse.cities;
                             },
                             loadingBuilder: (context) {
@@ -1051,7 +1050,7 @@ class _AddressState extends State<Address> {
                               }
                               var stateResponse = await AddressRepository()
                                   .getStateListByCountry(
-                                      country_id:
+                                      countryId:
                                           _selected_country_list_for_update[
                                                   index]
                                               .id,
@@ -1132,7 +1131,7 @@ class _AddressState extends State<Address> {
                               }
                               var cityResponse = await AddressRepository()
                                   .getCityListByState(
-                                      state_id: _selected_state_list_for_update[
+                                      stateId: _selected_state_list_for_update[
                                               index]!
                                           .id,
                                       name: name);
