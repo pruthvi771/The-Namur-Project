@@ -26,19 +26,28 @@ class _PestControlScreenState extends State<PestControlScreen> {
   void initState() {
     pestControlDataFuture =
         getPestControlDataForCropName(cropName: widget.cropName.toLowerCase());
-    Future.delayed(Duration(milliseconds: 500), () {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            "Single Tap to view PDF, Double Tap to view image",
-            textAlign: TextAlign.center,
-          ),
-          backgroundColor: MyTheme.accent_color,
-          duration: Duration(seconds: 3),
-        ),
-      );
-    });
+    Future.delayed(
+        Duration(milliseconds: 500),
+        () => ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  "Single Tap to view PDF, Double Tap to view image",
+                  textAlign: TextAlign.center,
+                ),
+                backgroundColor: MyTheme.accent_color,
+                duration: Duration(seconds: 3),
+              ),
+            ));
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    pestControlDataFuture.then((value) {
+      value.clear();
+    });
+    ScaffoldMessenger.of(context).clearSnackBars();
+    super.dispose();
   }
 
   void _launchPDF(String url) async {
