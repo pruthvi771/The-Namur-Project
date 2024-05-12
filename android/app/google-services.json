@@ -66,6 +66,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "581813390000-stp50lormm7olcdi9nnfmq3g60vd6tq6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.inkaanalysis.namur",
+            "certificate_hash": "66a2a27c810c02d8ad3092de5468d986f193afc1"
+          }
+        },
+        {
+          "client_id": "581813390000-t4l4ii8urm7ejnplt7hsngjrvb75phop.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.inkaanalysis.namur",
+            "certificate_hash": "321a4639a78ff6724d34d291f60ebf1943d511c7"
+          }
+        },
+        {
           "client_id": "581813390000-cockp1hrdsac5h8b9k9ceas7bqe5p4tj.apps.googleusercontent.com",
           "client_type": 3
         }
