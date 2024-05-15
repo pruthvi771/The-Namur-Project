@@ -111,22 +111,26 @@ class _BuyProductListState extends State<BuyProductList> {
     sortType = widget.sortType != null ? widget.sortType! : null;
 
     if (sortType != null && subSubCategoryList.length == 0) {
+      print("HERE 1");
       productsStream = productFilteredByLocationAndSortedStreamQuery(
         locationFilterMap: currentLocationFilterMap,
         sortType: sortType!,
       );
     } else if (subSubCategoryList.length != 0 && sortType == null) {
+      print("HERE 2");
       productsStream = productFilteredByLocationAndSubSubCategoryStreamQuery(
         locationFilterMap: currentLocationFilterMap,
         theSubSubCategoryList: subSubCategoryList,
       );
     } else if (subSubCategoryList.length != 0 && sortType != null) {
+      print("HERE 3");
       productsStream = productAllFiltersAndSortedStreamQuery(
         locationFilterMap: currentLocationFilterMap,
         sortType: sortType!,
         theSubSubCategoryList: subSubCategoryList,
       );
     } else {
+      print("HERE 4");
       productsStream = productFilteredByLocationStreamQuery(
         locationFilterMap: currentLocationFilterMap,
       );
@@ -148,6 +152,7 @@ class _BuyProductListState extends State<BuyProductList> {
   Stream<QuerySnapshot> allProductSortedStreamQuery({
     required SortType sortType,
   }) {
+    print("STREAM 1");
     String orderByField = 'price';
 
     return _firestore
@@ -170,7 +175,7 @@ class _BuyProductListState extends State<BuyProductList> {
         subSubCategoryList.add(item.name);
       }
     }
-
+    print("STREAM 2");
     return _firestore
         .collection('products')
         .where('subCategory',
@@ -192,7 +197,7 @@ class _BuyProductListState extends State<BuyProductList> {
         subSubCategoryList.add(item.name);
       }
     }
-
+    print("STREAM 3");
     return _firestore
         .collection('products')
         .where('subCategory',
@@ -209,6 +214,7 @@ class _BuyProductListState extends State<BuyProductList> {
   Stream<QuerySnapshot> productFilteredByLocationStreamQuery({
     required LocationFilterMap locationFilterMap,
   }) {
+    print("STREAM 4");
     var defaultQuery = _firestore
         .collection('products')
         .where('subCategory',
@@ -246,8 +252,9 @@ class _BuyProductListState extends State<BuyProductList> {
         subSubCategoryList.add(item.name);
       }
     }
-
+    print("STREAM 7");
     if (locationFilterMap.district) {
+      print("71");
       return _firestore
           .collection('products')
           .where('subCategory',
@@ -261,6 +268,7 @@ class _BuyProductListState extends State<BuyProductList> {
           .where('isDeleted', isEqualTo: false)
           .snapshots();
     } else if (locationFilterMap.taluk) {
+      print("72");
       return _firestore
           .collection('products')
           .where('subCategory',
@@ -274,6 +282,7 @@ class _BuyProductListState extends State<BuyProductList> {
           .where('isDeleted', isEqualTo: false)
           .snapshots();
     } else if (locationFilterMap.gramPanchayat) {
+      print("73");
       return _firestore
           .collection('products')
           .where('subCategory',
@@ -287,6 +296,7 @@ class _BuyProductListState extends State<BuyProductList> {
           .where('isDeleted', isEqualTo: false)
           .snapshots();
     } else {
+      print("74");
       return _firestore
           .collection('products')
           .where('subCategory',
@@ -306,6 +316,7 @@ class _BuyProductListState extends State<BuyProductList> {
     required LocationFilterMap locationFilterMap,
     required SortType sortType,
   }) {
+    print("STREAM 6");
     String orderByField = 'price';
     if (locationFilterMap.district) {
       return _firestore
@@ -360,7 +371,7 @@ class _BuyProductListState extends State<BuyProductList> {
     required SortType sortType,
   }) {
     String orderByField = 'price';
-
+    print("STREAM 5");
     List<String> subSubCategoryList = [];
     for (var item in theSubSubCategoryList!) {
       if (item.isSelected) {
@@ -585,7 +596,9 @@ class _BuyProductListState extends State<BuyProductList> {
                         createdAt: data['createdAt'].toDate(),
                       );
                     }).toList();
-
+                    // order this list based on createdAt
+                    bareProducts
+                        .sort((a, b) => b.createdAt.compareTo(a.createdAt));
                     List<SellProduct> products = bareProducts
                         .where((product) =>
                             product.district.isNotEmpty &&
@@ -593,157 +606,328 @@ class _BuyProductListState extends State<BuyProductList> {
                             product.gramPanchayat.isNotEmpty &&
                             product.village.isNotEmpty)
                         .toList();
-
-                    return Container(
-                      child: products.length == 0
-                          // short circuiting
-                          ? Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  height: 50,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 8),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      // filter by
-                                      GestureDetector(
-                                        onTap: () {
-                                          goToFilterScreen(
-                                              context: context,
-                                              subCategoryEnum:
-                                                  widget.subCategoryEnum,
-                                              isSecondHand: widget.isSecondHand,
-                                              theSubSubCategoryList:
-                                                  subSubCategoryList,
-                                              theSortType: sortType);
-                                        },
-                                        child: Container(
-                                          child: Chip(
-                                            backgroundColor: Colors.grey[200],
-                                            labelPadding: EdgeInsets.symmetric(
-                                                horizontal: 10, vertical: 0),
-                                            label: Text(
-                                                AppLocalizations.of(context)!
-                                                    .show_filters),
-                                            deleteIcon: FaIcon(
-                                              FontAwesomeIcons.sliders,
-                                              size: 15,
-                                            ),
-                                            onDeleted: () {
-                                              goToFilterScreen(
-                                                context: context,
-                                                subCategoryEnum:
-                                                    widget.subCategoryEnum,
-                                                isSecondHand:
-                                                    widget.isSecondHand,
-                                                theSubSubCategoryList:
-                                                    subSubCategoryList,
-                                                theSortType: sortType,
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        AppLocalizations.of(context)!
-                                            .no_product_found,
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            color: Colors.black45),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                    // Add animation before loading
+                    return AnimatedSwitcher(
+                      duration: Duration(milliseconds: 500),
+                      child: snapshot.connectionState == ConnectionState.waiting
+                          ? Center(
+                              child: CircularProgressIndicator(),
                             )
-                          : Column(
-                              children: [
-                                // filtering menu
-                                Container(
-                                  height: 50,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 8),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      // filter by
-                                      GestureDetector(
-                                        onTap: () {
-                                          goToFilterScreen(
-                                              context: context,
-                                              subCategoryEnum:
-                                                  widget.subCategoryEnum,
-                                              isSecondHand: widget.isSecondHand,
-                                              theSubSubCategoryList:
-                                                  subSubCategoryList,
-                                              theSortType: sortType);
-                                        },
-                                        child: Container(
-                                          child: Chip(
-                                            backgroundColor: Colors.grey[200],
-                                            labelPadding: EdgeInsets.symmetric(
-                                                horizontal: 10, vertical: 0),
-                                            label: Text(
-                                                AppLocalizations.of(context)!
-                                                    .show_filters),
-                                            deleteIcon: FaIcon(
-                                              FontAwesomeIcons.sliders,
-                                              size: 15,
-                                            ),
-                                            onDeleted: () {
-                                              goToFilterScreen(
-                                                context: context,
-                                                subCategoryEnum:
-                                                    widget.subCategoryEnum,
-                                                isSecondHand:
-                                                    widget.isSecondHand,
-                                                theSubSubCategoryList:
-                                                    subSubCategoryList,
-                                                theSortType: sortType,
-                                              );
-                                            },
+                          : Container(
+                              child: products.length == 0
+                                  // short circuiting
+                                  ? Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          height: 50,
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 8),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              // filter by
+                                              GestureDetector(
+                                                onTap: () {
+                                                  goToFilterScreen(
+                                                    context: context,
+                                                    subCategoryEnum:
+                                                        widget.subCategoryEnum,
+                                                    isSecondHand:
+                                                        widget.isSecondHand,
+                                                    theSubSubCategoryList:
+                                                        subSubCategoryList,
+                                                    theSortType: sortType,
+                                                  );
+                                                },
+                                                child: Container(
+                                                  child: Chip(
+                                                    backgroundColor:
+                                                        Colors.grey[200],
+                                                    labelPadding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 10,
+                                                            vertical: 0),
+                                                    label: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .show_filters),
+                                                    deleteIcon: FaIcon(
+                                                      FontAwesomeIcons.sliders,
+                                                      size: 15,
+                                                    ),
+                                                    onDeleted: () {
+                                                      goToFilterScreen(
+                                                          context: context,
+                                                          subCategoryEnum: widget
+                                                              .subCategoryEnum,
+                                                          isSecondHand: widget
+                                                              .isSecondHand,
+                                                          theSubSubCategoryList:
+                                                              subSubCategoryList,
+                                                          theSortType:
+                                                              sortType);
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                  child: ListView(
-                                    physics: BouncingScrollPhysics(),
-                                    children: [
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      ListView.builder(
-                                        itemCount: products.length,
-                                        shrinkWrap: true,
-                                        physics: NeverScrollableScrollPhysics(),
-                                        scrollDirection: Axis.vertical,
-                                        itemBuilder: (context, index) {
-                                          return ProductCard(
-                                            products,
-                                            index,
-                                            context,
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                                        Expanded(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                AppLocalizations.of(context)!
+                                                    .no_product_found,
+                                                style: TextStyle(
+                                                    fontSize: 20,
+                                                    color: Colors.black45),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : Column(
+                                      children: [
+                                        // filtering menu
+                                        Container(
+                                          height: 50,
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 8),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              // filter by
+                                              GestureDetector(
+                                                onTap: () {
+                                                  goToFilterScreen(
+                                                    context: context,
+                                                    subCategoryEnum:
+                                                        widget.subCategoryEnum,
+                                                    isSecondHand:
+                                                        widget.isSecondHand,
+                                                    theSubSubCategoryList:
+                                                        subSubCategoryList,
+                                                    theSortType: sortType,
+                                                  );
+                                                },
+                                                child: Container(
+                                                  child: Chip(
+                                                    backgroundColor:
+                                                        Colors.grey[200],
+                                                    labelPadding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 10,
+                                                            vertical: 0),
+                                                    label: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .show_filters),
+                                                    deleteIcon: FaIcon(
+                                                      FontAwesomeIcons.sliders,
+                                                      size: 15,
+                                                    ),
+                                                    onDeleted: () {},
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: ListView(
+                                            physics: BouncingScrollPhysics(),
+                                            children: [
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              ListView.builder(
+                                                itemCount: products.length,
+                                                shrinkWrap: true,
+                                                physics:
+                                                    NeverScrollableScrollPhysics(),
+                                                scrollDirection: Axis.vertical,
+                                                itemBuilder: (context, index) {
+                                                  return ProductCard(
+                                                    products,
+                                                    index,
+                                                    context,
+                                                  );
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                             ),
                     );
+                    // List<SellProduct> products = bareProducts
+                    //     .where((product) =>
+                    //         product.district.isNotEmpty &&
+                    //         product.taluk.isNotEmpty &&
+                    //         product.gramPanchayat.isNotEmpty &&
+                    //         product.village.isNotEmpty)
+                    //     .toList();
+
+                    // return Container(
+                    //   child: products.length == 0
+                    //       // short circuiting
+                    //       ? Column(
+                    //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //           children: [
+                    //             Container(
+                    //               height: 50,
+                    //               padding: const EdgeInsets.symmetric(
+                    //                   horizontal: 10, vertical: 8),
+                    //               child: Row(
+                    //                 mainAxisAlignment: MainAxisAlignment.start,
+                    //                 children: [
+                    //                   // filter by
+                    //                   GestureDetector(
+                    //                     onTap: () {
+                    //                       goToFilterScreen(
+                    //                           context: context,
+                    //                           subCategoryEnum:
+                    //                               widget.subCategoryEnum,
+                    //                           isSecondHand: widget.isSecondHand,
+                    //                           theSubSubCategoryList:
+                    //                               subSubCategoryList,
+                    //                           theSortType: sortType);
+                    //                     },
+                    //                     child: Container(
+                    //                       child: Chip(
+                    //                         backgroundColor: Colors.grey[200],
+                    //                         labelPadding: EdgeInsets.symmetric(
+                    //                             horizontal: 10, vertical: 0),
+                    //                         label: Text(
+                    //                             AppLocalizations.of(context)!
+                    //                                 .show_filters),
+                    //                         deleteIcon: FaIcon(
+                    //                           FontAwesomeIcons.sliders,
+                    //                           size: 15,
+                    //                         ),
+                    //                         onDeleted: () {
+                    //                           goToFilterScreen(
+                    //                             context: context,
+                    //                             subCategoryEnum:
+                    //                                 widget.subCategoryEnum,
+                    //                             isSecondHand:
+                    //                                 widget.isSecondHand,
+                    //                             theSubSubCategoryList:
+                    //                                 subSubCategoryList,
+                    //                             theSortType: sortType,
+                    //                           );
+                    //                         },
+                    //                       ),
+                    //                     ),
+                    //                   ),
+                    //                 ],
+                    //               ),
+                    //             ),
+                    //             Expanded(
+                    //               child: Column(
+                    //                 mainAxisAlignment: MainAxisAlignment.center,
+                    //                 children: [
+                    //                   Text(
+                    //                     AppLocalizations.of(context)!
+                    //                         .no_product_found,
+                    //                     style: TextStyle(
+                    //                         fontSize: 20,
+                    //                         color: Colors.black45),
+                    //                     textAlign: TextAlign.center,
+                    //                   ),
+                    //                 ],
+                    //               ),
+                    //             ),
+                    //           ],
+                    //         )
+                    //       : Column(
+                    //           children: [
+                    //             // filtering menu
+                    //             Container(
+                    //               height: 50,
+                    //               padding: const EdgeInsets.symmetric(
+                    //                   horizontal: 10, vertical: 8),
+                    //               child: Row(
+                    //                 mainAxisAlignment: MainAxisAlignment.start,
+                    //                 children: [
+                    //                   // filter by
+                    //                   GestureDetector(
+                    //                     onTap: () {
+                    //                       goToFilterScreen(
+                    //                           context: context,
+                    //                           subCategoryEnum:
+                    //                               widget.subCategoryEnum,
+                    //                           isSecondHand: widget.isSecondHand,
+                    //                           theSubSubCategoryList:
+                    //                               subSubCategoryList,
+                    //                           theSortType: sortType);
+                    //                     },
+                    //                     child: Container(
+                    //                       child: Chip(
+                    //                         backgroundColor: Colors.grey[200],
+                    //                         labelPadding: EdgeInsets.symmetric(
+                    //                             horizontal: 10, vertical: 0),
+                    //                         label: Text(
+                    //                             AppLocalizations.of(context)!
+                    //                                 .show_filters),
+                    //                         deleteIcon: FaIcon(
+                    //                           FontAwesomeIcons.sliders,
+                    //                           size: 15,
+                    //                         ),
+                    //                         onDeleted: () {
+                    //                           goToFilterScreen(
+                    //                             context: context,
+                    //                             subCategoryEnum:
+                    //                                 widget.subCategoryEnum,
+                    //                             isSecondHand:
+                    //                                 widget.isSecondHand,
+                    //                             theSubSubCategoryList:
+                    //                                 subSubCategoryList,
+                    //                             theSortType: sortType,
+                    //                           );
+                    //                         },
+                    //                       ),
+                    //                     ),
+                    //                   ),
+                    //                 ],
+                    //               ),
+                    //             ),
+                    //             Expanded(
+                    //               child: ListView(
+                    //                 physics: BouncingScrollPhysics(),
+                    //                 children: [
+                    //                   SizedBox(
+                    //                     height: 5,
+                    //                   ),
+                    //                   ListView.builder(
+                    //                     itemCount: products.length,
+                    //                     shrinkWrap: true,
+                    //                     physics: NeverScrollableScrollPhysics(),
+                    //                     scrollDirection: Axis.vertical,
+                    //                     itemBuilder: (context, index) {
+                    //                       return ProductCard(
+                    //                         products,
+                    //                         index,
+                    //                         context,
+                    //                       );
+                    //                     },
+                    //                   ),
+                    //                 ],
+                    //               ),
+                    //             ),
+                    //           ],
+                    //         ),
+                    // );
                   }
                   if (snapshot.hasError) {
                     // return Text('Something went wrong. Please try again.');
