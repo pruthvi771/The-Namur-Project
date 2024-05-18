@@ -298,13 +298,14 @@ class _ParentScreenState extends State<ParentScreen> {
                             ? Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => BuyProductList(
-                                          subCategoryEnum: subCategoryEnum,
-                                          isSecondHand: widget.isSecondHand,
-                                          isRent: isSwitched == null
-                                              ? null
-                                              : !isSwitched!,
-                                        )),
+                                  builder: (context) => BuyProductList(
+                                    subCategoryEnum: subCategoryEnum,
+                                    isSecondHand: widget.isSecondHand,
+                                    isRent: isSwitched == null
+                                        ? null
+                                        : !isSwitched!,
+                                  ),
+                                ),
                               )
                             : Navigator.push(
                                 context,

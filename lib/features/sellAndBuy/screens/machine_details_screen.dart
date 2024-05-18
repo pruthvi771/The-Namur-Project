@@ -1,6 +1,7 @@
 import 'package:active_ecommerce_flutter/features/profile/models/userdata.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/machine_rent_form.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/product_image_expanded.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/buy_repository.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/cart_bloc/cart_event.dart';
@@ -128,15 +129,27 @@ class _MachineDetailsState extends State<MachineDetails> {
             items: widget.sellProduct.imageURL.map((fileURL) {
               return Builder(
                 builder: (BuildContext context) {
-                  return Container(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(5),
-                      ),
-                      child: CachedNetworkImage(
-                        imageUrl: fileURL,
-                        fit: BoxFit.contain,
-                        width: MediaQuery.of(context).size.width,
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProductImageExpanded(
+                            sellProduct: widget.sellProduct,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(5),
+                        ),
+                        child: CachedNetworkImage(
+                          imageUrl: fileURL,
+                          fit: BoxFit.contain,
+                          width: MediaQuery.of(context).size.width,
+                        ),
                       ),
                     ),
                   );
@@ -346,6 +359,7 @@ class _MachineDetailsState extends State<MachineDetails> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => MachineRentForm(
+                                    sellProduct: widget.sellProduct,
                                     machineId: widget.sellProduct.id,
                                     imageURL: widget.sellProduct.imageURL,
                                     machineName: widget.sellProduct.productName,

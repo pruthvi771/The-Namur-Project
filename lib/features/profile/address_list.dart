@@ -322,7 +322,7 @@ String translatedName({
     case 'cultivator':
       return AppLocalizations.of(context)!.cultivator;
     case 'backhoe':
-      return "JCB";
+      return "jcb";
     case 'billhook':
       return AppLocalizations.of(context)!.billhook;
     case 'car':
@@ -629,7 +629,7 @@ List<String> crops = [
 List<String> equipment = [
   'N/A',
   // '',
-  'Backhoe',
+  'JCB',
   'Billhook',
   'Car',
   'Combine harvester',

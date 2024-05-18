@@ -286,6 +286,50 @@ class _RegistrationState extends State<Registration> {
                   ),
                 ),
               ),
+              
+              Container(
+                height: 50,
+                width: 50,
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Scaffold(
+                          appBar: AppBar(
+                            flexibleSpace: Container(
+                              decoration: const BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    Color(0xff107B28),
+                                    Color(0xff4C7B10)
+                                  ],
+                                ),
+                              ),
+                            ),
+                            title: Text("Help"),
+                          ),
+                          body: Center(
+                            child: InteractiveViewer(
+                              child: Image.asset(
+                                "assets/register_help.png",
+                                width: double.infinity,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  icon: Icon(
+                    Icons.help_outline,
+                    color: MyTheme.primary_color,
+                  ),
+                ),
+              ),
 
               // privacy policy button
               Padding(

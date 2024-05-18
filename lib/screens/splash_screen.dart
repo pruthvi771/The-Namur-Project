@@ -122,15 +122,11 @@ class _SplashScreenState extends State<SplashScreen> {
             SizedBox(
               height: 5,
             ),
-            Hero(
-              tag: "backgroundImageInSplash",
-              child: Image.asset(
-                "assets/kannada-namur-splash.jpg",
-                width: MediaQuery.of(context).size.width,
-              ),
-            ),
-            SizedBox(
-              height: 5,
+            Image.asset(
+              "assets/kannada-font.png",
+              width: MediaQuery.of(context).size.width,
+              height: 100,
+              fit: BoxFit.fitHeight,
             ),
             Stack(
               children: [

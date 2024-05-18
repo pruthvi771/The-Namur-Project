@@ -283,10 +283,10 @@ class _MyAppState extends State<MyApp> {
                   // the below code is getting fonts from http
                   textTheme:
                       GoogleFonts.publicSansTextTheme(textTheme).copyWith(
-                    bodyText1:
-                        GoogleFonts.publicSans(textStyle: textTheme.bodyText1),
-                    bodyText2: GoogleFonts.publicSans(
-                        textStyle: textTheme.bodyText2, fontSize: 12),
+                    bodyLarge:
+                        GoogleFonts.publicSans(textStyle: textTheme.bodyLarge),
+                    bodyMedium: GoogleFonts.publicSans(
+                        textStyle: textTheme.bodyMedium, fontSize: 12),
                   ),
                 ),
                 localizationsDelegates: [

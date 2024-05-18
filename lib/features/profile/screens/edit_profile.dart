@@ -186,6 +186,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }) async {
     List<String> temp = await locationRepository.getTaluksForDistrict(
         districtName: districtName);
+
     setState(() {
       taluksList = List.from(temp)..sort();
       isTalukEnabled = true;
@@ -197,6 +198,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }) async {
     List<String> temp =
         await locationRepository.getGramPanchayatsForTaluk(taluk: talukName);
+
     setState(() {
       gramPanchayatsList = List.from(temp)..sort();
       isGramPanchayadEnabled = true;

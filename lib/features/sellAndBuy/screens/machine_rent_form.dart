@@ -1,7 +1,9 @@
 import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/models/order_item.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/models/sell_product.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/checkout_details_screen.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/checkout_screen.dart';
+import 'package:active_ecommerce_flutter/features/sellAndBuy/screens/product_image_expanded.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/rent_bloc/rent_bloc.dart';
 import 'package:active_ecommerce_flutter/features/sellAndBuy/services/rent_bloc/rent_state.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
@@ -19,6 +21,7 @@ import 'package:toast/toast.dart';
 import 'package:time_range_picker/time_range_picker.dart';
 
 class MachineRentForm extends StatefulWidget {
+  final SellProduct sellProduct;
   final String machineId;
   final List imageURL;
   final String machineName;
@@ -34,6 +37,7 @@ class MachineRentForm extends StatefulWidget {
     required this.machinePrice,
     required this.machineDescription,
     required this.sellerId,
+    required this.sellProduct,
   }) : super(key: key);
 
   @override
@@ -456,15 +460,28 @@ class _MachineRentFormState extends State<MachineRentForm> {
                         items: widget.imageURL.map((fileURL) {
                           return Builder(
                             builder: (BuildContext context) {
-                              return Container(
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                  child: Image.network(
-                                    fileURL,
-                                    fit: BoxFit.cover,
-                                    width: MediaQuery.of(context).size.width,
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ProductImageExpanded(
+                                        sellProduct: widget.sellProduct,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                    child: Image.network(
+                                      fileURL,
+                                      fit: BoxFit.cover,
+                                      width: MediaQuery.of(context).size.width,
+                                    ),
                                   ),
                                 ),
                               );
