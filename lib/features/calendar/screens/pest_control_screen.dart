@@ -21,23 +21,25 @@ class PestControlScreen extends StatefulWidget {
 
 class _PestControlScreenState extends State<PestControlScreen> {
   late Future<List> pestControlDataFuture;
+  bool showHints = false;
 
   @override
   void initState() {
     pestControlDataFuture =
         getPestControlDataForCropName(cropName: widget.cropName.toLowerCase());
-    Future.delayed(
-        Duration(milliseconds: 500),
-        () => ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  "Single Tap to view PDF, Double Tap to view image",
-                  textAlign: TextAlign.center,
+    if (showHints)
+      Future.delayed(
+          Duration(milliseconds: 500),
+          () => ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    "Single Tap to view PDF, Double Tap to view image",
+                    textAlign: TextAlign.center,
+                  ),
+                  backgroundColor: MyTheme.accent_color,
+                  duration: Duration(seconds: 3),
                 ),
-                backgroundColor: MyTheme.accent_color,
-                duration: Duration(seconds: 3),
-              ),
-            ));
+              ));
     super.initState();
   }
 
@@ -46,7 +48,8 @@ class _PestControlScreenState extends State<PestControlScreen> {
     pestControlDataFuture.then((value) {
       value.clear();
     });
-    ScaffoldMessenger.of(context).clearSnackBars();
+    if (showHints) ScaffoldMessenger.of(context).clearSnackBars();
+
     super.dispose();
   }
 
@@ -70,6 +73,7 @@ class _PestControlScreenState extends State<PestControlScreen> {
         return [];
       }
       List returnVal = (userSnapshot.data() as Map)['stages'];
+      showHints = true;
       return returnVal;
     } else {
       return [];

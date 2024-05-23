@@ -117,6 +117,7 @@ class _SplashScreenState extends State<SplashScreen> {
               child: Image.asset(
                 "assets/pp2.png",
                 width: MediaQuery.of(context).size.width / 2.4,
+                fit: BoxFit.fitWidth,
               ),
             ),
             SizedBox(

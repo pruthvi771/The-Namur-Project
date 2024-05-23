@@ -17,10 +17,8 @@ class WeatherSectionBloc
         }
         // await Future.delayed(Duration(seconds: 3));
         emit(WeatherSectionDataReceived(responseData: currentData as dynamic));
-        // });
       } catch (e) {
-        //
-        final errorMessage = e.toString().replaceAll('Exception:', '');
+        e.toString().replaceAll('Exception:', '');
 
         emit(Error(e.toString()));
       }

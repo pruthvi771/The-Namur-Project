@@ -1,21 +1,3 @@
-import 'package:active_ecommerce_flutter/app_config.dart';
-import 'package:active_ecommerce_flutter/custom/btn.dart';
-import 'package:active_ecommerce_flutter/custom/device_info.dart';
-import 'package:active_ecommerce_flutter/custom/input_decorations.dart';
-import 'package:active_ecommerce_flutter/custom/toast_component.dart';
-import 'package:active_ecommerce_flutter/features/auth/models/postoffice_response_model.dart';
-import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_bloc.dart';
-import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_event.dart';
-import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_state.dart';
-import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
-import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
-import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
-import 'package:active_ecommerce_flutter/my_theme.dart';
-
-import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
-import 'package:active_ecommerce_flutter/features/auth/screens/otp.dart';
-import 'package:active_ecommerce_flutter/screens/common_webview_screen.dart';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,6 +7,21 @@ import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:toast/toast.dart';
 import 'package:validators/validators.dart';
+
+import 'package:active_ecommerce_flutter/app_config.dart';
+import 'package:active_ecommerce_flutter/custom/device_info.dart';
+import 'package:active_ecommerce_flutter/custom/input_decorations.dart';
+import 'package:active_ecommerce_flutter/custom/toast_component.dart';
+import 'package:active_ecommerce_flutter/features/auth/screens/login.dart';
+import 'package:active_ecommerce_flutter/features/auth/screens/otp.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_bloc.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_event.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_bloc/auth_state.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/auth_repository.dart';
+import 'package:active_ecommerce_flutter/features/auth/services/firestore_repository.dart';
+import 'package:active_ecommerce_flutter/helpers/shared_value_helper.dart';
+import 'package:active_ecommerce_flutter/my_theme.dart';
+import 'package:active_ecommerce_flutter/screens/common_webview_screen.dart';
 
 class Registration extends StatefulWidget {
   @override
@@ -276,57 +273,23 @@ class _RegistrationState extends State<Registration> {
               Padding(
                 padding: EdgeInsets.only(bottom: 0),
                 child: Container(
+                  width: _screen_width,
                   // padding: EdgeInsets.symmetric(horizontal: 20),
                   height: 60,
-                  child: TextField(
-                    controller: _emailController,
-                    autofocus: false,
-                    decoration: InputDecorations.buildInputDecoration_1(
-                        hint_text: AppLocalizations.of(context)!.email_ucf),
-                  ),
-                ),
-              ),
-              
-              Container(
-                height: 50,
-                width: 50,
-                child: IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Scaffold(
-                          appBar: AppBar(
-                            flexibleSpace: Container(
-                              decoration: const BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    Color(0xff107B28),
-                                    Color(0xff4C7B10)
-                                  ],
-                                ),
-                              ),
-                            ),
-                            title: Text("Help"),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _emailController,
+                          autofocus: false,
+                          decoration: InputDecorations.buildInputDecoration_1(
+                            hint_text: AppLocalizations.of(context)!.email_ucf,
                           ),
-                          body: Center(
-                            child: InteractiveViewer(
-                              child: Image.asset(
-                                "assets/register_help.png",
-                                width: double.infinity,
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                          ),
+                          cursorColor: Colors.black,
                         ),
                       ),
-                    );
-                  },
-                  icon: Icon(
-                    Icons.help_outline,
-                    color: MyTheme.primary_color,
+                      EmailHelpIcon(),
+                    ],
                   ),
                 ),
               ),
@@ -479,6 +442,56 @@ class _RegistrationState extends State<Registration> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class EmailHelpIcon extends StatelessWidget {
+  const EmailHelpIcon({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 50,
+      width: 50,
+      child: IconButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Scaffold(
+                appBar: AppBar(
+                  flexibleSpace: Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Color(0xff107B28), Color(0xff4C7B10)],
+                      ),
+                    ),
+                  ),
+                  title: Text("Help"),
+                ),
+                body: Center(
+                  child: InteractiveViewer(
+                    child: Image.asset(
+                      "assets/register_help.png",
+                      width: double.infinity,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+        icon: Icon(
+          Icons.help_outline,
+          color: MyTheme.primary_color,
         ),
       ),
     );

@@ -106,7 +106,6 @@ class MyApp extends StatefulWidget {
   final Locale? locale;
 
   const MyApp({super.key, required this.locale});
-  // This widget is the root of your application.
 
   @override
   _MyAppState createState() => _MyAppState();
@@ -207,52 +206,15 @@ class _MyAppState extends State<MyApp> {
                 initialRoute: "/",
                 routes: {
                   "/": (context) => SplashScreen(),
-                  // "/classified_ads": (context) => ClassifiedAds(),
-                  // "/classified_ads_details": (context) =>
-                  //     ClassifiedAdsDetails(id: 0),
-                  // "/my_classified_ads": (context) => MyClassifiedAds(),
-                  // "/digital_product_details": (context) =>
-                  //     DigitalProductDetails(
-                  //       id: 0,
-                  //     ),
-                  // "/digital_products": (context) => DigitalProducts(),
-                  // "/purchased_digital_products": (context) =>
-                  //     PurchasedDigitalProducts(),
-                  // "/update_package": (context) => UpdatePackage(),
                   "/address": (context) => Address(),
-                  // "/auction_products": (context) => AuctionProducts(),
-                  // "/auction_products_details": (context) =>
-                  //     AuctionProductsDetails(id: 0),
-                  // "/brand_products": (context) =>
-                  //     BrandProducts(id: 0, brand_name: ""),
                   "/category_list": (context) => CategoryList(
                       parentCategoryId: 0,
                       isBaseCategory: true,
                       parentCategoryName: "",
                       isTopCategory: false),
-                  // "/category_products": (context) =>
-                  //     CategoryProducts(category_id: 0, category_name: ""),
-                  // "/chat": (context) => Chat(),
-                  // "/checkout": (context) => Checkout(),
-                  // "/flash_deal_list": (context) => FlashDealList(),
-                  // "/flash_deal_products": (context) => FlashDealProducts(),
                   "/login": (context) => Login(),
                   "/main": (context) => Main(),
-                  // "/messenger_list": (context) => MessengerList(),
-                  // "/product_details": (context) => ProductDetails(
-                  //       id: 0,
-                  //     ),
-                  // "/product_reviews": (context) => ProductReviews(
-                  //       id: 0,
-                  //     ),
                   "/profile": (context) => Profile(),
-                  // "/seller_details": (context) => SellerDetails(
-                  //       id: 0,
-                  //     ),
-                  // "/seller_products": (context) => SellerProducts(),
-                  // "/todays_deal_products": (context) => TodaysDealProducts(),
-                  // "/top_selling_products": (context) => TopSellingProducts(),
-                  // "/wallet": (context) => Wallet(),
                 },
                 builder: OneContext().builder,
                 navigatorKey: OneContext().navigator.key,
@@ -260,27 +222,9 @@ class _MyAppState extends State<MyApp> {
                 debugShowCheckedModeBanner: false,
                 theme: ThemeData(
                   useMaterial3: false,
-                  // primarySwatch: MaterialColor(0xFFFFFFFF, <int, Color>{
-                  //   50: Color(0xFFFFFFFF),
-                  //   100: Color(0xFFFFFFFF),
-                  //   200: Color(0xFFFFFFFF),
-                  //   300: Color(0xFFFFFFFF),
-                  //   400: Color(0xFFFFFFFF),
-                  //   500: Color(0xFFFFFFFF),
-                  //   600: Color(0xFFFFFFFF),
-                  //   700: Color(0xFFFFFFFF),
-                  //   800: Color(0xFFFFFFFF),
-                  //   900: Color(0xFFFFFFFF),
-                  // }),
                   primaryColor: MyTheme.white,
                   scaffoldBackgroundColor: MyTheme.white,
                   visualDensity: VisualDensity.adaptivePlatformDensity,
-                  /*textTheme: TextTheme(
-                          bodyText1: TextStyle(),
-                          bodyText2: TextStyle(fontSize: 12.0),
-                        )*/
-                  //
-                  // the below code is getting fonts from http
                   textTheme:
                       GoogleFonts.publicSansTextTheme(textTheme).copyWith(
                     bodyLarge:
@@ -295,18 +239,8 @@ class _MyAppState extends State<MyApp> {
                   GlobalCupertinoLocalizations.delegate,
                   AppLocalizations.delegate,
                 ],
-                // locale: provider.locale,
                 supportedLocales: LangConfig().supportedLocales(),
                 locale: _currentLocale,
-                // locale: Locale('kn')
-                // localeResolutionCallback: (deviceLocale, supportedLocales) {
-                //   if (AppLocalizations.delegate.isSupported(deviceLocale!)) {
-                //     return deviceLocale;
-                //   }
-                //   return const Locale('ar');
-                // },
-                //home: SplashScreen(),
-                // home: Splash(),
               ),
             )));
   }

@@ -22,24 +22,36 @@ class CultivationTipsScreen extends StatefulWidget {
 
 class _CultivationTipsScreenState extends State<CultivationTipsScreen> {
   late Future<List<dynamic>> cultivationDataFuture;
+  bool showHints = false;
 
   @override
   void initState() {
     cultivationDataFuture =
         getCultivationTipsForCropName(cropName: widget.cropName.toLowerCase());
-    Future.delayed(Duration(milliseconds: 500), () {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            "Single Tap to view PDF, Double Tap to view image",
-            textAlign: TextAlign.center,
+
+    if (showHints)
+      Future.delayed(Duration(milliseconds: 500), () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "Single Tap to view PDF, Double Tap to view image",
+              textAlign: TextAlign.center,
+            ),
+            backgroundColor: MyTheme.accent_color,
+            duration: Duration(seconds: 3),
           ),
-          backgroundColor: MyTheme.accent_color,
-          duration: Duration(seconds: 3),
-        ),
-      );
-    });
+        );
+      });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    cultivationDataFuture.then((value) {
+      value.clear();
+    });
+    if (showHints) ScaffoldMessenger.of(context).clearSnackBars();
+    super.dispose();
   }
 
   void _launchPDF(String url) async {
@@ -64,6 +76,7 @@ class _CultivationTipsScreenState extends State<CultivationTipsScreen> {
       }
       List<dynamic> returnVal =
           (userSnapshot.data() as Map)['cultivation_tips'];
+      showHints = true;
       return returnVal;
     } else {
       return [];

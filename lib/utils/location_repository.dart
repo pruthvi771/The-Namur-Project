@@ -34,8 +34,6 @@ class LocationRepository {
         List<Map<String, dynamic>>.from(json.decode(jsonData));
 
     return addresses.map((map) => map['district'].toString()).toSet().toList();
-    // return addresses.map((map) => map['district'].toString()).toSet().toList();
-    // return [];
   }
 
   Future<List<String>> getTaluksForDistrict({
@@ -45,11 +43,13 @@ class LocationRepository {
     List<Map<String, dynamic>> addresses =
         List<Map<String, dynamic>>.from(json.decode(jsonData));
 
-    return addresses
+    List<String> taluksList = addresses
         .where((map) => map['district'] == districtName)
         .map((map) => map['TALUK'].toString())
         .toSet()
         .toList();
+
+    return taluksList;
   }
 
   Future<List<String>> getGramPanchayatsForTaluk({

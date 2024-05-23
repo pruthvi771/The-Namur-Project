@@ -1,3 +1,4 @@
+import 'package:active_ecommerce_flutter/custom/toast_component.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/hive_bloc/hive_event.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/misc_bloc/misc_bloc.dart';
@@ -9,12 +10,14 @@ import 'package:active_ecommerce_flutter/features/profile/screens/friends_screen
 import 'package:active_ecommerce_flutter/features/profile/screens/profile.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/weather_section_bloc/weather_section_bloc.dart';
 import 'package:active_ecommerce_flutter/features/profile/services/weather_section_bloc/weather_section_event.dart';
+import 'package:active_ecommerce_flutter/features/profile/services/weather_section_bloc/weather_section_state.dart';
 import 'package:active_ecommerce_flutter/utils/imageLinks.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:toast/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../my_theme.dart';
 import '../weather/screens/weather_screen.dart';
@@ -42,16 +45,6 @@ class _TitleBarState extends State<TitleBar> {
     BlocProvider.of<HiveBloc>(context).add(
       HiveDataRequested(),
     );
-  }
-
-  _launchURL(url) async {
-    //
-    final Uri _url = Uri.parse(url);
-    if (await canLaunchUrl(_url)) {
-      await launchUrl(_url);
-    } else {
-      throw 'Could not launch';
-    }
   }
 
   @override
@@ -200,171 +193,136 @@ class _TitleBarState extends State<TitleBar> {
                 ),
               ),
             ),
-            //Weather and Location
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: InkWell(
-                onTap: () async {
-                  _launchURL('https://zoom.earth/');
-                },
-                child: Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.asset("assets/satelite.png"),
-                    ),
-                    Positioned.fill(
-                      child: Container(
-                        // rounded borders
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: MyTheme.blue_grey.withOpacity(.5),
-                        ),
-
-                        child: Center(
-                          child: Text(
-                            AppLocalizations.of(context)!.satellite_view,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                              color: MyTheme.white,
+            BlocListener<WeatherSectionBloc, WeatherSectionState>(
+              listener: (context, state) {
+                if (state is WeatherSectionDataReceived) {
+                } else if (state is LoadingSection) {
+                } else if (state is WeatherSectionDataNotReceived) {
+                  //
+                }
+                if (state is Error) {
+                  ToastComponent.showDialog('Network error. Try again later',
+                      gravity: Toast.center, duration: Toast.lengthLong);
+                }
+              },
+              child: BlocBuilder<WeatherSectionBloc, WeatherSectionState>(
+                builder: (context, state) {
+                  if (state is LoadingSection) {
+                    return WeatherSection(
+                      temperature: '-',
+                      description: '-',
+                      location: '---',
+                      weatherCode: null,
+                    );
+                  }
+                  if (state is LocationDataNotFoundinHive) {
+                    return Expanded(
+                      flex: 4,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => WeatherScreen(),
+                            ),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              top: 8, right: 8, bottom: 8),
+                          child: Container(
+                            // height: 85,
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: MyTheme.green_light as Color,
+                                ),
+                                borderRadius: BorderRadius.circular(8)),
+                            padding: const EdgeInsets.all(8),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              // crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 5.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      // Image.asset('assets/weather.png'),
+                                      Icon(Icons.warning, color: Colors.red),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                            '--',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 15,
+                                              fontFamily: 'Poppins',
+                                              color: MyTheme.primary_color,
+                                            ),
+                                          ),
+                                          Text(
+                                            '--',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 11,
+                                              fontFamily: 'Poppins',
+                                              color: MyTheme.primary_color,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Text(
+                                  '--',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 15,
+                                    fontFamily: 'Poppins',
+                                    color: MyTheme.primary_color,
+                                  ),
+                                )
+                              ],
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                    );
+                  }
+                  if (state is WeatherSectionDataReceived) {
+                    return WeatherSection(
+                      temperature:
+                          '${state.responseData[0]!.currentData.tempC.toInt().toString()} °C',
+                      description:
+                          state.responseData[0]!.currentData.condition.text,
+                      location: '@${state.responseData[0]!.locationName}',
+                      weatherCode: state.responseData[0]!.weatherCode,
+                    );
+                  }
+                  if (state is WeatherSectionDataNotReceived) {
+                    return WeatherSection(
+                      temperature: '==',
+                      description: '==',
+                      location: '==',
+                      weatherCode: null,
+                    );
+                  }
+                  return WeatherSection(
+                    temperature: '00',
+                    description: '00',
+                    location: '00',
+                    weatherCode: null,
+                  );
+                },
               ),
             )
-            // BlocListener<WeatherSectionBloc, WeatherSectionState>(
-            //   listener: (context, state) {
-            //     if (state is WeatherSectionDataReceived) {
-            //     } else if (state is LoadingSection) {
-            //     } else if (state is WeatherSectionDataNotReceived) {
-            //       //
-            //     }
-            //     if (state is Error) {
-            //       ToastComponent.showDialog('Network error. Try again later',
-            //           gravity: Toast.center, duration: Toast.lengthLong);
-            //     }
-            //   },
-            //   child: BlocBuilder<WeatherSectionBloc, WeatherSectionState>(
-            //     builder: (context, state) {
-            //       if (state is LoadingSection) {
-            //         return WeatherSection(
-            //           temperature: '-',
-            //           description: '-',
-            //           location: '---',
-            //           weatherCode: null,
-            //         );
-            //       }
-            //       if (state is LocationDataNotFoundinHive) {
-            //         return Expanded(
-            //           flex: 4,
-            //           child: GestureDetector(
-            //             onTap: () {
-            //               Navigator.push(
-            //                   context,
-            //                   MaterialPageRoute(
-            //                       builder: (context) => WeatherScreen()));
-            //             },
-            //             child: Padding(
-            //               padding: const EdgeInsets.only(
-            //                   top: 8, right: 8, bottom: 8),
-            //               child: Container(
-            //                 // height: 85,
-            //                 decoration: BoxDecoration(
-            //                     border: Border.all(
-            //                       color: MyTheme.green_light as Color,
-            //                     ),
-            //                     borderRadius: BorderRadius.circular(8)),
-            //                 padding: const EdgeInsets.all(8),
-            //                 child: Column(
-            //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //                   // crossAxisAlignment: CrossAxisAlignment.center,
-            //                   children: [
-            //                     Padding(
-            //                       padding: const EdgeInsets.symmetric(
-            //                           horizontal: 5.0),
-            //                       child: Row(
-            //                         mainAxisAlignment:
-            //                             MainAxisAlignment.spaceEvenly,
-            //                         children: [
-            //                           // Image.asset('assets/weather.png'),
-            //                           Icon(Icons.warning, color: Colors.red),
-            //                           Column(
-            //                             mainAxisAlignment:
-            //                                 MainAxisAlignment.spaceBetween,
-            //                             crossAxisAlignment:
-            //                                 CrossAxisAlignment.end,
-            //                             children: [
-            //                               Text(
-            //                                 '--',
-            //                                 style: TextStyle(
-            //                                   fontWeight: FontWeight.w600,
-            //                                   fontSize: 15,
-            //                                   fontFamily: 'Poppins',
-            //                                   color: MyTheme.primary_color,
-            //                                 ),
-            //                               ),
-            //                               Text(
-            //                                 '--',
-            //                                 style: TextStyle(
-            //                                   fontWeight: FontWeight.w600,
-            //                                   fontSize: 11,
-            //                                   fontFamily: 'Poppins',
-            //                                   color: MyTheme.primary_color,
-            //                                 ),
-            //                               ),
-            //                             ],
-            //                           )
-            //                         ],
-            //                       ),
-            //                     ),
-            //                     Text(
-            //                       '--',
-            //                       style: TextStyle(
-            //                         fontWeight: FontWeight.w800,
-            //                         fontSize: 15,
-            //                         fontFamily: 'Poppins',
-            //                         color: MyTheme.primary_color,
-            //                       ),
-            //                     )
-            //                   ],
-            //                 ),
-            //               ),
-            //             ),
-            //           ),
-            //         );
-            //       }
-            //       if (state is WeatherSectionDataReceived) {
-            //         return WeatherSection(
-            //           temperature:
-            //               '${state.responseData[0]!.currentData.tempC.toInt().toString()} °C',
-            //           description:
-            //               state.responseData[0]!.currentData.condition.text,
-            //           location: '@${state.responseData[0]!.locationName}',
-            //           weatherCode: state.responseData[0]!.weatherCode,
-            //         );
-            //       }
-            //       if (state is WeatherSectionDataNotReceived) {
-            //         return WeatherSection(
-            //           temperature: '==',
-            //           description: '==',
-            //           location: '==',
-            //           weatherCode: null,
-            //         );
-            //       }
-            //       return WeatherSection(
-            //         temperature: '00',
-            //         description: '00',
-            //         location: '00',
-            //         weatherCode: null,
-            //       );
-            //     },
-            //   ),
-            // )
           ],
         ),
       ),
@@ -386,14 +344,23 @@ class WeatherSection extends StatelessWidget {
   final String location;
   final int? weatherCode;
 
+  _launchURL(url) async {
+    //
+    final Uri _url = Uri.parse(url);
+    if (await canLaunchUrl(_url)) {
+      await launchUrl(_url);
+    } else {
+      throw 'Could not launch';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
       flex: 4,
       child: GestureDetector(
         onTap: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => WeatherScreen()));
+          _launchURL('https://zoom.earth/');
         },
         child: Padding(
           padding: const EdgeInsets.only(top: 8, right: 8, bottom: 8),

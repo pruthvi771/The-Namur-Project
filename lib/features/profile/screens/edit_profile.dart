@@ -1,3 +1,5 @@
+import 'package:active_ecommerce_flutter/features/weather/bloc/weather_bloc.dart';
+import 'package:active_ecommerce_flutter/features/weather/bloc/weather_event.dart';
 import 'package:active_ecommerce_flutter/utils/profile_completion_bloc/profile_completion_bloc.dart';
 import 'package:active_ecommerce_flutter/utils/profile_completion_bloc/profile_completion_event.dart';
 import 'package:uuid/uuid.dart';
@@ -316,6 +318,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     BlocProvider.of<ProfileCompletionBloc>(context).add(
       ProfileCompletionDataRequested(),
+    );
+
+    BlocProvider.of<WeatherBloc>(context).add(
+      WeatherSreenDataRequested(),
     );
   }
 
