@@ -1,5 +1,6 @@
 import 'package:active_ecommerce_flutter/features/weather/bloc/weather_bloc.dart';
 import 'package:active_ecommerce_flutter/features/weather/bloc/weather_event.dart';
+import 'package:active_ecommerce_flutter/utils/functions.dart';
 import 'package:active_ecommerce_flutter/utils/profile_completion_bloc/profile_completion_bloc.dart';
 import 'package:active_ecommerce_flutter/utils/profile_completion_bloc/profile_completion_event.dart';
 import 'package:uuid/uuid.dart';
@@ -2002,20 +2003,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                                 cropDropdownValue, (value) {
                                               setState(() {
                                                 cropDropdownValue = value;
+                                                print(cropDropdownValue!);
                                               });
                                             }),
                                           ),
                                           SizedBox(
                                             width: 5,
                                           ),
-                                          Expanded(
-                                            flex: 2,
-                                            child: TexiFieldWidgetForDouble(
-                                              // 'Yield',
-                                              _yieldController,
-                                              localContext.acres,
+                                          if (cropDropdownValue != "N/A")
+                                            Expanded(
+                                              flex: 2,
+                                              child: TexiFieldWidgetForDouble(
+                                                // 'Yield',
+                                                _yieldController,
+                                                localContext.acres,
+                                              ),
                                             ),
-                                          ),
                                         ],
                                       ),
                                       Row(
@@ -2024,11 +2027,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           TextButton(
                                             child: Text(localContext.save_ucf),
                                             onPressed: () {
-                                              _addCropToHive(
-                                                landDropdownValue,
-                                                cropDropdownValue,
-                                                _yieldController.text,
-                                              );
+                                              if (cropDropdownValue == "N/A") {
+                                                _addCropToHive(
+                                                    landDropdownValue,
+                                                    cropDropdownValue,
+                                                    "0");
+                                              } else {
+                                                _addCropToHive(
+                                                  landDropdownValue,
+                                                  cropDropdownValue,
+                                                  _yieldController.text,
+                                                );
+                                              }
                                               setState(() {
                                                 cropDropdownValue = null;
                                               });
@@ -2233,14 +2243,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           SizedBox(
                                             width: 5,
                                           ),
-                                          Expanded(
-                                            flex: 2,
-                                            child: TexiFieldWidgetForDouble(
-                                              // 'Quantity',
-                                              _animalQuantityController,
-                                              localContext.enter_count,
+                                          if (animalDropdownValue != "N/A")
+                                            Expanded(
+                                              flex: 2,
+                                              child: TexiFieldWidgetForDouble(
+                                                // 'Quantity',
+                                                _animalQuantityController,
+                                                localContext.enter_count,
+                                              ),
                                             ),
-                                          ),
                                         ],
                                       ),
                                       Row(
@@ -2249,11 +2260,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           TextButton(
                                             child: Text(localContext.save_ucf),
                                             onPressed: () {
-                                              _addAnimalToHive(
-                                                landDropdownValue,
-                                                animalDropdownValue,
-                                                _animalQuantityController.text,
-                                              );
+                                              if (animalDropdownValue ==
+                                                  "N/A") {
+                                                _addAnimalToHive(
+                                                    landDropdownValue,
+                                                    animalDropdownValue,
+                                                    "0");
+                                              } else
+                                                _addAnimalToHive(
+                                                  landDropdownValue,
+                                                  animalDropdownValue,
+                                                  _animalQuantityController
+                                                      .text,
+                                                );
                                               setState(() {});
                                             },
                                           ),

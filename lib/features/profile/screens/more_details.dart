@@ -527,10 +527,10 @@ class _MoreDetailsState extends State<MoreDetails> {
                   List cropsList = [];
                   state.profileData.land.forEach((land) {
                     land.equipments.forEach((machine) {
-                      machinesList.add(machine);
+                      if (machine != "N/A") machinesList.add(machine);
                     });
                     land.crops.forEach((crop) {
-                      cropsList.add(crop.name);
+                      if (crop.name != "N/A") cropsList.add(crop.name);
                     });
                   });
                   return Column(

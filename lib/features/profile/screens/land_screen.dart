@@ -1,4 +1,5 @@
 import 'package:active_ecommerce_flutter/features/profile/address_list.dart';
+import 'package:active_ecommerce_flutter/utils/functions.dart';
 import 'package:active_ecommerce_flutter/utils/hive_models/models.dart';
 import 'package:active_ecommerce_flutter/features/profile/screens/edit_profile.dart';
 import 'package:active_ecommerce_flutter/my_theme.dart';
@@ -168,8 +169,8 @@ class _LandScreenState extends State<LandScreen> with TickerProviderStateMixin {
                             profileData!.land.length,
                             (index) {
                               var item = profileData!.land[index];
-                              //
-                              //
+//
+//
                               return SingleChildScrollView(
                                 padding: EdgeInsets.only(bottom: 20),
                                 physics: BouncingScrollPhysics(),
@@ -563,7 +564,7 @@ class CropWidget extends StatelessWidget {
                 letterSpacing: .5,
                 fontFamily: 'Poppins',
               )),
-          Text('${yieldOfCrop.toInt().toString()} ton'),
+          Text('${yieldOfCrop.toInt().toString()} acres'),
         ],
       ),
     );
