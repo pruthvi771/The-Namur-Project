@@ -13,10 +13,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:toast/toast.dart';
 
 class ProductInventory extends StatefulWidget {
+  final bool isMachine;
   final SubCategoryEnum subCategoryEnum;
   final bool isSecondHand;
   const ProductInventory({
     Key? key,
+    this.isMachine = false,
     required this.subCategoryEnum,
     required this.isSecondHand,
   }) : super(key: key);
@@ -30,6 +32,7 @@ class _ProductInventoryState extends State<ProductInventory> {
     BlocProvider.of<SellBloc>(context).add(ProductsForSubCategoryRequested(
       subCategory: nameForSubCategoryEnum[widget.subCategoryEnum]!,
       isSecondHand: widget.isSecondHand,
+      isMachine: widget.isMachine,
     ));
     super.initState();
   }
@@ -78,13 +81,16 @@ class _ProductInventoryState extends State<ProductInventory> {
           ? FloatingActionButton(
               onPressed: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ProductPost(
-                              subCategoryEnum: widget.subCategoryEnum,
-                              alreadyExistingProductNames: productNames,
-                              isSecondHand: widget.isSecondHand,
-                            )));
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProductPost(
+                      subCategoryEnum: widget.subCategoryEnum,
+                      alreadyExistingProductNames: productNames,
+                      isMachine: widget.isMachine,
+                      isSecondHand: widget.isSecondHand,
+                    ),
+                  ),
+                );
               },
               child: Image.asset("assets/add 2.png"),
             )
@@ -116,6 +122,7 @@ class _ProductInventoryState extends State<ProductInventory> {
               .add(ProductsForSubCategoryRequested(
             subCategory: nameForSubCategoryEnum[widget.subCategoryEnum]!,
             isSecondHand: widget.isSecondHand,
+            isMachine: widget.isMachine,
           ));
         }
       },

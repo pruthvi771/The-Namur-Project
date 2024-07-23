@@ -177,7 +177,7 @@ var imageForNameCloud = {
       'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FfruitsAndVeg%2FCoconut.png?alt=media&token=2acd1fbb-2423-4744-b253-08303d96d1ae',
   'coffee':
       'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FfruitsAndVeg%2FCoffee.png?alt=media&token=9cad2b25-a345-4edc-8264-12f7c4021949',
-  'eggplant':
+  'brinjal':
       'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FfruitsAndVeg%2FEggplant.png?alt=media&token=5dce2c6c-3cec-49bd-bb82-3b2f8afaae5a',
   'grapes red':
       'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/helpers3%2FfruitsAndVeg%2FGrapes%20Red.png?alt=media&token=54e02836-e954-4758-9ecd-c01017171161',

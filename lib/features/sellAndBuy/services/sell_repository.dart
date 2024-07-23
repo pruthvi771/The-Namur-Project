@@ -272,6 +272,7 @@ class SellRepository {
     required int kms,
     required String hiveMachineName,
     required String landSynoValue,
+    required bool isSecondHand,
     // required String imageURL,
     // required String userId,
   }) async {
@@ -292,11 +293,55 @@ class SellRepository {
         'hiveMachineName': hiveMachineName,
         'landSynoValue': landSynoValue,
         'updatedAt': FieldValue.serverTimestamp(),
+        'isSecondHand': isSecondHand,
         // 'imageURL': imageURL,
       });
     } catch (e) {
       // Handle the error according to your application's requirements
     }
+  }
+
+  Future<List<SellProduct>> getMachines({
+    required String subCategory,
+    required bool isMachine,
+  }) async {
+    // QuerySnapshot productSnapshot = await productsCollection.get();
+    if (isMachine) {
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await FirebaseFirestore.instance
+              .collection('products')
+              .where(FieldPath.documentId, isNotEqualTo: null)
+              .where('subCategory', isEqualTo: subCategory)
+              .where('sellerId', isEqualTo: _firebaseAuth.currentUser!.uid)
+              .where('isDeleted', isNotEqualTo: true)
+              .get();
+
+      var products = querySnapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data();
+        return SellProduct(
+          id: doc.id,
+          productName: data['name'],
+          productDescription: data['description'],
+          productPrice: data['price'],
+          productQuantity: data['quantity'],
+          quantityUnit: data['quantityUnit'],
+          // priceType: data['priceType'],
+          category: data['category'],
+          subCategory: data['subCategory'],
+          subSubCategory: data['subSubCategory'],
+          imageURL: data['imageURL'],
+          sellerId: data['sellerId'],
+          isSecondHand: data['isSecondHand'],
+          village: data['villageName'],
+          gramPanchayat: data['gramPanchayat'],
+          taluk: data['taluk'],
+          district: data['district'],
+          createdAt: data['createdAt'].toDate(),
+        );
+      }).toList();
+      return products;
+    }
+    return [];
   }
 
   Future<List<SellProduct>> getProducts({

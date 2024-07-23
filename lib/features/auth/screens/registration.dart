@@ -1,3 +1,4 @@
+import 'package:active_ecommerce_flutter/screens/about_us/terms_conditions.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:toast/toast.dart';
 import 'package:validators/validators.dart';
 
@@ -336,11 +338,10 @@ class _RegistrationState extends State<Registration> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    CommonWebviewScreen(
-                                                      page_name:
-                                                          "Terms Conditions",
+                                                    TermsConditions(
+                                                      title: "Terms Conditions",
                                                       url:
-                                                          "${AppConfig.RAW_BASE_URL}/mobile-page/terms",
+                                                          "https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/main%2FIA_Namur%20Agro_T%26C.pdf?alt=media&token=7fe405c6-1125-4e23-8b44-16f3c61811af",
                                                     )));
                                       },
                                     style:
@@ -354,15 +355,19 @@ class _RegistrationState extends State<Registration> {
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
                                         Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CommonWebviewScreen(
-                                                      page_name:
-                                                          "Privacy Policy",
-                                                      url:
-                                                          "${AppConfig.RAW_BASE_URL}/mobile-page/privacy-policy",
-                                                    )));
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => TermsConditions(
+                                                  title: "Privacy Policy",
+                                                  url:
+                                                      "https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/main%2FInkaanalysis_Privacy%20policy_Namur%20Agro_T%26C_20Dec23.pdf?alt=media&token=df0d14c6-29f1-4fa4-a6c3-760dc990f972")
+                                              //     CommonWebviewScreen(
+                                              //   page_name: "Privacy Policy",
+                                              //   url:
+                                              //       "https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/main%2FInkaanalysis_Privacy%20policy_Namur%20Agro_T%26C_20Dec23.pdf?alt=media&token=df0d14c6-29f1-4fa4-a6c3-760dc990f972",
+                                              // ),
+                                              ),
+                                        );
                                       },
                                     text: " Privacy Policy",
                                     style:
@@ -478,10 +483,15 @@ class EmailHelpIcon extends StatelessWidget {
                 ),
                 body: Center(
                   child: InteractiveViewer(
-                    child: Image.asset(
-                      "assets/register_help.png",
-                      width: double.infinity,
-                      fit: BoxFit.contain,
+                    maxScale: 5.0,
+                    constrained: true,
+                    child: PhotoView(
+                      backgroundDecoration: BoxDecoration(
+                        color: Colors.transparent,
+                      ),
+                      imageProvider: AssetImage(
+                        "assets/register_help2.png",
+                      ),
                     ),
                   ),
                 ),

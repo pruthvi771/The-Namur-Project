@@ -299,6 +299,8 @@ class _ParentScreenState extends State<ParentScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => BuyProductList(
+                                    isMachine: (widget.parentEnum ==
+                                        enums.ParentEnum.machine),
                                     subCategoryEnum: subCategoryEnum,
                                     isSecondHand: widget.isSecondHand,
                                     isRent: isSwitched == null
@@ -311,6 +313,8 @@ class _ParentScreenState extends State<ParentScreen> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => ProductInventory(
+                                          isMachine: (widget.parentEnum ==
+                                              enums.ParentEnum.machine),
                                           subCategoryEnum: subCategoryEnum,
                                           isSecondHand: widget.isSecondHand,
                                         )));

@@ -52,7 +52,7 @@ class _ProductPostState extends State<ProductPost> {
   TextEditingController _additionalController = TextEditingController();
   TextEditingController _priceController = TextEditingController();
   TextEditingController _quantityController = TextEditingController();
-
+  bool isFirstHand = false;
   String? _selectedItem;
 
   late List<String> _dropdownItems;
@@ -132,6 +132,7 @@ class _ProductPostState extends State<ProductPost> {
     String price = _priceController.text;
     var runningHours = _runningHoursController.text.toString();
     var kms = _kmsController.text.toString();
+    var isSecondHandValue = !isFirstHand && category == "machines";
     // String productPriceType = perPiecePrice ? "Per piece" : "Per kg";
 
     if (productName == "") {
@@ -288,7 +289,7 @@ class _ProductPostState extends State<ProductPost> {
         subCategory: productSubCategory,
         subSubCategory: productSubSubCategory,
         imageList: _mediaFileList!,
-        isSecondHand: widget.isSecondHand,
+        isSecondHand: isSecondHandValue,
         productType: widget.isSecondHand
             ? ProductType.secondHand
             : ProductType.newProduct,
@@ -319,7 +320,7 @@ class _ProductPostState extends State<ProductPost> {
     var quantityUnit = selectedQuantityUnit;
     var runningHours = _runningHoursController.text.toString();
     var kms = _kmsController.text.toString();
-
+    var isSecondHandValue = !isFirstHand && category == "machines";
     String price = _priceController.text;
     // String productPriceType = perPiecePrice ? "Per piece" : "Per kg";
 
@@ -462,6 +463,7 @@ class _ProductPostState extends State<ProductPost> {
         quantityUnit: quantityUnit,
         category: productCategory,
         subCategory: productSubCategory,
+        isSecondHand: isSecondHandValue,
         subSubCategory: productSubSubCategory,
         areImagesUpdated: _mediaFileList != null
             ? _mediaFileList!.isNotEmpty
@@ -746,7 +748,7 @@ class _ProductPostState extends State<ProductPost> {
 
                 for (Land land in state.profileData.land) {
                   for (String machine in land.equipments) {
-                    machines.add(machine);
+                    if (machine != "N/A") machines.add(machine);
                   }
                 }
 
@@ -1135,7 +1137,7 @@ class _ProductPostState extends State<ProductPost> {
               ),
               Container(
                 margin: EdgeInsets.only(
-                    top: 20.0, left: 20.0, right: 20.0, bottom: 20),
+                    top: 20.0, left: 20.0, right: 20.0, bottom: 10),
                 decoration: BoxDecoration(
                     color: MyTheme.field_color,
                     borderRadius: BorderRadius.circular(10)),
@@ -1152,6 +1154,27 @@ class _ProductPostState extends State<ProductPost> {
                   ),
                 ),
               ),
+              Container(
+                margin:
+                    const EdgeInsets.only(left: 20.0, right: 20, bottom: 10),
+                decoration: BoxDecoration(
+                    color: MyTheme.field_color,
+                    borderRadius: BorderRadius.circular(10)),
+                child: CheckboxListTile(
+                    value: isFirstHand,
+                    title: Text(
+                      AppLocalizations.of(context)!.is_First_Hand,
+                      style: TextStyle(
+                          color: Colors.black38,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        isFirstHand = value!;
+                      });
+                    }),
+              )
             ],
           ),
 

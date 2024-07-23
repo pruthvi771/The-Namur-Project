@@ -110,12 +110,23 @@ class SellBloc extends Bloc<SellEvent, SellState> {
     on<ProductsForSubCategoryRequested>((event, emit) async {
       try {
         emit(ProductLoading());
-        List<SellProduct> products = await sellRepository.getProducts(
-          subCategory: event.subCategory,
-          isSecondHand: event.isSecondHand,
-        );
+        List<SellProduct> products;
+        if (!event.isMachine) {
+          products = await sellRepository.getProducts(
+            subCategory: event.subCategory,
+            isSecondHand: event.isSecondHand,
+          );
 
-        emit(ProductsForSubCategoryReceived(products: products));
+          emit(ProductsForSubCategoryReceived(products: products));
+        } else if (event.isMachine) {
+          print("GETTING PRODUCTS FROM case2 : MACHINES ");
+          products = await sellRepository.getMachines(
+            subCategory: event.subCategory,
+            isMachine: event.isMachine,
+          );
+          print(products.length);
+          emit(ProductsForSubCategoryReceived(products: products));
+        }
       } catch (e) {
         // emit(SellAddProductErrorState(message: e.toString()));
       }
@@ -147,6 +158,7 @@ class SellBloc extends Bloc<SellEvent, SellState> {
             productPrice: event.productPrice,
             productQuantity: event.productQuantity,
             quantityUnit: event.quantityUnit,
+            isSecondHand: event.isSecondHand,
             category: event.category,
             subCategory: event.subCategory,
             subSubCategory: event.subSubCategory,

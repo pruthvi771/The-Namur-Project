@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:toast/toast.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({Key? key}) : super(key: key);
@@ -28,6 +29,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
   var imageLinks = imageForNameCloud;
 
   int selectedIndex = 0;
+
+  void _launchPDF(String url) async {
+    String pdfUrl = url;
+    if (await canLaunchUrl(Uri.parse(pdfUrl))) {
+      await launchUrl(Uri.parse(pdfUrl));
+    } else {
+      throw 'Could not launch $pdfUrl';
+    }
+  }
 
   void stopTrackingCrop(index) async {
     var dataBox = Hive.box<CropCalendarData>('cropCalendarDataBox');
@@ -280,9 +290,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                   // cost esmite
                                   Expanded(
                                     child: InkWell(
-                                      onTap: docData['costEstimate'] == null ||
-                                              docData['costEstimate'] == ''
+                                      onTap: docData['cropEstimationUrl'] ==
+                                                  null ||
+                                              docData['cropEstimationUrl'] == ''
                                           ? () {
+                                              print(
+                                                  docData['cropEstimationUrl']);
                                               ToastComponent.showDialog(
                                                   AppLocalizations.of(context)!
                                                       .cost_estimate_hasnt_been_added_yet,
@@ -291,50 +304,56 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                               return;
                                             }
                                           : () {
-                                              showDialog(
-                                                  context: context,
-                                                  builder: (context) {
-                                                    return AlertDialog(
-                                                      contentPadding:
-                                                          EdgeInsets.only(
-                                                              top: 10,
-                                                              left: 10,
-                                                              right: 10),
-                                                      // actionsPadding: EdgeInsets.all(0),
-                                                      content: Container(
-                                                        height: 300,
-                                                        child:
-                                                            CachedNetworkImage(
-                                                          imageUrl: docData[
-                                                              'costEstimate'],
-                                                          fit: BoxFit.fitWidth,
-                                                          progressIndicatorBuilder:
-                                                              (context, url,
-                                                                  progress) {
-                                                            return Center(
-                                                              child: Container(
-                                                                width: 20,
-                                                                height: 20,
-                                                                child:
-                                                                    CircularProgressIndicator(),
-                                                              ),
-                                                            );
-                                                          },
-                                                        ),
-                                                      ),
-                                                      actions: [
-                                                        TextButton(
-                                                            onPressed: () {
-                                                              Navigator.pop(
-                                                                  context);
-                                                            },
-                                                            child: Text(
-                                                                AppLocalizations.of(
-                                                                        context)!
-                                                                    .dismiss)),
-                                                      ],
-                                                    );
-                                                  });
+                                              print("here");
+                                              print(
+                                                  docData['cropEstimationUrl']);
+                                              _launchPDF(
+                                                docData['cropEstimationUrl'],
+                                              );
+                                              // showDialog(
+                                              //     context: context,
+                                              //     builder: (context) {
+                                              //       return AlertDialog(
+                                              //         contentPadding:
+                                              //             EdgeInsets.only(
+                                              //                 top: 10,
+                                              //                 left: 10,
+                                              //                 right: 10),
+                                              //         // actionsPadding: EdgeInsets.all(0),
+                                              //         content: Container(
+                                              //           height: 300,
+                                              //           child:
+                                              //               CachedNetworkImage(
+                                              //             imageUrl: docData[
+                                              //                 'costEstimate'],
+                                              //             fit: BoxFit.fitWidth,
+                                              //             progressIndicatorBuilder:
+                                              //                 (context, url,
+                                              //                     progress) {
+                                              //               return Center(
+                                              //                 child: Container(
+                                              //                   width: 20,
+                                              //                   height: 20,
+                                              //                   child:
+                                              //                       CircularProgressIndicator(),
+                                              //                 ),
+                                              //               );
+                                              //             },
+                                              //           ),
+                                              //         ),
+                                              //         actions: [
+                                              //           TextButton(
+                                              //               onPressed: () {
+                                              //                 Navigator.pop(
+                                              //                     context);
+                                              //               },
+                                              //               child: Text(
+                                              //                   AppLocalizations.of(
+                                              //                           context)!
+                                              //                       .dismiss)),
+                                              //         ],
+                                              //       );
+                                              //     });
                                             },
                                       child: Container(
                                         child: Column(

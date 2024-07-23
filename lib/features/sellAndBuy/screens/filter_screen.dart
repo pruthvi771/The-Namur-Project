@@ -15,6 +15,7 @@ enum FilterSection {
   price,
   categories,
   sellerLocations,
+  ownership,
 }
 
 enum SortType {
@@ -25,6 +26,7 @@ enum SortType {
 class FilterScreen extends StatefulWidget {
   final SubCategoryEnum subCategoryEnum;
   final bool isSecondHand;
+  final bool? isMachine;
   final List<FilterItem> subSubCategoryList;
   final SortType? sortType;
   final LocationFilterMap locationFilterMap;
@@ -38,6 +40,7 @@ class FilterScreen extends StatefulWidget {
     required this.sortType,
     required this.locationFilterMap,
     this.isRent,
+    this.isMachine,
   }) : super(key: key);
 
   @override
@@ -46,6 +49,7 @@ class FilterScreen extends StatefulWidget {
 
 class _FilterScreenState extends State<FilterScreen> {
   FilterSection sectionOpened = FilterSection.price;
+  bool isSecondHand = false;
 
   late List<FilterItem> subSubCategoryList;
   late List<FilterItem> locationsList;
@@ -56,6 +60,7 @@ class _FilterScreenState extends State<FilterScreen> {
   @override
   void initState() {
     newLocationFilterMap = widget.locationFilterMap;
+    isSecondHand = widget.isSecondHand;
     BlocProvider.of<HiveBloc>(context).add(
       HiveDataRequested(),
     );
@@ -231,13 +236,43 @@ class _FilterScreenState extends State<FilterScreen> {
                             ),
                           ),
                         ),
+                        if (widget.isMachine != null &&
+                            widget.isMachine == true &&
+                            widget.isRent != null &&
+                            widget.isRent == false)
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                print(widget.isMachine);
+                                if (sectionOpened != FilterSection.ownership) {
+                                  sectionOpened = FilterSection.ownership;
+                                }
+                              });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(8),
+                              height: 50,
+                              color: sectionOpened == FilterSection.ownership
+                                  ? Colors.white
+                                  : Colors.transparent,
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  AppLocalizations.of(context)!.ownership,
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                            ),
+                          ),
                       ],
                     ),
                   ),
                 ),
                 Expanded(
                     flex: 3,
-                    child: sectionOpened == FilterSection.price
+                    child: sectionOpened == FilterSection.ownership
                         ? Container(
                             color: Colors.white,
                             child: ListView(
@@ -250,22 +285,17 @@ class _FilterScreenState extends State<FilterScreen> {
                                   child: GestureDetector(
                                     onTap: () {
                                       setState(() {
-                                        if (sortType == SortType.ascending) {
-                                          sortType = null;
-                                        } else {
-                                          sortType = SortType.ascending;
-                                        }
+                                        if (isSecondHand != true)
+                                          isSecondHand = true;
                                       });
                                     },
                                     child: Container(
                                       padding: const EdgeInsets.all(8.0),
                                       height: 35,
                                       decoration: BoxDecoration(
-                                          color: sortType != null
-                                              ? sortType == SortType.ascending
-                                                  ? const Color.fromARGB(
-                                                      198, 216, 255, 199)
-                                                  : Colors.blueGrey[50]
+                                          color: isSecondHand == true
+                                              ? const Color.fromARGB(
+                                                  198, 216, 255, 199)
                                               : Colors.blueGrey[50],
                                           borderRadius:
                                               BorderRadius.circular(8),
@@ -275,18 +305,15 @@ class _FilterScreenState extends State<FilterScreen> {
                                           child: Align(
                                         alignment: Alignment.centerLeft,
                                         child: Text(
-                                          // 'Price (Low to high)',
                                           AppLocalizations.of(context)!
-                                              .price_low_to_high,
+                                              .second_hand,
                                           style: TextStyle(
-                                              fontSize: 13,
-                                              color: sortType != null
-                                                  ? sortType ==
-                                                          SortType.ascending
-                                                      ? MyTheme.primary_color
-                                                      : Colors.black
-                                                  : Colors.black,
-                                              fontWeight: FontWeight.w600),
+                                            fontSize: 13,
+                                            color: isSecondHand == true
+                                                ? MyTheme.primary_color
+                                                : Colors.black,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                         ),
                                       )),
                                     ),
@@ -297,22 +324,17 @@ class _FilterScreenState extends State<FilterScreen> {
                                   child: GestureDetector(
                                     onTap: () {
                                       setState(() {
-                                        if (sortType == SortType.descending) {
-                                          sortType = null;
-                                        } else {
-                                          sortType = SortType.descending;
-                                        }
+                                        if (isSecondHand != false)
+                                          isSecondHand = false;
                                       });
                                     },
                                     child: Container(
                                       padding: const EdgeInsets.all(8.0),
                                       height: 35,
                                       decoration: BoxDecoration(
-                                          color: sortType != null
-                                              ? sortType == SortType.descending
-                                                  ? const Color.fromARGB(
-                                                      198, 216, 255, 199)
-                                                  : Colors.blueGrey[50]
+                                          color: isSecondHand == false
+                                              ? const Color.fromARGB(
+                                                  198, 216, 255, 199)
                                               : Colors.blueGrey[50],
                                           borderRadius:
                                               BorderRadius.circular(8),
@@ -323,16 +345,14 @@ class _FilterScreenState extends State<FilterScreen> {
                                         alignment: Alignment.centerLeft,
                                         child: Text(
                                           AppLocalizations.of(context)!
-                                              .price_high_to_low,
+                                              .first_hand,
                                           style: TextStyle(
-                                              fontSize: 13,
-                                              color: sortType != null
-                                                  ? sortType ==
-                                                          SortType.descending
-                                                      ? MyTheme.primary_color
-                                                      : Colors.black
-                                                  : Colors.black,
-                                              fontWeight: FontWeight.w600),
+                                            fontSize: 13,
+                                            color: isSecondHand == false
+                                                ? MyTheme.primary_color
+                                                : Colors.black,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                         ),
                                       )),
                                     ),
@@ -341,177 +361,297 @@ class _FilterScreenState extends State<FilterScreen> {
                               ],
                             ),
                           )
-                        : sectionOpened == FilterSection.categories
+                        : sectionOpened == FilterSection.price
                             ? Container(
-                                height: double.infinity,
-                                // color: Colors.red[300],
-                                padding:
-                                    EdgeInsets.only(left: 8, right: 8, top: 20),
-                                child: subSubCategoryList.length == 0
-                                    ? Container(
-                                        child: Text(
-                                          AppLocalizations.of(context)!
-                                              .no_data_is_available,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.black45,
-                                          ),
+                                color: Colors.white,
+                                child: ListView(
+                                  children: [
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            if (sortType ==
+                                                SortType.ascending) {
+                                              sortType = null;
+                                            } else {
+                                              sortType = SortType.ascending;
+                                            }
+                                          });
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.all(8.0),
+                                          height: 35,
+                                          decoration: BoxDecoration(
+                                              color: sortType != null
+                                                  ? sortType ==
+                                                          SortType.ascending
+                                                      ? const Color.fromARGB(
+                                                          198, 216, 255, 199)
+                                                      : Colors.blueGrey[50]
+                                                  : Colors.blueGrey[50],
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              border: Border.all(
+                                                  color: Colors.black)),
+                                          child: Center(
+                                              child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              // 'Price (Low to high)',
+                                              AppLocalizations.of(context)!
+                                                  .price_low_to_high,
+                                              style: TextStyle(
+                                                  fontSize: 13,
+                                                  color: sortType != null
+                                                      ? sortType ==
+                                                              SortType.ascending
+                                                          ? MyTheme
+                                                              .primary_color
+                                                          : Colors.black
+                                                      : Colors.black,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                          )),
                                         ),
-                                      )
-                                    : ListView.builder(
-                                        itemCount: subSubCategoryList.length,
-                                        shrinkWrap: true,
-                                        physics: NeverScrollableScrollPhysics(),
-                                        scrollDirection: Axis.vertical,
-                                        itemBuilder: (context, index) {
-                                          return Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Container(
-                                              color: Colors.grey[200],
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 8,
-                                                      vertical: 0),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Expanded(
-                                                    child: Text(
-                                                      subSubCategoryList[index]
-                                                          .name,
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: TextStyle(
-                                                          fontSize: 14,
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                    ),
-                                                  ),
-                                                  Checkbox(
-                                                      activeColor:
-                                                          MyTheme.primary_color,
-                                                      value: subSubCategoryList[
-                                                              index]
-                                                          .isSelected,
-                                                      onChanged: (value) {
-                                                        setState(() {
-                                                          subSubCategoryList[
-                                                                      index]
-                                                                  .isSelected =
-                                                              value!;
-                                                        });
-                                                      }),
-                                                ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            if (sortType ==
+                                                SortType.descending) {
+                                              sortType = null;
+                                            } else {
+                                              sortType = SortType.descending;
+                                            }
+                                          });
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.all(8.0),
+                                          height: 35,
+                                          decoration: BoxDecoration(
+                                              color: sortType != null
+                                                  ? sortType ==
+                                                          SortType.descending
+                                                      ? const Color.fromARGB(
+                                                          198, 216, 255, 199)
+                                                      : Colors.blueGrey[50]
+                                                  : Colors.blueGrey[50],
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              border: Border.all(
+                                                  color: Colors.black)),
+                                          child: Center(
+                                              child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .price_high_to_low,
+                                              style: TextStyle(
+                                                  fontSize: 13,
+                                                  color: sortType != null
+                                                      ? sortType ==
+                                                              SortType
+                                                                  .descending
+                                                          ? MyTheme
+                                                              .primary_color
+                                                          : Colors.black
+                                                      : Colors.black,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                          )),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              )
+                            : sectionOpened == FilterSection.categories
+                                ? Container(
+                                    height: double.infinity,
+                                    // color: Colors.red[300],
+                                    padding: EdgeInsets.only(
+                                        left: 8, right: 8, top: 20),
+                                    child: subSubCategoryList.length == 0
+                                        ? Container(
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .no_data_is_available,
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.black45,
                                               ),
                                             ),
-                                          );
-                                        }))
-                            : BlocBuilder<HiveBloc, HiveState>(
-                                builder: (context, state) {
-                                  if (state is HiveDataReceived) {
-                                    return Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 20,
-                                        ),
-                                        Expanded(
-                                          child: ListView.builder(
-                                            itemCount: state
-                                                .profileData.address.length,
+                                          )
+                                        : ListView.builder(
+                                            itemCount:
+                                                subSubCategoryList.length,
+                                            shrinkWrap: true,
+                                            physics:
+                                                NeverScrollableScrollPhysics(),
+                                            scrollDirection: Axis.vertical,
                                             itemBuilder: (context, index) {
-                                              var addressObject = state
-                                                  .profileData.address[index];
-                                              return Column(
-                                                children: [
-                                                  CheckboxButton(
-                                                    heading:
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .district,
-                                                    title:
-                                                        addressObject.district,
-                                                    checkValue:
-                                                        newLocationFilterMap
-                                                            .district,
-                                                    onChanged: (value) {
-                                                      setState(() {
-                                                        filterChange(
-                                                            LocationFilterType
-                                                                .district);
-                                                      });
-                                                    },
+                                              return Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Container(
+                                                  color: Colors.grey[200],
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 8,
+                                                      vertical: 0),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Expanded(
+                                                        child: Text(
+                                                          subSubCategoryList[
+                                                                  index]
+                                                              .name,
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: TextStyle(
+                                                              fontSize: 14,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600),
+                                                        ),
+                                                      ),
+                                                      Checkbox(
+                                                          activeColor: MyTheme
+                                                              .primary_color,
+                                                          value:
+                                                              subSubCategoryList[
+                                                                      index]
+                                                                  .isSelected,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              subSubCategoryList[
+                                                                          index]
+                                                                      .isSelected =
+                                                                  value!;
+                                                            });
+                                                          }),
+                                                    ],
                                                   ),
-                                                  CheckboxButton(
-                                                    heading:
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .taluk,
-                                                    title: addressObject.taluk,
-                                                    checkValue:
-                                                        newLocationFilterMap
-                                                            .taluk,
-                                                    onChanged: (value) {
-                                                      setState(() {
-                                                        filterChange(
-                                                            LocationFilterType
-                                                                .taluk);
-                                                      });
-                                                    },
-                                                  ),
-                                                  CheckboxButton(
-                                                    heading:
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .gram_panchayat,
-                                                    title: addressObject
-                                                        .gramPanchayat,
-                                                    checkValue:
-                                                        newLocationFilterMap
-                                                            .gramPanchayat,
-                                                    onChanged: (value) {
-                                                      setState(() {
-                                                        filterChange(
-                                                            LocationFilterType
-                                                                .gramPanchayat);
-                                                      });
-                                                    },
-                                                  ),
-                                                  CheckboxButton(
-                                                    heading:
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .village,
-                                                    title:
-                                                        addressObject.village,
-                                                    checkValue:
-                                                        newLocationFilterMap
-                                                            .village,
-                                                    onChanged: (value) {
-                                                      setState(() {
-                                                        filterChange(
-                                                            LocationFilterType
-                                                                .village);
-                                                      });
-                                                    },
-                                                  ),
-                                                ],
+                                                ),
                                               );
-                                            },
-                                          ),
-                                        )
-                                      ],
-                                    );
-                                  }
-                                  return Container(
-                                    child: Text(AppLocalizations.of(context)!
-                                        .no_data_is_available),
-                                  );
-                                },
-                              ))
+                                            }))
+                                : BlocBuilder<HiveBloc, HiveState>(
+                                    builder: (context, state) {
+                                      if (state is HiveDataReceived) {
+                                        return Column(
+                                          children: [
+                                            SizedBox(
+                                              height: 20,
+                                            ),
+                                            Expanded(
+                                              child: ListView.builder(
+                                                itemCount: state
+                                                    .profileData.address.length,
+                                                itemBuilder: (context, index) {
+                                                  var addressObject = state
+                                                      .profileData
+                                                      .address[index];
+                                                  return Column(
+                                                    children: [
+                                                      CheckboxButton(
+                                                        heading:
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .district,
+                                                        title: addressObject
+                                                            .district,
+                                                        checkValue:
+                                                            newLocationFilterMap
+                                                                .district,
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            filterChange(
+                                                                LocationFilterType
+                                                                    .district);
+                                                          });
+                                                        },
+                                                      ),
+                                                      CheckboxButton(
+                                                        heading:
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .taluk,
+                                                        title:
+                                                            addressObject.taluk,
+                                                        checkValue:
+                                                            newLocationFilterMap
+                                                                .taluk,
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            filterChange(
+                                                                LocationFilterType
+                                                                    .taluk);
+                                                          });
+                                                        },
+                                                      ),
+                                                      CheckboxButton(
+                                                        heading:
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .gram_panchayat,
+                                                        title: addressObject
+                                                            .gramPanchayat,
+                                                        checkValue:
+                                                            newLocationFilterMap
+                                                                .gramPanchayat,
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            filterChange(
+                                                                LocationFilterType
+                                                                    .gramPanchayat);
+                                                          });
+                                                        },
+                                                      ),
+                                                      CheckboxButton(
+                                                        heading:
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .village,
+                                                        title: addressObject
+                                                            .village,
+                                                        checkValue:
+                                                            newLocationFilterMap
+                                                                .village,
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            filterChange(
+                                                                LocationFilterType
+                                                                    .village);
+                                                          });
+                                                        },
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              ),
+                                            )
+                                          ],
+                                        );
+                                      }
+                                      return Container(
+                                        child: Text(
+                                            AppLocalizations.of(context)!
+                                                .no_data_is_available),
+                                      );
+                                    },
+                                  ))
               ],
             ),
           ),
@@ -549,7 +689,9 @@ class _FilterScreenState extends State<FilterScreen> {
                               (context, animation, secondaryAnimation) {
                             return BuyProductList(
                               subCategoryEnum: widget.subCategoryEnum,
-                              isSecondHand: widget.isSecondHand,
+                              isSecondHand: isSecondHand,
+                              isMachine: widget.isMachine,
+                              isRent: widget.isRent,
                               subSubCategoryList: subSubCategoryList,
                               locationFilterMap: newLocationFilterMap,
                               sortType: sortType,

@@ -1,9 +1,17 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+
 import '../../my_theme.dart';
 
 class TermsConditions extends StatefulWidget {
-  const TermsConditions({Key? key}) : super(key: key);
+  String? title;
+  String? url;
+  TermsConditions({
+    Key? key,
+    this.title,
+    this.url,
+  }) : super(key: key);
 
   @override
   State<TermsConditions> createState() => _TermsConditionsState();
@@ -34,7 +42,8 @@ class _TermsConditionsState extends State<TermsConditions> {
                 colors: [Color(0xff107B28), Color(0xff4C7B10)]),
           ),
         ),
-        title: Text('Terms and Conditions',
+        title: Text(
+            widget.title != null ? widget.title! : 'Terms and Conditions',
             style: TextStyle(
                 color: MyTheme.white,
                 fontWeight: FontWeight.w500,
@@ -43,7 +52,9 @@ class _TermsConditionsState extends State<TermsConditions> {
         centerTitle: true,
       ),
       body: SfPdfViewer.network(
-        'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/main%2FInkaanalysis_Privacy%20policy_Namur%20Agro_T%26C_20Dec23.pdf?alt=media&token=df0d14c6-29f1-4fa4-a6c3-760dc990f972',
+        widget.url != null
+            ? widget.url!
+            : 'https://firebasestorage.googleapis.com/v0/b/namur-5095e.appspot.com/o/main%2FIA_Namur%20Agro_T%26C.pdf?alt=media&token=7fe405c6-1125-4e23-8b44-16f3c61811afw',
       ),
     );
   }

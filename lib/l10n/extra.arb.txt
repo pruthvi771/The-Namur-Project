@@ -1019,7 +1019,7 @@
         "marasebuPear": "ಮರಸೇಬು ಪೇರು",
         "muskMelon": "ಖರ್ಬೂಜ",
         "coconuttree": "ತೆಂಗಿನ ಮರ",
-        "eggplant": "ಬದನೇಕಾಯಿ",
+        "brinjal": "ಬದನೇಕಾಯಿ",
         "greenbeans": "ಹಸಿರು ಹುರುಳಿಕಾಯಿ",
         "greenonion": "ಹಸಿರು ಈರುಳ್ಳಿ",
         "marijuana": "ಗಾಂಜಾ",

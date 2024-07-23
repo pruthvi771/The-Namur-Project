@@ -112,38 +112,42 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Hero(
-              tag: "backgroundImageInSplash",
-              child: Image.asset(
-                "assets/pp2.png",
-                width: MediaQuery.of(context).size.width / 2.4,
-                fit: BoxFit.fitWidth,
-              ),
+            Image.asset(
+              "assets/pp2.png",
+              width: MediaQuery.of(context).size.width / 3.5,
+              fit: BoxFit.fitWidth,
             ),
             SizedBox(
               height: 5,
             ),
             Image.asset(
-              "assets/kannada-font.png",
+              "assets/group_splash.png",
+              // width: MediaQuery.of(context).size.width,
+
               width: MediaQuery.of(context).size.width,
-              height: 100,
-              fit: BoxFit.fitHeight,
+              fit: BoxFit.fitWidth,
             ),
-            Stack(
-              children: [
-                Image.asset(
-                  "assets/namur-english-splashbackground.png",
-                  width: MediaQuery.of(context).size.width,
-                ),
-                Positioned(
-                  right: -MediaQuery.of(context).size.width / 5.5,
-                  child: Image.asset(
-                    "assets/namur-splash-text.png",
-                    width: MediaQuery.of(context).size.width,
-                  ),
-                ),
-              ],
-            ),
+            // Image.asset(
+            //   "assets/english_namur_splash.png",
+            //   height: 100,
+            //   width: MediaQuery.of(context).size.width * 0.8,
+            //   fit: BoxFit.fitHeight,
+            // ),
+            // Stack(
+            //   children: [
+            //     Image.asset(
+            //       "assets/english_namur_splash.png",
+            //       width: MediaQuery.of(context).size.width,
+            //     ),
+            //     Positioned(
+            //       right: -MediaQuery.of(context).size.width / 5.5,
+            //       child: Image.asset(
+            //         "assets/namur-splash-text.png",
+            //         width: MediaQuery.of(context).size.width,
+            //       ),
+            //     ),
+            //   ],
+            // ),
           ],
         ),
       ),

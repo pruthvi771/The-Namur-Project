@@ -90,6 +90,7 @@ class EditProductRequested extends SellEvent {
   final String productDescription;
   final double productPrice;
   final int productQuantity;
+  final bool isSecondHand;
   final String quantityUnit;
   // final String priceType;
   final String category;
@@ -114,6 +115,7 @@ class EditProductRequested extends SellEvent {
     required this.category,
     required this.subCategory,
     required this.subSubCategory,
+    required this.isSecondHand,
     required this.areImagesUpdated,
     this.imageList,
     this.kms,
@@ -148,10 +150,12 @@ class EditProductRequested extends SellEvent {
 class ProductsForSubCategoryRequested extends SellEvent {
   final String subCategory;
   final bool isSecondHand;
+  final bool isMachine;
 
   const ProductsForSubCategoryRequested({
     required this.subCategory,
     required this.isSecondHand,
+    required this.isMachine,
   });
 
   @override

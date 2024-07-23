@@ -22,6 +22,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive/hive.dart';
 import 'package:toast/toast.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../custom/toast_component.dart';
 
@@ -218,6 +219,10 @@ class _MainDrawerState extends State<MainDrawer> {
                         style: TextStyle(
                             color: MyTheme.primary_color, fontSize: 14)),
                     onTap: () {
+                      launchUrl(
+                          Uri.parse(
+                              'https://chat.whatsapp.com/FGvrJi51iXg4pkpmwa4XLl'),
+                          mode: LaunchMode.externalApplication);
                       // Navigator.push(context,
                       //     MaterialPageRoute(builder: (context) {
                       //   return ContactUs();

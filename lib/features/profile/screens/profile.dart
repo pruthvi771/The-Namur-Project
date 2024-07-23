@@ -74,13 +74,26 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
         await FirebaseFirestore.instance.collection('updates').get();
 
     for (var document in userSnapshot.docs) {
+      String imageURL = document.data()['imageURL'];
       // userSnapshot.docs[0].data()!['imageURL']
+      if (imageURL.contains("drive.google.com")) {
+        RegExp regExp = RegExp(r'/d/([a-zA-Z0-9_-]+)');
+
+        // Use the regular expression to find the fileId
+        Match? match = regExp.firstMatch(imageURL);
+
+        if (match != null) {
+          // The fileId is in the first capture group
+          String fileId = match.group(1)!;
+          imageURL = "https://drive.google.com/uc?export=view&id=$fileId";
+        }
+      }
       updatesData.add(UpdatesData(
-        imageURL: document.data()['imageURL'],
-        goToURL: document.data()['link'],
+        imageURL: imageURL,
+        goToURL: document.data()['goToURL'],
       ));
     }
-
+    print(updatesData.length);
     return updatesData;
   }
 
@@ -652,11 +665,23 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                                             updatesList[index]
                                                                 .goToURL);
                                                       },
-                                                      child: CachedNetworkImage(
-                                                        imageUrl:
-                                                            updatesList[index]
-                                                                .imageURL,
-                                                        fit: BoxFit.cover,
+                                                      child: Container(
+                                                        color: Colors.black
+                                                            .withOpacity(0.05),
+                                                        child:
+                                                            CachedNetworkImage(
+                                                          imageUrl:
+                                                              updatesList[index]
+                                                                  .imageURL,
+                                                          fit: BoxFit.fitWidth,
+                                                          width:
+                                                              double.infinity,
+                                                          height: (9 / 16) *
+                                                              MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),

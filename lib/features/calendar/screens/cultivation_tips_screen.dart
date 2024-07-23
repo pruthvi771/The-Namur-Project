@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:active_ecommerce_flutter/my_theme.dart';
@@ -50,7 +51,7 @@ class _CultivationTipsScreenState extends State<CultivationTipsScreen> {
     cultivationDataFuture.then((value) {
       value.clear();
     });
-    if (showHints) ScaffoldMessenger.of(context).clearSnackBars();
+    // if (showHints) ScaffoldMessenger.of(context).clearSnackBars();
     super.dispose();
   }
 
@@ -182,10 +183,14 @@ class _CultivationTipsScreenState extends State<CultivationTipsScreen> {
                   )
                 : SingleChildScrollView(
                     physics: BouncingScrollPhysics(),
-                    child: MasonryGridView.count(
-                      crossAxisCount: 3,
-                      mainAxisSpacing: 16,
-                      crossAxisSpacing: 16,
+                    child: GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
+                        childAspectRatio:
+                            0.9, // Adjusted to ensure content fits well
+                      ),
                       itemCount: cultivationData.length,
                       shrinkWrap: true,
                       padding: EdgeInsets.only(
@@ -193,7 +198,27 @@ class _CultivationTipsScreenState extends State<CultivationTipsScreen> {
                       physics: NeverScrollableScrollPhysics(),
                       scrollDirection: Axis.vertical,
                       itemBuilder: (context, index) {
-                        var imageLink = cultivationData[index]['logoUrl'];
+                        var imageLink = cultivationData[index]['logoUrl'] == ""
+                            ? imageForNameCloud['placeholder']!
+                            : cultivationData[index]['logoUrl'];
+                        if (cultivationData[index]['logoUrl'] != null &&
+                            imageLink.contains("drive.google.com")) {
+                          RegExp regExp = RegExp(r'/d/([a-zA-Z0-9_-]+)');
+
+                          // Use the regular expression to find the fileId
+                          Match? match = regExp.firstMatch(imageLink);
+
+                          if (match != null) {
+                            // The fileId is in the first capture group
+                            String fileId = match.group(1)!;
+                            imageLink =
+                                "https://drive.google.com/uc?export=view&id=$fileId";
+                            print('File ID: $fileId');
+                          } else {
+                            print('No file ID found in the URL.');
+                          }
+                        }
+
                         var name = cultivationData[index]['title'];
                         var description = cultivationData[index]['dataUrl'];
                         return InkWell(
@@ -221,9 +246,7 @@ class _CultivationTipsScreenState extends State<CultivationTipsScreen> {
                                             height: 200,
                                             width: double.infinity,
                                             child: CachedNetworkImage(
-                                                imageUrl: imageLink ??
-                                                    imageForNameCloud[
-                                                        'placeholder']!,
+                                                imageUrl: imageLink,
                                                 fit: BoxFit.fitHeight),
                                           ),
 
@@ -290,12 +313,14 @@ class _CultivationTipsScreenState extends State<CultivationTipsScreen> {
                               borderRadius: BorderRadius.circular(15),
                             ),
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Container(
                                   margin: EdgeInsets.only(top: 8.0, bottom: 8),
                                   height: 50,
                                   width: 50,
                                   child: CachedNetworkImage(
+                                      fit: BoxFit.fill,
                                       imageUrl: imageLink ??
                                           imageForNameCloud['placeholder']!),
                                 ),

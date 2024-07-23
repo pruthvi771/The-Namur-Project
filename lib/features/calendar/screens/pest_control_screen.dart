@@ -48,7 +48,7 @@ class _PestControlScreenState extends State<PestControlScreen> {
     pestControlDataFuture.then((value) {
       value.clear();
     });
-    if (showHints) ScaffoldMessenger.of(context).clearSnackBars();
+    // if (showHints) ScaffoldMessenger.of(context).clearSnackBars();
 
     super.dispose();
   }
@@ -173,10 +173,15 @@ class _PestControlScreenState extends State<PestControlScreen> {
                                       ),
                                     ),
                                   )
-                                : MasonryGridView.count(
-                                    crossAxisCount: 3,
-                                    mainAxisSpacing: 16,
-                                    crossAxisSpacing: 16,
+                                : GridView.builder(
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 3,
+                                      crossAxisSpacing: 12,
+                                      mainAxisSpacing: 12,
+                                      childAspectRatio:
+                                          0.8, // Adjusted to ensure content fits well
+                                    ),
                                     itemCount: pestControlData[index]
                                             ['pestAndDiseases']
                                         .length,
@@ -190,12 +195,42 @@ class _PestControlScreenState extends State<PestControlScreen> {
                                     scrollDirection: Axis.vertical,
                                     itemBuilder: (context, index2) {
                                       var imageLink = pestControlData[index]
-                                          ['pestAndDiseases'][index2]['image'];
+                                                  ['pestAndDiseases'][index2]
+                                              ['image'] ??
+                                          imageForNameCloud['placeholder']!;
+                                      if (pestControlData[index]
+                                                      ['pestAndDiseases']
+                                                  [index2]['image'] !=
+                                              null &&
+                                          imageLink
+                                              .contains("drive.google.com")) {
+                                        RegExp regExp =
+                                            RegExp(r'/d/([a-zA-Z0-9_-]+)');
+
+                                        // Use the regular expression to find the fileId
+                                        Match? match =
+                                            regExp.firstMatch(imageLink);
+
+                                        if (match != null) {
+                                          // The fileId is in the first capture group
+                                          String fileId = match.group(1)!;
+                                          imageLink =
+                                              "https://drive.google.com/uc?export=view&id=$fileId";
+                                        } else {
+                                          print('No file ID found in the URL.');
+                                        }
+                                      }
+                                      // : pestControlData[index]
+                                      //         ['pestAndDiseases'][index2]
+                                      //     ['image'];
+
                                       var name = pestControlData[index]
                                           ['pestAndDiseases'][index2]['name'];
+
                                       var description = pestControlData[index]
                                               ['pestAndDiseases'][index2]
                                           ['contentUrl'];
+
                                       return InkWell(
                                         onTap: () => _launchPDF(description),
                                         onDoubleTap: () {
@@ -229,12 +264,12 @@ class _PestControlScreenState extends State<PestControlScreen> {
                                                           height: 200,
                                                           width:
                                                               double.infinity,
-                                                          child: CachedNetworkImage(
-                                                              imageUrl: imageLink ??
-                                                                  imageForNameCloud[
-                                                                      'placeholder']!,
-                                                              fit: BoxFit
-                                                                  .fitHeight),
+                                                          child:
+                                                              CachedNetworkImage(
+                                                                  imageUrl:
+                                                                      imageLink,
+                                                                  fit: BoxFit
+                                                                      .fitWidth),
                                                         ),
 
                                                         // name
